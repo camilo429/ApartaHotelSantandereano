@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { makeStyles } from "@mui/styles";
+import DocumentoEmpleado from './DocumentoEmpleado'
+import "./Empleado.css";
 import {
   Table,
   TableContainer,
@@ -13,6 +15,7 @@ import {
   TextField,
 } from "@mui/material";
 import { Edit, Delete } from "@mui/icons-material";
+
 
 const url = "http://localhost:8002/empleados/listarEmpleados";
 const urlG = "http://localhost:8002/empleados/registrarEmpleado";
@@ -147,14 +150,15 @@ function EmpleadoComponent() {
         name="nombre"
         className={styles.inputMaterial}
         label="Nombre"
-        onChange={handleChange}
       />
-      <TextField
+      {/* <TextField
         name="idTipoDocumento"
         className={styles.inputMaterial}
         label="id tipo Documento"
         onChange={handleChange}
-      />
+      /> */}
+      <DocumentoEmpleado  onChange={handleChange}/>
+      
       <TextField
         name="numDocumento"
         className={styles.inputMaterial}

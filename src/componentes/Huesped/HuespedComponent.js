@@ -13,6 +13,7 @@ import {
   TextField,
 } from "@mui/material";
 import { Edit, Delete } from "@mui/icons-material";
+import Select from "react-select";
 
 const url = "http://localhost:8001/huespedes/listarHuespedes";
 const urlG = "http://localhost:8001/huespedes/registrarHuesped";
@@ -59,8 +60,10 @@ function HuespedComponent() {
     id_nacionalidad: "",
     lugar_origen: "",
     nom_contacto_emergencia: "",
-    num_contacto_emergencia: ""
+    num_contacto_emergencia: "",
   });
+
+  const [nacionalidad, setNacionalidadSeleccionada] = useState({});
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -182,6 +185,7 @@ function HuespedComponent() {
         label="idLugar Nacimiento"
         onChange={handleChange}
       />
+
       <TextField
         name="lugar_origen"
         className={styles.inputMaterial}
@@ -323,7 +327,7 @@ function HuespedComponent() {
   const bodyEliminar = (
     <div className={styles.modal}>
       <p>
-        Esta seguro de Eliminar Nacionalidad{" "}
+        Esta seguro de Eliminar Huesped
         <b>{consolaSeleccionada && consolaSeleccionada.nombre}</b> ?
       </p>
       <div align="right">
