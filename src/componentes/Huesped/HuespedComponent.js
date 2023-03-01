@@ -13,7 +13,6 @@ import {
   TextField,
 } from "@mui/material";
 import { Edit, Delete } from "@mui/icons-material";
-import Select from "react-select";
 
 const url = "http://localhost:8001/huespedes/listarHuespedes";
 const urlG = "http://localhost:8001/huespedes/registrarHuesped";
@@ -62,8 +61,6 @@ function HuespedComponent() {
     nom_contacto_emergencia: "",
     num_contacto_emergencia: "",
   });
-
-  const [nacionalidad, setNacionalidadSeleccionada] = useState({});
 
   const handleChange = (e) => {
     const { name, value } = e.target;

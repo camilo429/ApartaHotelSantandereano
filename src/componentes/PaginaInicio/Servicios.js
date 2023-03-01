@@ -63,6 +63,7 @@ const ServiciosComponent = () => {
               <br></br>
               <img
               src="/assets/img/101.jpg"
+              alt="habitación 101"
               style={{
                 width: "300px",
                 height: "250px",
@@ -73,6 +74,7 @@ const ServiciosComponent = () => {
 
             <img
               src="/assets/img/2022.jpg"
+              alt="habitación 202"
               style={{
                 width: "300px",
                 height: "250px",
@@ -82,6 +84,7 @@ const ServiciosComponent = () => {
             />
             <img
               src="/assets/img/207.jpg"
+              alt="habitación 207"
               style={{
                 width: "300px",
                 height: "250px",
@@ -109,9 +112,56 @@ const ServiciosComponent = () => {
 
       <footer className="navbar navbar-dark bg-dark">
         <div className="badge badge-light">
-          <a className="navbar-brand" href="index.html">
-            Aparta Hotel Santandereano
-          </a>
+          <div align="center">
+            <img
+              src="/assets/img/facebook.png"
+              alt="Es la imagen de facebook"
+              style={{
+                width: "25px",
+                height: "25px",
+                marginLeft: "350px",
+                marginRight: "25px",
+              }}
+            />
+            <a
+              className="navbar-brand"
+              href="https://www.facebook.com/HotelSantandereanoBogota"
+            >
+              Facebook
+            </a>
+            <img
+              src="/assets/img/instagram.png"
+              alt="Es la imagen de facebook"
+              style={{
+                width: "25px",
+                height: "25px",
+                marginLeft: "25px",
+                marginRight: "25px",
+              }}
+            />
+            <a
+              className="navbar-brand"
+              href="https://www.instagram.com/HotelSantandereanoBogota"
+            >
+              Instagram
+            </a>
+            <img
+              src="/assets/img/whatsapp.png"
+              alt="Es la imagen de Whatsapp"
+              style={{
+                width: "55px",
+                height: "55px",
+                marginLeft: "15px",
+                marginRight: "15px",
+              }}
+            />
+            <a
+              className="navbar-brand"
+              href="https://wa.me/3107763328?text=Quisiera%20saber%20el%20precio%20de%20los%20servicios%20y%20sus%20precios?"
+            >
+              Whatsapp (3107763328)
+            </a>
+          </div>
         </div>
       </footer>
     </div>

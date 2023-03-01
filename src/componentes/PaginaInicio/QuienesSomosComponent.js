@@ -5,13 +5,13 @@ const QuienesSomosComponent = () => {
   return (
     <div>
       <nav className="navbar navbar-dark bg-dark" id="mainNav">
-        <div className="container px-4 px-lg-5">
+      <div className="container px-4 px-lg-5">
           <a className="navbar-brand" href="index.html">
             Aparta Hotel Santandereano
           </a>
           <img
             src="/assets/img/facebook.png"
-            alt="imagen de facebook"
+            alt="Es la imagen de facebook"
             style={{
               width: "25px",
               height: "25px",
@@ -20,24 +20,23 @@ const QuienesSomosComponent = () => {
           ></img>
           <img
             src="/assets/img/whatsapp.png"
-            alt="imagen de instragram"
+            alt="Es la imagen de Whatsapp"
             style={{
               width: "55px",
               height: "55px",
               marginRight: "0px",
             }}
           />
-          <div style={{ color: "white", marginLeft: "0px" }}>
-            (+57)3107763328
-          </div>
+          <div style={{color:"white", marginLeft:"0px"}}>(+57)3107763328</div>
           <img
             src="/assets/img/instagram.png"
+            alt="Es la imagen de instragram"
             style={{
               width: "25px",
               height: "25px",
               marginRight: "10px",
             }}
-          ></img>
+          />
           <div className="navbar-brand" id="navbarResponsive">
             <Link className="badge badge-light" to={`/Inicio`}>
               Inicio
@@ -181,13 +180,14 @@ const QuienesSomosComponent = () => {
           <div align="center">
             <img
               src="/assets/img/facebook.png"
+              alt="Es la imagen de facebook"
               style={{
                 width: "25px",
                 height: "25px",
                 marginLeft: "350px",
                 marginRight: "25px",
               }}
-            ></img>
+            />
             <a
               className="navbar-brand"
               href="https://www.facebook.com/HotelSantandereanoBogota"
@@ -196,13 +196,14 @@ const QuienesSomosComponent = () => {
             </a>
             <img
               src="/assets/img/instagram.png"
+              alt="Es la imagen de facebook"
               style={{
                 width: "25px",
                 height: "25px",
                 marginLeft: "25px",
                 marginRight: "25px",
               }}
-            ></img>
+            />
             <a
               className="navbar-brand"
               href="https://www.instagram.com/HotelSantandereanoBogota"
@@ -211,18 +212,19 @@ const QuienesSomosComponent = () => {
             </a>
             <img
               src="/assets/img/whatsapp.png"
+              alt="Es la imagen de Whatsapp"
               style={{
                 width: "55px",
                 height: "55px",
                 marginLeft: "15px",
                 marginRight: "15px",
               }}
-            ></img>
+            />
             <a
               className="navbar-brand"
               href="https://wa.me/3107763328?text=Quisiera%20saber%20el%20precio%20de%20los%20servicios%20y%20sus%20precios?"
             >
-              Whatsapp (+57)3107763328
+              Whatsapp (3107763328)
             </a>
           </div>
         </div>

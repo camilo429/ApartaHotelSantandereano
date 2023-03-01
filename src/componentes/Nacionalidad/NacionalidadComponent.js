@@ -14,7 +14,6 @@ import {
 } from "@mui/material";
 import { Edit, Delete } from "@mui/icons-material";
 import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
-import { Dropdown,DropdownItem, DropdownMenu,DropdownToggle } from "reactstrap";
 
 const url = "http://localhost:8001/nacionalidad/listarNacionalidades";
 const urlG = "http://localhost:8001/nacionalidad/registrarNacionalidad";
@@ -169,11 +168,6 @@ function NacionalidadComponent() {
     peticionGet();
   }, []);
 
-  const [dropdown,setDropdown]=useState(false);
-
-  const abrirCerrarDropDown = () =>{
-    setDropdown(!dropdown);
-  }
   return (
     <div className="NacionalidadComponent">
       <br />
