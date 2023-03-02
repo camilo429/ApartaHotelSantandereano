@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
 import React from "react";
 
 import NacionalidadComponent from "./componentes/Nacionalidad/NacionalidadComponent";
@@ -13,53 +13,34 @@ import EmpleadoComponent from "./componentes/Empleado/EmpleadoComponent";
 import AdministradorComponent from "./componentes/Administrador/AdministradorComponent";
 import DocumentoComponent from "./componentes/Documento/DocumentoComponent";
 import DocumentoEmpleado from "./componentes/Empleado/DocumentoEmpleado";
+import PanelAdministrador from "./componentes/Administrador/PanelAdministrador";
 
 function App() {
   return (
-    <div>
-      <BrowserRouter>
-        <div className="pagian">
+    <div className="App">
+      <div className="pagina">
+        <BrowserRouter>
           <Routes>
-            <Route path="/" exament element={<PaginaInicio />}></Route>
-            <Route path="/inicio" element={<PaginaInicio />}></Route>
-            <Route
-              path="/QuienesSomos"
-              element={<QuienesSomosComponent />}
-            ></Route>
-            <Route path="/Servicios" element={<ServiciosComponent />}></Route>
-            <Route path="/Contacto" element={<ContactoComponent />}></Route>
-            <Route path="/Login" element={<LoginComponent />}></Route>
+            <Route path="/" exament element={<PaginaInicio />} />
+            <Route path="/inicio" element={<PaginaInicio />} />
+            <Route path="/QuienesSomos" element={<QuienesSomosComponent />} />
+            <Route path="/Servicios" element={<ServiciosComponent />} />
+            <Route path="/Contacto" element={<ContactoComponent />} />
+            <Route path="/Login" element={<LoginComponent />} />
 
             <Route
               path="/ListarNacionalidades"
               element={<NacionalidadComponent />}
-            ></Route>
-            {/* <Route path='/ListarTipoDocumento' element={<ListTipoDocumentoComponent/>}></Route> */}
-            <Route
-              path="/ListarHuespedes"
-              element={<HuespedComponent />}
-            ></Route>
-            <Route
-              path="/ListarDocumento"
-              element={<DocumentoComponent />}
-            ></Route>
-            <Route
-              path="/ListarEmpleado"
-              element={<EmpleadoComponent />}
-            ></Route>
-
-            <Route
-              path="/documentoEmpleado"
-              element={<DocumentoEmpleado />}
-            ></Route>
-
-            <Route
-              path="/Administrador"
-              element={<AdministradorComponent />}
-            ></Route>
+            />
+            <Route path="/ListarHuespedes" element={<HuespedComponent />} />
+            <Route path="/ListarDocumento" element={<DocumentoComponent />} />
+            <Route path="/ListarEmpleado" element={<EmpleadoComponent />} />
+            <Route path="/documentoEmpleado" element={<DocumentoEmpleado />} />
+            <Route path="/Administrador" element={<AdministradorComponent />} />
+            <Route path="/PanelAdministrador/*" element={<PanelAdministrador />} />
           </Routes>
-        </div>
-      </BrowserRouter>
+        </BrowserRouter>
+      </div>
     </div>
   );
 }
