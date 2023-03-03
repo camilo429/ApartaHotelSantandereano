@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { makeStyles } from "@mui/styles";
-import DocumentoEmpleado from './DocumentoEmpleado'
+import DocumentoEmpleado from "./DocumentoEmpleado";
 import "./Empleado.css";
 import {
   Table,
@@ -14,8 +14,14 @@ import {
   Button,
   TextField,
 } from "@mui/material";
+
+import { Form, FormGroup, Label, Input } from "reactstrap";
+import "../../App.scss";
+
 import { Edit, Delete } from "@mui/icons-material";
 
+import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
+import "../../../node_modules/bootstrap/scss/bootstrap.scss";
 
 const url = "http://localhost:8002/empleados/listarEmpleados";
 const urlG = "http://localhost:8002/empleados/registrarEmpleado";
@@ -32,16 +38,6 @@ const useStyles = makeStyles((theme) => ({
     top: "50%",
     left: "50%",
     transform: "translate(-50%,-50%)",
-  },
-  icons: {
-    cursor: "pointer",
-  },
-  inputMaterial: {
-    width: "30%",
-  },
-  TextField: {
-    marginTop: "15px",
-    marginLeft: "15px",
   },
 }));
 
@@ -140,99 +136,115 @@ function EmpleadoComponent() {
   const bodyInsertar = (
     <div className={styles.modal}>
       <h3>Agregar Empleado</h3>
-      <TextField
-        name="apellido"
-        className={styles.inputMaterial}
-        label="Apellido"
-        onChange={handleChange}
-      />
-      <TextField
-        name="nombre"
-        className={styles.inputMaterial}
-        label="Nombre"
-      />
-      {/* <TextField
-        name="idTipoDocumento"
-        className={styles.inputMaterial}
-        label="id tipo Documento"
-        onChange={handleChange}
-      /> */}
-      <DocumentoEmpleado  onChange={handleChange}/>
-      
-      <TextField
-        name="numDocumento"
-        className={styles.inputMaterial}
-        label="Número de Documento"
-        onChange={handleChange}
-      />
-      <TextField
-        name="numTelefono"
-        className={styles.inputMaterial}
-        label="Número de Telefono"
-        onChange={handleChange}
-      />
+      <Form>
+      <Label for="exampleEmail">Información Persona</Label>
+        <div className="flex">
+          <FormGroup className="me-2">
+            <Input
+              name="apellido"
+              placeholder="Apellido"
+              type="text"
+              className="w-90 me-2"
+            />
+          </FormGroup>
+          <FormGroup className="me-2">
+            <Input
+              name="nombre"
+              placeholder="Nombre"
+              type="text"
+              className="w-90 me-2"
+            />
+          </FormGroup>
+          <FormGroup className="me-2">
+            <Input
+              name="numDocumento"
+              placeholder="Número Documento"
+              type="text"
+              className="w-90"
+            />
+          </FormGroup>
+        </div>
+        <div className="flex">
+          <FormGroup className="me-2">
+            <Input
+              name="numTelefono"
+              placeholder="Número de Celular"
+              type="text"
+              className="w-90"
+            />
+          </FormGroup>
+          <FormGroup className="me-2">
+            <Input
+              name="correo"
+              placeholder="Correo Electronico"
+              type="text"
+              className="w-90"
+            />
+          </FormGroup>
+          <FormGroup className="me-2">
+            <Input
+              name="contraseña"
+              placeholder="Contraseña"
+              type="password"
+              className="w-90"
+            />
+          </FormGroup>
+        </div>
+        <div className="flex">
+          <FormGroup className="me-2">
+            <Input
+              name="fechaNacimiento"
+              placeholder="fecha Nacimiento"
+              type="date"
+              className="w-90"
+            />
+          </FormGroup>
+          <FormGroup className="me-2">
+            <Input
+              name="direccion"
+              placeholder="Dirección"
+              type="text"
+              className="w-90"
+            />
+          </FormGroup>
+          <FormGroup className="me-2">
+            <Input
+              name="nomContactoEmergencia"
+              placeholder="Nombre Contacto Emergencia"
+              type="text"
+              className="w-100"
+            />
+          </FormGroup>
+        </div>
+        <div className="flex">
+          <FormGroup className="me-2">
+            <Input
+              name="numContactoEmergencia"
+              placeholder="Número Contacto Emergencia"
+              type="text"
+              className="w-100"
+            />
+          </FormGroup>
+          <FormGroup className="me-2">
+            <Input name="eps" placeholder="EPS" type="text" className="w-100" />
+          </FormGroup>
+          <FormGroup className="me-2">
+            <Input name="arl" placeholder="ARL" type="text" className="w-100" />
+          </FormGroup>
+        </div>
+        <div className="flex">
+          <FormGroup className="me-2">
+            <Input name="idGenero" placeholder="idGenero" type="text" className="w-100" />
+          </FormGroup>
+          <FormGroup className="me-2">
+            <Input name="idTipoSangre" placeholder="idTipoSangre" type="text" className="w-100" />
+          </FormGroup>
+          <FormGroup className="me-2">
+          <DocumentoEmpleado onChange={handleChange} className="w-90"/>
+          </FormGroup>
+        </div>
+      </Form>
 
-      <TextField
-        name="correo"
-        className={styles.inputMaterial}
-        label="Correo"
-        onChange={handleChange}
-      />
-      <TextField
-        name="contraseña"
-        className={styles.inputMaterial}
-        label="Contraseña"
-        onChange={handleChange}
-      />
-      <TextField
-        name="fechaNacimiento"
-        className={styles.inputMaterial}
-        label="Fecha de Nacimiento"
-        onChange={handleChange}
-      />
-      <TextField
-        name="direccion"
-        className={styles.inputMaterial}
-        label="Dirección"
-        onChange={handleChange}
-      />
-      <TextField
-        name="nomContactoEmergencia"
-        className={styles.inputMaterial}
-        label="nombre Contacto Emergencia"
-        onChange={handleChange}
-      />
-
-      <TextField
-        name="numContactoEmergencia"
-        className={styles.inputMaterial}
-        label="Numero Contacto Emergencia"
-        onChange={handleChange}
-      />
-      <TextField
-        name="eps"
-        className={styles.inputMaterial}
-        label="EPS"
-        onChange={handleChange}
-      />
-      <TextField
-        name="arl"
-        className={styles.inputMaterial}
-        label="ARL"
-        onChange={handleChange}
-      />
-      <TextField
-        name="idGenero"
-        className={styles.inputMaterial}
-        label="ID Género"
-        onChange={handleChange}
-      />
-      <TextField
-        name="idTipoSangre"
-        className={styles.inputMaterial}
-        label="ID Tipo Sangre"
-        onChange={handleChange}
-      />
       <br />
       <div align="right">
         <Button color="primary" onClick={() => peticionPost()}>
