@@ -1,29 +1,29 @@
+import React, { useEffect, useState } from "react";
 import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "../../../node_modules/bootstrap/scss/bootstrap.scss";
-import React, { useEffect, useState } from "react";
-import Select from "react-select";
-
 import axios from "axios";
 import "./Empleado.css";
+import Select from "react-select";
 
 const url = "http://localhost:8001/genero/listarGenero";
 
 function GeneroEmpleado({ name, handleChangeData }) {
+
   const [data, setData] = useState([]);
 
-  const getGeneros = async () => {
+  const getGeneroEmpleado = async () => {
     await axios.get(url).then((response) => {
       setData(response.data);
     });
   };
-
+  
   useEffect(() => {
-    getGeneros();
+    getGeneroEmpleado();
   }, []);
 
   const handleChange = ({ label, value }) => {
     handleChangeData({
-      target: { name, value: { id_tip_documento: value, tipDocumento: label } },
+      target: { name, value: { idSexoBio: value, sexoBio: label } },
     });
   };
 

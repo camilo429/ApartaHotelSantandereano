@@ -246,12 +246,8 @@ function EmpleadoComponent() {
           </FormGroup>
         </div>
         <div className="flex">
-          <FormGroup className="me-2" onChange={handleChange}>
-            <GeneroEmpleado
-              name="idSexoBio"
-              className="me-2"
-              onChange={handleChange}
-            />
+          <FormGroup>
+            <GeneroEmpleado name="idSexoBio" handleChangeData={handleChange} />
           </FormGroup>
           <FormGroup className="me-2">
             <TipoSangre
@@ -259,7 +255,7 @@ function EmpleadoComponent() {
               handleChangeData={handleChange}
             />
           </FormGroup>
-          <FormGroup className="me-2" onChange={handleChange}>
+          <FormGroup>
             <DocumentoEmpleado
               name="idTipoDocumento"
               handleChangeData={handleChange}
