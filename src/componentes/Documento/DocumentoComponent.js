@@ -14,10 +14,10 @@ import {
 } from "@mui/material";
 import { Edit, Delete } from "@mui/icons-material";
 
-const url = "http://localhost:8002/tipoDocumento/listarTipoDocumentos";
-const urlG = "http://localhost:8002/tipoDocumento/registrarTipoDocumento";
-const urlE = "http://localhost:8002/tipoDocumento/actualizarTipoDocumento/";
-const urlD = "http://localhost:8002/tipoDocumento/deleteTipoDocumento/";
+const url = "http://localhost:8001/tipoDocumento/listarTipoDocumentos";
+const urlG = "http://localhost:8001/tipoDocumento/registrarTipoDocumento";
+const urlE = "http://localhost:8001/tipoDocumento/actualizarTipoDocumento/";
+const urlD = "http://localhost:8001/tipoDocumento/deleteTipoDocumento/";
 
 const useStyles = makeStyles((theme) => ({
     modal: {

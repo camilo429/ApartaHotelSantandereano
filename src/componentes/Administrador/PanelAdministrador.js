@@ -4,6 +4,8 @@ import Huespedes from "../pagesAdministrador/Huespedes";
 import Sales from "../pagesAdministrador/Sales";
 import NavbarA from "./NavbarA";
 import Sidebar from "./Sidebar";
+import Tablas from "../pagesAdministrador/Tablas";
+import Graficas from "../pagesAdministrador/Graficas";
 import { Routes, Route } from "react-router-dom";
 import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 
@@ -29,6 +31,16 @@ function PanelAdministrador() {
               path="PanelAdministrador/Sales"
               exact={true}
               element={<Sales />}
+            />
+             <Route
+              path="PanelAdministrador/Graficas"
+              exact={true}
+              element={<Graficas />}
+            />
+             <Route
+              path="PanelAdministrador/Tablas"
+              exact={true}
+              element={<Tablas />}
             />
           </Routes>
         </div>

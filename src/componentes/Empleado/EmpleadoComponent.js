@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { makeStyles } from "@mui/styles";
-import DocumentoEmpleado from "./DocumentoEmpleado";
+import { Form, FormGroup, Label, Input } from "reactstrap";
+import "../../App.scss";
+import { Edit, Delete } from "@mui/icons-material";
 import "./Empleado.css";
 import {
   Table,
@@ -12,26 +14,24 @@ import {
   TableRow,
   Modal,
   Button,
-  TextField,
 } from "@mui/material";
-
-import { Form, FormGroup, Label, Input } from "reactstrap";
-import "../../App.scss";
-
-import { Edit, Delete } from "@mui/icons-material";
 
 import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "../../../node_modules/bootstrap/scss/bootstrap.scss";
 
-const url = "http://localhost:8002/empleados/listarEmpleados";
-const urlG = "http://localhost:8002/empleados/registrarEmpleado";
-const urlE = "http://localhost:8002/empleados/actualizarEmpleado/";
-const urlD = "http://localhost:8002/empleados/deleteEmpleado/";
+import DocumentoEmpleado from "./DocumentoEmpleado";
+import TipoSangre from "./TipoSangre";
+import GeneroEmpleado from "./GeneroEmpleado";
+
+const url = "http://localhost:8001/empleados/listarEmpleados";
+const urlG = "http://localhost:8001/empleados/registrarEmpleado";
+const urlE = "http://localhost:8001/empleados/actualizarEmpleado/";
+const urlD = "http://localhost:8001/empleados/deleteEmpleado/";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
     position: "absolute",
-    width: 800,
+    width: "800px",
     backgroundColor: "white",
     padding: 50,
     boder: "2px solid #000",
@@ -51,19 +51,18 @@ function EmpleadoComponent() {
   const [consolaSeleccionada, setConsolaSeleccionada] = useState({
     nombre: "",
     apellido: "",
+    idTipoDocumento: {},
     numDocumento: "",
     numTelefono: "",
     correo: "",
-    contraseña: "",
     fechaNacimiento: "",
     direccion: "",
     nomContactoEmergencia: "",
     numContactoEmergencia: "",
     eps: "",
     arl: "",
-    idGenero: "",
-    idTipoSangre: "",
-    idTipoDocumento: "",
+    idSexoBio: {},
+    idTipoSangre: {},
   });
 
   const handleChange = (e) => {
@@ -72,7 +71,6 @@ function EmpleadoComponent() {
       ...prevState,
       [name]: value,
     }));
-    console.log(consolaSeleccionada);
   };
 
   const peticionGet = async () => {
@@ -81,12 +79,14 @@ function EmpleadoComponent() {
     });
   };
 
-  const peticionPost = async () => {
-    await axios.post(urlG, consolaSeleccionada).then((response) => {
-      setData(data.concat(response.data));
-      peticionGet();
-      abrirCerrarModalInsertar();
-    });
+  const peticionPost = async (e) => {
+    e.preventDefault();
+    console.log("esta es la data selleccionada", consolaSeleccionada);
+    const response = await axios.post(urlG, consolaSeleccionada);
+    console.log(response.data);
+    setData(data.concat(response.data));
+    peticionGet();
+    abrirCerrarModalInsertar();
   };
 
   const peticionPut = async () => {
@@ -137,22 +137,24 @@ function EmpleadoComponent() {
     <div className={styles.modal}>
       <h3>Agregar Empleado</h3>
       <Form>
-      <Label for="exampleEmail">Información Persona</Label>
+        <Label for="exampleEmail">Información Persona</Label>
         <div className="flex">
-          <FormGroup className="me-2">
-            <Input
-              name="apellido"
-              placeholder="Apellido"
-              type="text"
-              className="w-90 me-2"
-            />
-          </FormGroup>
           <FormGroup className="me-2">
             <Input
               name="nombre"
               placeholder="Nombre"
               type="text"
               className="w-90 me-2"
+              onChange={handleChange}
+            />
+          </FormGroup>
+          <FormGroup className="me-2">
+            <Input
+              name="apellido"
+              placeholder="Apellido"
+              type="text"
+              className="w-90 me-2"
+              onChange={handleChange}
             />
           </FormGroup>
           <FormGroup className="me-2">
@@ -161,6 +163,7 @@ function EmpleadoComponent() {
               placeholder="Número Documento"
               type="text"
               className="w-90"
+              onChange={handleChange}
             />
           </FormGroup>
         </div>
@@ -171,6 +174,7 @@ function EmpleadoComponent() {
               placeholder="Número de Celular"
               type="text"
               className="w-90"
+              onChange={handleChange}
             />
           </FormGroup>
           <FormGroup className="me-2">
@@ -179,32 +183,27 @@ function EmpleadoComponent() {
               placeholder="Correo Electronico"
               type="text"
               className="w-90"
+              onChange={handleChange}
             />
           </FormGroup>
           <FormGroup className="me-2">
             <Input
-              name="contraseña"
-              placeholder="Contraseña"
-              type="password"
+              name="fechaNacimiento"
+              placeholder="Fecha de Nacimiento"
+              type="date"
               className="w-90"
+              onClick={handleChange}
             />
           </FormGroup>
         </div>
         <div className="flex">
           <FormGroup className="me-2">
             <Input
-              name="fechaNacimiento"
-              placeholder="fecha Nacimiento"
-              type="date"
-              className="w-90"
-            />
-          </FormGroup>
-          <FormGroup className="me-2">
-            <Input
               name="direccion"
               placeholder="Dirección"
               type="text"
               className="w-90"
+              onChange={handleChange}
             />
           </FormGroup>
           <FormGroup className="me-2">
@@ -213,6 +212,7 @@ function EmpleadoComponent() {
               placeholder="Nombre Contacto Emergencia"
               type="text"
               className="w-100"
+              onChange={handleChange}
             />
           </FormGroup>
         </div>
@@ -223,31 +223,54 @@ function EmpleadoComponent() {
               placeholder="Número Contacto Emergencia"
               type="text"
               className="w-100"
+              onChange={handleChange}
             />
           </FormGroup>
           <FormGroup className="me-2">
-            <Input name="eps" placeholder="EPS" type="text" className="w-100" />
+            <Input
+              name="eps"
+              placeholder="EPS"
+              type="text"
+              className="w-100"
+              onChange={handleChange}
+            />
           </FormGroup>
           <FormGroup className="me-2">
-            <Input name="arl" placeholder="ARL" type="text" className="w-100" />
+            <Input
+              name="arl"
+              placeholder="ARL"
+              type="text"
+              className="w-100"
+              onChange={handleChange}
+            />
           </FormGroup>
         </div>
         <div className="flex">
-          <FormGroup className="me-2">
-            <Input name="idGenero" placeholder="idGenero" type="text" className="w-100" />
+          <FormGroup className="me-2" onChange={handleChange}>
+            <GeneroEmpleado
+              name="idSexoBio"
+              className="me-2"
+              onChange={handleChange}
+            />
           </FormGroup>
           <FormGroup className="me-2">
-            <Input name="idTipoSangre" placeholder="idTipoSangre" type="text" className="w-100" />
+            <TipoSangre
+              name="idTipoDocumento"
+              handleChangeData={handleChange}
+            />
           </FormGroup>
-          <FormGroup className="me-2">
-          <DocumentoEmpleado onChange={handleChange} className="w-90"/>
+          <FormGroup className="me-2" onChange={handleChange}>
+            <DocumentoEmpleado
+              name="idTipoDocumento"
+              handleChangeData={handleChange}
+            />
           </FormGroup>
         </div>
       </Form>
 
       <br />
       <div align="right">
-        <Button color="primary" onClick={() => peticionPost()}>
+        <Button color="primary" onClick={(e) => peticionPost(e)}>
           Insertar
         </Button>
         <Button onClick={() => abrirCerrarModalInsertar()}>Cancelar</Button>
@@ -258,129 +281,6 @@ function EmpleadoComponent() {
   const bodyEditar = (
     <div className={styles.modal}>
       <h3>Editar Empleado</h3>
-      <TextField
-        name="nombre"
-        className={styles.inputMaterial}
-        label="Nombre"
-        onChange={handleChange}
-        value={consolaSeleccionada && consolaSeleccionada.nombre}
-      />
-      <TextField
-        style={{ marginTop: "15px" }}
-        name="apellido"
-        className={styles.inputMaterial}
-        label="Apellido"
-        onChange={handleChange}
-        value={consolaSeleccionada && consolaSeleccionada.apellido}
-      />
-      <TextField
-        style={{ marginTop: "15px" }}
-        name="idTipoDocumento"
-        className={styles.inputMaterial}
-        label="id Tipo Documento"
-        onChange={handleChange}
-        value={
-          consolaSeleccionada &&
-          consolaSeleccionada.idTipoDocumento.id_tip_documento
-        }
-      />
-      <TextField
-        style={{ marginTop: "15px" }}
-        name="numDocumento"
-        className={styles.inputMaterial}
-        label="Número Documento"
-        onChange={handleChange}
-        value={consolaSeleccionada && consolaSeleccionada.numDocumento}
-      />
-      <TextField
-        style={{ marginTop: "15px" }}
-        name="numTelefono"
-        className={styles.inputMaterial}
-        label="Número de Telefono"
-        onChange={handleChange}
-        value={consolaSeleccionada && consolaSeleccionada.numTelefono}
-      />
-
-      <TextField
-        name="correo"
-        className={styles.inputMaterial}
-        label="Correo"
-        onChange={handleChange}
-        value={consolaSeleccionada && consolaSeleccionada.correo}
-      />
-      <TextField
-        style={{ marginTop: "15px" }}
-        name="contraseña"
-        className={styles.inputMaterial}
-        label="contraseña"
-        onChange={handleChange}
-        value={consolaSeleccionada && consolaSeleccionada.contraseña}
-      />
-      <TextField
-        style={{ marginTop: "15px" }}
-        name="fechaNacimiento"
-        className={styles.inputMaterial}
-        label="Fecha Nacimiento"
-        onChange={handleChange}
-        value={consolaSeleccionada && consolaSeleccionada.fechaNacimiento}
-      />
-      <TextField
-        style={{ marginTop: "15px" }}
-        name="direccion"
-        className={styles.inputMaterial}
-        label="Dirección"
-        onChange={handleChange}
-        value={consolaSeleccionada && consolaSeleccionada.direccion}
-      />
-      <TextField
-        style={{ marginTop: "15px" }}
-        name="nomContactoEmergencia"
-        className={styles.inputMaterial}
-        label="Nombre Contacto Emergencia"
-        onChange={handleChange}
-        value={consolaSeleccionada && consolaSeleccionada.nomContactoEmergencia}
-      />
-
-      <TextField
-        style={{ marginTop: "15px" }}
-        name="eps"
-        className={styles.inputMaterial}
-        label="EPS"
-        onChange={handleChange}
-        value={consolaSeleccionada && consolaSeleccionada.eps}
-      />
-      <TextField
-        style={{ marginTop: "15px" }}
-        name="arl"
-        className={styles.inputMaterial}
-        label="ARL"
-        onChange={handleChange}
-        value={consolaSeleccionada && consolaSeleccionada.arl}
-      />
-      <TextField
-        style={{ marginTop: "15px" }}
-        name="numContactoEmergencia"
-        className={styles.inputMaterial}
-        label="Numero contacto Emergencia"
-        onChange={handleChange}
-        value={consolaSeleccionada && consolaSeleccionada.numContactoEmergencia}
-      />
-      <TextField
-        style={{ marginTop: "15px" }}
-        name="idGenero"
-        className={styles.inputMaterial}
-        label="Genero"
-        onChange={handleChange}
-        value={consolaSeleccionada && consolaSeleccionada.idGenero.id}
-      />
-      <TextField
-        style={{ marginTop: "15px" }}
-        name="idTipoSangre"
-        className={styles.inputMaterial}
-        label="Tipo de sangre"
-        onChange={handleChange}
-        value={consolaSeleccionada && consolaSeleccionada.idTipoSangre.id}
-      />
 
       <div align="right">
         <Button color="primary" onClick={() => peticionPut()}>
@@ -423,12 +323,10 @@ function EmpleadoComponent() {
             <TableRow>
               <TableCell>Nombre</TableCell>
               <TableCell>Apellido</TableCell>
-              <TableCell>Tipo Documento</TableCell>
               <TableCell>Número Documento</TableCell>
               <TableCell>Número de Celular</TableCell>
               <TableCell>Correo</TableCell>
-              <TableCell>contraseña</TableCell>
-              <TableCell>Fecha de nacimiento</TableCell>
+              <TableCell>Fecha Nacimiento</TableCell>
               <TableCell>Dirección</TableCell>
               <TableCell>Nombre Contacto Emergencia</TableCell>
               <TableCell>Número de Emergencia</TableCell>
@@ -436,28 +334,28 @@ function EmpleadoComponent() {
               <TableCell>ARL</TableCell>
               <TableCell>Genero</TableCell>
               <TableCell>Tipo de Sangre</TableCell>
+              <TableCell>Tipo Documento</TableCell>
               <TableCell>Acciones</TableCell>
             </TableRow>
           </TableHead>
 
           <TableBody>
             {data.map((consola) => (
-              <TableRow key={consola.id}>
+              <TableRow key={consola.idEmpleado}>
                 <TableCell>{consola.nombre}</TableCell>
                 <TableCell>{consola.apellido}</TableCell>
-                <TableCell>{consola.idTipoDocumento.tipDocumento}</TableCell>
                 <TableCell>{consola.numDocumento}</TableCell>
                 <TableCell>{consola.numTelefono}</TableCell>
                 <TableCell>{consola.correo}</TableCell>
-                <TableCell>{consola.contraseña}</TableCell>
                 <TableCell>{consola.fechaNacimiento}</TableCell>
                 <TableCell>{consola.direccion}</TableCell>
                 <TableCell>{consola.nomContactoEmergencia}</TableCell>
                 <TableCell>{consola.numContactoEmergencia}</TableCell>
                 <TableCell>{consola.eps}</TableCell>
                 <TableCell>{consola.arl}</TableCell>
-                <TableCell>{consola.idGenero.genero}</TableCell>
+                <TableCell>{consola.idSexoBio.sexoBio}</TableCell>
                 <TableCell>{consola.idTipoSangre.tipoSangre}</TableCell>
+                <TableCell>{consola.idTipoDocumento.tipDocumento}</TableCell>
                 <TableCell>
                   <Edit
                     className={styles.iconos}

@@ -1,20 +1,26 @@
 {
-  "nombre": "betLO",
-  "apellido": "AHUMADA",
-  "numDocumento": 100370,
-  "numTelefono": 3207818145,
-  "correo": "CAHUMADAG@UNBOSQUE.EDU.CO",
-  "contraseña": "******",
-  "fechaNacimiento": "2001-11-10",
-  "direccion": "BOGOTA",
-  "nomContactoEmergencia": "DIEGO",
-  "numContactoEmergencia": 3207818137,
-  "eps": "BOLIVAR",
-  "arl": "CONVIDA",
-  "idGenero": { "id": 1, "genero": "M" },
-  "idTipoSangre": { "id": 1, "tipoSangre": "O+" },
+  "idEmpleado": 1,
+  "nombre": "ALEJANDRO",
+  "apellido": "CAMILO",
   "idTipoDocumento": {
-    "id_tip_documento": 1,
-    "tipDocumento": "CEDULA DE CIUDADANIA"
+      "idTipDocumento": 1,
+      "tipDocumento": "CEDULA NACIONAL"
+  },
+  "numDocumento": 1007788675,
+  "numTelefono": 3207818137,
+  "correo": "CAMILO@GMAIL.COM",
+  "fechaNacimiento": "10-10-2001",
+  "direccion": "CARRERA 80A#2-15",
+  "nomContactoEmergencia": "DIEGO",
+  "numContactoEmergencia": 32078181832,
+  "eps": "FAMISANAR",
+  "arl": "CONVIDAD",
+  "idSexoBio": {
+      "idSexoBio": 1,
+      "sexoBio": "MASCULINO"
+  },
+  "idTipoSangre": {
+      "idTipoSangre": 1,
+      "tipoSangre": "O+"
   }
 }

@@ -1,24 +1,24 @@
-import React, { useEffect, useState } from "react";
 import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "../../../node_modules/bootstrap/scss/bootstrap.scss";
-import axios from "axios";
-import "./Empleado.css";
+import React, { useEffect, useState } from "react";
 import Select from "react-select";
 
-const url = "http://localhost:8001/tipoDocumento/listarTipoDocumentos";
+import axios from "axios";
+import "./Empleado.css";
 
-function DocumentoEmpleado({ name, handleChangeData }) {
+const url = "http://localhost:8001/genero/listarGenero";
 
+function GeneroEmpleado({ name, handleChangeData }) {
   const [data, setData] = useState([]);
 
-  const getDocumentos = async () => {
+  const getGeneros = async () => {
     await axios.get(url).then((response) => {
       setData(response.data);
     });
   };
-  
+
   useEffect(() => {
-    getDocumentos();
+    getGeneros();
   }, []);
 
   const handleChange = ({ label, value }) => {
@@ -28,11 +28,11 @@ function DocumentoEmpleado({ name, handleChangeData }) {
   };
 
   return (
-    <div className="DocumentoEmpleado">
+    <div className="GeneroEmpleado">
       <Select
         options={data.map((docu) => ({
-          label: docu.tipDocumento,
-          value: docu.idTipDocumento,
+          label: docu.sexoBio,
+          value: docu.idSexoBio,
         }))}
         onChange={handleChange}
       />
@@ -40,4 +40,4 @@ function DocumentoEmpleado({ name, handleChangeData }) {
   );
 }
 
-export default DocumentoEmpleado;
+export default GeneroEmpleado;
