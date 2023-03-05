@@ -75,6 +75,18 @@ const Sidebar = () => {
         <li className="nav-item active">
           <NavLink
             className="text-blue rounded py-2 w-100 d-inline-block px-1"
+            to="PanelAdministrador/Empleados"
+            exact="true"
+            activeclassname="active"
+          >
+            <HiIcons.HiUsers className="me-2" />
+            Empleados
+          </NavLink>
+        </li>
+
+        <li className="nav-item active">
+          <NavLink
+            className="text-blue rounded py-2 w-100 d-inline-block px-1"
             to="PanelAdministrador/Graficas"
             exact="true"
             activeclassname="active"

@@ -11,7 +11,6 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-  NavItem,
   NavLink,
   Form,
 } from "reactstrap";
@@ -42,35 +41,11 @@ const NavbarA = () => {
           </div>
         </Form>
 
-        <ul className="navbar-nav ml-auto">
-          <li className="nav-item dropdown no-arrow d-sm-none">
-            <div
-              className="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
-              aria-labelledby="searchDropdown"
-            >
-              <Form className="form-inline mr-auto w-100 navbar-search">
-                <div className="input-group">
-                  <input
-                    type="text"
-                    class="form-control bg-light border-0 small"
-                    placeholder="Search for..."
-                    aria-label="Search"
-                    aria-describedby="basic-addon2"
-                  />
-                  <div className="input-group-append">
-                    <button className="btn btn-primary" type="button">
-                      <i class="fas fa-search fa-sm"></i>
-                    </button>
-                  </div>
-                </div>
-              </Form>
-            </div>
-          </li>
-
-          <li className="nav-item dropdown no-arrow mx-1">
+        <ul className="navbar-nav ms-auto">
+          <li className="nav-item dropdown no-arrow mx-1 flex">
             <a
               className="nav-link dropdown-toggle"
-              href="#"
+              href="/index.html"
               id="alertsDropdown"
               role="button"
               data-toggle="dropdown"
@@ -78,47 +53,33 @@ const NavbarA = () => {
               aria-expanded="false"
             >
               <i className="fas fa-bell fa-fw"></i>
-
               <span className="badge badge-danger badge-counter">3+</span>
             </a>
-          </li>
 
-          <li className="nav-item dropdown no-arrow mx-1">
-            <a
-              className="nav-link dropdown-toggle"
-              href="#"
-              id="messagesDropdown"
-              role="button"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
-              <i className="fas fa-envelope fa-fw"></i>
-            </a>
-
-            <div
-              className="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
-              aria-labelledby="messagesDropdown"
-            >
-              <a className="dropdown-item d-flex align-items-center" href="#">
-                <div className="dropdown-list-image mr-3">
-                  <img
-                    className="rounded-circle"
-                    src="img/undraw_profile_1.svg"
-                    alt="..."
-                  />
-                  <div className="status-indicator bg-success"></div>
-                </div>
+            <li className="nav-item dropdown no-arrow mx-1 flex">
+              <a
+                className="nav-link dropdown-toggle"
+                href="/index.html"
+                id="alertsDropdown"
+                role="button"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                <i className="fas fa-envelope fa-fw"></i>
+                <span className="badge badge-danger badge-counter">3+</span>
               </a>
-            </div>
+            </li>
           </li>
-
-          <div className="topbar-divider d-none d-sm-block"></div>
         </ul>
 
-        <NavbarToggler onClick={toggle} className="me-2" />
-        <Collapse isOpen={isOpen} navbar>
-          <Nav className="ms-auto" navbar>
+        {/* <div className="topbar-divider d-none d-sm-block"></div> */}
+        <hr className="topbar-divider d-none d-sm-block" style={{ borderTop: "1px solid white" }} />
+
+        <div className="w-30">
+        <NavbarToggler onClick={toggle} />
+        <Collapse isOpen={isOpen} navbar className="w-40">
+          <Nav className="ms-auto w-40" navbar>
             <UncontrolledDropdown nav inNavbar>
               <DropdownToggle nav caret>
                 Camilo Ahumada
@@ -141,6 +102,7 @@ const NavbarA = () => {
             </UncontrolledDropdown>
           </Nav>
         </Collapse>
+        </div>
       </Navbar>
     </div>
   );

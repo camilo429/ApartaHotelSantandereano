@@ -457,11 +457,6 @@ function EmpleadoComponent() {
               <TableCell>Dirección</TableCell>
               <TableCell>Nombre Contacto Emergencia</TableCell>
               <TableCell>Número de Emergencia</TableCell>
-              <TableCell>EPS</TableCell>
-              <TableCell>ARL</TableCell>
-              <TableCell>Genero</TableCell>
-              <TableCell>Tipo de Sangre</TableCell>
-              <TableCell>Tipo Documento</TableCell>
               <TableCell>Acciones</TableCell>
             </TableRow>
           </TableHead>
@@ -478,12 +473,6 @@ function EmpleadoComponent() {
                 <TableCell>{consola.direccion}</TableCell>
                 <TableCell>{consola.nomContactoEmergencia}</TableCell>
                 <TableCell>{consola.numContactoEmergencia}</TableCell>
-                <TableCell>{consola.eps}</TableCell>
-                <TableCell>{consola.arl}</TableCell>
-                <TableCell>{consola.idSexoBio.sexoBio}</TableCell>
-                <TableCell>{consola.idTipoSangre.tipoSangre}</TableCell>
-                <TableCell>{consola.idTipoDocumento.tipDocumento}</TableCell>
-
                 <TableCell>
                   <Edit
                     className={styles.iconos}

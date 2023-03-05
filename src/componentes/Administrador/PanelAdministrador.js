@@ -8,6 +8,7 @@ import Tablas from "../pagesAdministrador/Tablas";
 import Graficas from "../pagesAdministrador/Graficas";
 import { Routes, Route } from "react-router-dom";
 import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
+import EmpleadoComponent from "../Empleado/EmpleadoComponent";
 
 function PanelAdministrador() {
   return (
@@ -26,6 +27,11 @@ function PanelAdministrador() {
               path="PanelAdministrador/Huespedes"
               exact={true}
               element={<Huespedes />}
+            />
+             <Route
+              path="PanelAdministrador/Empleados"
+              exact={true}
+              element={<EmpleadoComponent />}
             />
             <Route
               path="PanelAdministrador/Sales"
