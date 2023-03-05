@@ -1,48 +1,42 @@
-import React from "react";
-import { Component } from "react";
+import React, { useEffect, useState } from "react";
 import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "../../../node_modules/bootstrap/scss/bootstrap.scss";
-
 import axios from "axios";
 import "./Empleado.css";
-import { Input } from "reactstrap";
+import Select from "react-select";
+
 const url = "http://localhost:8001/tipoSangre/listarTipoSangre";
 
-class TipoSangre extends Component {
-  state = {
-    tiposSangres: [],
+function TipoSangre({ name, handleChangeData }) {
+  const [data, setData] = useState([]);
+
+  const getTipoSangre = async () => {
+    await axios.get(url).then((response) => {
+      setData(response.data);
+    });
   };
 
-  componentDidMount() {
-    axios
-      .get(url)
-      .then((response) => {
-        console.log(response);
-        this.setState({ tiposSangres: response.data });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
+  useEffect(() => {
+    getTipoSangre();
+  }, []);
 
-  render() {
-    return (
-      <div className="TipoSangre">
-        <div className="form-group">
-          <Input type="select" className="w-90">
-            {this.state.tiposSangres.map((elemento) => (
-              <option
-                key={elemento.idTipoSangre}
-                value={elemento.idTipoSangre}
-              >
-                {elemento.tipoSangre}
-              </option>
-            ))}
-          </Input>
-        </div>
-      </div>
-    );
-  }
+  const handleChange = ({ label, value }) => {
+    handleChangeData({
+      target: { name, value: { idTipoSangre: value, tipoSangre: label } },
+    });
+  };
+
+  return (
+    <div className="TipoSangre">
+      <Select
+        options={data.map((docu) => ({
+          label: docu.tipoSangre,
+          value: docu.idTipoSangre,
+        }))}
+        onChange={handleChange}
+      />
+    </div>
+  );
 }
 
 export default TipoSangre;

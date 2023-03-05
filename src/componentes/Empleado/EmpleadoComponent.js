@@ -51,7 +51,10 @@ function EmpleadoComponent() {
   const [consolaSeleccionada, setConsolaSeleccionada] = useState({
     nombre: "",
     apellido: "",
-    idTipoDocumento: {},
+    idTipoDocumento: {
+      idTipDocumento: "",
+      tipDocumento: "",
+    },
     numDocumento: "",
     numTelefono: "",
     correo: "",
@@ -61,8 +64,14 @@ function EmpleadoComponent() {
     numContactoEmergencia: "",
     eps: "",
     arl: "",
-    idSexoBio: {},
-    idTipoSangre: {},
+    idSexoBio: {
+      idSexoBio: "",
+      sexoBio: "",
+    },
+    idTipoSangre: {
+      idTipoSangre: "",
+      tipoSangre: "",
+    },
   });
 
   const handleChange = (e) => {
@@ -91,11 +100,11 @@ function EmpleadoComponent() {
 
   const peticionPut = async () => {
     await axios
-      .put(urlE + consolaSeleccionada.numDocumento, consolaSeleccionada)
+      .put(urlE + consolaSeleccionada.idEmpleado, consolaSeleccionada)
       .then((response) => {
         var dataNueva = data;
         dataNueva.map((consola) => {
-          if (consolaSeleccionada.numDocumento === consola.numDocumento) {
+          if (consolaSeleccionada.idEmpleado === consola.idEmpleado) {
             consola.nombre = consolaSeleccionada.nombre;
           }
         });
@@ -107,12 +116,11 @@ function EmpleadoComponent() {
 
   const peticionDelete = async () => {
     await axios
-      .delete(urlD + consolaSeleccionada.numDocumento)
+      .delete(urlD + consolaSeleccionada.idEmpleado)
       .then((response) => {
         setData(
           data.filter(
-            (consola) =>
-              consola.numDocumento !== consolaSeleccionada.numDocumento
+            (consola) => consola.idEmpleado !== consolaSeleccionada.idEmpleado
           )
         );
         abrirCerrarModalEliminar();
@@ -189,10 +197,9 @@ function EmpleadoComponent() {
           <FormGroup className="me-2">
             <Input
               name="fechaNacimiento"
-              placeholder="Fecha de Nacimiento"
               type="date"
               className="w-90"
-              onClick={handleChange}
+              onChange={handleChange}
             />
           </FormGroup>
         </div>
@@ -250,12 +257,9 @@ function EmpleadoComponent() {
             <GeneroEmpleado name="idSexoBio" handleChangeData={handleChange} />
           </FormGroup>
           <FormGroup className="me-2">
-            <TipoSangre
-              name="idTipoDocumento"
-              handleChangeData={handleChange}
-            />
+            <TipoSangre name="idTipoSangre" handleChangeData={handleChange} />
           </FormGroup>
-          <FormGroup>
+          <FormGroup className="me-2">
             <DocumentoEmpleado
               name="idTipoDocumento"
               handleChangeData={handleChange}
@@ -276,8 +280,135 @@ function EmpleadoComponent() {
 
   const bodyEditar = (
     <div className={styles.modal}>
-      <h3>Editar Empleado</h3>
+      <h3>Editar Huesped</h3>
+      <Form>
+        <div className="flex">
+          <FormGroup className="me-2">
+            <Input
+              name="nombre"
+              onChange={handleChange}
+              value={consolaSeleccionada && consolaSeleccionada.nombre}
+              placeholder="Nombre"
+            />
+          </FormGroup>
+          <FormGroup className="me-2">
+            <Input
+              name="apellido"
+              onChange={handleChange}
+              value={consolaSeleccionada && consolaSeleccionada.apellido}
+              placeholder="Apellido"
+            />
+          </FormGroup>
+          <FormGroup className="me-2">
+            <Input
+              name="numDocumento"
+              onChange={handleChange}
+              value={consolaSeleccionada && consolaSeleccionada.numDocumento}
+              disabled
+              placeholder="Numero Identidad"
+            />
+          </FormGroup>
+        </div>
+        <div className="flex">
+          <FormGroup className="me-2">
+            <Input
+              name="numTelefono"
+              onChange={handleChange}
+              value={consolaSeleccionada && consolaSeleccionada.numTelefono}
+              placeholder="Número Celular"
+            />
+          </FormGroup>
+          <FormGroup className="me-2">
+            <Input
+              name="correo"
+              onChange={handleChange}
+              value={consolaSeleccionada && consolaSeleccionada.correo}
+              placeholder="Correo Electronico"
+            />
+          </FormGroup>
 
+          <FormGroup className="me-2">
+            <Input
+              name="fechaNacimiento"
+              onChange={handleChange}
+              value={consolaSeleccionada && consolaSeleccionada.fechaNacimiento}
+              type="date"
+            />
+          </FormGroup>
+        </div>
+        <div className="flex">
+          <FormGroup className="me-2">
+            <Input
+              name="direccion"
+              onChange={handleChange}
+              value={consolaSeleccionada && consolaSeleccionada.direccion}
+              placeholder="Dirección"
+            />
+          </FormGroup>
+          <FormGroup className="me-2">
+            <Input
+              name="nomContactoEmergencia"
+              onChange={handleChange}
+              value={
+                consolaSeleccionada && consolaSeleccionada.nomContactoEmergencia
+              }
+              placeholder="Nombre Familiar"
+            />
+          </FormGroup>
+          <FormGroup className="me-2">
+            <Input
+              name="numContactoEmergencia"
+              onChange={handleChange}
+              value={
+                consolaSeleccionada && consolaSeleccionada.numContactoEmergencia
+              }
+              placeholder="# Contacto Emergencia"
+            />
+          </FormGroup>
+        </div>
+        <div className="flex">
+          <FormGroup className="me-2">
+            <Input
+              name="eps"
+              onChange={handleChange}
+              value={consolaSeleccionada && consolaSeleccionada.eps}
+              placeholder="EPS"
+            />
+          </FormGroup>
+
+          <FormGroup className="me-2">
+            <Input
+              name="arl"
+              onChange={handleChange}
+              value={consolaSeleccionada && consolaSeleccionada.arl}
+              placeholder="ARL"
+            />
+          </FormGroup>
+          <FormGroup className="me-2 w-100">
+            <GeneroEmpleado
+              name="idSexoBio"
+              handleChangeData={handleChange}
+              value={consolaSeleccionada.idSexoBio.sexoBio}
+            />
+          </FormGroup>
+        </div>
+        <div className="flex">
+          <FormGroup className="me-2 w-100">
+            <DocumentoEmpleado
+              name="idTipoDocumento"
+              handleChangeData={handleChange}
+              value={consolaSeleccionada.idTipoDocumento.idTipDocumento}
+            />
+          </FormGroup>
+          <FormGroup className="me-2 w-100">
+            <TipoSangre
+              name="idTipoSangre"
+              handleChangeData={handleChange}
+              value={consolaSeleccionada.idTipoSangre.idTipoSangre}
+            />
+          </FormGroup>
+        </div>
+      </Form>
       <div align="right">
         <Button color="primary" onClick={() => peticionPut()}>
           Actualizar
@@ -352,6 +483,7 @@ function EmpleadoComponent() {
                 <TableCell>{consola.idSexoBio.sexoBio}</TableCell>
                 <TableCell>{consola.idTipoSangre.tipoSangre}</TableCell>
                 <TableCell>{consola.idTipoDocumento.tipDocumento}</TableCell>
+
                 <TableCell>
                   <Edit
                     className={styles.iconos}
