@@ -28,7 +28,7 @@ function Home() {
                   <div className="text-xs font-weight-bold text-primary text-uppercase mb-1">
                     Número Personas(Día)
                   </div>
-                  <div claclassNamess="h5 mb-0 font-weight-bold text-gray-800">
+                  <div className="h5 mb-0 font-weight-bold text-gray-800">
                     35
                   </div>
                 </div>

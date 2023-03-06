@@ -7,8 +7,6 @@ import QuienesSomosComponent from "./componentes/PaginaInicio/QuienesSomosCompon
 import ServiciosComponent from "./componentes/PaginaInicio/Servicios";
 import ContactoComponent from "./componentes/PaginaInicio/ContactoComponent";
 import LoginComponent from "./componentes/PaginaInicio/LoginComponent";
-
-import HuespedComponent from "./componentes/Huesped/HuespedComponent";
 import EmpleadoComponent from "./componentes/Empleado/EmpleadoComponent";
 import AdministradorComponent from "./componentes/Administrador/AdministradorComponent";
 import DocumentoComponent from "./componentes/Documento/DocumentoComponent";
@@ -32,12 +30,13 @@ function App() {
               path="/ListarNacionalidades"
               element={<NacionalidadComponent />}
             />
-            <Route path="/ListarHuespedes" element={<HuespedComponent />} />
             <Route path="/ListarDocumento" element={<DocumentoComponent />} />
-            <Route path="/ListarEmpleado" element={<EmpleadoComponent />} />
             <Route path="/documentoEmpleado" element={<DocumentoEmpleado />} />
             <Route path="/Administrador" element={<AdministradorComponent />} />
-            <Route path="/PanelAdministrador/*" element={<PanelAdministrador />} />
+
+            <Route path="/ListarEmpleado" element={<EmpleadoComponent />} />
+
+            <Route path="/*" element={<PanelAdministrador />} />
           </Routes>
         </BrowserRouter>
       </div>

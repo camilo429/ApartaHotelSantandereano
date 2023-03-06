@@ -10,7 +10,8 @@ import { Routes, Route } from "react-router-dom";
 import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import EmpleadoComponent from "../Empleado/EmpleadoComponent";
 
-function PanelAdministrador() {
+function 
+PanelAdministrador() {
   return (
     <div>
       <div className="flex">
@@ -19,32 +20,32 @@ function PanelAdministrador() {
           <NavbarA />
           <Routes>
             <Route
-              path="PanelAdministrador/Home"
+              path="/Home"
               exact={true}
               element={<Home />}
             />
             <Route
-              path="PanelAdministrador/Huespedes"
+              path="/Huespedes"
               exact={true}
               element={<Huespedes />}
             />
              <Route
-              path="PanelAdministrador/Empleados"
+              path="/Empleados"
               exact={true}
               element={<EmpleadoComponent />}
             />
             <Route
-              path="PanelAdministrador/Sales"
+              path="/Sales"
               exact={true}
               element={<Sales />}
             />
              <Route
-              path="PanelAdministrador/Graficas"
+              path="/Graficas"
               exact={true}
               element={<Graficas />}
             />
              <Route
-              path="PanelAdministrador/Tablas"
+              path="/Tablas"
               exact={true}
               element={<Tablas />}
             />

@@ -331,7 +331,6 @@ function EmpleadoComponent() {
               value={consolaSeleccionada && consolaSeleccionada.numDocumento}
               disabled
               placeholder="Numero Identidad"
-              disabled
             />
           </FormGroup>
           <FormGroup className="me-2">

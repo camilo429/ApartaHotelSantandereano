@@ -22,24 +22,13 @@ const Sidebar = () => {
 
           <div className="sidebar-brand-text mx-3">Administrador</div>
         </a>
-
-        <hr style={{ borderTop: "1px solid white" }} />
-
-        <li className="nav-item active">
-          <a href="index.html">
-            <i className="fas fa-fw fa-tachometer-alt"></i>
-            <span>Panel de control</span>
-          </a>
-        </li>
-
-        <hr style={{ borderTop: "1px solid white" }} />
-
+        <br></br>
         <div className="sidebar-heading">Interface</div>
 
         <li className="nav-item active">
           <NavLink
             className="text-blue rounded py-2 w-100 d-inline-block px-1"
-            to="PanelAdministrador/Home"
+            to="/Home"
             exact="true"
             activeclassname="active"
           >
@@ -51,7 +40,7 @@ const Sidebar = () => {
         <li className="nav-item active">
           <NavLink
             className="text-blue rounded py-2 w-100 d-inline-block px-1"
-            to="PanelAdministrador/Sales"
+            to="/Sales"
             exact="true"
             activeclassname="active"
           >
@@ -63,7 +52,7 @@ const Sidebar = () => {
         <li className="nav-item active">
           <NavLink
             className="text-blue rounded py-2 w-100 d-inline-block px-1"
-            to="PanelAdministrador/Huespedes"
+            to="/Huespedes"
             exact="true"
             activeclassname="active"
           >
@@ -75,7 +64,7 @@ const Sidebar = () => {
         <li className="nav-item active">
           <NavLink
             className="text-blue rounded py-2 w-100 d-inline-block px-1"
-            to="PanelAdministrador/Empleados"
+            to="/Empleados"
             exact="true"
             activeclassname="active"
           >
@@ -87,7 +76,7 @@ const Sidebar = () => {
         <li className="nav-item active">
           <NavLink
             className="text-blue rounded py-2 w-100 d-inline-block px-1"
-            to="PanelAdministrador/Graficas"
+            to="/Graficas"
             exact="true"
             activeclassname="active"
           >
@@ -99,7 +88,7 @@ const Sidebar = () => {
         <li className="nav-item active">
           <NavLink
             className="text-blue rounded py-2 w-100 d-inline-block px-1"
-            to="PanelAdministrador/Tablas"
+            to="/Tablas"
             exact="true"
             activeclassname="active"
           >
