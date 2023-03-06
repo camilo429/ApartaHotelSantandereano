@@ -7,7 +7,7 @@ import Select from "react-select";
 
 const url = "http://localhost:8001/tipoDocumento/listarTipoDocumentos";
 
-function DocumentoEmpleado({ name, handleChangeData }) {
+function DocumentoEmpleado({ name, handleChangeData,value=null }) {
 
   const [data, setData] = useState([]);
 
@@ -30,11 +30,16 @@ function DocumentoEmpleado({ name, handleChangeData }) {
   return (
     <div className="DocumentoEmpleado">
       <Select
+      defaultValue={value?{
+        label:value?.tipDocumento,
+        value: value?.idTipDocumento
+      }:null}
         options={data.map((docu) => ({
           label: docu.tipDocumento,
           value: docu.idTipDocumento,
         }))}
         onChange={handleChange}
+        placeholder="Seccione Documento"
       />
     </div>
   );

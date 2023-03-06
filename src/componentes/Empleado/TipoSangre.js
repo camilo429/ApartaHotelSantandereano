@@ -7,7 +7,7 @@ import Select from "react-select";
 
 const url = "http://localhost:8001/tipoSangre/listarTipoSangre";
 
-function TipoSangre({ name, handleChangeData }) {
+function TipoSangre({ name, handleChangeData, value = null }) {
   const [data, setData] = useState([]);
 
   const getTipoSangre = async () => {
@@ -29,11 +29,20 @@ function TipoSangre({ name, handleChangeData }) {
   return (
     <div className="TipoSangre">
       <Select
+        defaultValue={
+          value
+            ? {
+                label: value?.tipoSangre,
+                value: value?.idTipoSangre,
+              }
+            : null
+        }
         options={data.map((docu) => ({
           label: docu.tipoSangre,
           value: docu.idTipoSangre,
         }))}
         onChange={handleChange}
+        placeholder="Seleccionar Tipo Sangre"
       />
     </div>
   );

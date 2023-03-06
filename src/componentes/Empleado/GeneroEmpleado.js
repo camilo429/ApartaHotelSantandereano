@@ -7,8 +7,7 @@ import Select from "react-select";
 
 const url = "http://localhost:8001/genero/listarGenero";
 
-function GeneroEmpleado({ name, handleChangeData }) {
-
+function GeneroEmpleado({ name, handleChangeData, value = null }) {
   const [data, setData] = useState([]);
 
   const getGeneroEmpleado = async () => {
@@ -16,7 +15,7 @@ function GeneroEmpleado({ name, handleChangeData }) {
       setData(response.data);
     });
   };
-  
+
   useEffect(() => {
     getGeneroEmpleado();
   }, []);
@@ -30,11 +29,20 @@ function GeneroEmpleado({ name, handleChangeData }) {
   return (
     <div className="GeneroEmpleado">
       <Select
+        defaultValue={
+          value
+            ? {
+                label: value?.sexoBio,
+                value: value?.idSexoBio,
+              }
+            : null
+        }
         options={data.map((docu) => ({
           label: docu.sexoBio,
           value: docu.idSexoBio,
         }))}
         onChange={handleChange}
+        placeholder="seleccione Tipo Genero"
       />
     </div>
   );

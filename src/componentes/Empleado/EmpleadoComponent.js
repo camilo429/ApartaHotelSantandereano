@@ -3,18 +3,10 @@ import axios from "axios";
 import { makeStyles } from "@mui/styles";
 import { Form, FormGroup, Label, Input } from "reactstrap";
 import "../../App.scss";
-import { Edit, Delete } from "@mui/icons-material";
 import "./Empleado.css";
-import {
-  Table,
-  TableContainer,
-  TableHead,
-  TableCell,
-  TableBody,
-  TableRow,
-  Modal,
-  Button,
-} from "@mui/material";
+import { Modal, Button } from "@mui/material";
+import * as AiFillEdit from "react-icons/ai";
+import * as MdDelete from "react-icons/md";
 
 import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "../../../node_modules/bootstrap/scss/bootstrap.scss";
@@ -287,8 +279,10 @@ function EmpleadoComponent() {
             <Input
               name="nombre"
               onChange={handleChange}
-              value={consolaSeleccionada && consolaSeleccionada.nombre}
-              placeholder="Nombre"
+              value={consolaSeleccionada?.nombre}
+              placeholder={
+                !consolaSeleccionada?.nombre ? "Diligencia su nombre" : "Nombre"
+              }
             />
           </FormGroup>
           <FormGroup className="me-2">
@@ -331,7 +325,13 @@ function EmpleadoComponent() {
             <Input
               name="fechaNacimiento"
               onChange={handleChange}
-              value={consolaSeleccionada && consolaSeleccionada.fechaNacimiento}
+              value={
+                consolaSeleccionada?.fechaNacimiento.split("-")[2] +
+                "-" +
+                consolaSeleccionada?.fechaNacimiento.split("-")[1] +
+                "-" +
+                consolaSeleccionada?.fechaNacimiento.split("-")[0]
+              }
               type="date"
             />
           </FormGroup>
@@ -388,7 +388,7 @@ function EmpleadoComponent() {
             <GeneroEmpleado
               name="idSexoBio"
               handleChangeData={handleChange}
-              value={consolaSeleccionada.idSexoBio.sexoBio}
+              value={consolaSeleccionada.idSexoBio}
             />
           </FormGroup>
         </div>
@@ -397,14 +397,14 @@ function EmpleadoComponent() {
             <DocumentoEmpleado
               name="idTipoDocumento"
               handleChangeData={handleChange}
-              value={consolaSeleccionada.idTipoDocumento.idTipDocumento}
+              value={consolaSeleccionada.idTipoDocumento}
             />
           </FormGroup>
           <FormGroup className="me-2 w-100">
             <TipoSangre
               name="idTipoSangre"
               handleChangeData={handleChange}
-              value={consolaSeleccionada.idTipoSangre.idTipoSangre}
+              value={consolaSeleccionada.idTipoSangre}
             />
           </FormGroup>
         </div>
@@ -439,56 +439,73 @@ function EmpleadoComponent() {
 
   return (
     <div className="EmpleadoComponent">
-      <br />
-      <Button onClick={() => abrirCerrarModalInsertar()}>Insertar</Button>
       <br></br>
       <br></br>
+      <br></br>
+      <div className="card shadow mb-4">
+        <div className="card-header py-3">
+          <div className="flex">
+            <h6 className="m-0 font-weight-bold text-primary">
+              Base de Datos Empleados
+            </h6>
+          </div>
+        </div>
+        <div className="flex">
+          <Button
+            onClick={() => abrirCerrarModalInsertar()}
+            className="btn btn-primary"
+          >
+            Insertar Empleado
+          </Button>
+        </div>
 
-      <TableContainer>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Nombre</TableCell>
-              <TableCell>Apellido</TableCell>
-              <TableCell>Número Documento</TableCell>
-              <TableCell>Número de Celular</TableCell>
-              <TableCell>Correo</TableCell>
-              <TableCell>Fecha Nacimiento</TableCell>
-              <TableCell>Dirección</TableCell>
-              <TableCell>Nombre Contacto Emergencia</TableCell>
-              <TableCell>Número de Emergencia</TableCell>
-              <TableCell>Acciones</TableCell>
-            </TableRow>
-          </TableHead>
-
-          <TableBody>
-            {data.map((consola) => (
-              <TableRow key={consola.idEmpleado}>
-                <TableCell>{consola.nombre}</TableCell>
-                <TableCell>{consola.apellido}</TableCell>
-                <TableCell>{consola.numDocumento}</TableCell>
-                <TableCell>{consola.numTelefono}</TableCell>
-                <TableCell>{consola.correo}</TableCell>
-                <TableCell>{consola.fechaNacimiento}</TableCell>
-                <TableCell>{consola.direccion}</TableCell>
-                <TableCell>{consola.nomContactoEmergencia}</TableCell>
-                <TableCell>{consola.numContactoEmergencia}</TableCell>
-                <TableCell>
-                  <Edit
-                    className={styles.iconos}
-                    onClick={() => seleccionarEmpleado(consola, "Editar")}
-                  />
-                  &nbsp;&nbsp; &nbsp;&nbsp;
-                  <Delete
-                    className={styles.iconos}
-                    onClick={() => seleccionarEmpleado(consola, "Eliminar")}
-                  />
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+        <div className="card-body">
+          <div className="table-responsive">
+            <table className="table table-bordered" cellSpacing="0">
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Apellido</th>
+                  <th>Número Documento</th>
+                  <th>Número de Celular</th>
+                  <th>Correo</th>
+                  <th>Fecha Nacimiento</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.map((consola) => (
+                  <tr key={consola.idEmpleado}>
+                    <th>{consola.nombre}</th>
+                    <th>{consola.apellido}</th>
+                    <th>{consola.numDocumento}</th>
+                    <th>{consola.numTelefono}</th>
+                    <th>{consola.correo}</th>
+                    <th>{consola.fechaNacimiento}</th>
+                    <th>
+                      <Button
+                        className="flex"
+                        onClick={() => seleccionarEmpleado(consola, "Editar")}
+                      >
+                        <AiFillEdit.AiFillEdit className="me-2" />
+                        Editar
+                      </Button>
+                      &nbsp;&nbsp; &nbsp;&nbsp;
+                      <Button
+                        className="flex"
+                        onClick={() => seleccionarEmpleado(consola, "Eliminar")}
+                      >
+                        <MdDelete.MdDelete className="me-2" />
+                        Eliminar
+                      </Button>
+                    </th>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
 
       <Modal open={modalInsertar} onClose={abrirCerrarModalInsertar}>
         {bodyInsertar}

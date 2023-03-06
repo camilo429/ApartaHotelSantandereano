@@ -55,7 +55,7 @@ const NavbarA = () => {
               <i className="fas fa-bell fa-fw"></i>
               <span className="badge badge-danger badge-counter">3+</span>
             </a>
-
+            </li>
             <li className="nav-item dropdown no-arrow mx-1 flex">
               <a
                 className="nav-link dropdown-toggle"
@@ -70,7 +70,7 @@ const NavbarA = () => {
                 <span className="badge badge-danger badge-counter">3+</span>
               </a>
             </li>
-          </li>
+         
         </ul>
 
         {/* <div className="topbar-divider d-none d-sm-block"></div> */}
@@ -84,7 +84,7 @@ const NavbarA = () => {
               <DropdownToggle nav caret>
                 Camilo Ahumada
               </DropdownToggle>
-              <DropdownMenu right>
+              <DropdownMenu end>
                 <DropdownItem>
                   <BsPerfil.BsFillPersonFill className="me-2" />
                   Administrador
