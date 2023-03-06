@@ -7,6 +7,7 @@ import "./Empleado.css";
 import { Modal, Button } from "@mui/material";
 import * as AiFillEdit from "react-icons/ai";
 import * as MdDelete from "react-icons/md";
+import * as BsInfoLg from "react-icons/bs";
 
 import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "../../../node_modules/bootstrap/scss/bootstrap.scss";
@@ -23,9 +24,10 @@ const urlD = "http://localhost:8001/empleados/deleteEmpleado/";
 const useStyles = makeStyles((theme) => ({
   modal: {
     position: "absolute",
-    width: "800px",
+    width: "900px",
+    height: "500px",
     backgroundColor: "white",
-    padding: 50,
+    padding: 10,
     boder: "2px solid #000",
     top: "50%",
     left: "50%",
@@ -39,6 +41,7 @@ function EmpleadoComponent() {
   const [modalInsertar, setModalInsertar] = useState(false);
   const [modalEditar, setModalEditar] = useState(false);
   const [modalEliminar, setModalEliminar] = useState(false);
+  const [modalVer, setModalVer] = useState(false);
 
   const [consolaSeleccionada, setConsolaSeleccionada] = useState({
     nombre: "",
@@ -128,18 +131,29 @@ function EmpleadoComponent() {
   const abrirCerrarModalEliminar = () => {
     setModalEliminar(!modalEliminar);
   };
+  const abrirCerrarModalVer = () => {
+    setModalVer(!modalVer);
+  };
   const seleccionarEmpleado = (consola, caso) => {
     setConsolaSeleccionada(consola);
-    caso === "Editar" ? abrirCerrarModalEditar() : abrirCerrarModalEliminar();
+    if (caso === "Editar") {
+      abrirCerrarModalEditar();
+    }
+    if (caso === "Eliminar") {
+      abrirCerrarModalEliminar();
+    }
+    if (caso === "Ver") {
+      abrirCerrarModalVer();
+    }
   };
 
   const bodyInsertar = (
     <div className={styles.modal}>
       <h3>Agregar Empleado</h3>
       <Form>
-        <Label for="exampleEmail">Información Persona</Label>
         <div className="flex">
           <FormGroup className="me-2">
+            <Label for="exampleEmail">Nombre</Label>
             <Input
               name="nombre"
               placeholder="Nombre"
@@ -149,6 +163,7 @@ function EmpleadoComponent() {
             />
           </FormGroup>
           <FormGroup className="me-2">
+            <Label for="exampleEmail">Apellido</Label>
             <Input
               name="apellido"
               placeholder="Apellido"
@@ -158,6 +173,7 @@ function EmpleadoComponent() {
             />
           </FormGroup>
           <FormGroup className="me-2">
+            <Label for="exampleEmail"># Documento Indentidad</Label>
             <Input
               name="numDocumento"
               placeholder="Número Documento"
@@ -166,18 +182,21 @@ function EmpleadoComponent() {
               onChange={handleChange}
             />
           </FormGroup>
-        </div>
-        <div className="flex">
           <FormGroup className="me-2">
+            <Label for="exampleEmail">Número de Celular</Label>
             <Input
               name="numTelefono"
-              placeholder="Número de Celular"
+              placeholder="# Celular"
               type="text"
               className="w-90"
               onChange={handleChange}
             />
           </FormGroup>
+        </div>
+
+        <div className="flex">
           <FormGroup className="me-2">
+            <Label for="exampleEmail">Correo Electronico</Label>
             <Input
               name="correo"
               placeholder="Correo Electronico"
@@ -187,6 +206,7 @@ function EmpleadoComponent() {
             />
           </FormGroup>
           <FormGroup className="me-2">
+            <Label for="exampleEmail">Fecha de Nacimiento</Label>
             <Input
               name="fechaNacimiento"
               type="date"
@@ -194,9 +214,8 @@ function EmpleadoComponent() {
               onChange={handleChange}
             />
           </FormGroup>
-        </div>
-        <div className="flex">
           <FormGroup className="me-2">
+            <Label for="exampleEmail">Dirección</Label>
             <Input
               name="direccion"
               placeholder="Dirección"
@@ -205,7 +224,8 @@ function EmpleadoComponent() {
               onChange={handleChange}
             />
           </FormGroup>
-          <FormGroup className="me-2">
+          <FormGroup className="me-2 w-80">
+            <Label for="exampleEmail">Nombre Contacto Emergencia</Label>
             <Input
               name="nomContactoEmergencia"
               placeholder="Nombre Contacto Emergencia"
@@ -217,15 +237,17 @@ function EmpleadoComponent() {
         </div>
         <div className="flex">
           <FormGroup className="me-2">
+            <Label for="exampleEmail">Número Emergencia</Label>
             <Input
               name="numContactoEmergencia"
-              placeholder="Número Contacto Emergencia"
+              placeholder="#Contacto Emergencia"
               type="text"
               className="w-100"
               onChange={handleChange}
             />
           </FormGroup>
           <FormGroup className="me-2">
+            <Label for="exampleEmail">EPS</Label>
             <Input
               name="eps"
               placeholder="EPS"
@@ -235,6 +257,7 @@ function EmpleadoComponent() {
             />
           </FormGroup>
           <FormGroup className="me-2">
+            <Label for="exampleEmail">ARL</Label>
             <Input
               name="arl"
               placeholder="ARL"
@@ -245,13 +268,16 @@ function EmpleadoComponent() {
           </FormGroup>
         </div>
         <div className="flex">
-          <FormGroup>
+          <FormGroup className="me-2">
+            <Label for="exampleEmail">Genero</Label>
             <GeneroEmpleado name="idSexoBio" handleChangeData={handleChange} />
           </FormGroup>
           <FormGroup className="me-2">
+            <Label for="exampleEmail">Tipo Grupo Sanguineo</Label>
             <TipoSangre name="idTipoSangre" handleChangeData={handleChange} />
           </FormGroup>
           <FormGroup className="me-2">
+            <Label for="exampleEmail">Tipo de Documento</Label>
             <DocumentoEmpleado
               name="idTipoDocumento"
               handleChangeData={handleChange}
@@ -270,12 +296,188 @@ function EmpleadoComponent() {
     </div>
   );
 
+  const bodyVer = (
+    <div className={styles.modal}>
+      <h3>Datos del Empleado</h3>
+      <Form>
+        <div className="flex">
+          <FormGroup className="me-2">
+            <Label for="exampleEmail">Nombre</Label>
+            <Input
+              name="nombre"
+              onChange={handleChange}
+              value={consolaSeleccionada?.nombre}
+              placeholder={
+                !consolaSeleccionada?.nombre ? "Diligencia su nombre" : "Nombre"
+              }
+              disabled
+            />
+          </FormGroup>
+          <FormGroup className="me-2">
+            <Label for="exampleEmail">Apellido</Label>
+            <Input
+              name="apellido"
+              onChange={handleChange}
+              value={consolaSeleccionada && consolaSeleccionada.apellido}
+              placeholder="Apellido"
+              disabled
+            />
+          </FormGroup>
+          <FormGroup className="me-2">
+            <Label for="exampleEmail">Número Documento Indentidad</Label>
+            <Input
+              name="numDocumento"
+              onChange={handleChange}
+              value={consolaSeleccionada && consolaSeleccionada.numDocumento}
+              disabled
+              placeholder="Numero Identidad"
+              disabled
+            />
+          </FormGroup>
+          <FormGroup className="me-2">
+            <Label for="exampleEmail">Número de Celular</Label>
+            <Input
+              name="numTelefono"
+              onChange={handleChange}
+              value={consolaSeleccionada && consolaSeleccionada.numTelefono}
+              placeholder="Número Celular"
+              disabled
+            />
+          </FormGroup>
+        </div>
+
+        <div className="flex">
+          <FormGroup className="me-2">
+            <Label for="exampleEmail">Correo Electronico</Label>
+            <Input
+              name="correo"
+              onChange={handleChange}
+              value={consolaSeleccionada && consolaSeleccionada.correo}
+              placeholder="Correo Electronico"
+              disabled
+            />
+          </FormGroup>
+
+          <FormGroup className="me-2">
+            <Label for="exampleEmail">Fecha de Nacimiento</Label>
+            <Input
+              name="fechaNacimiento"
+              onChange={handleChange}
+              value={
+                consolaSeleccionada?.fechaNacimiento.split("-")[2] +
+                "-" +
+                consolaSeleccionada?.fechaNacimiento.split("-")[1] +
+                "-" +
+                consolaSeleccionada?.fechaNacimiento.split("-")[0]
+              }
+              type="date"
+              disabled
+            />
+          </FormGroup>
+          <FormGroup className="me-2">
+            <Label for="exampleEmail">Dirección</Label>
+            <Input
+              name="direccion"
+              onChange={handleChange}
+              value={consolaSeleccionada && consolaSeleccionada.direccion}
+              placeholder="Dirección"
+              disabled
+            />
+          </FormGroup>
+          <FormGroup className="me-2">
+            <Label for="exampleEmail">Contacto Emergencia</Label>
+            <Input
+              name="nomContactoEmergencia"
+              onChange={handleChange}
+              value={
+                consolaSeleccionada && consolaSeleccionada.nomContactoEmergencia
+              }
+              placeholder="Nombre Familiar"
+              disabled
+            />
+          </FormGroup>
+        </div>
+        <div className="flex">
+          <FormGroup className="me-2">
+            <Label className="w-100" for="exampleEmail">
+              #Contacto Emergencia
+            </Label>
+            <Input
+              name="numContactoEmergencia"
+              onChange={handleChange}
+              value={
+                consolaSeleccionada && consolaSeleccionada.numContactoEmergencia
+              }
+              placeholder="# Contacto Emergencia"
+              className="w-100"
+              disabled
+            />
+          </FormGroup>
+          <FormGroup className="me-2">
+            <Label for="exampleEmail">EPS</Label>
+            <Input
+              name="eps"
+              onChange={handleChange}
+              value={consolaSeleccionada && consolaSeleccionada.eps}
+              placeholder="EPS"
+              disabled
+            />
+          </FormGroup>
+
+          <FormGroup className="me-2">
+            <Label for="exampleEmail">ARL</Label>
+            <Input
+              name="arl"
+              onChange={handleChange}
+              value={consolaSeleccionada && consolaSeleccionada.arl}
+              placeholder="ARL"
+              disabled
+            />
+          </FormGroup>
+        </div>
+
+        <div className="flex">
+          <FormGroup className="me-2 w-100">
+            <Label for="exampleEmail">Genero</Label>
+            <GeneroEmpleado
+              name="idSexoBio"
+              handleChangeData={handleChange}
+              value={consolaSeleccionada.idSexoBio}
+              disabled
+            />
+          </FormGroup>
+          <FormGroup className="me-2 w-100">
+            <Label for="exampleEmail">Tipo de Documento de Indentidad</Label>
+            <DocumentoEmpleado
+              name="idTipoDocumento"
+              handleChangeData={handleChange}
+              value={consolaSeleccionada.idTipoDocumento}
+              disabled
+            />
+          </FormGroup>
+          <FormGroup className="me-2 w-100">
+            <Label for="exampleEmail">Tipo de Sangre</Label>
+            <TipoSangre
+              name="idTipoSangre"
+              handleChangeData={handleChange}
+              value={consolaSeleccionada.idTipoSangre}
+              disabled
+            />
+          </FormGroup>
+        </div>
+      </Form>
+      <div align="right">
+        <Button onClick={() => abrirCerrarModalVer()}>Volver</Button>
+      </div>
+    </div>
+  );
   const bodyEditar = (
     <div className={styles.modal}>
       <h3>Editar Huesped</h3>
       <Form>
         <div className="flex">
           <FormGroup className="me-2">
+            <Label for="exampleEmail">Nombre</Label>
             <Input
               name="nombre"
               onChange={handleChange}
@@ -286,6 +488,7 @@ function EmpleadoComponent() {
             />
           </FormGroup>
           <FormGroup className="me-2">
+            <Label for="exampleEmail">Apellido</Label>
             <Input
               name="apellido"
               onChange={handleChange}
@@ -294,6 +497,7 @@ function EmpleadoComponent() {
             />
           </FormGroup>
           <FormGroup className="me-2">
+            <Label for="exampleEmail">Número Documento Indentidad</Label>
             <Input
               name="numDocumento"
               onChange={handleChange}
@@ -302,9 +506,8 @@ function EmpleadoComponent() {
               placeholder="Numero Identidad"
             />
           </FormGroup>
-        </div>
-        <div className="flex">
           <FormGroup className="me-2">
+            <Label for="exampleEmail">Número de Celular</Label>
             <Input
               name="numTelefono"
               onChange={handleChange}
@@ -312,7 +515,11 @@ function EmpleadoComponent() {
               placeholder="Número Celular"
             />
           </FormGroup>
+        </div>
+
+        <div className="flex">
           <FormGroup className="me-2">
+            <Label for="exampleEmail">Correo Electronico</Label>
             <Input
               name="correo"
               onChange={handleChange}
@@ -322,6 +529,7 @@ function EmpleadoComponent() {
           </FormGroup>
 
           <FormGroup className="me-2">
+            <Label for="exampleEmail">Fecha de Nacimiento</Label>
             <Input
               name="fechaNacimiento"
               onChange={handleChange}
@@ -335,9 +543,8 @@ function EmpleadoComponent() {
               type="date"
             />
           </FormGroup>
-        </div>
-        <div className="flex">
           <FormGroup className="me-2">
+            <Label for="exampleEmail">Dirección</Label>
             <Input
               name="direccion"
               onChange={handleChange}
@@ -346,6 +553,7 @@ function EmpleadoComponent() {
             />
           </FormGroup>
           <FormGroup className="me-2">
+            <Label for="exampleEmail">Contacto Emergencia</Label>
             <Input
               name="nomContactoEmergencia"
               onChange={handleChange}
@@ -355,7 +563,12 @@ function EmpleadoComponent() {
               placeholder="Nombre Familiar"
             />
           </FormGroup>
+        </div>
+        <div className="flex">
           <FormGroup className="me-2">
+            <Label className="w-100" for="exampleEmail">
+              #Contacto Emergencia
+            </Label>
             <Input
               name="numContactoEmergencia"
               onChange={handleChange}
@@ -363,11 +576,11 @@ function EmpleadoComponent() {
                 consolaSeleccionada && consolaSeleccionada.numContactoEmergencia
               }
               placeholder="# Contacto Emergencia"
+              className="w-100"
             />
           </FormGroup>
-        </div>
-        <div className="flex">
           <FormGroup className="me-2">
+            <Label for="exampleEmail">EPS</Label>
             <Input
               name="eps"
               onChange={handleChange}
@@ -377,6 +590,7 @@ function EmpleadoComponent() {
           </FormGroup>
 
           <FormGroup className="me-2">
+            <Label for="exampleEmail">ARL</Label>
             <Input
               name="arl"
               onChange={handleChange}
@@ -384,16 +598,19 @@ function EmpleadoComponent() {
               placeholder="ARL"
             />
           </FormGroup>
+        </div>
+
+        <div className="flex">
           <FormGroup className="me-2 w-100">
+            <Label for="exampleEmail">Genero</Label>
             <GeneroEmpleado
               name="idSexoBio"
               handleChangeData={handleChange}
               value={consolaSeleccionada.idSexoBio}
             />
           </FormGroup>
-        </div>
-        <div className="flex">
           <FormGroup className="me-2 w-100">
+            <Label for="exampleEmail">Tipo de Documento de Indentidad</Label>
             <DocumentoEmpleado
               name="idTipoDocumento"
               handleChangeData={handleChange}
@@ -401,6 +618,7 @@ function EmpleadoComponent() {
             />
           </FormGroup>
           <FormGroup className="me-2 w-100">
+            <Label for="exampleEmail">Tipo de Sangre</Label>
             <TipoSangre
               name="idTipoSangre"
               handleChangeData={handleChange}
@@ -490,13 +708,22 @@ function EmpleadoComponent() {
                         <AiFillEdit.AiFillEdit className="me-2" />
                         Editar
                       </Button>
-                      &nbsp;&nbsp; &nbsp;&nbsp;
+
+                      <br></br>
                       <Button
                         className="flex"
                         onClick={() => seleccionarEmpleado(consola, "Eliminar")}
                       >
                         <MdDelete.MdDelete className="me-2" />
                         Eliminar
+                      </Button>
+                      <br></br>
+                      <Button
+                        className="flex"
+                        onClick={() => seleccionarEmpleado(consola, "Ver")}
+                      >
+                        <BsInfoLg.BsInfoLg className="me-2" />
+                        Ver Info
                       </Button>
                     </th>
                   </tr>
@@ -517,6 +744,9 @@ function EmpleadoComponent() {
 
       <Modal open={modalEliminar} onClose={abrirCerrarModalEliminar}>
         {bodyEliminar}
+      </Modal>
+      <Modal open={modalVer} onClose={abrirCerrarModalVer}>
+        {bodyVer}
       </Modal>
     </div>
   );
