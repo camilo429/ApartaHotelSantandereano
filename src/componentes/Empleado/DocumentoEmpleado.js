@@ -20,10 +20,10 @@ function DocumentoEmpleado({ name, handleChangeData,value=null }) {
   useEffect(() => {
     getDocumentos();
   }, []);
-
+  
   const handleChange = ({ label, value }) => {
     handleChangeData({
-      target: { name, value: { id_tip_documento: value, tipDocumento: label } },
+      target: { name, value: { idTipDocumento: value, tipDocumento: label } },
     });
   };
 

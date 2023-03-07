@@ -10,6 +10,7 @@ import * as AiFillEdit from "react-icons/ai";
 import * as MdDelete from "react-icons/md";
 import * as BsInfoLg from "react-icons/bs";
 import DocumentoEmpleado from "../../componentes/Empleado/DocumentoEmpleado";
+import Nacionalidades from "../../componentes/pagesAdministrador/Nacionalidades";
 import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "../../../node_modules/bootstrap/scss/bootstrap.scss";
 
@@ -76,7 +77,7 @@ function Huespedes() {
   };
   const peticionPost = async (e) => {
     e.preventDefault();
-    console.log("esta es la data selleccionada", consolaSeleccionada);
+    console.log("esta es la data seleccionada", consolaSeleccionada);
     const response = await axios.post(urlG, consolaSeleccionada);
     console.log(response.data);
     setData(data.concat(response.data));
@@ -86,11 +87,11 @@ function Huespedes() {
 
   const peticionPut = async () => {
     await axios
-      .put(urlE + consolaSeleccionada.idEmpleado, consolaSeleccionada)
+      .put(urlE + consolaSeleccionada.idHuesped, consolaSeleccionada)
       .then((response) => {
         var dataNueva = data;
         dataNueva.map((consola) => {
-          if (consolaSeleccionada.idEmpleado === consola.idEmpleado) {
+          if (consolaSeleccionada.idHuesped === consola.idHuesped) {
             consola.nombre = consolaSeleccionada.nombre;
           }
         });
@@ -102,7 +103,12 @@ function Huespedes() {
 
   const peticionDelete = async () => {
     await axios
-      .delete(urlD + consolaSeleccionada.numDocumento +"/"+ consolaSeleccionada.idHuesped)
+      .delete(
+        urlD +
+          consolaSeleccionada.numDocumento +
+          "/" +
+          consolaSeleccionada.idHuesped
+      )
       .then((response) => {
         setData(
           data.filter(
@@ -199,7 +205,7 @@ function Huespedes() {
           <FormGroup className="me-2">
             <Label for="exampleEmail">Número Documento</Label>
             <Input
-              name="idTipoDocumento"
+              name="numDocumento"
               type="text"
               className="w-90"
               onChange={handleChange}
@@ -226,6 +232,7 @@ function Huespedes() {
             />
           </FormGroup>
         </div>
+
         <div className="flex">
           <FormGroup className="me-2">
             <Label for="exampleEmail">Número Emergencia</Label>
@@ -237,8 +244,6 @@ function Huespedes() {
               onChange={handleChange}
             />
           </FormGroup>
-        </div>
-        <div className="flex">
           <FormGroup className="me-2">
             <Label for="exampleEmail">Tipo de Documento</Label>
             <DocumentoEmpleado
@@ -248,8 +253,8 @@ function Huespedes() {
           </FormGroup>
           <FormGroup className="me-2">
             <Label for="exampleEmail">Nacionalidad</Label>
-            <DocumentoEmpleado
-              name="idTipoDocumento"
+            <Nacionalidades
+              name="idNacionalidad"
               handleChangeData={handleChange}
             />
           </FormGroup>
@@ -387,10 +392,10 @@ function Huespedes() {
           </FormGroup>
           <FormGroup className="me-2 w-100">
             <Label for="exampleEmail">Nacionalidad</Label>
-            <DocumentoEmpleado
-              name="idTipoDocumento"
+            <Nacionalidades
+              name="idNacionalidad"
               handleChangeData={handleChange}
-              value={consolaSeleccionada.idNacionalidad.id}
+              value={consolaSeleccionada.idNacionalidad}
               disabled
             />
           </FormGroup>
@@ -464,7 +469,7 @@ function Huespedes() {
             <Label for="exampleEmail">Número Documento</Label>
             <Input
               name="numDocumento"
-              onChange={handleChange }
+              onChange={handleChange}
               value={consolaSeleccionada && consolaSeleccionada.numDocumento}
               type="number"
             />
@@ -581,8 +586,7 @@ function Huespedes() {
                   <th>Dirección</th>
                   <th>Número celular</th>
                   <th>Tipo Documento</th>
-                  <th>Número Documento</th>
-                  <th>Nacionalidad</th>
+                  
                   <th>Lugar Origen</th>
                   <th>Acciones</th>
                 </tr>
@@ -594,9 +598,9 @@ function Huespedes() {
                     <th>{consola.apellido}</th>
                     <th>{consola.direccion}</th>
                     <th>{consola.numCelular}</th>
-                    <th>{consola.idTipoDocumento.tipDocumento}</th>
+                    
                     <th>{consola.numDocumento}</th>
-                    <th>{consola.idNacionalidad.nombre}</th>
+                    
                     <th>{consola.lugarOrigen}</th>
                     {/* <th>{consola.estadoHuesped}</th> */}
                     <th>
