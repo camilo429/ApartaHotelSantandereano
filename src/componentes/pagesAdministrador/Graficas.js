@@ -1,4 +1,5 @@
-const Graficas =()=>{
+import React from "react"
+function Graficas (){
     return (
         <div>
             <p>

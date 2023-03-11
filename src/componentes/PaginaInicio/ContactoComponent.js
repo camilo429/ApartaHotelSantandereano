@@ -1,6 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import GoogleMaps from "simple-react-google-maps";
+import "../../vendor/owl-carousel/owl.carousel.min.css";
+import "../../vendor/nice-select/css/nice-select.css";
+import "../../vendor/owl-carousel/owl.carousel.min.css";
+
+import "../../css/responsive.css";
+import "../../vendor/linericon/style.css";
+
+
 
 const ContactoComponent = () => {
   return (

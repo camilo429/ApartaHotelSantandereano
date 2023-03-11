@@ -1,4 +1,6 @@
-const Tablas = () => {
+import React from "react";
+
+function Tablas() {
   return (
     <div>
       <div className="container-fluid">
@@ -15,6 +17,6 @@ const Tablas = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Tablas;

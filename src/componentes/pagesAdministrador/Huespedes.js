@@ -75,6 +75,7 @@ function Huespedes() {
       setData(response.data);
     });
   };
+  
   const peticionPost = async (e) => {
     e.preventDefault();
     console.log("esta es la data seleccionada", consolaSeleccionada);

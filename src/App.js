@@ -12,6 +12,7 @@ import AdministradorComponent from "./componentes/Administrador/AdministradorCom
 import DocumentoComponent from "./componentes/Documento/DocumentoComponent";
 import DocumentoEmpleado from "./componentes/Empleado/DocumentoEmpleado";
 import PanelAdministrador from "./componentes/Administrador/PanelAdministrador";
+import Inicio from "./componentes/PaginaInicio/Inicio";
 
 function App() {
   return (
@@ -19,12 +20,14 @@ function App() {
       <div className="pagina">
         <BrowserRouter>
           <Routes>
-            <Route path="/" exament element={<PaginaInicio />} />
-            <Route path="/inicio" element={<PaginaInicio />} />
-            <Route path="/QuienesSomos" element={<QuienesSomosComponent />} />
+            <Route path="/" exament element={<Inicio />} />
+            {/* <Route path="/Paginainicio" element={<PaginaInicio />} /> */}
+            
+            <Route path="/Inicio" element={<Inicio />} />
+            {/* <Route path="/QuienesSomos" element={<QuienesSomosComponent />} />
             <Route path="/Servicios" element={<ServiciosComponent />} />
             <Route path="/Contacto" element={<ContactoComponent />} />
-            <Route path="/Login" element={<LoginComponent />} />
+            <Route path="/Login" element={<LoginComponent />} /> */}
 
             <Route
               path="/ListarNacionalidades"

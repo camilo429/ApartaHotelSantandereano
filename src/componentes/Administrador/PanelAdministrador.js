@@ -9,6 +9,7 @@ import Graficas from "../pagesAdministrador/Graficas";
 import { Routes, Route } from "react-router-dom";
 import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import EmpleadoComponent from "../Empleado/EmpleadoComponent";
+import Habitacion from "../pagesAdministrador/Habitacion";
 
 function 
 PanelAdministrador() {
@@ -48,6 +49,11 @@ PanelAdministrador() {
               path="/Tablas"
               exact={true}
               element={<Tablas />}
+            />
+             <Route
+              path="/Habitacion"
+              exact={true}
+              element={<Habitacion />}
             />
           </Routes>
         </div>

@@ -2,10 +2,15 @@ import React from "react";
 import { Link } from "react-router-dom";
 import GoogleMaps from "simple-react-google-maps";
 
+import "../../vendor/owl-carousel/owl.carousel.min.css";
+import "../../vendor/nice-select/css/nice-select.css";
+import "../../vendor/owl-carousel/owl.carousel.min.css";
+
+
 const PaginaInicio = () => {
   return (
     <div>
-      <nav className="navbar navbar-dark bg-dark" id="mainNav">
+      <nav className="navbar navbar-expand-lg navbar-light bg-light" id="mainNav">
         <div className="container px-4 px-lg-5">
           <a className="navbar-brand" href="index.html">
             Aparta Hotel Santandereano

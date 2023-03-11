@@ -5,6 +5,7 @@ import * as FcIcons from "react-icons/fc";
 import * as HiIcons from "react-icons/hi";
 import * as BsIcons from "react-icons/bs";
 import * as GrIcons from "react-icons/gr";
+import * as MdHotel from "react-icons/md";
 import "../../App.scss";
 import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 
@@ -82,6 +83,17 @@ const Sidebar = () => {
           >
             <BsIcons.BsWindows className="me-2" />
             Graficas
+          </NavLink>
+        </li>
+        <li className="nav-item active">
+          <NavLink
+            className="text-blue rounded py-2 w-100 d-inline-block px-1"
+            to="/Habitacion"
+            exact="true"
+            activeclassname="active"
+          >
+            <MdHotel.MdHotel className="me-2" />
+            Habitaciones
           </NavLink>
         </li>
 
