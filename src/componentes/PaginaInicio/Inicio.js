@@ -1,8 +1,11 @@
 import React from "react";
 
+
+import "../../App.scss";
 import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "../../../node_modules/bootstrap/scss/bootstrap.scss";
-
+import "../../css/sb-admin-2.min.css";
+import "../../vendor/fontawesome-free/css/all.min.css";
 
 //librerias que necesito 
 import "../../css/bootstrap.css"
@@ -12,7 +15,6 @@ import "../../vendor/owl-carousel/owl.carousel.min.css";
 import "../../vendor/bootstrap-datepicker/bootstrap-datetimepicker.min.css";
 import "../../vendor/nice-select/css/nice-select.css";
 import "../../vendor/owl-carousel/owl.carousel.min.css";
-
 import "../../css/responsive.css";
 
 function Inicio() {

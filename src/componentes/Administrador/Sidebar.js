@@ -8,6 +8,9 @@ import * as GrIcons from "react-icons/gr";
 import * as MdHotel from "react-icons/md";
 import "../../App.scss";
 import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
+import "../../../node_modules/bootstrap/scss/bootstrap.scss";
+import "../../css/sb-admin-2.min.css";
+import "../../vendor/fontawesome-free/css/all.min.css";
 
 const Sidebar = () => {
   return (

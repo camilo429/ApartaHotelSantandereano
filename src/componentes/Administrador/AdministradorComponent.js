@@ -79,7 +79,7 @@ function AdministradorComponent() {
                   data-target="#collapseTwo"
                   aria-expanded="true"
                   aria-controls="collapseTwo"
-                  href="#"
+                  href="/Home"
                 >
                   <i className="fas fa-fw fa-cog"></i>
                   <DropdownToggle>Components</DropdownToggle>

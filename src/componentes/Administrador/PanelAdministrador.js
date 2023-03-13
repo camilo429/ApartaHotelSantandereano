@@ -10,6 +10,7 @@ import { Routes, Route } from "react-router-dom";
 import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import EmpleadoComponent from "../Empleado/EmpleadoComponent";
 import Habitacion from "../pagesAdministrador/Habitacion";
+import "../../App.scss";
 
 function 
 PanelAdministrador() {
