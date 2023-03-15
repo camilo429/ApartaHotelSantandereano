@@ -8,8 +8,6 @@ import "../../vendor/owl-carousel/owl.carousel.min.css";
 import "../../css/responsive.css";
 import "../../vendor/linericon/style.css";
 
-
-
 const ContactoComponent = () => {
   return (
     <div>
@@ -206,7 +204,7 @@ const ContactoComponent = () => {
           </div>
         </div>
       </main>
-      {/* <div style={{ marginBottom: "50px" }}>
+      <div style={{ marginBottom: "50px" }}>
         <div className="container">
           <GoogleMaps
             apiKey={"AIzaSyATbG2zP_RkvgXW7pjWNbyubO6VaSpZ1vk"}
@@ -224,7 +222,7 @@ const ContactoComponent = () => {
             ]}
           />
         </div>
-      </div> */}
+      </div>
       <div>
         <footer className="navbar navbar-dark bg-dark">
           <div className="badge badge-light">

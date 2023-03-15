@@ -1,113 +1,29 @@
 import React from "react";
 
-
 import "../../App.scss";
 import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "../../../node_modules/bootstrap/scss/bootstrap.scss";
 import "../../css/sb-admin-2.min.css";
 import "../../vendor/fontawesome-free/css/all.min.css";
 
-//librerias que necesito 
-import "../../css/bootstrap.css"
-import "../../vendor/linericon/style.css"
-import "../../css/font-awesome.min.css"
+//librerias que necesito
+import "../../css/bootstrap.css";
+import "../../vendors/linericon/style.css";
+import "../../css/font-awesome.min.css";
 import "../../vendor/owl-carousel/owl.carousel.min.css";
-import "../../vendor/bootstrap-datepicker/bootstrap-datetimepicker.min.css";
-import "../../vendor/nice-select/css/nice-select.css";
-import "../../vendor/owl-carousel/owl.carousel.min.css";
+import "../../vendors/bootstrap-datepicker/bootstrap-datetimepicker.min.css";
+import "../../vendors/nice-select/css/nice-select.css";
+
+import "../estilos/style.css";
 import "../../css/responsive.css";
+
+import Navbar from "./Navbar";
+import Footer from "./Footer";
 
 function Inicio() {
   return (
     <div>
-      <div className="header_area">
-        <div className="container">
-          <nav className="navbar navbar-expand-lg navbar-light bg-light">
-            {/* <!-- Brand and toggle get grouped for better mobile display --> */}
-            <img
-              src="/assets/img/logo.jpg"
-              alt="Es el logo del aparta hotel"
-              style={{ width: "120px", height: "90px" }}
-            ></img>
-            <button
-              className="navbar-toggler"
-              type="button"
-              data-toggle="collapse"
-              data-target="#navbarSupportedContent"
-              aria-controls="navbarSupportedContent"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
-            >
-              <span className="icon-bar"></span>
-              <span className="icon-bar"></span>
-              <span className="icon-bar"></span>
-            </button>
-            {/* <!-- Collect the nav links, forms, and other content for toggling --> */}
-            <div
-              className="collapse navbar-collapse offset"
-              id="navbarSupportedContent"
-            >
-              <ul className="nav navbar-nav menu_nav ml-auto">
-                <li className="nav-item active">
-                  <a className="nav-link" href="index.html">
-                    Inicio
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link" href="about.html">
-                    Sobre Nosotros
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link" href="accomodation.html">
-                    Accomodation
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link" href="gallery.html">
-                    Gallery
-                  </a>
-                </li>
-                <li className="nav-item submenu dropdown">
-                  <a
-                    href="/Home"
-                    className="nav-link dropdown-toggle"
-                    data-toggle="dropdown"
-                    role="button"
-                    aria-haspopup="true"
-                    aria-expanded="false"
-                  >
-                    Blog
-                  </a>
-                  <ul className="dropdown-menu">
-                    <li className="nav-item">
-                      <a className="nav-link" href="blog.html">
-                        Blog
-                      </a>
-                    </li>
-                    <li className="nav-item">
-                      <a className="nav-link" href="blog-single.html">
-                        Detalles del blog
-                      </a>
-                    </li>
-                  </ul>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link" href="elements.html">
-                    Elemementos
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link" href="contact.html">
-                    Contactos
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </nav>
-        </div>
-      </div>
-
+      <Navbar />
       {/* // is de background more the text in the center de display */}
       <div className="banner_area">
         <div className="booking_table d_flex align-items-center">
@@ -289,7 +205,7 @@ function Inicio() {
       </div>
       {/* // Testimonio de los huespedes  */}
 
-      <div className="testimonial_area section_gap">
+      <div className="testimonial_area section_gap ">
         <div className="container">
           <div className="section_title text-center">
             <h2 className="title_color">
@@ -301,28 +217,78 @@ function Inicio() {
               para nuestros futuros cliente{" "}
             </p>
           </div>
-          {/* //Cuadros de testimonios */}
-          <div className="testimonial_slider owl-carousel">
-            <div className=" testimonial_item">
+        </div>
+        {/* //Cuadros de testimonios */}
+
+        <div className="flex" style={{ marginLeft: "15%" }}>
+          <div
+            className="testimonial_slider"
+            style={{ width: "300px", height: "250px", margin: "10px" }}
+          >
+            <div className="testimonial_item">
               <img
                 className="rounded-circle"
                 src="../../assets/img/fotoperfil.png"
-                alt=""
+                alt="foto del primer cliente"
+                style={{ width: "120px", height: "120px" }}
               />
               <div className="media-body">
-                <p>
-                  As conscious traveling Paupers we must always be concerned
-                  about our dear Mother Earth. If you think about it, you travel
-                  across her face, and She is the{" "}
-                </p>
+                <p>Es un hotel expectacular</p>
                 <a href="/Home">
                   <h4 className="sec_h4">Camilo Ahumada</h4>
                 </a>
               </div>
             </div>
           </div>
+
+          <div className="flex">
+            <div
+              className="testimonial_slider flex"
+              style={{ width: "300px", height: "250px", margin: "10px" }}
+            >
+              <div className=" testimonial_item">
+                <img
+                  className="rounded-circle"
+                  src="../../assets/img/fotoperfil.png"
+                  alt=""
+                  style={{ width: "120px", height: "120px" }}
+                />
+                <div className="media-body">
+                  <p>Diego medina es el mejor hotel que estado viendo</p>
+                  <a href="/Home">
+                    <h4 className="sec_h4">Diego Medina</h4>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex">
+            <div
+              className="testimonial_slider flex"
+              style={{ width: "300px", height: "250px", margin: "10px" }}
+            >
+              <div className=" testimonial_item">
+                <img
+                  className="rounded-circle"
+                  src="../../assets/img/fotoperfil.png"
+                  alt=""
+                  style={{ width: "120px", height: "120px" }}
+                />
+                <div className="media-body">
+                  <p>Diego medina es el mejor hotel que estado viendo</p>
+                  <a href="/Home">
+                    <h4 className="sec_h4">Diego Medina</h4>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+
+      {/* // footer */}
+      <Footer />
     </div>
   );
 }
