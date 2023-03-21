@@ -61,44 +61,46 @@ function Footer() {
                   style={{
                     width: "30px",
                     height: "30px",
-                    margin: "5px",
-                    marginTop: "5px",
+                    margin: "10px",
                   }}
                 />
               </a>
+
               <a
                 href="https://www.instagram.com/HotelSantandereanoBogota"
-                style={{ textAlign: "center" }}
               >
+                <img
+                  src="/assets/img/instagram.png"
+                  alt="Es la imagen de instagram"
+                  style={{
+                    width: "40px",
+                    height: "40px",
+                    textAlign: "center",
+                    marginTop:"4px"
+                  }}
+                />
+              </a>
+
+              <a href="https://wa.me/3107763328?text=Quisiera%20saber%20el%20precio%20de%20los%20servicios%20y%20sus%20precios?"
+               style={{ textAlign: "center" }}
+               className="flex">
                 <img
                   src="/assets/img/whatsapp.png"
                   alt="Es la imagen de Whatsapp"
                   style={{
                     width: "55px",
                     height: "55px",
-                    textAlign: "center",
                   }}
                 />
                 <div
                   style={{
                     color: "white",
-                    marginTop: "4px",
                     textAlign: "center",
+                    marginTop:"10px"
                   }}
                 >
                   (+57)3107763328
                 </div>
-              </a>
-
-              <a href="https://wa.me/3107763328?text=Quisiera%20saber%20el%20precio%20de%20los%20servicios%20y%20sus%20precios?">
-                <img
-                  src="/assets/img/instagram.png"
-                  alt="Es la imagen de instragram"
-                  style={{
-                    width: "35px",
-                    height: "35px",
-                  }}
-                />
               </a>
             </div>
           </div>
