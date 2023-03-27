@@ -32,7 +32,7 @@ function Lugares() {
             <h2 className="title_color">Lugares Especiales</h2>
             <p>
               El Aparta Hotel Santandereano, además de presentar varios de los
-              servicios mostrados, esta hubicado en un sector donde el comercio
+              servicios mostrados, está ubicado en un sector donde el comercio
               y lugares importantes para el desarrollo del país.
             </p>
           </div>

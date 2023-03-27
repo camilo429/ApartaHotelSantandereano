@@ -38,12 +38,12 @@ function Inicio() {
               <h2>Tiempo de Descanso</h2>
               <p>
                 Si necesitas en necesitas un hospedaje en Bogotá, esta es tu
-                mejor obción
+                mejor opción
                 <br /> Diferentes habitaciones a diferentes precios pero con la
                 misma calidad.
               </p>
               <a href="/Home" className="btn btn-warning">
-                Recepciona con nosotros
+                Reserva con nosotros
               </a>
             </div>
           </div>
@@ -209,12 +209,12 @@ function Inicio() {
         <div className="container">
           <div className="section_title text-center">
             <h2 className="title_color">
-              Comentarios de nuestros huespedes frecuentes
+              Comentarios de nuestros huéspedes frecuentes
             </h2>
             <p>
-              Historias y comentarios realizan de parte de nuestros huespedes
-              más abituales <br />
-              para nuestros futuros cliente{" "}
+              Historias y comentarios realizados de parte de nuestros huéspedes
+              más habituales <br />
+              para nuestros futuros huéspedes
             </p>
           </div>
         </div>

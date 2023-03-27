@@ -15,7 +15,7 @@ function About() {
        <br/>
         <div className="container">
           <div className="page-cover text-center">
-            <h2 className="page-cover-tittle">Hacerca de nosotros</h2>
+            <h2 className="page-cover-tittle">Acerca de nosotros</h2>
             <ol className="breadcrumb">
               <li>
                 <a href="/Inicio">Inicio</a>
@@ -82,7 +82,7 @@ function About() {
               <div className="font-weight-light">
                 <h2>Historia</h2>
                 <p>
-                  Los inicios del Aparta Hotel Santandereano, se remota a
+                  Los inicios del Aparta Hotel Santandereano, se remonta a
                   diciembre de 2008, cuando se constituye la dueña Ana Beatriz
                   Quiroga Inicialmente con el nombre comercial de Hotel de
                   Abastos
@@ -93,7 +93,7 @@ function About() {
                   la categoría inicial de hospedaje sencillo.
                   <br></br>
                   <br></br>
-                  En junio de 2011 ElMinisterio de Comercio Exterior y Turismo
+                  En junio de 2011 El Ministerio de Comercio Exterior y Turismo
                   nos otorga el RECONOCIMIENTO A LA APLICACIÓN DE BUENAS
                   PRÁCTICAS DE GESTIÓN DE SERVICIO PARA ESTABLECIMIENTOS DE
                   HOSPEDAJE. En julio del 2012, ampliamos nuestro número de

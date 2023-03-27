@@ -64,7 +64,8 @@ function Contacto() {
         <br></br>
       </div>
 
-      <div className="flex">
+      {/* //mostramos la información para el mensaje */}
+      <div className="flex" style={{width:"90%", marginLeft:"10%"}}>
         {" "}
         <div className="col-md-3">
           <div className="contact_info">
