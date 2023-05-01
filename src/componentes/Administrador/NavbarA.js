@@ -27,11 +27,12 @@ const NavbarA = () => {
     <div>
       <Navbar color="light" light expand="md">
         <Form className="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-md-0 mw-100 navbar-search">
-          <div className="input-group">
+          <div className="input-group" style={{marginTop:"10px"}}>
             <input
               type="text"
               className="form-control bg-light border-0 small"
               placeholder="Buscar Empleado"
+              
             />
             <div className="input-group-append">
               <NavLink className="btn btn-primary ">

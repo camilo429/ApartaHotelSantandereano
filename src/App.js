@@ -42,7 +42,7 @@ function App() {
 
             <Route path="/ListarEmpleado" element={<EmpleadoComponent />} />
 
-            <Route path="/" element={<PanelAdministrador />} />
+            <Route path="/PanelAdministrador/*" element={<PanelAdministrador />} />
           </Routes>
         </BrowserRouter>
       </div>

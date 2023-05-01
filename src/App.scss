@@ -7,6 +7,9 @@
 
 body {
   font-family: "Rubik", sans-serif;
+  height: 100%;
+  width: 100%;
+  
 }
 span {
   color: white;
@@ -32,8 +35,8 @@ $gray: #e7e9eb;
 }
 
 .sidebar {
-  width: 14rem;
-  height: calc(100vh - 53px);
+  margin-right: 10px;
+  height: 100%;
   border-right: 1px solid $gray;
   ul {
     list-style: none;

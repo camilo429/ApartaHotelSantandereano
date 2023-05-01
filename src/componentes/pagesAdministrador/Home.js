@@ -6,7 +6,7 @@ import "../../App.scss";
 
 function Home() {
   return (
-    <div>
+    <div style={{ width: "95%", height: "100%" }}>
       <div className="container-fluid">
         <div className="d-sm-flex align-items-center justify-content-between mb-4">
           <h1 className="h3 mb-0 text-gray-800">Panel De Control</h1>
@@ -20,9 +20,9 @@ function Home() {
         </div>
       </div>
       {/* // Primer cuadrito */}
-      <div className="row">
-        <div className="col-xl-3 col-md-6 mb-4">
-          <div className="card border-left-primary shadow h-100 py-2">
+      <div className="row" >
+        <div className="col-xl-3 col-md-3 mb-4 w-100">
+          <div className="card border-left-primary shadow h-100 py-2 w-100">
             <div className="card-body">
               <div className="row no-gutters align-items-center">
                 <div className="col mr-2">
@@ -43,7 +43,7 @@ function Home() {
 
         {/* //Segundo cuadrito */}
 
-        <div className="col-xl-3 col-md-6 mb-4">
+        <div className="col-xl-3 col-md-3 mb-4 ">
           <div className="card border-left-success shadow h-100 py-2">
             <div className="card-body">
               <div className="row no-gutters align-items-center">
@@ -64,7 +64,7 @@ function Home() {
         </div>
 
         {/* //Tercer Cuadrito */}
-        <div className="col-xl-3 col-md-6 mb-4">
+        <div className="col-xl-3 col-md-3 mb-4">
           <div className="card border-left-info shadow h-100 py-2">
             <div className="card-body">
               <div className="row no-gutters align-items-center">
@@ -101,7 +101,7 @@ function Home() {
         </div>
 
         {/* //Cuarto Cuadrito */}
-        <div className="col-xl-3 col-md-6 mb-4">
+        <div className="col-xl-3 col-md-3 mb-4">
           <div className="card border-left-warning shadow h-100 py-2">
             <div className="card-body">
               <div className="row no-gutters align-items-center">
@@ -123,6 +123,7 @@ function Home() {
 
         {/* //Tabla Ingresos */}
         <div className="row flex">
+
           <div className="col-xl-8 col-lg-7">
             <div className="card shadow mb-4">
               <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -158,6 +159,7 @@ function Home() {
                     </a>
                   </div>
                 </div>
+
               </div>
 
               <div className="card-body">
@@ -166,6 +168,7 @@ function Home() {
                 </div>
               </div>
             </div>
+
           </div>
 
           {/* //Grafica de porcentajes  */}

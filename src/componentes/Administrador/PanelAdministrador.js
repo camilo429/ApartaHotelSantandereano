@@ -12,15 +12,21 @@ import EmpleadoComponent from "../Empleado/EmpleadoComponent";
 import Habitacion from "../pagesAdministrador/Habitacion";
 import "../../App.scss";
 
-function 
-PanelAdministrador() {
+function
+  PanelAdministrador() {
   return (
     <div>
       <div className="flex">
-        <Sidebar className="w-100"/>
-        <div className="content w-100">
+        <Sidebar/>
+        <div className="content">
           <NavbarA />
+
           <Routes>
+            <Route
+              path="/"
+              exact={true}
+              element={<Home />}
+            />
             <Route
               path="/Home"
               exact={true}
@@ -31,7 +37,7 @@ PanelAdministrador() {
               exact={true}
               element={<Huespedes />}
             />
-             <Route
+            <Route
               path="/Empleados"
               exact={true}
               element={<EmpleadoComponent />}
@@ -41,17 +47,17 @@ PanelAdministrador() {
               exact={true}
               element={<Sales />}
             />
-             <Route
+            <Route
               path="/Graficas"
               exact={true}
               element={<Graficas />}
             />
-             <Route
+            <Route
               path="/Tablas"
               exact={true}
               element={<Tablas />}
             />
-             <Route
+            <Route
               path="/Habitacion"
               exact={true}
               element={<Habitacion />}
