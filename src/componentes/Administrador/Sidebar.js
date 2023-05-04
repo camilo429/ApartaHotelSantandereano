@@ -6,6 +6,8 @@ import * as HiIcons from "react-icons/hi";
 import * as BsIcons from "react-icons/bs";
 import * as GrIcons from "react-icons/gr";
 import * as MdHotel from "react-icons/md";
+import * as TbReceipt2 from "react-icons/tb";
+
 import "../../App.scss";
 import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "../../../node_modules/bootstrap/scss/bootstrap.scss";
@@ -115,6 +117,17 @@ const Sidebar = () => {
             >
               <GrIcons.GrTable className="me-2" />
               Tablas
+            </NavLink>
+          </li>
+          <li className="nav-item active">
+            <NavLink
+              className="text-blue rounded py-2 w-100 d-inline-block px-1"
+              to="Recibos"
+              exact="true"
+              activeclassname="active"
+            >
+              <TbReceipt2.TbReceipt2 className="me-2" />
+              Recibos
             </NavLink>
           </li>
         </div>

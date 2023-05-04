@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { makeStyles } from "@mui/styles";
-import { Form, FormGroup, Label, Input } from "reactstrap";
+
 import "../../App.scss";
 import "./Empleado.css";
-import { Modal, Button } from "@mui/material";
+
 import * as AiFillEdit from "react-icons/ai";
 import * as MdDelete from "react-icons/md";
 import * as BsInfoLg from "react-icons/bs";
 
 import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "../../../node_modules/bootstrap/scss/bootstrap.scss";
+
+import { Form, FormGroup, Label, Input } from "reactstrap";
+import { makeStyles } from "@mui/styles";
+import { Modal, Button } from "@mui/material";
 
 import DocumentoEmpleado from "./DocumentoEmpleado";
 import TipoSangre from "./TipoSangre";
@@ -85,7 +88,7 @@ function EmpleadoComponent() {
 
   const peticionPost = async (e) => {
     e.preventDefault();
-    console.log("esta es la data selleccionada", consolaSeleccionada);
+    console.log("esta es la data seleccionada", consolaSeleccionada);
     const response = await axios.post(urlG, consolaSeleccionada);
     console.log(response.data);
     setData(data.concat(response.data));

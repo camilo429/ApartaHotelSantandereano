@@ -123,7 +123,7 @@ function Inicio() {
                 </div>
                 <a href="/Home">
                   <h4 className="sec_h4">
-                    Abitación Familiar <br /> (5 Personas)
+                    Habitación Familiar <br /> (5 Personas)
                   </h4>
                 </a>
                 <h5>

@@ -11,6 +11,7 @@ import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import EmpleadoComponent from "../Empleado/EmpleadoComponent";
 import Habitacion from "../pagesAdministrador/Habitacion";
 import "../../App.scss";
+import Recibos from "../pagesAdministrador/Recibos";
 
 function
   PanelAdministrador() {
@@ -18,7 +19,7 @@ function
     <div>
       <div className="flex">
         <Sidebar/>
-        <div className="content">
+        <div className="content" style={{width:"100%"}}>
           <NavbarA />
 
           <Routes>
@@ -61,6 +62,11 @@ function
               path="/Habitacion"
               exact={true}
               element={<Habitacion />}
+            />
+            <Route
+              path="/Recibos"
+              exact={true}
+              element={<Recibos />}
             />
           </Routes>
         </div>

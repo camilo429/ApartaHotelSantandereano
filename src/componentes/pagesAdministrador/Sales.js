@@ -3,7 +3,7 @@ function Sales (){
     return (
         <div>
             <p>
-                sales
+                Ventas
             </p>
         </div>
     );
