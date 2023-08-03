@@ -9,22 +9,24 @@ function Recibos() {
         <div>
             <h1>PSE en un medio de pago electrónico</h1>
             <h2>¿Qué es PSE?</h2>
-            <p>PSE es el botón de Pagos Seguros en Línea, un servicio de ACH Colombia que
+            <p>
+                PSE es el botón de Pagos Seguros en Línea, un servicio de ACH Colombia que
                 le permite a las empresas vender o recaudar a través de Internet, en el
                 cual los clientes o usuarios autorizan mediante la banca virtual de su banco
-                el débito de los fondos desde sus cuentas de ahorro, corrientes o depósitos electrónicos</p>
+                el débito de los fondos desde sus cuentas de ahorro, corrientes o depósitos electrónicos
+            </p>
+            <h2>¿Cualquier navegador me sirve?</h2>
             <p>
-                En esta sección de SISPART, podra encontrar los links directos para realizar los
-                pagos en las diferentes entidades correspondiente. <br />
-                De esta manera como primer versión no tendra opciones de pago directas o incorporadas en el
-                mismo software.  <br />
-                Para tener encuenta, mantenga los minimos riesgos de seguridad al pagar por medio de
-                transacciones online. Primero a un puesto los link directos tenga en cuenta, que la
-                pagina a la que este entrando sea segura y cuente con el cadado al lado izquierdo de la dirección url.
-                No de información que nunca le halla pedido de manera transaccional anteriormente.
-
+                Siempre y cuando este se encuentre actualizado a la última versión, esto para garantizar
+                la seguridad de tu información transaccional, las siguientes versiones o superiores son
+                necesarias para utilizar PSE: Internet Explorer 11, Firefox 72, Chrome 72, Safari 12 y Opera 56.
 
             </p>
+            <h2>¿Cuánto se demora en procesar la transacción?</h2>
+            <p>
+                PSE tiene un tiempo máximo de 21 minutos en el procesamiento de una transacción.
+            </p>
+            <h4>Para más información de pagos PSE </h4>
 
             <NavLink
                 className="text-blue rounded py-2 w-100 d-inline-block px-1"

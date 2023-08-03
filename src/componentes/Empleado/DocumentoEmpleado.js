@@ -5,17 +5,36 @@ import axios from "axios";
 import "./Empleado.css";
 import Select from "react-select";
 
-const url = "http://localhost:8001/tipoDocumento/listarTipoDocumentos";
+const url = "http://localhost:5000/tipoDocumento/listarTipoDocumentos";
+const urlAuth = "http://localhost:5000/oauth/token";
 
 function DocumentoEmpleado({ name, handleChangeData,value=null }) {
+  const [localStorage, setLocalStorage] = useState({token:""});
 
   const [data, setData] = useState([]);
 
   const getDocumentos = async () => {
-    await axios.get(url).then((response) => {
-      setData(response.data);
-    });
+    if(localStorage.token){
+      await axios.get(url,{headers:{
+        'Authorization': localStorage.token
+      }}).then((response) => {
+        setData(response.data);
+      }).catch(()=>setLocalStorage({token:""}))
+    }else{
+      await axios.post(urlAuth,{data:{
+        username: "localStorage.token",
+        password:"",
+        grant_type:'',
+      }}).then((response) => {
+        setLocalStorage(response.data.access_token);
+      });
+    }
+   
   };
+
+  useEffect(() => {
+    getDocumentos();
+  }, [localStorage]);
   
   useEffect(() => {
     getDocumentos();

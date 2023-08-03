@@ -8,9 +8,23 @@ import { Button } from "@mui/material";
 
 import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "../../../node_modules/bootstrap/scss/bootstrap.scss";
+import {auth} from "../../services/userService"
 
 const url = "http://localhost:8001/usuarioEmpleado/createLoginEmpleado";
-const urlLogin ="http://localhost:5000/oauth/token";
+//const urlLogin ="http://localhost:5000/oauth/token";
+
+import axios from 'axios';
+
+const API_URL = 'http://localhost:5000/oauth/token';
+
+const api = axios.create({
+  baseURL: API_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// Agregar el token a la cabecera de Authorization de cada solicitud
 
 function Login() {
 
@@ -23,9 +37,10 @@ function Login() {
 
   const loginUsuario = async (e) => {
     e.preventDefault();
-    console.log("esta esla data seleccionada", consolaSeleccionada);
-    const response = await axios.post(url, consolaSeleccionada);
+    console.log("esta es la data seleccionada", consolaSeleccionada);
+    const response = await axios.post(urlLogin, consolaSeleccionada);
     console.log(response.data);
+    {token:response.data.token,refresh:response.data.refres_token}
     setData(data.concat(response.data));
   }
 
