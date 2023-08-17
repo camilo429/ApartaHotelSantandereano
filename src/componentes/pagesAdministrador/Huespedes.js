@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
+//Librerias
 import axios from "axios";
+//Estilos
 import { makeStyles } from "@mui/styles";
 import { Form, FormGroup, Label, Input } from "reactstrap";
 import "../../App.scss";
@@ -9,15 +11,18 @@ import { Modal, Button } from "@mui/material";
 import * as AiFillEdit from "react-icons/ai";
 import * as MdDelete from "react-icons/md";
 import * as BsInfoLg from "react-icons/bs";
+//Componentes
 import DocumentoEmpleado from "../../componentes/Empleado/DocumentoEmpleado";
 import Nacionalidades from "../../componentes/pagesAdministrador/Nacionalidades";
 import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "../../../node_modules/bootstrap/scss/bootstrap.scss";
 
-const url = "http://localhost:8001/huespedes/listarHuespedes";
-const urlG = "http://localhost:8001/huespedes/registrarHuesped";
-const urlE = "http://localhost:8001/huespedes/actualizarHuesped/";
-const urlD = "http://localhost:8001/huespedes/deleteHuespedes/";
+import { Apiurl } from "../../services/userService";
+
+const url = Apiurl + "huespedes/listarHuespedes";
+const urlG = Apiurl + "huespedes/registrarHuesped";
+const urlE = Apiurl + "huespedes/actualizarHuesped/";
+const urlD = Apiurl + "huespedes/deleteHuespedes/";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -71,11 +76,38 @@ function Huespedes() {
   };
 
   const peticionGet = async () => {
-    await axios.get(url).then((response) => {
-      setData(response.data);
-    });
+    axios.request({
+      method: "get",
+      url: url,
+      withCredentials: true,
+      crossdomain: true,
+      auth: {
+        username: "angularapp", // This is the client_id
+        password: "angu1234lar" // This is the client_secret
+      }, header: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Cache-Control": "no-cache"
+      }
+    }).then(response => {
+      if (response.status === 200) {
+        setData(response.data);
+        console.log(response.data);
+      } else {
+        this.setState({
+          error: true,
+          errorMsg: response.data.error_description
+        })
+      }
+      // console.log(response.data);
+    }).catch(error => {
+      this.setState({
+        error: true,
+        errorMsg: "Error:400"
+      })
+      //  console.log(error.message);
+    })
   };
-  
+
   const peticionPost = async (e) => {
     e.preventDefault();
     console.log("esta es la data seleccionada", consolaSeleccionada);
@@ -106,9 +138,9 @@ function Huespedes() {
     await axios
       .delete(
         urlD +
-          consolaSeleccionada.numDocumento +
-          "/" +
-          consolaSeleccionada.idHuesped
+        consolaSeleccionada.numDocumento +
+        "/" +
+        consolaSeleccionada.idHuesped
       )
       .then((response) => {
         setData(
@@ -587,51 +619,49 @@ function Huespedes() {
                   <th>Dirección</th>
                   <th>Número celular</th>
                   <th>Tipo Documento</th>
-                  
                   <th>Lugar Origen</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
               <tbody>
-                {data.map((consola) => (
-                  <tr key={consola.idHuesped}>
-                    <th>{consola.nombre}</th>
-                    <th>{consola.apellido}</th>
-                    <th>{consola.direccion}</th>
-                    <th>{consola.numCelular}</th>
-                    
-                    <th>{consola.numDocumento}</th>
-                    
-                    <th>{consola.lugarOrigen}</th>
-                    {/* <th>{consola.estadoHuesped}</th> */}
-                    <th>
-                      <Button
-                        className="flex"
-                        onClick={() => seleccionarEmpleado(consola, "Editar")}
-                      >
-                        <AiFillEdit.AiFillEdit className="me-2" />
-                        Editar
-                      </Button>
+                {data.map((consola) => {
+                  return (
+                    <tr key={consola} >
+                      <td>{consola.nombre}</td>
+                      <td>{consola.apellido}</td>
+                      <td>{consola.direccion}</td>
+                      <td>{consola.numCelular}</td>
+                      <th>{consola.numDocumento}</th>
+                      <th>{consola.lugarOrigen}</th>
+                      <th>
+                        <Button
+                          className="flex"
+                          onClick={() => seleccionarEmpleado(consola, "Editar")}
+                        >
+                          <AiFillEdit.AiFillEdit className="me-2" />
+                          Editar
+                        </Button>
 
-                      <br></br>
-                      <Button
-                        className="flex"
-                        onClick={() => seleccionarEmpleado(consola, "Eliminar")}
-                      >
-                        <MdDelete.MdDelete className="me-2" />
-                        Eliminar
-                      </Button>
-                      <br></br>
-                      <Button
-                        className="flex"
-                        onClick={() => seleccionarEmpleado(consola, "Ver")}
-                      >
-                        <BsInfoLg.BsInfoLg className="me-2" />
-                        Ver Info
-                      </Button>
-                    </th>
-                  </tr>
-                ))}
+                        <br></br>
+                        <Button
+                          className="flex"
+                          onClick={() => seleccionarEmpleado(consola, "Eliminar")}
+                        >
+                          <MdDelete.MdDelete className="me-2" />
+                          Eliminar
+                        </Button>
+                        <br></br>
+                        <Button
+                          className="flex"
+                          onClick={() => seleccionarEmpleado(consola, "Ver")}
+                        >
+                          <BsInfoLg.BsInfoLg className="me-2" />
+                          Ver Info
+                        </Button>
+                      </th>
+                    </tr>
+                  )
+                })}
               </tbody>
             </table>
           </div>
