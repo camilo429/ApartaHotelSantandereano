@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "../../../node_modules/bootstrap/scss/bootstrap.scss";
-import axios from "axios";
+//import axios from "axios";
 import "./Empleado.css";
-import Select from "react-select";
+//import Select from "react-select";
 
-const url = "http://localhost:5000/tipoDocumento/listarTipoDocumentos";
-const urlAuth = "http://localhost:5000/oauth/token";
+// const url = "http://localhost:5000/tipoDocumento/listarTipoDocumentos";
+// const urlAuth = "http://localhost:5000/oauth/token";
 
 function DocumentoEmpleado({ name, handleChangeData, value = null }) {
-  const [localStorage, setLocalStorage] = useState({ token: "" });
+  // const [localStorage, setLocalStorage] = useState({ token: "" });
 
-  const [data, setData] = useState([]);
+  // const [data, setData] = useState([]);
 
   // const getDocumentos = async () => {
   //   if (localStorage.token) {
@@ -31,23 +31,23 @@ function DocumentoEmpleado({ name, handleChangeData, value = null }) {
   //     )
   //   };
 
-    useEffect(() => {
-     // getDocumentos();
-    }, [localStorage]);
+    // useEffect(() => {
+    //  // getDocumentos();
+    // }, [localStorage]);
 
     useEffect(() => {
      // getDocumentos();
     }, []);
 
-    const handleChange = ({ label, value }) => {
-      handleChangeData({
-        target: { name, value: { idTipDocumento: value, tipDocumento: label } },
-      });
-    };
+    // const handleChange = ({ label, value }) => {
+    //   handleChangeData({
+    //     target: { name, value: { idTipDocumento: value, tipDocumento: label } },
+    //   });
+    // };
 
     return (
       <div className="DocumentoEmpleado">
-        <Select
+        {/* <Select
           defaultValue={value ? {
             label: value?.tipDocumento,
             value: value?.idTipDocumento
@@ -58,7 +58,7 @@ function DocumentoEmpleado({ name, handleChangeData, value = null }) {
           }))}
           onChange={handleChange}
           placeholder="Seccione Documento"
-        />
+        /> */}
       </div>
     );
   }

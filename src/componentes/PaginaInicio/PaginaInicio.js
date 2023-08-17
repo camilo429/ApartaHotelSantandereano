@@ -33,7 +33,7 @@ const PaginaInicio = () => {
               marginRight: "0px",
             }}
           />
-          <div style={{color:"white", marginLeft:"0px"}}>(+57)3107763328</div>
+          <div style={{ color: "white", marginLeft: "0px" }}>(+57)3107763328</div>
           <img
             src="/assets/img/instagram.png"
             alt="Es la imagen de instragram"
@@ -47,7 +47,7 @@ const PaginaInicio = () => {
             <Link className="badge badge-light" to={`/Inicio`}>
               Inicio
             </Link>
-            <Link className="badge badge-light" to={`/QuienesSomos`}>
+            <Link className="badge badge-light" to={`/SobreNosotros`}>
               Nosotros
             </Link>
             <Link className="badge badge-light" to={`/Servicios`}>
@@ -141,7 +141,7 @@ const PaginaInicio = () => {
           </div>
 
           <div className="">
-            <hr className="my-4"/>
+            <hr className="my-4" />
             <br></br>
             <p>
               Todas las habitaciones tienen un promedio de dimensión de 25
@@ -180,7 +180,7 @@ const PaginaInicio = () => {
                 height: "250px",
                 float: "left",
                 marginLeft: "25px",
-                padding:"15px"
+                padding: "15px"
               }}
             />
             <img
@@ -192,10 +192,10 @@ const PaginaInicio = () => {
                 marginLeft: "25px",
                 marginRight: "9px",
               }}
-            /> 
+            />
           </div>
 
-          <hr className="my-4"/>
+          <hr className="my-4" />
 
           <div className="">
             <p>
@@ -242,23 +242,23 @@ const PaginaInicio = () => {
           <br></br>
           <h2 className="post-title">Estamos Ubicados en: carrera 80a#2-15</h2>
           <br></br>
-          {/* <div className="container">
-          <GoogleMaps
-            apiKey={"AIzaSyATbG2zP_RkvgXW7pjWNbyubO6VaSpZ1vk"}
-            style={{ height: "400px", with: "400px" }}
-            zoom={13}
-            center={{
-              lat: 4.632369452800604,
-              lng: -74.15449512172077,
-            }}
-            markers={[
-              {
+          <div className="container">
+            <GoogleMaps
+              apiKey={"AIzaSyATbG2zP_RkvgXW7pjWNbyubO6VaSpZ1vk"}
+              style={{ height: "400px", with: "400px" }}
+              zoom={13}
+              center={{
                 lat: 4.632369452800604,
                 lng: -74.15449512172077,
-              },
-            ]}
-          />
-        </div> */}
+              }}
+              markers={[
+                {
+                  lat: 4.632369452800604,
+                  lng: -74.15449512172077,
+                },
+              ]}
+            />
+          </div>
           <br></br>
           <br></br>
         </div>

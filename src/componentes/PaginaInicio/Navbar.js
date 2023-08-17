@@ -49,7 +49,7 @@ function Navbar() {
                 <li className="nav-item">
                   <NavLink
                     className="nav-link"
-                    to="/QuienesSomos"
+                    to="/SobreNosotros"
                     exact="true"
                     activeclassname="active"
                   >

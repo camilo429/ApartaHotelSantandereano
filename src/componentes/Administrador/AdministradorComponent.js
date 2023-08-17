@@ -9,10 +9,6 @@ import {
 
 import "../../vendor/fontawesome-free/css/all.min.css";
 
-// import "../../css/sb-admin-2.min.css";
-
-import "../../img/undraw_rocket.svg";
-
 function AdministradorComponent() {
   const [dropdown, setDropdown] = useState(false);
 

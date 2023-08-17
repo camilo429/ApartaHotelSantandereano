@@ -77,14 +77,14 @@ function Contacto() {
             <div className="info_item">
               <i className="lnr lnr-phone-handset"></i>
               <h6>
-                <a href="#">(57) 3107763328</a>
+                <a href="/whatsapp.com">(57) 3107763328</a>
               </h6>
               <p>Servicio24 Horas</p>
             </div>
             <div class="info_item">
               <i class="lnr lnr-envelope"></i>
               <h6>
-                <a href="#">apartahotelsantandereano@gmail.com</a>
+                <a href="/gmail.com">apartahotelsantandereano@gmail.com</a>
               </h6>
               <p>Envie su comentario o pregunta.</p>
             </div>

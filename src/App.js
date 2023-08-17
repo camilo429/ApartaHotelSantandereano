@@ -20,18 +20,15 @@ function App() {
       <div className="pagina">
         <BrowserRouter>
           <Routes>
+            {/* url para navegar en la pagina inicial */}
             <Route path="/" exament element={<Inicio />} />
-            {/* <Route path="/Paginainicio" element={<PaginaInicio />} /> */}
-
             <Route path="/Inicio" element={<Inicio />} />
-            <Route path="/QuienesSomos" element={<About />} />
+            <Route path="/SobreNosotros" element={<About />} />
             <Route path="/Lugares" element={<Lugares />} />
             <Route path="/Contactanos" element={<Contacto />} />
-
-            {/* <Route path="/Servicios" element={<ServiciosComponent />} /> */}
-            {/* <Route path="/Contacto" element={<ContactoComponent />} /> */}
             <Route path="/Login" element={<Login />} />
 
+            {/* url para navegar en empleado */}
             <Route
               path="/ListarNacionalidades"
               element={<NacionalidadComponent />}
@@ -39,9 +36,9 @@ function App() {
             <Route path="/ListarDocumento" element={<DocumentoComponent />} />
             <Route path="/documentoEmpleado" element={<DocumentoEmpleado />} />
             <Route path="/Administrador" element={<AdministradorComponent />} />
-
             <Route path="/ListarEmpleado" element={<EmpleadoComponent />} />
 
+            {/* Rutas para El administrador */}
             <Route path="/PanelAdministrador/*" element={<PanelAdministrador />} />
           </Routes>
         </BrowserRouter>
