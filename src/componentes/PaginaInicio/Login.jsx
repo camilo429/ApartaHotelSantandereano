@@ -56,11 +56,9 @@ class Login extends React.Component {
             }
 
         }).then(response => {
-
             if (response.status === 200) {
                 sessionStorage.setItem("access_token", response.data.access_token);
                 window.location.href = "PanelAdministrador";
-
                 console.log(response.data);
             } else {
                 this.setState({

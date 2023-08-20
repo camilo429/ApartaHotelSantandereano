@@ -1,16 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { Modal, Button } from "@mui/material";
+// librerias
 import axios from "axios";
+import $ from "jquery";
+// Estilos
 import { Form, FormGroup, Label, Input } from "reactstrap";
 import "../../App.scss";
 import { makeStyles } from "@mui/styles";
-
+import { Modal, Button } from "@mui/material";
+// Iconos
 import * as MdDelete from "react-icons/md";
+// url
+import { Apiurl } from "../../services/userService";
 
-let url = "http://localhost:8001/habitaciones/listarHabitaciones";
-const urlG = "http://localhost:8001/habitaciones/registrarHabitacion";
-const urlE = "http://localhost:8001/habitaciones/actualizarHuesped/";
-const urlD = "http://localhost:8001/habitaciones/deleteHabitacion/";
+
+const url = Apiurl + "habitacion/listarHabitaciones";
+const urlG = Apiurl + "habitacion/registrarHabitacion";
+const urlE = Apiurl + "habitacion/actualizarHuesped/";
+const urlD = Apiurl + "habitacion/deleteHabitacion/";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -51,11 +57,40 @@ function Habitacion() {
       [name]: value,
     }));
   };
+  const [state, setState] = useState({
+    form: {
+      "usuario": "",
+      "password": ""
+    },
+    error: false,
+    errorMsg: ""
+  });
 
   const peticionGet = async () => {
-    await axios.get(url).then((response) => {
-      setData(response.data);
-    });
+    const token = {
+      "access_token": sessionStorage.getItem("access_token")
+    }
+   // console.log(token)
+    axios.request({
+      method: "get",
+      url: url,
+      withCredentials: true,
+      crossdomain: true,
+      auth: {
+        username: "angularapp", // This is the client_id
+        password: "angu1234lar" // This is the client_secret
+    },
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Cache-Control": "no-cache",
+        Authorization: `Bearer Token ${token}`
+      }
+    }).then(response => {
+      console.log(response.data);
+    })
+    // await axios.get(url).then((response) => {
+    //   setData(response.data);
+    // });
   };
   const peticionPost = async (e) => {
     e.preventDefault();
@@ -364,27 +399,30 @@ function Habitacion() {
                 </tr>
               </thead>
               <tbody>
-                {data.map((consola) => (
-                  <tr key={consola.idHabitacion}>
-                    <th>{consola.nombreHabitacion}</th>
-                    <th>{consola.descripHabitacion}</th>
-                    <th>{consola.numHabitacion}</th>
-                    <th>{consola.pisoHabitacion}</th>
-                    <th>{consola.maxPersonasDisponibles}</th>
-                    <th>{consola.estadoHabitacion}</th>
-                    <th>
-                      <Button
-                        className="flex"
-                        onClick={() =>
-                          seleccionarHabitacion(consola, "Eliminar")
-                        }
-                      >
-                        <MdDelete.MdDelete className="me-2" />
-                        Eliminar
-                      </Button>
-                    </th>
-                  </tr>
-                ))}
+                {data.map((consola) => {
+                  return (
+                    <tr key={consola}>
+                      <th>{consola.nombreHabitacion}</th>
+                      <th>{consola.descripHabitacion}</th>
+                      <th>{consola.numHabitacion}</th>
+                      <th>{consola.pisoHabitacion}</th>
+                      <th>{consola.maxPersonasDisponibles}</th>
+                      <th>{consola.estadoHabitacion}</th>
+                      <th>
+                        <Button
+                          className="flex"
+                          onClick={() =>
+                            seleccionarHabitacion(consola, "Eliminar")
+                          }
+                        >
+                          <MdDelete.MdDelete className="me-2" />
+                          Eliminar
+                        </Button>
+                      </th>
+                    </tr>
+                  )
+                })
+                }
               </tbody>
             </table>
           </div>

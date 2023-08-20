@@ -32,9 +32,9 @@ function TipoSangre({ name, handleChangeData, value = null }) {
         defaultValue={
           value
             ? {
-                label: value?.tipoSangre,
-                value: value?.idTipoSangre,
-              }
+              label: value?.tipoSangre,
+              value: value?.idTipoSangre,
+            }
             : null
         }
         options={data.map((docu) => ({

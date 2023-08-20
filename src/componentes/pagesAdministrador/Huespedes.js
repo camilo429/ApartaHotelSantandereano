@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 //Librerias
 import axios from "axios";
+import $ from "jquery";
 //Estilos
 import { makeStyles } from "@mui/styles";
 import { Form, FormGroup, Label, Input } from "reactstrap";
 import "../../App.scss";
-
 import { Modal, Button } from "@mui/material";
-
 import * as AiFillEdit from "react-icons/ai";
 import * as MdDelete from "react-icons/md";
 import * as BsInfoLg from "react-icons/bs";
@@ -16,8 +15,8 @@ import DocumentoEmpleado from "../../componentes/Empleado/DocumentoEmpleado";
 import Nacionalidades from "../../componentes/pagesAdministrador/Nacionalidades";
 import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "../../../node_modules/bootstrap/scss/bootstrap.scss";
-
 import { Apiurl } from "../../services/userService";
+import { Co2Sharp } from "@mui/icons-material";
 
 const url = Apiurl + "huespedes/listarHuespedes";
 const urlG = Apiurl + "huespedes/registrarHuesped";
@@ -27,8 +26,8 @@ const urlD = Apiurl + "huespedes/deleteHuespedes/";
 const useStyles = makeStyles((theme) => ({
   modal: {
     position: "absolute",
-    width: "900px",
-    height: "400px",
+    width: "90%",
+    height: "80%",
     backgroundColor: "white",
     padding: 10,
     boder: "2px solid #000",
@@ -47,24 +46,35 @@ function Huespedes() {
   const [modalVer, setModalVer] = useState(false);
 
   const [consolaSeleccionada, setConsolaSeleccionada] = useState({
+
+    codHuesped: "",
     nombre: "",
     apellido: "",
     direccion: "",
     numCelular: "",
     correo: "",
-    idTipoDocumento: {
-      idTipDocumento: "",
-      tipDocumento: "",
+    tipoDocumento: {
+      codTipoDocumento: "",
+      nomTipoDocumento: ""
     },
     numDocumento: "",
-    idNacionalidad: {
-      id: "",
-      nombre: "",
+    nacionalidad: {
+      codNacion: "",
+      nombre: ""
     },
     lugarOrigen: "",
     nomContactoEmergencia: "",
     numContactoEmergencia: "",
     estadoHuesped: "",
+
+  });
+  const [state, setState] = useState({
+    form: {
+      "usuario": "",
+      "password": ""
+    },
+    error: false,
+    errorMsg: ""
   });
 
   const handleChange = (e) => {
@@ -119,19 +129,69 @@ function Huespedes() {
   };
 
   const peticionPut = async () => {
-    await axios
-      .put(urlE + consolaSeleccionada.idHuesped, consolaSeleccionada)
-      .then((response) => {
+    await axios.request({
+      method: "put",
+      url: urlE + consolaSeleccionada.codHuesped,
+      withCredentials: true,
+      crossdomain: true,
+      data: $.param(consolaSeleccionada),
+      auth: {
+        username: "angularapp",
+        password: "angu1234lar"
+      },
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("access_token")}`
+      }
+    }).then(response => {
+      if (response.status == 200) {
         var dataNueva = data;
         dataNueva.map((consola) => {
-          if (consolaSeleccionada.idHuesped === consola.idHuesped) {
+          if (consolaSeleccionada.codHuesped === consola.codHuesped) {
             consola.nombre = consolaSeleccionada.nombre;
+            consola.apellido = consolaSeleccionada.apellido;
+            consola.direccion = consolaSeleccionada.direccion;
+            consola.numCelular = consolaSeleccionada.numCelular;
+            consola.correo = consolaSeleccionada.correo;
+            tipoDocumento: {
+              consola.codTipoDocumento = consolaSeleccionada.codTipoDocumento,
+                consola.nomTipoDocumento = consolaSeleccionada.nomTipoDocumento
+            }
+            consola.numDocumento = consolaSeleccionada.numDocumento;
+            nacionalidad: {
+              consola.codNacion = consolaSeleccionada.codNacion,
+                consola.nombre = consolaSeleccionada.nombre
+            }
+            consola.lugarOrigen = consolaSeleccionada.lugarOrigen
+            consola.nomContactoEmergencia = consolaSeleccionada.nomContactoEmergencia
+            consola.numContactoEmergencia = consolaSeleccionada.numContactoEmergencia
+            consola.estadoHuesped = consolaSeleccionada.estadoHuesped
           }
-        });
+        })
         setData(dataNueva);
         peticionGet();
         abrirCerrarModalEditar();
-      });
+      } else {
+        this.setState({
+          error: true,
+          errorMsg: response.data.errror_description
+        })
+      }
+    }).catch(error => {
+      console.log(error);
+    })
+    // await axios
+    //   .put(urlE + consolaSeleccionada.idHuesped, consolaSeleccionada)
+    //   .then((response) => {
+    //     var dataNueva = data;
+    //     dataNueva.map((consola) => {
+    //       if (consolaSeleccionada.idHuesped === consola.idHuesped) {
+    //         consola.nombre = consolaSeleccionada.nombre;
+    //       }
+    //     });
+    //     setData(dataNueva);
+    //     peticionGet();
+    //     abrirCerrarModalEditar();
+    //   });
   };
 
   const peticionDelete = async () => {
@@ -457,7 +517,7 @@ function Huespedes() {
             />
           </FormGroup>
           <FormGroup className="me-2">
-            <Label for="exampleEmail">Apellido</Label>
+            <Label for="Apellido">Apellido</Label>
             <Input
               name="apellido"
               onChange={handleChange}
@@ -474,48 +534,74 @@ function Huespedes() {
               placeholder="direccion"
             />
           </FormGroup>
+        </div>
+
+        <div className="flex">
           <FormGroup className="me-2">
             <Label for="exampleEmail">Número Celular</Label>
             <Input
               name="numCelular"
               onChange={handleChange}
               value={consolaSeleccionada && consolaSeleccionada.numCelular}
-              placeholder="numCelular"
-              type="number"
+              placeholder="#Celular"
+            />
+          </FormGroup>
+
+          <FormGroup className="me-2">
+            <Label for="email">Correo Electronico</Label>
+            <Input
+              name="correo"
+              onChange={handleChange}
+              value={consolaSeleccionada && consolaSeleccionada.correo}
+              placeholder="Correo Electronico"
+            />
+          </FormGroup>
+
+          <FormGroup className="me-2">
+            <Label for="exampleEmail">Tipo Documento</Label>
+            <Input
+              name="tipoDocumento"
+              onChange={handleChange}
+              value={consolaSeleccionada && consolaSeleccionada.tipoDocumento.nomTipoDocumento
+              }
+              placeholder="tipoDocumento"
             />
           </FormGroup>
         </div>
 
         <div className="flex">
           <FormGroup className="me-2">
-            <Label for="exampleEmail">Correo Electronico</Label>
-            <Input
-              name="correo"
-              onChange={handleChange}
-              value={consolaSeleccionada && consolaSeleccionada.correo}
-              placeholder="Correo Electronico"
-              type="email"
-            />
-          </FormGroup>
-
-          <FormGroup className="me-2">
             <Label for="exampleEmail">Número Documento</Label>
             <Input
               name="numDocumento"
               onChange={handleChange}
               value={consolaSeleccionada && consolaSeleccionada.numDocumento}
-              type="number"
             />
           </FormGroup>
+
           <FormGroup className="me-2">
-            <Label for="exampleEmail">lugar Origen</Label>
-            <Input
-              name="lugarOrigen"
-              onChange={handleChange}
-              value={consolaSeleccionada && consolaSeleccionada.direccion}
-              placeholder="lugar Origen"
+            <Label for="exampleEmail">Nacionalidad</Label>
+            <Nacionalidades
+              name="nacionalidad"
+              handleChangeData={handleChange}
+              value={consolaSeleccionada.nacionalidad}
             />
           </FormGroup>
+
+          <FormGroup className="me-2">
+            <Label for="exampleEmail">Lugar Proviene</Label>
+            <Input
+              name="lugarProviene"
+              onChange={handleChange}
+              value={
+                consolaSeleccionada && consolaSeleccionada.lugarOrigen
+              }
+              placeholder="LugarProviene"
+            />
+          </FormGroup>
+        </div>
+
+        <div className="flex">
           <FormGroup className="me-2">
             <Label for="exampleEmail">Nombre Emergencia</Label>
             <Input
@@ -527,9 +613,6 @@ function Huespedes() {
               placeholder="Nombre Familiar"
             />
           </FormGroup>
-        </div>
-
-        <div className="flex">
           <FormGroup className="me-2">
             <Label for="exampleEmail">#Contacto Emergencia</Label>
             <Input
@@ -539,27 +622,18 @@ function Huespedes() {
                 consolaSeleccionada && consolaSeleccionada.numContactoEmergencia
               }
               placeholder="# Contacto Emergencia"
-              disabled
             />
           </FormGroup>
           <FormGroup className="me-2">
-            <Label for="exampleEmail">Tipo de Documento de Indentidad</Label>
+            <Label for="exampleEmail">Estado Huesped</Label>
             <DocumentoEmpleado
               name="idTipoDocumento"
               handleChangeData={handleChange}
-              value={consolaSeleccionada.idTipoDocumento}
-            />
-          </FormGroup>
-          <FormGroup className="me-2">
-            <Label for="exampleEmail">Nacionalidad</Label>
-            <DocumentoEmpleado
-              name="idTipoDocumento"
-              handleChangeData={handleChange}
-              value={consolaSeleccionada.idTipoDocumento}
-              disabled
+              value={consolaSeleccionada.estadoHuesped}
             />
           </FormGroup>
         </div>
+
       </Form>
       <div align="right">
         <Button color="primary" onClick={() => peticionPut()}>
