@@ -54,7 +54,6 @@ class Login extends React.Component {
                 "Content-Type": "application/x-www-form-urlencoded",
                 "Cache-Control": "no-cache"
             }
-
         }).then(response => {
             if (response.status === 200) {
                 sessionStorage.setItem("access_token", response.data.access_token);

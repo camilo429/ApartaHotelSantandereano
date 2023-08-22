@@ -1,18 +1,50 @@
 import React, { useEffect, useState } from "react";
-import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
-import "../../../node_modules/bootstrap/scss/bootstrap.scss";
+// librerias
 import axios from "axios";
-import "../../componentes/Empleado/Empleado.css";
-import Select from "react-select";
+// css
+import Select from "react-select"
+// url
+import { Apiurl } from "../../services/userService"
+const url = Apiurl + "nacionalidad/listarNacionalidades";
 
-const url = "http://localhost:8001/nacionalidad/listarNacionalidades";
 function Nacionalidades({ name, handleChangeData, value = null }) {
   const [data, setData] = useState([]);
+  const [state, setState] = useState({
+    form: {
+      "usuario": "",
+      "password": ""
+    },
+    error: false,
+    errorMsg: ""
+  });
 
   const getNacionalidades = async () => {
-    await axios.get(url).then((response) => {
-      setData(response.data);
-    });
+    axios.request({
+      method: "get",
+      url: url,
+      withCredentials: true,
+      crossdomain: true,
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("access_token")}`
+      }
+    }).then(response => {
+      if (response.status === 200) {
+        setData(response.data);
+        //  console.log(response.data);
+      } else {
+        this.setState({
+          error: true,
+          errorMsg: response.data.error_description
+        })
+      }
+      // console.log(response.data);
+    }).catch(error => {
+      setState({
+        error: true,
+        errorMsg: "Error:400"
+      })
+      //  console.log(error.message);
+    })
   };
   useEffect(() => {
     getNacionalidades();
@@ -20,24 +52,26 @@ function Nacionalidades({ name, handleChangeData, value = null }) {
 
   const handleChange = ({ label, value }) => {
     handleChangeData({
-      target: { name, value: { id: value, nombre: label } },
+      target: { name, value: { codNacion: value, nombre: label } },
     });
   };
+
   return (
     <div className="Nacionalidades">
       <Select
         defaultValue={
           value
             ? {
-                label: value?.nombre,
-                value: value?.id,
-              }
-            : null
+              label: value?.nombre,
+              value: value?.codNacion,
+            } : null
         }
-        options={data.map((docu) => ({
-          label: docu.nombre,
-          value: docu.id,
-        }))}
+        options={
+          data.map((nacio) => ({
+            label: nacio.nombre,
+            value: nacio.codNacion,
+          }))
+        }
         onChange={handleChange}
         placeholder="Seleccione Nacionalidad"
       />

@@ -6,22 +6,26 @@ import $ from "jquery";
 import { makeStyles } from "@mui/styles";
 import { Form, FormGroup, Label, Input } from "reactstrap";
 import "../../App.scss";
+import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
+import "../../../node_modules/bootstrap/scss/bootstrap.scss";
+//iconos
 import { Modal, Button } from "@mui/material";
 import * as AiFillEdit from "react-icons/ai";
 import * as MdDelete from "react-icons/md";
 import * as BsInfoLg from "react-icons/bs";
+import { Co2Sharp } from "@mui/icons-material";
 //Componentes
 import DocumentoEmpleado from "../../componentes/Empleado/DocumentoEmpleado";
 import Nacionalidades from "../../componentes/pagesAdministrador/Nacionalidades";
-import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
-import "../../../node_modules/bootstrap/scss/bootstrap.scss";
+import TipoDocumento from "./TipoDocumento";
+// url
 import { Apiurl } from "../../services/userService";
-import { Co2Sharp } from "@mui/icons-material";
+
 
 const url = Apiurl + "huespedes/listarHuespedes";
-const urlG = Apiurl + "huespedes/registrarHuesped";
+const urlG = Apiurl + "huespedes/crearHuesped";
 const urlE = Apiurl + "huespedes/actualizarHuesped/";
-const urlD = Apiurl + "huespedes/deleteHuespedes/";
+const urlD = Apiurl + "huespedes/eliminarhuesped/";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -46,8 +50,6 @@ function Huespedes() {
   const [modalVer, setModalVer] = useState(false);
 
   const [consolaSeleccionada, setConsolaSeleccionada] = useState({
-
-    codHuesped: "",
     nombre: "",
     apellido: "",
     direccion: "",
@@ -65,7 +67,7 @@ function Huespedes() {
     lugarOrigen: "",
     nomContactoEmergencia: "",
     numContactoEmergencia: "",
-    estadoHuesped: "",
+    estadoHuesped: "true",
 
   });
   const [state, setState] = useState({
@@ -91,26 +93,22 @@ function Huespedes() {
       url: url,
       withCredentials: true,
       crossdomain: true,
-      auth: {
-        username: "angularapp", // This is the client_id
-        password: "angu1234lar" // This is the client_secret
-      }, header: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        "Cache-Control": "no-cache"
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("access_token")}`
       }
     }).then(response => {
       if (response.status === 200) {
         setData(response.data);
         console.log(response.data);
       } else {
-        this.setState({
+        setState({
           error: true,
           errorMsg: response.data.error_description
         })
       }
       // console.log(response.data);
     }).catch(error => {
-      this.setState({
+      setState({
         error: true,
         errorMsg: "Error:400"
       })
@@ -118,10 +116,13 @@ function Huespedes() {
     })
   };
 
-  const peticionPost = async (e) => {
-    e.preventDefault();
+  const peticionPost = async () => {
     console.log("esta es la data seleccionada", consolaSeleccionada);
-    const response = await axios.post(urlG, consolaSeleccionada);
+    const response = await axios.post(urlG, consolaSeleccionada, {
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("access_token")}`
+      }
+    });
     console.log(response.data);
     setData(data.concat(response.data));
     peticionGet();
@@ -134,16 +135,13 @@ function Huespedes() {
       url: urlE + consolaSeleccionada.codHuesped,
       withCredentials: true,
       crossdomain: true,
-      data: $.param(consolaSeleccionada),
-      auth: {
-        username: "angularapp",
-        password: "angu1234lar"
-      },
+      data: consolaSeleccionada,
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem("access_token")}`
       }
     }).then(response => {
-      if (response.status == 200) {
+      console.log(response.status);
+      if (response.status == 201) {
         var dataNueva = data;
         dataNueva.map((consola) => {
           if (consolaSeleccionada.codHuesped === consola.codHuesped) {
@@ -152,26 +150,26 @@ function Huespedes() {
             consola.direccion = consolaSeleccionada.direccion;
             consola.numCelular = consolaSeleccionada.numCelular;
             consola.correo = consolaSeleccionada.correo;
-            tipoDocumento: {
-              consola.codTipoDocumento = consolaSeleccionada.codTipoDocumento,
-                consola.nomTipoDocumento = consolaSeleccionada.nomTipoDocumento
-            }
+
+            consola.codTipoDocumento = consolaSeleccionada.codTipoDocumento,
+              consola.nomTipoDocumento = consolaSeleccionada.nomTipoDocumento
+
             consola.numDocumento = consolaSeleccionada.numDocumento;
-            nacionalidad: {
-              consola.codNacion = consolaSeleccionada.codNacion,
-                consola.nombre = consolaSeleccionada.nombre
-            }
+
+            consola.codNacion = consolaSeleccionada.codNacion,
+              consola.nombre = consolaSeleccionada.nombre
+
             consola.lugarOrigen = consolaSeleccionada.lugarOrigen
             consola.nomContactoEmergencia = consolaSeleccionada.nomContactoEmergencia
             consola.numContactoEmergencia = consolaSeleccionada.numContactoEmergencia
-            consola.estadoHuesped = consolaSeleccionada.estadoHuesped
+            consola.estadoHuesped = true
           }
         })
         setData(dataNueva);
         peticionGet();
         abrirCerrarModalEditar();
       } else {
-        this.setState({
+        setState({
           error: true,
           errorMsg: response.data.errror_description
         })
@@ -195,21 +193,33 @@ function Huespedes() {
   };
 
   const peticionDelete = async () => {
-    await axios
-      .delete(
-        urlD +
-        consolaSeleccionada.numDocumento +
-        "/" +
-        consolaSeleccionada.idHuesped
-      )
-      .then((response) => {
-        setData(
-          data.filter(
-            (consola) => consola.idHuesped !== consolaSeleccionada.idHuesped
-          )
-        );
+    axios.request({
+      method: "delete",
+      url: urlD + consolaSeleccionada.codHuesped,
+      withCredentials: true,
+      crossdomain: true,
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("access_token")}`
+      }
+    }).then(response => {
+      if (response.status === 200) {
+        setData(data.filter((consola) => consola.codHuesped !== consolaSeleccionada.codHuesped));
         abrirCerrarModalEliminar();
-      });
+      } else {
+        this.setState({
+          error: true,
+          errorMsg: response.data.error_description
+        })
+      }
+      // console.log(response.data);
+    }).catch(error => {
+      this.setState({
+        error: true,
+        errorMsg: "Error:400"
+      })
+      //  console.log(error.message);
+    })
+
   };
 
   const abrirCerrarModalInsertar = () => {
@@ -246,109 +256,125 @@ function Huespedes() {
             <Label for="exampleEmail">Nombre</Label>
             <Input
               name="nombre"
-              placeholder="Nombre"
-              type="text"
-              className="w-90 me-2"
               onChange={handleChange}
+              value={consolaSeleccionada?.nombre}
+              placeholder={
+                !consolaSeleccionada?.nombre ? "Diligencia su nombre" : "Nombre"
+              }
             />
           </FormGroup>
           <FormGroup className="me-2">
-            <Label for="exampleEmail">Apellido</Label>
+            <Label for="Apellido">Apellido</Label>
             <Input
               name="apellido"
-              placeholder="Apellido"
-              type="text"
-              className="w-90 me-2"
               onChange={handleChange}
+              value={consolaSeleccionada && consolaSeleccionada.apellido}
+              placeholder="Apellido"
             />
           </FormGroup>
           <FormGroup className="me-2">
-            <Label for="exampleEmail">Dirección</Label>
+            <Label for="exampleEmail">Direccion</Label>
             <Input
               name="direccion"
-              placeholder="Dirección"
-              type="text"
-              className="w-90"
               onChange={handleChange}
-            />
-          </FormGroup>
-          <FormGroup className="me-2">
-            <Label for="exampleEmail">Número de Celular</Label>
-            <Input
-              name="numCelular"
-              placeholder="# numCelular"
-              type="text"
-              className="w-90"
-              onChange={handleChange}
+              value={consolaSeleccionada && consolaSeleccionada.direccion}
+              placeholder="direccion"
             />
           </FormGroup>
         </div>
 
         <div className="flex">
           <FormGroup className="me-2">
-            <Label for="exampleEmail">Correo Electronico</Label>
+            <Label for="exampleEmail">Número Celular</Label>
             <Input
-              name="correo"
-              placeholder="Correo Electronico"
-              type="text"
-              className="w-90"
+              name="numCelular"
               onChange={handleChange}
+              value={consolaSeleccionada && consolaSeleccionada.numCelular}
+              placeholder="#Celular"
             />
           </FormGroup>
+
+          <FormGroup className="me-2">
+            <Label for="email">Correo Electronico</Label>
+            <Input
+              name="correo"
+              onChange={handleChange}
+              value={consolaSeleccionada && consolaSeleccionada.correo}
+              placeholder="Correo Electronico"
+            />
+          </FormGroup>
+
+          <FormGroup className="me-2">
+            <Label for="exampleEmail">Tipo Documento</Label>
+            <TipoDocumento
+              name="tipoDocumento"
+              handleChangeData={handleChange}
+              value={consolaSeleccionada.tipoDocumento}
+            />
+          </FormGroup>
+        </div>
+
+        <div className="flex">
           <FormGroup className="me-2">
             <Label for="exampleEmail">Número Documento</Label>
             <Input
               name="numDocumento"
-              type="text"
-              className="w-90"
               onChange={handleChange}
+              value={consolaSeleccionada && consolaSeleccionada.numDocumento}
             />
           </FormGroup>
+
           <FormGroup className="me-2">
-            <Label for="exampleEmail">Lugar Origen</Label>
+            <Label for="exampleEmail">Nacionalidad</Label>
+            <Nacionalidades
+              name="nacionalidad"
+              handleChangeData={handleChange}
+              value={consolaSeleccionada.nacionalidad}
+            />
+          </FormGroup>
+
+          <FormGroup className="me-2">
+            <Label for="exampleEmail">Lugar Proviene</Label>
             <Input
               name="lugarOrigen"
-              placeholder="lugar Origen"
-              type="text"
-              className="w-90"
               onChange={handleChange}
-            />
-          </FormGroup>
-          <FormGroup className="me-2 w-80">
-            <Label for="exampleEmail">Nombre Contacto Emergencia</Label>
-            <Input
-              name="nomContactoEmergencia"
-              placeholder="Nombre Contacto Emergencia"
-              type="text"
-              className="w-100"
-              onChange={handleChange}
+              value={
+                consolaSeleccionada && consolaSeleccionada.lugarOrigen
+              }
+              placeholder="lugarOrigen"
             />
           </FormGroup>
         </div>
 
         <div className="flex">
           <FormGroup className="me-2">
-            <Label for="exampleEmail">Número Emergencia</Label>
+            <Label for="exampleEmail">Nombre Emergencia</Label>
+            <Input
+              name="nomContactoEmergencia"
+              onChange={handleChange}
+              value={
+                consolaSeleccionada && consolaSeleccionada.nomContactoEmergencia
+              }
+              placeholder="Nombre Familiar"
+            />
+          </FormGroup>
+          <FormGroup className="me-2">
+            <Label for="exampleEmail">#Contacto Emergencia</Label>
             <Input
               name="numContactoEmergencia"
-              placeholder="#Contacto Emergencia"
-              type="text"
-              className="w-100"
               onChange={handleChange}
+              value={
+                consolaSeleccionada && consolaSeleccionada.numContactoEmergencia
+              }
+              placeholder="# Contacto Emergencia"
             />
           </FormGroup>
           <FormGroup className="me-2">
-            <Label for="exampleEmail">Tipo de Documento</Label>
+            <Label for="exampleEmail">Estado Huesped</Label>
             <DocumentoEmpleado
-              name="idTipoDocumento"
+              name="estadoHuesped"
               handleChangeData={handleChange}
-            />
-          </FormGroup>
-          <FormGroup className="me-2">
-            <Label for="exampleEmail">Nacionalidad</Label>
-            <Nacionalidades
-              name="idNacionalidad"
-              handleChangeData={handleChange}
+              value={consolaSeleccionada.estadoHuesped}
             />
           </FormGroup>
         </div>
@@ -483,15 +509,6 @@ function Huespedes() {
               disabled
             />
           </FormGroup>
-          <FormGroup className="me-2 w-100">
-            <Label for="exampleEmail">Nacionalidad</Label>
-            <Nacionalidades
-              name="idNacionalidad"
-              handleChangeData={handleChange}
-              value={consolaSeleccionada.idNacionalidad}
-              disabled
-            />
-          </FormGroup>
         </div>
       </Form>
       <div align="right">
@@ -559,12 +576,10 @@ function Huespedes() {
 
           <FormGroup className="me-2">
             <Label for="exampleEmail">Tipo Documento</Label>
-            <Input
+            <TipoDocumento
               name="tipoDocumento"
-              onChange={handleChange}
-              value={consolaSeleccionada && consolaSeleccionada.tipoDocumento.nomTipoDocumento
-              }
-              placeholder="tipoDocumento"
+              handleChangeData={handleChange}
+              value={consolaSeleccionada.tipoDocumento}
             />
           </FormGroup>
         </div>
