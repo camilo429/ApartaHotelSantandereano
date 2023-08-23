@@ -145,20 +145,16 @@ function Huespedes() {
         var dataNueva = data;
         dataNueva.map((consola) => {
           if (consolaSeleccionada.codHuesped === consola.codHuesped) {
-            consola.nombre = consolaSeleccionada.nombre;
-            consola.apellido = consolaSeleccionada.apellido;
-            consola.direccion = consolaSeleccionada.direccion;
-            consola.numCelular = consolaSeleccionada.numCelular;
-            consola.correo = consolaSeleccionada.correo;
-
-            consola.codTipoDocumento = consolaSeleccionada.codTipoDocumento,
-              consola.nomTipoDocumento = consolaSeleccionada.nomTipoDocumento
-
-            consola.numDocumento = consolaSeleccionada.numDocumento;
-
-            consola.codNacion = consolaSeleccionada.codNacion,
-              consola.nombre = consolaSeleccionada.nombre
-
+            consola.nombre = consolaSeleccionada.nombre
+            consola.apellido = consolaSeleccionada.apellido
+            consola.direccion = consolaSeleccionada.direccion
+            consola.numCelular = consolaSeleccionada.numCelular
+            consola.correo = consolaSeleccionada.correo
+            consola.codTipoDocumento = consolaSeleccionada.tipoDocumento.codTipoDocumento
+            consola.nomTipoDocumento = consolaSeleccionada.tipoDocumento.nomTipoDocumento
+            consola.numDocumento = consolaSeleccionada.numDocumento
+            consola.codNacion = consolaSeleccionada.nacionalidad.codNacion
+            consola.nombre = consolaSeleccionada.nacionalidad.nombre
             consola.lugarOrigen = consolaSeleccionada.lugarOrigen
             consola.nomContactoEmergencia = consolaSeleccionada.nomContactoEmergencia
             consola.numContactoEmergencia = consolaSeleccionada.numContactoEmergencia
