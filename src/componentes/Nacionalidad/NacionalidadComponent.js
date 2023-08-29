@@ -15,11 +15,12 @@ import {
 } from "@mui/material";
 import { Edit, Delete } from "@mui/icons-material";
 import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
+import { Apiurl } from "../../services/userService";
 
-const url = "http://localhost:8001/nacionalidad/listarNacionalidades";
-const urlG = "http://localhost:8001/nacionalidad/registrarNacionalidad";
-const urlE = "http://localhost:8001/nacionalidad/actualizarNacionalidad/";
-const urlD = "http://localhost:8001/nacionalidad/deleteNacionalidad/";
+const url = Apiurl + "nacionalidad/listarNacionalidades";
+const urlG = Apiurl + "nacionalidad/registrarNacionalidad";
+const urlE = Apiurl + "nacionalidad/actualizarNacionalidad/";
+const urlD = Apiurl + "nacionalidad/deleteNacionalidad/";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -48,7 +49,8 @@ function NacionalidadComponent() {
   const [modalEliminar, setModalEliminar] = useState(false);
 
   const [consolaSeleccionada, setConsolaSeleccionada] = useState({
-    nombre: "",
+    codNacion: "",
+    nombre: ""
   });
 
   const handleChange = (e) => {

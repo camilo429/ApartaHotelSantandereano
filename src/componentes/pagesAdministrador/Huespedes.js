@@ -800,6 +800,7 @@ function Huespedes() {
                 <tr>
                   <th>Nombre</th>
                   <th>Apellido</th>
+
                   <th>Número celular</th>
                   <th>Tipo Documento</th>
                   <th>Lugar Origen</th>

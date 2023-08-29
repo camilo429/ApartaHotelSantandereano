@@ -13,35 +13,36 @@ import {
   TextField,
 } from "@mui/material";
 import { Edit, Delete } from "@mui/icons-material";
+import { Apiurl } from "../../services/userService";
 
-const url = "http://localhost:8001/tipoDocumento/listarTipoDocumentos";
-const urlG = "http://localhost:8001/tipoDocumento/registrarTipoDocumento";
-const urlE = "http://localhost:8001/tipoDocumento/actualizarTipoDocumento/";
-const urlD = "http://localhost:8001/tipoDocumento/deleteTipoDocumento/";
+const url = Apiurl + "tipoDocumento/listarTipoDocumentos";
+const urlG = Apiurl + "registrarTipoDocumento";
+const urlE = Apiurl + "tipoDocumento/actualizarTipoDocumento/";
+const urlD = Apiurl + "tipoDocumento/deleteTipoDocumento/";
 
 const useStyles = makeStyles((theme) => ({
-    modal: {
-      position: "absolute",
-      width: 800,
-      backgroundColor: "white",
-      padding: 50,
-      boder: "2px solid #000",
-      top: "50%",
-      left: "50%",
-      transform: "translate(-50%,-50%)",
-    },
-    icons: {
-      cursor: "pointer",
-    },
-    inputMaterial: {
-      width: "30%",
-    },
-    TextField: {
-      marginTop: "15px",
-      marginLeft: "15px",
-    },
-  }));
-  
+  modal: {
+    position: "absolute",
+    width: 800,
+    backgroundColor: "white",
+    padding: 50,
+    boder: "2px solid #000",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%,-50%)",
+  },
+  icons: {
+    cursor: "pointer",
+  },
+  inputMaterial: {
+    width: "30%",
+  },
+  TextField: {
+    marginTop: "15px",
+    marginLeft: "15px",
+  },
+}));
+
 function DocumentoComponent() {
   const styles = useStyles();
   const [data, setData] = useState([]);

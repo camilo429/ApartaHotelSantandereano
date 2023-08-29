@@ -6,12 +6,13 @@ import "./Empleado.css";
 import Select from "react-select";
 import { Apiurl } from "../../services/userService";
 
-const url = Apiurl + "tipoSangre/listarTiposSangre";
+const url = Apiurl + "actividades/listarActividades";
 
-function TipoSangre({ name, handleChangeData, value = null }) {
+function ActividadesComponent({ name, handleChangeData, value = null }) {
+
   const [data, setData] = useState([]);
 
-  const getTipoSangre = async () => {
+  const getActividadesComponent = async () => {
     axios.request({
       method: "get",
       url: url,
@@ -30,35 +31,31 @@ function TipoSangre({ name, handleChangeData, value = null }) {
   };
 
   useEffect(() => {
-    getTipoSangre();
+    getActividadesComponent();
   }, []);
 
   const handleChange = ({ label, value }) => {
     handleChangeData({
-      target: { name, value: { codTipoSangre: value, nomTipoSangre: label } },
+      target: { name, value: { codActividad: value, titulo: label } },
     });
   };
 
   return (
-    <div className="TipoSangre">
+    <div className="ActividadesComponent">
       <Select
-        defaultValue={
-          value
-            ? {
-              label: value?.nomTipoSangre,
-              value: value?.codTipoSangre,
-            }
-            : null
-        }
+        defaultValue={value ? {
+          label: value?.titulo,
+          value: value?.codActividad,
+        } : null}
         options={data.map((docu) => ({
-          label: docu.nomTipoSangre,
-          value: docu.codTipoSangre,
+          label: docu.titulo,
+          value: docu.codActividad,
         }))}
         onChange={handleChange}
-        placeholder="Seleccionar Tipo Sangre"
+        placeholder="seleccione Tipo Genero"
       />
     </div>
   );
 }
 
-export default TipoSangre;
+export default ActividadesComponent;

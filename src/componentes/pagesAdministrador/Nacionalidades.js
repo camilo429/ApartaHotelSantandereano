@@ -30,20 +30,8 @@ function Nacionalidades({ name, handleChangeData, value = null }) {
     }).then(response => {
       if (response.status === 200) {
         setData(response.data);
-        //  console.log(response.data);
-      } else {
-        this.setState({
-          error: true,
-          errorMsg: response.data.error_description
-        })
+        //console.log(response.data);
       }
-      // console.log(response.data);
-    }).catch(error => {
-      setState({
-        error: true,
-        errorMsg: "Error:400"
-      })
-      //  console.log(error.message);
     })
   };
   useEffect(() => {
