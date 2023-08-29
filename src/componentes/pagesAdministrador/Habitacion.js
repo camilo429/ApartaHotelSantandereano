@@ -57,14 +57,14 @@ function Habitacion() {
 
   const [consolaSeleccionada, setConsolaSeleccionada] = useState({
     codHabitacion: "",
-    descripHabitacion: "",
-    estadoHabitacion: "",
-    imagenHabitacion: "",
-    maxPersonasDisponibles: "",
     nombreHabitacion: "",
+    descripHabitacion: "",
     numHabitacion: "",
     pisoHabitacion: "",
-    precioHabitacion: "",
+    maxPersonasDisponibles: "",
+    precioDia: "",
+    estadoHabitacion: "",
+    imagenHabitacion: ""
   });
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -117,10 +117,12 @@ function Habitacion() {
       }
     }).then((response) => {
       console.log(response.status);
+      console.log(consolaSeleccionada);
       if (response.status == 201) {
         var dataNueva = data;
         dataNueva.map((consola) => {
           if (consolaSeleccionada.codHabitacion === consola.codHabitacion) {
+            consola.codHabitacion = consolaSeleccionada.codHabitacion
             consola.descripHabitacion = consolaSeleccionada.descripHabitacion
             consola.estadoHabitacion = "ocupado"
             consola.imagenHabitacion = consolaSeleccionada.imagenHabitacion
@@ -184,16 +186,7 @@ function Habitacion() {
       <h3>Agregar Habitacion</h3>
       <Form>
         <div className="flex">
-          <FormGroup className="me-2">
-            <Label for="exampleEmail">Imagen</Label>
-            <input
-              className="form-control"
-              name="imagenHabitacion"
-              placeholder="url Imagen"
-              onChange={handleChange}
-            />
-          </FormGroup>
-          <FormGroup className="me-2" style={{ marginLeft: "4%" }}>
+          <FormGroup className="me-2" >
             <Label for="exampleEmail">Nombre Habitación</Label>
             <input
               name="nombreHabitacion"
@@ -212,9 +205,6 @@ function Habitacion() {
               onChange={handleChange}
             />
           </FormGroup>
-        </div>
-
-        <div className="flex">
           <FormGroup className="me-2">
             <Label for="exampleEmail">Piso Habitación</Label>
             <Input
@@ -225,29 +215,41 @@ function Habitacion() {
               onChange={handleChange}
             />
           </FormGroup>
-          <FormGroup className="me-2" style={{ marginLeft: "4%" }}>
+        </div>
+
+        <div className="flex">
+          <FormGroup className="me-2">
             <Label for="exampleEmail">Capacidad</Label>
-            <input
+            <Input
               name="maxPersonasDisponibles"
-              placeholder="Número Personas"
+              placeholder="Capacidad(Personas)"
               type="number"
               className="form-control"
               onChange={handleChange}
             />
           </FormGroup>
           <FormGroup className="me-2" style={{ marginLeft: "4%" }}>
-            <Label for="exampleEmail">Precio Habitación</Label>
+            <Label for="exampleEmail">Precio Habitación(Día)</Label>
             <input
-              name="precioHabitacion"
+              name="precioDia"
               placeholder="Valor Habitación"
               type="number"
               className="form-control"
               onChange={handleChange}
             />
           </FormGroup>
+          <FormGroup className="me-2">
+            <Label for="exampleEmail">Imagen</Label>
+            <input
+              className="form-control"
+              name="imagenHabitacion"
+              placeholder="url Imagen"
+              onChange={handleChange}
+            />
+          </FormGroup>
         </div>
-        <div className="flex">
 
+        <div className="flex">
           <FormGroup className="me-2" style={{ width: "30%" }}>
             <Label for="exampleEmail">Estado Habitación</Label>
             <select
@@ -290,39 +292,39 @@ function Habitacion() {
       <Form>
         <div className="flex">
           <FormGroup className="me-2">
-            <Label for="exampleEmail">Dirección</Label>
+            <Label for="exampleEmail">Nombre</Label>
             <input
               className="form-control"
-              name="imagenHabitacion"
+              name="nombreHabitacion"
               onChange={handleChange}
-              value={consolaSeleccionada?.imagenHabitacion}
+              value={consolaSeleccionada?.nombreHabitacion}
               placeholder={
-                !consolaSeleccionada?.imagenHabitacion
-                  ? "Diligencia su nombre"
+                !consolaSeleccionada?.nombreHabitacion
+                  ? "Nombre"
                   : "Nombre"
               }
             />
           </FormGroup>
           <FormGroup className="me-2" style={{ marginLeft: "4%" }}>
-            <Label for="exampleEmail">Nombre Habitación</Label>
-            <input
-              className="form-control"
-              name="nombreHabitacion"
-              onChange={handleChange}
-              value={
-                consolaSeleccionada && consolaSeleccionada.nombreHabitacion
-              }
-              placeholder="Tipo Habitación"
-            />
-          </FormGroup>
-          <FormGroup className="me-2" style={{ marginLeft: "4%" }}>
-            <Label for="exampleEmail">Número Habitación</Label>
+            <Label for="exampleEmail">Numero Habitación</Label>
             <input
               className="form-control"
               name="numHabitacion"
               onChange={handleChange}
-              value={consolaSeleccionada && consolaSeleccionada.numHabitacion}
-              placeholder="Número habitación"
+              value={
+                consolaSeleccionada && consolaSeleccionada.numHabitacion
+              }
+              placeholder="Número Habitación"
+            />
+          </FormGroup>
+          <FormGroup className="me-2" style={{ marginLeft: "4%" }}>
+            <Label for="exampleEmail">Piso Habitación</Label>
+            <input
+              className="form-control"
+              name="pisoHabitacion"
+              onChange={handleChange}
+              value={consolaSeleccionada && consolaSeleccionada.pisoHabitacion}
+              placeholder="Piso Habitación"
               type="number"
             />
           </FormGroup>
@@ -330,39 +332,39 @@ function Habitacion() {
 
         <div className="flex">
           <FormGroup className="me-2">
-            <Label for="exampleEmail">Piso</Label>
-            <input
-              className="form-control"
-              name="pisoHabitacion"
-              onChange={handleChange}
-              value={consolaSeleccionada && consolaSeleccionada.pisoHabitacion}
-              placeholder="Correo Electronico"
-              type="number"
-            />
-          </FormGroup>
-          <FormGroup className="me-2" style={{ marginLeft: "4%" }}>
-            <Label for="exampleEmail">Capacidad</Label>
+            <Label for="exampleEmail">Capacidad (#Personas)</Label>
             <input
               className="form-control"
               name="maxPersonasDisponibles"
               onChange={handleChange}
+              value={consolaSeleccionada && consolaSeleccionada.maxPersonasDisponibles}
+              placeholder="#Personas"
+              type="number"
+            />
+          </FormGroup>
+          <FormGroup className="me-2" style={{ marginLeft: "4%" }}>
+            <Label for="exampleEmail">Valor (Persona)</Label>
+            <input
+              className="form-control"
+              name="precioDia"
+              onChange={handleChange}
               value={
                 consolaSeleccionada &&
-                consolaSeleccionada.maxPersonasDisponibles
+                consolaSeleccionada.precioDia
               }
               type="number"
             />
           </FormGroup>
           <FormGroup className="me-2" style={{ marginLeft: "4%" }}>
-            <Label for="exampleEmail">Precio Habitación</Label>
+            <Label for="exampleEmail">Imagen Habitacion</Label>
             <input
               className="form-control"
-              name="precioHabitacion"
+              name="imagenHabitacion"
               onChange={handleChange}
               value={
-                consolaSeleccionada && consolaSeleccionada.precioHabitacion
+                consolaSeleccionada && consolaSeleccionada.imagenHabitacion
               }
-              placeholder="Precio"
+              placeholder="imagenHabitacion"
             />
           </FormGroup>
         </div>
@@ -474,7 +476,7 @@ function Habitacion() {
                       <th>{consola.numHabitacion}</th>
                       <th>{consola.pisoHabitacion}</th>
                       <th>{consola.maxPersonasDisponibles}</th>
-                      <th>{consola.precioHabitacion}</th>
+                      <th>{consola.precioDia}</th>
                       <th>
                         <Button
                           className="flex"
@@ -485,6 +487,7 @@ function Habitacion() {
                           <MdDelete.MdDelete className="me-2" />
                           Eliminar
                         </Button>
+
                         <Button
                           className="flex"
                           onClick={() => seleccionarHabitacion(consola, "Editar")}

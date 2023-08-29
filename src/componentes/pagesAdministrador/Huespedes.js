@@ -76,7 +76,6 @@ function Huespedes() {
   const [consolaSeleccionada, setConsolaSeleccionada] = useState({
     nombre: "",
     apellido: "",
-    direccion: "",
     numCelular: "",
     correo: "",
     tipoDocumento: {
@@ -92,7 +91,6 @@ function Huespedes() {
     nomContactoEmergencia: "",
     numContactoEmergencia: "",
     estadoHuesped: "true",
-
   });
 
 
@@ -109,9 +107,6 @@ function Huespedes() {
     }
     if (consolaSeleccionada.apellido.length < 4 || consolaSeleccionada.apellido.length > 30) {
       errors.apellido = "Apellido es corto o muy largo"
-    }
-    if (consolaSeleccionada.direccion.length < 4 || consolaSeleccionada.direccion.length > 40) {
-      errors.direccion = "Dirección NO válida"
     }
     if (!numeroCelularExpresion.test(consolaSeleccionada.numCelular)) {
       errors.numCelular = "Número No válido"
@@ -196,7 +191,6 @@ function Huespedes() {
             if (consolaSeleccionada.codHuesped === consola.codHuesped) {
               consola.nombre = consolaSeleccionada.nombre
               consola.apellido = consolaSeleccionada.apellido
-              consola.direccion = consolaSeleccionada.direccion
               consola.numCelular = consolaSeleccionada.numCelular
               consola.correo = consolaSeleccionada.correo
               consola.codTipoDocumento = consolaSeleccionada.tipoDocumento.codTipoDocumento
@@ -265,7 +259,7 @@ function Huespedes() {
     <div className={styles.modal}>
       <h3>Agregar Huesped</h3>
       <Form>
-        <div className="flex">
+        <div className="flex" >
           <FormGroup className="me-2">
             <Label for="exampleEmail">Nombre</Label>
             <input
@@ -300,23 +294,6 @@ function Huespedes() {
             }
           </FormGroup>
           <FormGroup className="me-2">
-            <Label for="exampleEmail">Direccion</Label>
-            <input
-              className="form-control"
-              name="direccion"
-              onChange={handleChange}
-              placeholder={
-                !consolaSeleccionada?.direccion ? "Dirección recidencia" : "Dirección"
-              }
-            />
-            {
-              errors.direccion &&
-              <div style={estilos}>
-                <p>{errors.direccion}</p>
-              </div>
-            }
-          </FormGroup>
-          <FormGroup className="me-2">
             <Label for="exampleEmail">Número Celular</Label>
             <input
               className="form-control"
@@ -333,6 +310,7 @@ function Huespedes() {
               </div>
             }
           </FormGroup>
+
         </div>
 
         <div className="flex">
@@ -480,17 +458,6 @@ function Huespedes() {
             />
           </FormGroup>
           <FormGroup className="me-2">
-            <Label for="exampleEmail">Direccion</Label>
-            <input
-              className="form-control"
-              name="direccion"
-              onChange={handleChange}
-              value={consolaSeleccionada && consolaSeleccionada.direccion}
-              placeholder="direccion"
-              disabled
-            />
-          </FormGroup>
-          <FormGroup className="me-2">
             <Label for="exampleEmail">Número Celular</Label>
             <input
               className="form-control"
@@ -629,24 +596,6 @@ function Huespedes() {
               errors.apellido &&
               <div style={estilos}>
                 <p>{errors.apellido}</p>
-              </div>
-            }
-          </FormGroup>
-          <FormGroup className="me-2">
-            <Label for="exampleEmail">Direccion</Label>
-            <input
-              className="form-control"
-              name="direccion"
-              onChange={handleChange}
-              value={consolaSeleccionada && consolaSeleccionada.direccion}
-              placeholder={
-                !consolaSeleccionada?.direccion ? " la dirección" : "Dirección"
-              }
-            />
-            {
-              errors.direccion &&
-              <div style={estilos}>
-                <p>{errors.direccion}</p>
               </div>
             }
           </FormGroup>
@@ -851,7 +800,6 @@ function Huespedes() {
                 <tr>
                   <th>Nombre</th>
                   <th>Apellido</th>
-                  <th>Dirección</th>
                   <th>Número celular</th>
                   <th>Tipo Documento</th>
                   <th>Lugar Origen</th>
@@ -864,7 +812,6 @@ function Huespedes() {
                     <tr key={consola.codHuesped} >
                       <td>{consola.nombre}</td>
                       <td>{consola.apellido}</td>
-                      <td>{consola.direccion}</td>
                       <td>{consola.numCelular}</td>
                       <th>{consola.numDocumento}</th>
                       <th>{consola.lugarOrigen}</th>
