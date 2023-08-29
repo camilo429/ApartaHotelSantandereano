@@ -9,14 +9,6 @@ const url = Apiurl + "tipoDocumento/listarTipoDocumentos"
 
 function TipoDocumento({ name, handleChangeData, value = null }) {
     const [data, setData] = useState([]);
-    const [state, setState] = useState({
-        form: {
-            "usuario": "",
-            "password": ""
-        },
-        error: false,
-        errorMsg: ""
-    });
 
     const getTipoDocumento = async () => {
         axios.request({
@@ -38,12 +30,6 @@ function TipoDocumento({ name, handleChangeData, value = null }) {
                 })
             }
             // console.log(response.data);
-        }).catch(error => {
-            setState({
-                error: true,
-                errorMsg: "Error:400"
-            })
-            //  console.log(error.message);
         })
     }
 

@@ -1,0 +1,10 @@
+input::placeholder {
+    color: black;
+}
+
+input {
+    color: black
+}
+h3, h6 {
+    text-align: center;
+}

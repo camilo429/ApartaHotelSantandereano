@@ -65,13 +65,11 @@ class Login extends React.Component {
                     errorMsg: response.data.error_description
                 })
             }
-            // console.log(response.data);
         }).catch(error => {
             this.setState({
                 error: true,
                 errorMsg: "Error:400"
             })
-            //  console.log(error.message);
         })
     }
     render() {
@@ -96,8 +94,8 @@ class Login extends React.Component {
                             this.state.error === true &&
                             <div className="alert alert-danger" role="alert">
                                 {this.state.errorMsg}
-                            </div>}
-
+                            </div>
+                        }
                     </div>
                 </div>
             </React.Fragment>

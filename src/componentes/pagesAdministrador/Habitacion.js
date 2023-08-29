@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 // librerias
-import axios from "axios";
-import $ from "jquery";
+import axios from "axios"
 // Estilos
 import { Form, FormGroup, Label, Input } from "reactstrap";
 import "../../App.scss";
@@ -9,28 +8,45 @@ import { makeStyles } from "@mui/styles";
 import { Modal, Button } from "@mui/material";
 // Iconos
 import * as MdDelete from "react-icons/md";
+import * as AiFillEdit from "react-icons/ai";
 // url
 import { Apiurl } from "../../services/userService";
 
 
 const url = Apiurl + "habitacion/listarHabitaciones";
-const urlG = Apiurl + "habitacion/registrarHabitacion";
-const urlE = Apiurl + "habitacion/actualizarHuesped/";
-const urlD = Apiurl + "habitacion/deleteHabitacion/";
+const urlG = Apiurl + "habitacion/crearHabitacion";
+const urlE = Apiurl + "habitacion/actualizarHabitacion/";
+const urlD = Apiurl + "habitacion/eliminarHabitacion/";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
     position: "absolute",
-    width: "900px",
-    height: "400px",
+    width: "50%",
+    height: "60%",
     backgroundColor: "white",
-    padding: 10,
+    padding: "1%",
+    boder: "2px solid #000",
+    top: "40%",
+    left: "50%",
+    transform: "translate(-50%,-50%)",
+    fontSize: "1.2rem",
+    borderRadius: "5px",
+  },
+}));
+
+const useEstilo = makeStyles((theme) => ({
+  modal: {
+    position: "absolute",
+    width: "40%",
+    height: "40%",
+    backgroundColor: "white",
+    padding: "5%",
     boder: "2px solid #000",
     top: "50%",
     left: "50%",
     transform: "translate(-50%,-50%)",
   },
-}));
+}))
 function Habitacion() {
   const styles = useStyles();
   const [data, setData] = useState([]);
@@ -40,15 +56,15 @@ function Habitacion() {
   //const [modalVer, setModalVer] = useState(false);
 
   const [consolaSeleccionada, setConsolaSeleccionada] = useState({
-    imagenHabitacion: "",
-    nombreHabitacion: "",
+    codHabitacion: "",
     descripHabitacion: "",
+    estadoHabitacion: "",
+    imagenHabitacion: "",
+    maxPersonasDisponibles: "",
+    nombreHabitacion: "",
     numHabitacion: "",
     pisoHabitacion: "",
-    maxPersonasDisponibles: "",
     precioHabitacion: "",
-    estadoHabitacion: "",
-    idHabitacion: "",
   });
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -57,78 +73,87 @@ function Habitacion() {
       [name]: value,
     }));
   };
-  const [state, setState] = useState({
-    form: {
-      "usuario": "",
-      "password": ""
-    },
-    error: false,
-    errorMsg: ""
-  });
 
   const peticionGet = async () => {
-    const token = {
-      "access_token": sessionStorage.getItem("access_token")
-    }
-   // console.log(token)
     axios.request({
       method: "get",
       url: url,
       withCredentials: true,
       crossdomain: true,
-      auth: {
-        username: "angularapp", // This is the client_id
-        password: "angu1234lar" // This is the client_secret
-    },
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        "Cache-Control": "no-cache",
-        Authorization: `Bearer Token ${token}`
+        Authorization: `Bearer ${sessionStorage.getItem("access_token")}`
       }
     }).then(response => {
-      console.log(response.data);
+      if (response.status === 200) {
+        setData(response.data);
+        console.log(response.data);
+      }
     })
-    // await axios.get(url).then((response) => {
-    //   setData(response.data);
-    // });
   };
   const peticionPost = async (e) => {
     e.preventDefault();
-    console.log("esta es la data seleccionada", consolaSeleccionada);
-    const response = await axios.post(urlG, consolaSeleccionada);
-    console.log(response.data);
+
+    const response = await axios.post(urlG, consolaSeleccionada, {
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("access_token")}`
+      }
+    });
     setData(data.concat(response.data));
     peticionGet();
     abrirCerrarModalInsertar();
+    alert("La habitación ha sido creada");
+
   };
+
   const peticionPut = async () => {
-    await axios
-      .put(urlE + consolaSeleccionada.idHuesped, consolaSeleccionada)
-      .then((response) => {
+    await axios.request({
+      method: "put",
+      url: urlE + consolaSeleccionada.codHabitacion,
+      withCredentials: true,
+      crossdomain: true,
+      data: consolaSeleccionada,
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("access_token")}`
+      }
+    }).then((response) => {
+      console.log(response.status);
+      if (response.status == 201) {
         var dataNueva = data;
         dataNueva.map((consola) => {
-          if (consolaSeleccionada.idHuesped === consola.idHuesped) {
-            consola.nombre = consolaSeleccionada.nombre;
+          if (consolaSeleccionada.codHabitacion === consola.codHabitacion) {
+            consola.descripHabitacion = consolaSeleccionada.descripHabitacion
+            consola.estadoHabitacion = "ocupado"
+            consola.imagenHabitacion = consolaSeleccionada.imagenHabitacion
+            consola.maxPersonasDisponibles = consolaSeleccionada.maxPersonasDisponibles
+            consola.nombreHabitacion = consolaSeleccionada.nombreHabitacion
+            consola.numHabitacion = consolaSeleccionada.numHabitacion
+            consola.pisoHabitacion = consolaSeleccionada.pisoHabitacion
+            consola.precioHabitacion = consolaSeleccionada.precioHabitacion
           }
-        });
+        })
         setData(dataNueva);
         peticionGet();
         abrirCerrarModalEditar();
-      });
-  };
-
+        alert("La habitación ha sido actualizada");
+      }
+    });
+  }
   const peticionDelete = async () => {
-    await axios
-      .delete(urlD + consolaSeleccionada.numHabitacion)
-      .then((response) => {
-        setData(
-          data.filter(
-            (consola) =>
-              consola.numHabitacion !== consolaSeleccionada.numHabitacion
-          )
-        );
+    axios.request({
+      method: "delete",
+      url: urlD + consolaSeleccionada.codHabitacion,
+      withCredentials: true,
+      crossdomain: true,
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("access_token")}`
+      }
+    }).then(response => {
+      if (response.status === 200) {
+        setData(data.filter((consola) => consola.codHabitacion !== consolaSeleccionada.codHabitacion));
         abrirCerrarModalEliminar();
-      });
+        alert("Habitación Eliminada!")
+      }
+    })
   };
 
   const abrirCerrarModalInsertar = () => {
@@ -156,46 +181,34 @@ function Habitacion() {
 
   const bodyInsertar = (
     <div className={styles.modal}>
-      <h3>Agregar Empleado</h3>
+      <h3>Agregar Habitacion</h3>
       <Form>
         <div className="flex">
           <FormGroup className="me-2">
             <Label for="exampleEmail">Imagen</Label>
-            <Input
+            <input
+              className="form-control"
               name="imagenHabitacion"
-              placeholder="imagenHabitacion"
-              type="text"
-              className="w-90 me-2"
+              placeholder="url Imagen"
               onChange={handleChange}
             />
           </FormGroup>
-          <FormGroup className="me-2">
-            <Label for="exampleEmail">Tipo Habitación</Label>
-            <Input
+          <FormGroup className="me-2" style={{ marginLeft: "4%" }}>
+            <Label for="exampleEmail">Nombre Habitación</Label>
+            <input
               name="nombreHabitacion"
-              placeholder="Tipo Habitación"
-              type="text"
-              className="w-90 me-2"
+              placeholder="Nombre Habitación"
+              className="form-control"
               onChange={handleChange}
             />
           </FormGroup>
-          <FormGroup className="me-2">
-            <Label for="exampleEmail">Descripción </Label>
-            <Input
-              name="descripHabitacion"
-              placeholder="Descripción Habitación"
-              type="text"
-              className="w-90"
-              onChange={handleChange}
-            />
-          </FormGroup>
-          <FormGroup className="me-2">
+          <FormGroup className="me-2" style={{ marginLeft: "4%" }}>
             <Label for="exampleEmail">Número Habitación</Label>
-            <Input
+            <input
               name="numHabitacion"
               placeholder="Número Habitación"
               type="number"
-              className="w-90"
+              className="form-control"
               onChange={handleChange}
             />
           </FormGroup>
@@ -208,27 +221,56 @@ function Habitacion() {
               name="pisoHabitacion"
               placeholder="Piso"
               type="number"
-              className="w-90"
+              className="form-control"
               onChange={handleChange}
             />
           </FormGroup>
-          <FormGroup className="me-2">
+          <FormGroup className="me-2" style={{ marginLeft: "4%" }}>
             <Label for="exampleEmail">Capacidad</Label>
-            <Input
+            <input
               name="maxPersonasDisponibles"
+              placeholder="Número Personas"
               type="number"
-              className="w-90"
+              className="form-control"
               onChange={handleChange}
             />
           </FormGroup>
-          <FormGroup className="me-2">
+          <FormGroup className="me-2" style={{ marginLeft: "4%" }}>
             <Label for="exampleEmail">Precio Habitación</Label>
-            <Input
+            <input
               name="precioHabitacion"
               placeholder="Valor Habitación"
               type="number"
-              className="w-90"
+              className="form-control"
               onChange={handleChange}
+            />
+          </FormGroup>
+        </div>
+        <div className="flex">
+
+          <FormGroup className="me-2" style={{ width: "30%" }}>
+            <Label for="exampleEmail">Estado Habitación</Label>
+            <select
+              className="form-select"
+              name="estadoHabitacion"
+              placeholder="estado Habitación"
+              onChange={handleChange}
+            >
+              <option value="1">Ocupada</option>
+              <option value="2">Sucia</option>
+              <option value="3">Apartada</option>
+              <option value="3">Libre</option>
+            </select>
+          </FormGroup>
+          <FormGroup className="me-2" style={{ width: "70%", height: "100%" }}>
+            <Label for="exampleEmail">Descripción </Label>
+            <textarea
+              className="form-control"
+              name="descripHabitacion"
+              placeholder="Descripción Habitación"
+              type="text"
+              onChange={handleChange}
+              style={{ width: "100%", height: "100%" }}
             />
           </FormGroup>
         </div>
@@ -249,7 +291,8 @@ function Habitacion() {
         <div className="flex">
           <FormGroup className="me-2">
             <Label for="exampleEmail">Dirección</Label>
-            <Input
+            <input
+              className="form-control"
               name="imagenHabitacion"
               onChange={handleChange}
               value={consolaSeleccionada?.imagenHabitacion}
@@ -260,9 +303,10 @@ function Habitacion() {
               }
             />
           </FormGroup>
-          <FormGroup className="me-2">
-            <Label for="exampleEmail">Tipo Habitación</Label>
-            <Input
+          <FormGroup className="me-2" style={{ marginLeft: "4%" }}>
+            <Label for="exampleEmail">Nombre Habitación</Label>
+            <input
+              className="form-control"
               name="nombreHabitacion"
               onChange={handleChange}
               value={
@@ -271,20 +315,10 @@ function Habitacion() {
               placeholder="Tipo Habitación"
             />
           </FormGroup>
-          <FormGroup className="me-2">
-            <Label for="exampleEmail">Descripción Habitación</Label>
-            <Input
-              name="descripHabitacion"
-              onChange={handleChange}
-              value={
-                consolaSeleccionada && consolaSeleccionada.descripHabitacion
-              }
-              placeholder="Descripción Habitación"
-            />
-          </FormGroup>
-          <FormGroup className="me-2">
+          <FormGroup className="me-2" style={{ marginLeft: "4%" }}>
             <Label for="exampleEmail">Número Habitación</Label>
-            <Input
+            <input
+              className="form-control"
               name="numHabitacion"
               onChange={handleChange}
               value={consolaSeleccionada && consolaSeleccionada.numHabitacion}
@@ -297,7 +331,8 @@ function Habitacion() {
         <div className="flex">
           <FormGroup className="me-2">
             <Label for="exampleEmail">Piso</Label>
-            <Input
+            <input
+              className="form-control"
               name="pisoHabitacion"
               onChange={handleChange}
               value={consolaSeleccionada && consolaSeleccionada.pisoHabitacion}
@@ -305,10 +340,10 @@ function Habitacion() {
               type="number"
             />
           </FormGroup>
-
-          <FormGroup className="me-2">
+          <FormGroup className="me-2" style={{ marginLeft: "4%" }}>
             <Label for="exampleEmail">Capacidad</Label>
-            <Input
+            <input
+              className="form-control"
               name="maxPersonasDisponibles"
               onChange={handleChange}
               value={
@@ -318,9 +353,10 @@ function Habitacion() {
               type="number"
             />
           </FormGroup>
-          <FormGroup className="me-2">
+          <FormGroup className="me-2" style={{ marginLeft: "4%" }}>
             <Label for="exampleEmail">Precio Habitación</Label>
-            <Input
+            <input
+              className="form-control"
               name="precioHabitacion"
               onChange={handleChange}
               value={
@@ -330,6 +366,39 @@ function Habitacion() {
             />
           </FormGroup>
         </div>
+        <div className="flex">
+          <FormGroup className="me-2" style={{ width: "40%" }}>
+            <Label for="exampleEmail">Estado Habitación</Label>
+            <select
+              className="form-select"
+              name="estadoHabitacion"
+              placeholder="estado Habitación"
+              onChange={handleChange}
+              value={
+                consolaSeleccionada && consolaSeleccionada.estadoHabitacion
+              }
+            >
+              <option value="1">Ocupada</option>
+              <option value="2">Sucia</option>
+              <option value="3">Apartada</option>
+              <option value="3">Libre</option>
+            </select>
+          </FormGroup>
+          <FormGroup className="me-2" style={{ width: "100%", height: "100%" }}>
+            <Label for="exampleEmail">Descripción Habitación</Label>
+            <textarea
+              className="form-control"
+              name="descripHabitacion"
+              onChange={handleChange}
+              value={
+                consolaSeleccionada && consolaSeleccionada.descripHabitacion
+              }
+              placeholder="Descripción Habitación"
+              style={{ width: "100%", height: "100%" }}
+            />
+          </FormGroup>
+        </div>
+
       </Form>
       <div align="right">
         <Button color="primary" onClick={() => peticionPut()}>
@@ -340,7 +409,7 @@ function Habitacion() {
     </div>
   );
   const bodyEliminar = (
-    <div className={styles.modal}>
+    <div className={useEstilo.modal}>
       <p>
         Esta seguro de Eliminar la Habitación
         <b>
@@ -363,8 +432,6 @@ function Habitacion() {
   return (
     <div className="Habitacion">
       <br />
-      <br></br>
-      <br></br>
       <div className="card shadow mb-4">
         <div className="card-header py-3">
           <div className="flex">
@@ -407,7 +474,7 @@ function Habitacion() {
                       <th>{consola.numHabitacion}</th>
                       <th>{consola.pisoHabitacion}</th>
                       <th>{consola.maxPersonasDisponibles}</th>
-                      <th>{consola.estadoHabitacion}</th>
+                      <th>{consola.precioHabitacion}</th>
                       <th>
                         <Button
                           className="flex"
@@ -417,6 +484,13 @@ function Habitacion() {
                         >
                           <MdDelete.MdDelete className="me-2" />
                           Eliminar
+                        </Button>
+                        <Button
+                          className="flex"
+                          onClick={() => seleccionarHabitacion(consola, "Editar")}
+                        >
+                          <AiFillEdit.AiFillEdit className="me-2" />
+                          Editar
                         </Button>
                       </th>
                     </tr>
