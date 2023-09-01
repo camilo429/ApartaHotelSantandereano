@@ -2,6 +2,15 @@ import React from "react";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
 import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
+//Estilos
+import "../../vendors/bootstrap-datepicker/bootstrap-datetimepicker.min.css";
+import "../../vendors/nice-select/css/nice-select.css";
+import "../estilos/style.css";
+import "../../css/responsive.css";
+import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
+import "../../../node_modules/bootstrap/scss/bootstrap.scss";
+import "../../css/sb-admin-2.min.css";
+import "../../vendor/fontawesome-free/css/all.min.css";
 
 function Contacto() {
   const { isLoaded } = useLoadScript({
@@ -22,15 +31,9 @@ function Contacto() {
   }
 
   return (
-    <div>
+    <div className="Contacto" style={{ background: "white", width:"100%" }}>
       <Navbar />
       <section className="breadcrumb_area">
-        <div
-          className="overlay bg-parallax"
-          data-stellar-ratio="0.8"
-          data-stellar-vertical-offset="0"
-          data-background=""
-        ></div>
         <div className="container">
           <div className="page-cover text-center">
             <h2 className="page-cover-tittle">Contactanos</h2>
@@ -43,8 +46,7 @@ function Contacto() {
           </div>
         </div>
       </section>
-      <div>
-        <br></br>
+      <div style={{ background: "white" }}>
         <hr className="my-4" />
         <br></br>
         <h2 className="post-title">Estamos Ubicados en: carrera 80a#2-15</h2>
@@ -65,24 +67,18 @@ function Contacto() {
       </div>
 
       {/* //mostramos la información para el mensaje */}
-      <div className="flex" style={{width:"90%", marginLeft:"10%"}}>
+      <div className="flex" >
         {" "}
-        <div className="col-md-3">
+        <div className="col-md-3" style={{ width: "100%", marginRight: "5%" }}>
           <div className="contact_info">
             <div className="info_item">
               <i className="lnr lnr-home"></i>
               <h6>Bogotá, Colombia</h6>
-              <p>Aparta Hotel Santandereano; (kennedy)</p>
+              <p>Aparta Hotel Santandereano (kennedy) +(57) 3107763328</p>
+              <p>Servicio las 24/7/365 año</p>
             </div>
             <div className="info_item">
-              <i className="lnr lnr-phone-handset"></i>
-              <h6>
-                <a href="/whatsapp.com">(57) 3107763328</a>
-              </h6>
-              <p>Servicio24 Horas</p>
-            </div>
-            <div class="info_item">
-              <i class="lnr lnr-envelope"></i>
+              <i className="lnr lnr-envelope"></i>
               <h6>
                 <a href="/gmail.com">apartahotelsantandereano@gmail.com</a>
               </h6>
@@ -91,64 +87,55 @@ function Contacto() {
           </div>
         </div>
         {/* // enviar mensaje o pregunta */}
-        <div className="col-md-9">
-          <form
-            className="row contact_form"
-            action="contact_process.php"
-            method="post"
-            id="contactForm"
-            novalidate="novalidate"
-          >
-            <div className="col-md-6">
-              <div className="form-group">
+        <div className="form">
+          <form>
+            <div className="form-row" style={{width:"80%"}}>
+              <div className="form-group col-md-6">
+                <label>Nombre</label>
                 <input
-                  type="text"
                   className="form-control"
-                  id="name"
-                  name="name"
+                  name="nombre"
                   placeholder="Ingrese su nombre"
                 />
               </div>
-              <div className="form-group">
+              <div className="form-group col-md-6">
+                <label>Correo </label>
                 <input
                   type="email"
                   className="form-control"
-                  id="email"
                   name="email"
                   placeholder="Ingrese su correo"
                 />
               </div>
-              <div className="form-group">
+              <div className="form-group col-md-6">
+                <label>Número Celular</label>
                 <input
-                  type="text"
+                  type="number"
                   className="form-control"
-                  id="subject"
-                  name="subject"
+                  name="numTelefono"
                   placeholder="Ingrese su número de telefono"
                 />
               </div>
-            </div>
-            <div className="col-md-6">
-              <div className="form-group">
-                <textarea
+              <div className="form-group col-md-6">
+                <label>Mensaje</label>
+                <input
                   className="form-control"
-                  name="message"
-                  id="message"
-                  rows="1"
+                  name="comentario"
+                  type="texarea"
                   placeholder="Ingrese su mensaje"
-                ></textarea>
+                />
               </div>
             </div>
-            <div className="col-md-12 text-right">
-              <button
-                type="submit"
-                value="submit"
-                className="btn theme_btn button_hover"
-              >
-                Enviar Mensaje
-              </button>
-            </div>
           </form>
+          <div className="col-md-12 text-center">
+            <button
+              type="submit"
+              value="submit"
+              className="btn theme_btn button_hover"
+            >
+              Enviar Mensaje
+            </button>
+          </div>
         </div>
       </div>
       <Footer />

@@ -1,103 +1,254 @@
-import React from "react";
-
-import "../../App.scss";
+import React, { useState } from "react";
+//librerias
+import axios from "axios";
+import $ from "jquery";
+//Estilos
+import "../../vendors/bootstrap-datepicker/bootstrap-datetimepicker.min.css";
+import "../../vendors/nice-select/css/nice-select.css";
+import "../estilos/style.css";
+import "../../css/responsive.css";
 import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "../../../node_modules/bootstrap/scss/bootstrap.scss";
 import "../../css/sb-admin-2.min.css";
 import "../../vendor/fontawesome-free/css/all.min.css";
-
-//librerias que necesito
-import "../../css/bootstrap.css";
-import "../../vendors/linericon/style.css";
-import "../../css/font-awesome.min.css";
-import "../../vendor/owl-carousel/owl.carousel.min.css";
-import "../../vendors/bootstrap-datepicker/bootstrap-datetimepicker.min.css";
-import "../../vendors/nice-select/css/nice-select.css";
-
-import "../estilos/style.css";
-import "../../css/responsive.css";
-
+//Components
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+import { Apiurl } from "../../services/userService";
+//Reactrap
+import { Form, FormGroup, Label, Input } from "reactstrap";
+import { makeStyles } from "@mui/styles";
+import { Modal } from "@mui/material";
 
+const useStyles = makeStyles((theme) => ({
+  modal: {
+    position: "absolute",
+    width: "60%",
+    height: "70%",
+    backgroundColor: "white",
+    padding: "1%",
+    boder: "2px solid #000",
+    top: "40%",
+    left: "50%",
+    transform: "translate(-50%,-50%)",
+    fontSize: "0.9rem",
+    borderRadius: "5px",
+  },
+}));
 function Inicio() {
+  const styles = useStyles();
+  // const [data, setData] = useState([]);
+  const [modalInsertar, setModalInsertar] = useState(false);
+
+  const [consolaSeleccionada, setConsolaSeleccionada] = useState({
+    codReservacion: "",
+    fechaEntrada: "",
+    fechaSalida: "",
+    totalDias: "",
+    adultos: "",
+    ninos: "",
+    tipoDocumento: "",
+    numDocumento: "",
+    nombre: "",
+    apellido: "",
+    email: "",
+    habitacion: "",
+  });
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setConsolaSeleccionada((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+  const peticionPost = async (e) => {
+    var reqData = {
+      "username": this.state.form.usuario,
+      "password": this.state.form.password,
+      "grant_type": "password",
+  }
+
+  axios.request({
+      method: "post",
+      url: Apiurl + "reservaciones/crearReservacion",
+      withCredentials: true,
+      crossdomain: true,
+      data: $.param(reqData),
+      auth: {
+          username: "angularapp", // This is the client_id
+          password: "angu1234lar" // This is the client_secret
+      }, header: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "Cache-Control": "no-cache"
+      }
+  }).then(response => {
+      if (response.status === 200) {
+          alert("Se ha solicitado una habitación correctamente.")
+          console.log(response.data);
+      } else {
+          this.setState({
+              error: true,
+              errorMsg: response.data.error_description
+          })
+      }
+  }).catch(error => {
+      this.setState({
+          error: true,
+          errorMsg: "Error:400"
+      })
+  })
+  };
+  const abrirCerrarModalInsertar = () => {
+    setModalInsertar(!modalInsertar);
+  };
+  const bodyInsertar = (
+    <div className={styles.modal}>
+      <h3>Agendar una Reservación</h3>
+      <Form style={{ marginLeft: "3%" }}>
+        <div className="flex">
+          <FormGroup className="me-2">
+            <Label for="exampleEmail">Fecha de Entrada</Label>
+            <input
+              name="fechaEntrada"
+              type="date"
+              placeholder="fechaEntrada"
+              className="form-control"
+              onChange={handleChange}
+            />
+          </FormGroup>
+          <FormGroup className="me-2">
+            <Label for="exampleEmail">Fecha de Salida</Label>
+            <input
+              name="fechaSalida"
+              type="date"
+              placeholder="fechaSalida"
+              className="form-control"
+              onChange={handleChange}
+            />
+          </FormGroup>
+
+          <FormGroup className="me-2">
+            <Label for="exampleEmail">Número de Adultos</Label>
+            <input
+              name="adultos"
+              type="number"
+              placeholder="# Adultos"
+              className="form-control"
+              onChange={handleChange}
+            />
+          </FormGroup>
+
+          <FormGroup className="me-2">
+            <Label for="exampleEmail">Número de Niños</Label>
+            <input
+              name="ninos"
+              type="number"
+              placeholder="# Niños"
+              className="form-control"
+              onChange={handleChange}
+            />
+          </FormGroup>
+        </div>
+
+        <div className="flex">
+          <FormGroup className="me-2">
+            <Label for="exampleEmail">Tipo de Documento</Label>
+            <input
+              name="tipoDocumento"
+              placeholder="tipoDocumento"
+              className="form-control"
+              onChange={handleChange}
+            />
+          </FormGroup>
+          <FormGroup className="me-2">
+            <Label for="exampleEmail"># Documento</Label>
+            <input
+              name="numDocumento"
+              type="number"
+              placeholder="Número de Documento"
+              className="form-control"
+              onChange={handleChange}
+            />
+          </FormGroup>
+
+          <FormGroup className="me-2">
+            <Label for="exampleEmail">Nombre</Label>
+            <input
+              name="nombre"
+              placeholder="Nombre"
+              className="form-control"
+              onChange={handleChange}
+            />
+          </FormGroup>
+
+          <FormGroup className="me-2">
+            <Label for="exampleEmail">Apellido</Label>
+            <Input
+              name="apellido"
+              placeholder="apellido"
+              className="form-control"
+              onChange={handleChange}
+            />
+          </FormGroup>
+        </div>
+        <div className="flex">
+          <FormGroup className="me-2">
+            <Label for="exampleEmail">Correo Electronico</Label>
+            <input
+              name="email"
+              type="email"
+              placeholder="email"
+              className="form-control"
+              onChange={handleChange}
+            />
+          </FormGroup>
+          <FormGroup className="me-2 w-80">
+            <Label for="exampleEmail">habitacion</Label>
+            <input
+              name="habitacion"
+              type="number"
+              placeholder="habitacion"
+              className="form-control"
+              onChange={handleChange}
+            />
+          </FormGroup>
+        </div>
+      </Form>
+      <br />
+      <div align="right">
+        <button className="btn btn-success" onClick={(e) => peticionPost(e)}>
+          Insertar
+        </button>
+        <button className="btn btn-danger" onClick={() => abrirCerrarModalInsertar()}>Cancelar</button>
+      </div>
+    </div>
+  );
   return (
     <div>
       <Navbar />
       {/* // is de background more the text in the center de display */}
-      <div className="banner_area">
+      <div className="banner_area" style={{ height: "500px" }}>
         <div className="booking_table d_flex align-items-center">
           <div
             className="overlay bg-parallax"
             data-stellar-ratio="0.9"
             data-stellar-vertical-offset="0"
-            data-background=""
           ></div>
           <div className="container">
             <div className="banner_content text-center">
               <h2>Tiempo de Descanso</h2>
               <p>
-                Si necesitas en necesitas un hospedaje en Bogotá, esta es tu
-                mejor opción
-                <br /> Diferentes habitaciones a diferentes precios pero con la
+                Si necesitas en necesitas un hospedaje en Bogotá, esta es tu mejor
+                opción <br /> Diferentes habitaciones a diferentes precios pero con la
                 misma calidad.
               </p>
-              <a href="/Home" className="btn btn-warning">
-                Reserva con nosotros
-              </a>
             </div>
           </div>
         </div>
-        {/* // is the cuadro for book your reservartion */}
-        <div className="hotel_booking_area position">
-          <div className="container">
-            <div className="hotel_booking_table">
-              <div className="col-md-3">
-                <h2>
-                  Reserve
-                  <br /> su Habitación
-                </h2>
-              </div>
-              <div className="col-md-9">
-                <div className="boking_table">
-                  <div className="row">
-                    <div className="col-md-4">
-                      <input
-                        type="email"
-                        placeholder="Escribe el correo"
-                        style={{ backgroundColor: "103454", color: "white" }}
-                        className="form-control"
-                      ></input>
-                    </div>
-                    <div className="col-md-4">
-                      <div className="book_tabel_item">
-                        <input
-                          type="email"
-                          placeholder="Escribe el correo"
-                          style={{ backgroundColor: "103454", color: "white" }}
-                          className="form-control"
-                        ></input>
-                      </div>
-                    </div>
-                    <div className="col-md-4">
-                      <div className="book_tabel_item">
-                        <input
-                          type="email"
-                          placeholder="Escribe el correo"
-                          style={{ backgroundColor: "103454", color: "white" }}
-                          className="form-control"
-                        ></input>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+
       </div>
 
-      <div className="accomodation_area section_gap">
+      <div className="testimonial_area section_gap">
         <div className="container">
           <div className="section_title text-center">
             <h2 className="title_color">Aparta Hotel Santadereano</h2>
@@ -113,14 +264,14 @@ function Inicio() {
               <div className="accomodation_item text-center">
                 <div className="hotel_img">
                   <img src="../../assets/img/101.jpg" alt="" />
-                  <a
-                    href="/Home"
-                    className="btn theme_btn btn-warning button_hover"
-                  >
-                    Agendar <br />
-                    Ahora
-                  </a>
                 </div>
+                <button
+                  onClick={() => abrirCerrarModalInsertar()}
+                  className="btn btn-warning"
+                  style={{ marginTop: "2%", width: "100%", height: "40%" }}
+                >
+                  Agendar Habitación
+                </button>
                 <a href="/Home">
                   <h4 className="sec_h4">
                     Habitación Familiar <br /> (5 Personas)
@@ -136,14 +287,14 @@ function Inicio() {
               <div className="accomodation_item text-center">
                 <div className="hotel_img">
                   <img src="../../assets/img/205.jpg" alt="" />
-                  <a
-                    href="/Home"
-                    className="btn theme_btn btn-warning button_hover"
-                  >
-                    Agendar <br />
-                    Ahora
-                  </a>
                 </div>
+                <button
+                  onClick={() => abrirCerrarModalInsertar()}
+                  className="btn btn-warning"
+                  style={{ marginTop: "2%", width: "100%", height: "40%" }}
+                >
+                  Agendar Habitación
+                </button>
                 <a href="/Home">
                   <h4 className="sec_h4">
                     Matrimonial <br /> (Pareja o Personas){" "}
@@ -159,14 +310,14 @@ function Inicio() {
               <div className="accomodation_item text-center">
                 <div className="hotel_img">
                   <img src="../../assets/img/205.jpg" alt="" />
-                  <a
-                    href="/Home"
-                    className="btn theme_btn btn-warning button_hover"
-                  >
-                    Agendar <br />
-                    Ahora
-                  </a>
                 </div>
+                <button
+                  onClick={() => abrirCerrarModalInsertar()}
+                  className="btn btn-warning"
+                  style={{ marginTop: "2%", width: "100%", height: "40%" }}
+                >
+                  Agendar Habitación
+                </button>
                 <a href="/Home">
                   <h4 className="sec_h4">
                     Individual <br /> (1 Persona)
@@ -182,14 +333,14 @@ function Inicio() {
               <div className="accomodation_item text-center">
                 <div className="hotel_img">
                   <img src="../../assets/img/101.jpg" alt="" />
-                  <a
-                    href="/Home"
-                    className="btn theme_btn btn-warning button_hover"
-                  >
-                    Agendar <br />
-                    Ahora
-                  </a>
                 </div>
+                <button
+                  onClick={() => abrirCerrarModalInsertar()}
+                  className="btn btn-warning"
+                  style={{ marginTop: "2%", width: "100%", height: "40%" }}
+                >
+                  Agendar Habitación
+                </button>
                 <a href="/Home">
                   <h4 className="sec_h4">
                     Amigos <br /> (2 Personas)
@@ -289,6 +440,9 @@ function Inicio() {
 
       {/* // footer */}
       <Footer />
+      <Modal open={modalInsertar} onClose={abrirCerrarModalInsertar}>
+        {bodyInsertar}
+      </Modal>
     </div>
   );
 }

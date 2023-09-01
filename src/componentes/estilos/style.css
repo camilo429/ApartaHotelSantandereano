@@ -56,6 +56,14 @@ Table of Content:
   padding: 0px;
 }
 
+.estilos {
+  color: #000
+}
+
+.estilos::placeholder {
+  color: #000
+}
+
 a {
   text-decoration: none;
   -webkit-transition: all 0.3s ease-in-out;
@@ -118,7 +126,7 @@ button:focus {
 }
 
 .section_gap {
-  padding: 60px 0;
+  padding: 10px 0;
 }
 
 .d_flex {
@@ -504,13 +512,15 @@ button:focus {
 /*============= Start banner_area css =============*/
 .banner_area {
   background: #04091e;
+  height: 800px;
   position: relative;
   z-index: 1;
 }
 
 .banner_area .bg-parallax {
-  background: url("about_banner.jpg") no-repeat scroll center 0/cover;
-  opacity: 0.50;
+  background: url("../../image/facilites_bg.jpg") no-repeat scroll center cover;
+  size:auto;
+  opacity: 0.20;
 }
 
 .banner_area .position {
@@ -524,7 +534,7 @@ button:focus {
   position: relative;
   overflow: hidden;
   width: 100%;
-  min-height: 800px;
+  min-height: 500px;
 }
 
 .overlay {
@@ -601,24 +611,24 @@ button:focus {
   font-size: 13px;
   line-height: 38px;
   padding: 0px 20px;
-  color: #777777;
+  color: black;
   z-index: 0;
 }
 
 .book_tabel_item .form-group .input-group .form-control.placeholder {
-  color: #777777;
+  color: black;
 }
 
 .book_tabel_item .form-group .input-group .form-control:-moz-placeholder {
-  color: #777777;
+  color: black;
 }
 
 .book_tabel_item .form-group .input-group .form-control::-moz-placeholder {
-  color: #777777;
+  color: black;
 }
 
 .book_tabel_item .form-group .input-group .form-control::-webkit-input-placeholder {
-  color: #777777;
+  color: black;
 }
 
 .book_tabel_item .form-group .input-group .form-control:focus {
@@ -637,7 +647,7 @@ button:focus {
   -webkit-transform: translateY(-50%);
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
-  color: #777777;
+  color: black;
   z-index: 2;
 }
 
@@ -652,14 +662,14 @@ button:focus {
   font-size: 13px;
   line-height: 40px;
   height: 40px;
-  color: #777;
+  color: black;
 }
 
 .book_tabel_item .nice-select:after {
   content: "\e874";
   font-family: 'Linearicons-Free';
   font-size: 13px;
-  color: #777777;
+  color: black;
   border: 0px;
   top: 0;
   margin-top: 0px;
@@ -1771,8 +1781,9 @@ button:focus {
   }
 }
 
-.comment-form .form-control {
+.form-control {
   padding: 8px 20px;
+  margin: 10px;
   background: #fff;
   border: none;
   border-radius: 0px;

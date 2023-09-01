@@ -29,10 +29,7 @@ function App() {
             <Route path="/Login" element={<Login />} />
 
             {/* url para navegar en empleado */}
-            <Route
-              path="/ListarNacionalidades"
-              element={<NacionalidadComponent />}
-            />
+            <Route path="/ListarNacionalidades" element={<NacionalidadComponent />}/>
             <Route path="/ListarDocumento" element={<DocumentoComponent />} />
             <Route path="/documentoEmpleado" element={<DocumentoEmpleado />} />
             <Route path="/Administrador" element={<AdministradorComponent />} />

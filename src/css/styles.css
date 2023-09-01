@@ -118,7 +118,7 @@ button:focus {
 }
 
 .section_gap {
-  padding: 60px 0;
+  padding: 10px 0;
 }
 
 .d_flex {
@@ -509,7 +509,8 @@ button:focus {
 }
 
 .banner_area .bg-parallax {
-  background: url("../componentes/estilos/about_banner.jpg") no-repeat scroll center 0/cover;
+  background: url("../image/facilites_bg.jpg") no-repeat center 0/cover;
+  height: auto;
   opacity: 0.50;
 }
 
@@ -524,7 +525,7 @@ button:focus {
   position: relative;
   overflow: hidden;
   width: 100%;
-  min-height: 800px;
+  min-height: 500px;
 }
 
 .overlay {
@@ -682,7 +683,7 @@ button:focus {
 }
 
 .breadcrumb_area .bg-parallax {
-  background: url(../componentes/estilos/about_banner.jpg) no-repeat scroll center 0/cover;
+  background: url(../image/puertahotel.jpg) no-repeat scroll center 0/cover;
   opacity: 0.50;
   z-index: -1;
 }
@@ -727,7 +728,7 @@ button:focus {
 }
 
 .blog_banner .bg-parallax {
-  background: url(../componentes/estilos/about_banner.jpg) no-repeat scroll center center;
+  background: url(../image/banner_bg.jpg) no-repeat scroll center center;
 }
 
 .blog_banner .banner_content {
@@ -760,7 +761,7 @@ button:focus {
 }
 
 .blog_banner_two .bg-parallax {
-  background: url(../componentes/estilos/about_banner.jpg) no-repeat scroll center top/cover;
+  background: url(../image/banner_bg.jpg) no-repeat scroll center top/cover;
 }
 
 /*=============End Blog Banner css =============*/

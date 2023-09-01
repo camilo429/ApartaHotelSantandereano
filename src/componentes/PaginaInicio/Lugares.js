@@ -3,6 +3,8 @@ import Footer from "./Footer";
 import Navbar from "./Navbar";
 import "../../css/styles.css";
 import "../estilos/banderas.jpg";
+import "../../image/tintal.jpg"
+
 function Lugares() {
   return (
     <div className="Lugares">
@@ -29,11 +31,11 @@ function Lugares() {
       <section className="accomodation_area section_gap">
         <div className="container">
           <div className="section_title text-center">
-            <h2 className="title_color">Lugares Especiales</h2>
+            <h2 className="title_color">Lugares Cercanos</h2>
             <p>
               El Aparta Hotel Santandereano, además de presentar varios de los
-              servicios mostrados, está ubicado en un sector donde el comercio
-              y lugares importantes para el desarrollo del país.
+              servicios mostrados, está ubicado en un sector donde se desarrollan
+              grandes eventos del país, los cuales se encuentran a menos de 30 minutos.
             </p>
           </div>
           <div className="row mb_30">
@@ -69,7 +71,7 @@ function Lugares() {
               <div className="accomodation_item text-center">
                 <div className="hotel_img">
                   <img
-                    src="../../assets/img/abastos1.jpg"
+                    src="../../assets/img/tintal.jpg"
                     alt=""
                     style={{ width: "250px", height: "300px" }}
                   />
@@ -99,7 +101,7 @@ function Lugares() {
               <div className="accomodation_item text-center">
                 <div className="hotel_img">
                   <img
-                    src="../../assets/img/abastos1.jpg"
+                    src="../../assets/img/rcn.jpg"
                     alt=""
                     style={{ width: "250px", height: "300px" }}
                   />
@@ -113,7 +115,7 @@ function Lugares() {
               <div className="accomodation_item text-center">
                 <div className="hotel_img">
                   <img
-                    src="../../assets/img/abastos1.jpg"
+                    src="../../assets/img/flores.jpg"
                     alt=""
                     style={{ width: "250px", height: "300px" }}
                   />
@@ -127,7 +129,7 @@ function Lugares() {
               <div className="accomodation_item text-center">
                 <div className="hotel_img">
                   <img
-                    src="../../assets/img/abastos1.jpg"
+                    src="../../assets/img/bomberos.jpg"
                     alt=""
                     style={{ width: "250px", height: "300px" }}
                   />
@@ -141,7 +143,7 @@ function Lugares() {
               <div className="accomodation_item text-center">
                 <div className="hotel_img">
                   <img
-                    src="../../assets/img/abastos1.jpg"
+                    src="../../assets/img/hospialKenndy.jpg"
                     alt=""
                     style={{ width: "250px", height: "300px" }}
                   />

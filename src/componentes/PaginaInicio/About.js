@@ -7,7 +7,7 @@ import "../../css/responsive.css";
 
 function About() {
   return (
-    <div className="About">
+    <div className="testimonial_area section_gap">
       <Navbar />
 
       <div className="breadcrumb_area">
