@@ -12,7 +12,6 @@ import * as AiFillEdit from "react-icons/ai";
 // url
 import { Apiurl } from "../../services/userService";
 
-
 const url = Apiurl + "habitacion/listarHabitaciones";
 const urlG = Apiurl + "habitacion/crearHabitacion";
 const urlE = Apiurl + "habitacion/actualizarHabitacion/";
@@ -102,7 +101,6 @@ function Habitacion() {
     peticionGet();
     abrirCerrarModalInsertar();
     alert("La habitación ha sido creada");
-
   };
 
   const peticionPut = async () => {
@@ -140,6 +138,7 @@ function Habitacion() {
       }
     });
   }
+
   const peticionDelete = async () => {
     axios.request({
       method: "delete",

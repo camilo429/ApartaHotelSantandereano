@@ -4,7 +4,7 @@ import Huespedes from "../pagesAdministrador/Huespedes";
 import Sales from "../pagesAdministrador/Sales";
 import NavbarA from "./NavbarA";
 import Sidebar from "./Sidebar";
-import Tablas from "../pagesAdministrador/Tablas";
+import Reservaciones from "../pagesAdministrador/Reservaciones";
 import Graficas from "../pagesAdministrador/Graficas";
 import { Routes, Route } from "react-router-dom";
 import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
@@ -18,8 +18,8 @@ function
   return (
     <div>
       <div className="flex">
-        <Sidebar/>
-        <div className="content" style={{width:"100%"}}>
+        <Sidebar />
+        <div className="content" style={{ width: "100%" }}>
           <NavbarA />
 
           <Routes>
@@ -54,9 +54,9 @@ function
               element={<Graficas />}
             />
             <Route
-              path="/Tablas"
+              path="/Reservaciones"
               exact={true}
-              element={<Tablas />}
+              element={<Reservaciones />}
             />
             <Route
               path="/Habitacion"

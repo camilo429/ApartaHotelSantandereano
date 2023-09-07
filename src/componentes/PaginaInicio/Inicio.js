@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 //librerias
 import axios from "axios";
-import $ from "jquery";
+//import $ from "jquery";
 //Estilos
 import "../../vendors/bootstrap-datepicker/bootstrap-datetimepicker.min.css";
 import "../../vendors/nice-select/css/nice-select.css";
@@ -15,11 +15,15 @@ import "../../vendor/fontawesome-free/css/all.min.css";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { Apiurl } from "../../services/userService";
+import TipoDocumento from "../pagesAdministrador/TipoDocumento"
 //Reactrap
 import { Form, FormGroup, Label, Input } from "reactstrap";
 import { makeStyles } from "@mui/styles";
 import { Modal } from "@mui/material";
-
+import Habitaciones from "./Habitaciones";
+//url
+const urlhabitacionesDisponibles = Apiurl + "habitacion/listarHabitaciones/estado/Disponible";
+const urlG = Apiurl + "reservaciones/crearReservacion";
 const useStyles = makeStyles((theme) => ({
   modal: {
     position: "absolute",
@@ -37,22 +41,33 @@ const useStyles = makeStyles((theme) => ({
 }));
 function Inicio() {
   const styles = useStyles();
-  // const [data, setData] = useState([]);
+  const [data, setData] = useState([]);
   const [modalInsertar, setModalInsertar] = useState(false);
 
   const [consolaSeleccionada, setConsolaSeleccionada] = useState({
-    codReservacion: "",
     fechaEntrada: "",
     fechaSalida: "",
-    totalDias: "",
-    adultos: "",
-    ninos: "",
-    tipoDocumento: "",
+    adultos: 0,
+    ninos: 0,
+    tipoDocumento: {
+      codTipoDocumento: "",
+      nomTipoDocument: ""
+    },
     numDocumento: "",
     nombre: "",
     apellido: "",
     email: "",
-    habitacion: "",
+    habitacion: {
+      codHabitacion: "",
+      nombreHabitacion: "",
+      descripHabitacion: "",
+      numHabitacion: "",
+      pisoHabitacion: "",
+      maxPersonasDisponibles: "",
+      precioDia: "",
+      estadoHabitacion: "",
+      imagenHabitacion: "s"
+    }
   });
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -61,42 +76,12 @@ function Inicio() {
       [name]: value,
     }));
   };
-  const peticionPost = async (e) => {
-    var reqData = {
-      "username": this.state.form.usuario,
-      "password": this.state.form.password,
-      "grant_type": "password",
-  }
-
-  axios.request({
-      method: "post",
-      url: Apiurl + "reservaciones/crearReservacion",
-      withCredentials: true,
-      crossdomain: true,
-      data: $.param(reqData),
-      auth: {
-          username: "angularapp", // This is the client_id
-          password: "angu1234lar" // This is the client_secret
-      }, header: {
-          "Content-Type": "application/x-www-form-urlencoded",
-          "Cache-Control": "no-cache"
-      }
-  }).then(response => {
-      if (response.status === 200) {
-          alert("Se ha solicitado una habitación correctamente.")
-          console.log(response.data);
-      } else {
-          this.setState({
-              error: true,
-              errorMsg: response.data.error_description
-          })
-      }
-  }).catch(error => {
-      this.setState({
-          error: true,
-          errorMsg: "Error:400"
-      })
-  })
+  const peticionPost = async () => {
+    console.log(consolaSeleccionada)
+    const response = await axios.post(urlG, consolaSeleccionada);
+    setData(data.concat(response.data));
+    abrirCerrarModalInsertar();
+    alert("La reservación ha sido creada");
   };
   const abrirCerrarModalInsertar = () => {
     setModalInsertar(!modalInsertar);
@@ -131,7 +116,6 @@ function Inicio() {
             <Label for="exampleEmail">Número de Adultos</Label>
             <input
               name="adultos"
-              type="number"
               placeholder="# Adultos"
               className="form-control"
               onChange={handleChange}
@@ -142,7 +126,6 @@ function Inicio() {
             <Label for="exampleEmail">Número de Niños</Label>
             <input
               name="ninos"
-              type="number"
               placeholder="# Niños"
               className="form-control"
               onChange={handleChange}
@@ -153,11 +136,9 @@ function Inicio() {
         <div className="flex">
           <FormGroup className="me-2">
             <Label for="exampleEmail">Tipo de Documento</Label>
-            <input
+            <TipoDocumento
               name="tipoDocumento"
-              placeholder="tipoDocumento"
-              className="form-control"
-              onChange={handleChange}
+              handleChangeData={handleChange}
             />
           </FormGroup>
           <FormGroup className="me-2">
@@ -204,12 +185,10 @@ function Inicio() {
           </FormGroup>
           <FormGroup className="me-2 w-80">
             <Label for="exampleEmail">habitacion</Label>
-            <input
+            <Habitaciones
               name="habitacion"
-              type="number"
-              placeholder="habitacion"
-              className="form-control"
-              onChange={handleChange}
+              handleChangeData={handleChange}
+              url={urlhabitacionesDisponibles}
             />
           </FormGroup>
         </div>
@@ -217,7 +196,7 @@ function Inicio() {
       <br />
       <div align="right">
         <button className="btn btn-success" onClick={(e) => peticionPost(e)}>
-          Insertar
+          Agendar
         </button>
         <button className="btn btn-danger" onClick={() => abrirCerrarModalInsertar()}>Cancelar</button>
       </div>

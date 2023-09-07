@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 //Librerias
 import axios from "axios";
-import $ from 'jquery';
-import DataTable from 'react-data-table-component';
+//import $ from 'jquery';
+//import DataTable from 'react-data-table-component';
 //Estilos
 import { makeStyles } from "@mui/styles";
 import { Form, FormGroup, Label } from "reactstrap";
@@ -154,7 +154,6 @@ function Huespedes() {
     })
   };
 
-
   const peticionPost = async () => {
     setErrors(validacionesFormulario(consolaSeleccionada));
     if (Object.keys(errors).length === 0) {
@@ -168,7 +167,6 @@ function Huespedes() {
       abrirCerrarModalInsertar();
       alert("El Huesped ha sido creado");
     }
-
   };
 
   const peticionPut = async () => {

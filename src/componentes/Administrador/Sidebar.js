@@ -111,12 +111,12 @@ const Sidebar = () => {
           <li className="nav-item active">
             <NavLink
               className="text-blue rounded py-2 w-100 d-inline-block px-1"
-              to="Tablas"
+              to="Reservaciones"
               exact="true"
               activeclassname="active"
             >
               <GrIcons.GrTable className="me-2" />
-              Tablas
+              Reservaciones
             </NavLink>
           </li>
           <li className="nav-item active">

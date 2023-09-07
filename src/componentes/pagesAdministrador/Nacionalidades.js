@@ -9,14 +9,6 @@ const url = Apiurl + "nacionalidad/listarNacionalidades";
 
 function Nacionalidades({ name, handleChangeData, value = null }) {
   const [data, setData] = useState([]);
-  const [state, setState] = useState({
-    form: {
-      "usuario": "",
-      "password": ""
-    },
-    error: false,
-    errorMsg: ""
-  });
 
   const getNacionalidades = async () => {
     axios.request({

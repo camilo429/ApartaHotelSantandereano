@@ -1,7 +1,9 @@
-import React from "react";
+//componentes
 import Footer from "./Footer";
 import Navbar from "./Navbar";
+//Hooks
 import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
+import React, { useState } from "react";
 //Estilos
 import "../../vendors/bootstrap-datepicker/bootstrap-datetimepicker.min.css";
 import "../../vendors/nice-select/css/nice-select.css";
@@ -11,8 +13,23 @@ import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "../../../node_modules/bootstrap/scss/bootstrap.scss";
 import "../../css/sb-admin-2.min.css";
 import "../../vendor/fontawesome-free/css/all.min.css";
+//librerias
+import axios from "axios";
+
+import { Apiurl } from "../../services/userService"
+const url = Apiurl + "comentarios/crearComentario"
 
 function Contacto() {
+  const [data, setData] = useState([]);
+  const [consolaSeleccionada, setConsolaSeleccionada] = useState({
+    codComentario: "",
+    nombre: "",
+    email: "",
+    numTelefono: "",
+    comentario: "",
+    fechaEnviado: "",
+    horaEnviado: ""
+  });
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: "AIzaSyB98G8_CHNNlhya9B1iiolBxsxp4UDZc60",
   });
@@ -30,8 +47,23 @@ function Contacto() {
     );
   }
 
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setConsolaSeleccionada((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+  const peticionPost = async (e) => {
+    console.log("data seleccioada", consolaSeleccionada)
+    const response = await axios.post(url, consolaSeleccionada)
+    setData(data.concat(response.data));
+    alert("El comentario ha sido enviado");
+  };
+
   return (
-    <div className="Contacto" style={{ background: "white", width:"100%" }}>
+    <div className="Contacto" style={{ background: "white", width: "100%" }}>
       <Navbar />
       <section className="breadcrumb_area">
         <div className="container">
@@ -64,6 +96,7 @@ function Contacto() {
         </div>
         <br></br>
         <br></br>
+        <p></p>
       </div>
 
       {/* //mostramos la información para el mensaje */}
@@ -89,13 +122,14 @@ function Contacto() {
         {/* // enviar mensaje o pregunta */}
         <div className="form">
           <form>
-            <div className="form-row" style={{width:"80%"}}>
+            <div className="form-row" style={{ width: "80%" }}>
               <div className="form-group col-md-6">
                 <label>Nombre</label>
                 <input
                   className="form-control"
                   name="nombre"
                   placeholder="Ingrese su nombre"
+                  onChange={handleChange}
                 />
               </div>
               <div className="form-group col-md-6">
@@ -105,6 +139,7 @@ function Contacto() {
                   className="form-control"
                   name="email"
                   placeholder="Ingrese su correo"
+                  onChange={handleChange}
                 />
               </div>
               <div className="form-group col-md-6">
@@ -114,6 +149,7 @@ function Contacto() {
                   className="form-control"
                   name="numTelefono"
                   placeholder="Ingrese su número de telefono"
+                  onChange={handleChange}
                 />
               </div>
               <div className="form-group col-md-6">
@@ -123,6 +159,7 @@ function Contacto() {
                   name="comentario"
                   type="texarea"
                   placeholder="Ingrese su mensaje"
+                  onChange={handleChange}
                 />
               </div>
             </div>
@@ -132,6 +169,7 @@ function Contacto() {
               type="submit"
               value="submit"
               className="btn theme_btn button_hover"
+              onClick={(e) => peticionPost(e)}
             >
               Enviar Mensaje
             </button>

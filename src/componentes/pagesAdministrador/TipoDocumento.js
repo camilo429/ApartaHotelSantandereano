@@ -5,7 +5,7 @@ import axios from "axios";
 import Select from "react-select"
 // url
 import { Apiurl } from "../../services/userService";
-const url = Apiurl + "tipoDocumento/listarTipoDocumentos"
+const url = Apiurl + "tipoDocumento/listarTipoDocumentos";
 
 function TipoDocumento({ name, handleChangeData, value = null }) {
     const [data, setData] = useState([]);
@@ -14,15 +14,10 @@ function TipoDocumento({ name, handleChangeData, value = null }) {
         axios.request({
             method: "get",
             url: url,
-            withCredentials: true,
-            crossdomain: true,
-            headers: {
-                Authorization: `Bearer ${sessionStorage.getItem("access_token")}`
-            }
         }).then(response => {
             if (response.status === 200) {
                 setData(response.data);
-               // console.log(response.data);
+                // console.log(response.data);
             } else {
                 this.setState({
                     error: true,
