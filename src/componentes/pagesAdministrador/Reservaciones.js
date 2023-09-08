@@ -7,16 +7,19 @@ import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "../../../node_modules/bootstrap/scss/bootstrap.scss";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../../css/Huesped.css"
-// Estilos
+// Reactstrap
 import { Form, FormGroup, Label, Input } from "reactstrap";
-import "../../App.scss";
 import { makeStyles } from "@mui/styles";
 import { Modal, Button } from "@mui/material";
+//componentes
+import TipoDocumento from "../pagesAdministrador/TipoDocumento"
+import Habitaciones from "../PaginaInicio/Habitaciones";
 //iconos
 import * as MdDelete from "react-icons/md";
 // import * as BsInfoLg from "react-icons/bs";
 //url
 import { Apiurl } from "../../services/userService";
+const urlhabitacionesDisponibles = Apiurl + "habitacion/listarHabitaciones/estado/Disponible";
 const url = Apiurl + "reservaciones/listarReservas";
 const urlG = Apiurl + "reservaciones/crearReservacion";
 //const urlE = Apiurl + "reservaciones/actualizarHuesped/";
@@ -170,14 +173,11 @@ function Reservaciones() {
       }
     })
   };
+
   const peticionPost = async (e) => {
     e.preventDefault();
-
-    const response = await axios.post(urlG, consolaSeleccionada, {
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("access_token")}`
-      }
-    });
+    console.log("esta es la data seleccionada ", consolaSeleccionada);
+    const response = await axios.post(urlG, consolaSeleccionada);
     setData(data.concat(response.data));
     peticionGet();
     abrirCerrarModalInsertar();
@@ -207,34 +207,45 @@ function Reservaciones() {
   }, []);
   const bodyInsertar = (
     <div className={styles.modal}>
-      <h3>Agregar Habitacion</h3>
-      <Form>
+      <h3>Agendar una Reservación</h3>
+      <Form style={{ marginLeft: "3%" }}>
         <div className="flex">
-          <FormGroup className="me-2" >
-            <Label for="exampleEmail">Nombre Habitación</Label>
+          <FormGroup className="me-2">
+            <Label for="exampleEmail">Fecha de Entrada</Label>
             <input
-              name="nombreHabitacion"
-              placeholder="Nombre Habitación"
-              className="form-control"
-              onChange={handleChange}
-            />
-          </FormGroup>
-          <FormGroup className="me-2" style={{ marginLeft: "4%" }}>
-            <Label for="exampleEmail">Número Habitación</Label>
-            <input
-              name="numHabitacion"
-              placeholder="Número Habitación"
-              type="number"
+              name="fechaEntrada"
+              type="date"
+              placeholder="fechaEntrada"
               className="form-control"
               onChange={handleChange}
             />
           </FormGroup>
           <FormGroup className="me-2">
-            <Label for="exampleEmail">Piso Habitación</Label>
-            <Input
-              name="pisoHabitacion"
-              placeholder="Piso"
-              type="number"
+            <Label for="exampleEmail">Fecha de Salida</Label>
+            <input
+              name="fechaSalida"
+              type="date"
+              placeholder="fechaSalida"
+              className="form-control"
+              onChange={handleChange}
+            />
+          </FormGroup>
+
+          <FormGroup className="me-2">
+            <Label for="exampleEmail">Número de Adultos</Label>
+            <input
+              name="adultos"
+              placeholder="# Adultos"
+              className="form-control"
+              onChange={handleChange}
+            />
+          </FormGroup>
+
+          <FormGroup className="me-2">
+            <Label for="exampleEmail">Número de Niños</Label>
+            <input
+              name="ninos"
+              placeholder="# Niños"
               className="form-control"
               onChange={handleChange}
             />
@@ -243,70 +254,70 @@ function Reservaciones() {
 
         <div className="flex">
           <FormGroup className="me-2">
-            <Label for="exampleEmail">Capacidad</Label>
-            <Input
-              name="maxPersonasDisponibles"
-              placeholder="Capacidad(Personas)"
-              type="number"
-              className="form-control"
-              onChange={handleChange}
-            />
-          </FormGroup>
-          <FormGroup className="me-2" style={{ marginLeft: "4%" }}>
-            <Label for="exampleEmail">Precio Habitación(Día)</Label>
-            <input
-              name="precioDia"
-              placeholder="Valor Habitación"
-              type="number"
-              className="form-control"
-              onChange={handleChange}
+            <Label for="exampleEmail">Tipo de Documento</Label>
+            <TipoDocumento
+              name="tipoDocumento"
+              handleChangeData={handleChange}
             />
           </FormGroup>
           <FormGroup className="me-2">
-            <Label for="exampleEmail">Imagen</Label>
+            <Label for="exampleEmail"># Documento</Label>
             <input
+              name="numDocumento"
+              type="number"
+              placeholder="Número de Documento"
               className="form-control"
-              name="imagenHabitacion"
-              placeholder="url Imagen"
+              onChange={handleChange}
+            />
+          </FormGroup>
+
+          <FormGroup className="me-2">
+            <Label for="exampleEmail">Nombre</Label>
+            <input
+              name="nombre"
+              placeholder="Nombre"
+              className="form-control"
+              onChange={handleChange}
+            />
+          </FormGroup>
+
+          <FormGroup className="me-2">
+            <Label for="exampleEmail">Apellido</Label>
+            <Input
+              name="apellido"
+              placeholder="apellido"
+              className="form-control"
               onChange={handleChange}
             />
           </FormGroup>
         </div>
-
         <div className="flex">
-          <FormGroup className="me-2" style={{ width: "30%" }}>
-            <Label for="exampleEmail">Estado Habitación</Label>
-            <select
-              className="form-select"
-              name="estadoHabitacion"
-              placeholder="estado Habitación"
-              onChange={handleChange}
-            >
-              <option value="1">Ocupada</option>
-              <option value="2">Sucia</option>
-              <option value="3">Apartada</option>
-              <option value="3">Libre</option>
-            </select>
-          </FormGroup>
-          <FormGroup className="me-2" style={{ width: "70%", height: "100%" }}>
-            <Label for="exampleEmail">Descripción </Label>
-            <textarea
+          <FormGroup className="me-2">
+            <Label for="exampleEmail">Correo Electronico</Label>
+            <input
+              name="email"
+              type="email"
+              placeholder="email"
               className="form-control"
-              name="descripHabitacion"
-              placeholder="Descripción Habitación"
-              type="text"
               onChange={handleChange}
-              style={{ width: "100%", height: "100%" }}
+            />
+          </FormGroup>
+          <FormGroup className="me-2 w-80">
+            <Label for="exampleEmail">habitacion</Label>
+            <Habitaciones
+              name="habitacion"
+              handleChangeData={handleChange}
+              url={urlhabitacionesDisponibles}
             />
           </FormGroup>
         </div>
       </Form>
       <br />
       <div align="right">
-        <Button color="primary" onClick={(e) => peticionPost(e)}>
-          Insertar
-        </Button>
-        <Button onClick={() => abrirCerrarModalInsertar()}>Cancelar</Button>
+        <button className="btn btn-success" onClick={(e) => peticionPost(e)}>
+          Agendar
+        </button>
+        <button className="btn btn-danger" onClick={() => abrirCerrarModalInsertar()}>Cancelar</button>
       </div>
     </div>
   );
@@ -348,7 +359,7 @@ function Reservaciones() {
             onClick={() => abrirCerrarModalInsertar()}
             className="btn btn-primary"
           >
-            Buscar reservación
+            AGENDARs reservación
           </button>
         </div>
         <div className="card-body">

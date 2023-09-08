@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 //librerias
 import axios from "axios";
-// css
 import Select from "react-select"
 // url
 import { Apiurl } from "../../services/userService";
@@ -34,7 +33,11 @@ function TipoDocumento({ name, handleChangeData, value = null }) {
 
     const handleChange = ({ label, value }) => {
         handleChangeData({
-            target: { name, value: { codTipoDocumento: value, nomTipoDocumento: label } },
+            target: {
+                name, value: {
+                    codTipoDocumento: value, nomTipoDocumento: label
+                }
+            },
         });
     };
 

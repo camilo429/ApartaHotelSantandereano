@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 //librerias
 import axios from "axios";
-//import $ from "jquery";
 //Estilos
 import "../../vendors/bootstrap-datepicker/bootstrap-datetimepicker.min.css";
 import "../../vendors/nice-select/css/nice-select.css";
@@ -24,6 +23,7 @@ import Habitaciones from "./Habitaciones";
 //url
 const urlhabitacionesDisponibles = Apiurl + "habitacion/listarHabitaciones/estado/Disponible";
 const urlG = Apiurl + "reservaciones/crearReservacion";
+
 const useStyles = makeStyles((theme) => ({
   modal: {
     position: "absolute",
@@ -187,7 +187,6 @@ function Inicio() {
             <Label for="exampleEmail">habitacion</Label>
             <Habitaciones
               name="habitacion"
-              handleChangeData={handleChange}
               url={urlhabitacionesDisponibles}
             />
           </FormGroup>

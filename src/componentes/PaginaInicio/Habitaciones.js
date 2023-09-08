@@ -1,57 +1,78 @@
 import React, { useEffect, useState } from "react";
 // librerias
 import axios from "axios";
-// css
 import Select from "react-select"
 
 function Habitaciones({ name, handleChangeData, value = null, url }) {
     const [data, setData] = useState([]);
+    const [options, setOptions] = useState([]);
+    const [selectedOption, setSelectedOption] = useState(null);
 
-    const getHabitaciones = async () => {
-        axios.request({
-            method: "get",
-            url: url,
-        }).then(response => {
-            if (response.status === 200) {
-                setData(response.data);
-                console.log(response.data);
-            }
-        })
-    };
-    
     useEffect(() => {
+        const getHabitaciones = async () => {
+            try {
+                axios.get(url)
+                    .then(response => {
+                        setData(response.data);
+                        const formattedOptions = data.map(item => ({
+                            value: item.id,
+                            label: item.name,
+                            data: item, // Almacenamos toda la información del elemento aquí
+                        }));
+                        setOptions(formattedOptions);
+                    })
+                    .catch(error => {
+                        console.error('Error al obtener las opciones:', error);
+                    });
+            } catch (error) {
+                console.log("Error al obtener las opciones:", error)
+            }
+        }
         getHabitaciones();
-    }, []);
+    }, [url]);
 
-    const handleChange = ({ label, value }) => {
+    const handleChange = ({ label, value, descripHabitacion, numHabitacion, pisoHabitacion, maxPersonasDisponibles,
+        precioDia, estadoHabitacion, imagenHabitacion }) => {
         handleChangeData({
-            target: { 
-                name, value:
-                 { 
-                    codHabitacion: value, 
-                    nombreHabitacion: label 
-                } },
+            target: {
+                name, value: {
+                    codHabitacion: value,
+                    nombreHabitacion: label,
+                    descripHabitacion: descripHabitacion,
+                    numHabitacion: numHabitacion,
+                    pisoHabitacion: pisoHabitacion,
+                    maxPersonasDisponibles: maxPersonasDisponibles,
+                    precioDia: precioDia,
+                    estadoHabitacion: estadoHabitacion,
+                    imagenHabitacion: imagenHabitacion
+                }
+            },
         });
     };
+    // const handleChange = selectedOption => {
+
+    //     handleChangeData(selectedOption);
+    // };
+
 
     return (
-        <div className="Habitaciones">
+        <div className="habitaciones">
             <Select
-                defaultValue={
-                    value
-                        ? {
-                            label: value?.nombreHabitacion,
-                            value: value?.codHabitacion,
-                        } : null
-                }
                 options={
-                    data.map((nacio) => ({
-                        label: nacio.nombreHabitacion,
-                        value: nacio.codHabitacion,
+                    data.map((docu) => ({
+                        label: docu.nombreHabitacion,
+                        value: docu.codHabitacion,
+                        descripHabitacion: docu.descripHabitacion,
+                        numHabitacion: docu.numHabitacion,
+                        pisoHabitacion: docu.pisoHabitacion,
+                        maxPersonasDisponibles: docu.maxPersonasDisponibles,
+                        precioDia: docu.precioDia,
+                        estadoHabitacion: docu.estadoHabitacion,
+                        imagenHabitacion: docu.imagenHabitacion
                     }))
                 }
                 onChange={handleChange}
-                placeholder="Seleccione Habitación"
+                placeholder="Seleccione Habitacion"
             />
         </div>
     );
