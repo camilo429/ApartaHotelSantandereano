@@ -187,6 +187,7 @@ function Inicio() {
             <Label for="exampleEmail">habitacion</Label>
             <Habitaciones
               name="habitacion"
+              handleChangeData={handleChange}
               url={urlhabitacionesDisponibles}
             />
           </FormGroup>

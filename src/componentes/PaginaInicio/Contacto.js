@@ -4,6 +4,8 @@ import Navbar from "./Navbar";
 //Hooks
 import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
 import React, { useState } from "react";
+// import ReactDatePicker from "react-datepicker";
+// import "react-datepicker/dist/react-datepicker.css";
 //Estilos
 import "../../vendors/bootstrap-datepicker/bootstrap-datetimepicker.min.css";
 import "../../vendors/nice-select/css/nice-select.css";
@@ -19,9 +21,11 @@ import axios from "axios";
 import { Apiurl } from "../../services/userService"
 const url = Apiurl + "comentarios/crearComentario"
 
+
 function Contacto() {
   const [data, setData] = useState([]);
-  const [consolaSeleccionada, setConsolaSeleccionada] = useState({
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [formulario, setFormulario] = useState({
     codComentario: "",
     nombre: "",
     email: "",
@@ -47,18 +51,29 @@ function Contacto() {
     );
   }
 
-
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setConsolaSeleccionada((prevState) => ({
+    setFormulario((prevState) => ({
       ...prevState,
       [name]: value,
     }));
   };
+
   const peticionPost = async (e) => {
-    console.log("data seleccioada", consolaSeleccionada)
-    const response = await axios.post(url, consolaSeleccionada)
+    console.log("data seleccioada", formulario);
+    setSelectedDate(new Date());
+    formulario.fechaEnviado = selectedDate;
+    const response = await axios.post(url, formulario)
     setData(data.concat(response.data));
+    setFormulario({
+      codComentario: "",
+      nombre: "",
+      email: "",
+      numTelefono: "",
+      comentario: "",
+      fechaEnviado: "",
+      horaEnviado: ""
+    });
     alert("El comentario ha sido enviado");
   };
 
@@ -121,7 +136,7 @@ function Contacto() {
         </div>
         {/* // enviar mensaje o pregunta */}
         <div className="form">
-          <form>
+          <form >
             <div className="form-row" style={{ width: "80%" }}>
               <div className="form-group col-md-6">
                 <label>Nombre</label>
@@ -130,6 +145,7 @@ function Contacto() {
                   name="nombre"
                   placeholder="Ingrese su nombre"
                   onChange={handleChange}
+                  value={formulario.nombre}
                 />
               </div>
               <div className="form-group col-md-6">
@@ -138,6 +154,7 @@ function Contacto() {
                   type="email"
                   className="form-control"
                   name="email"
+                  value={formulario.email}
                   placeholder="Ingrese su correo"
                   onChange={handleChange}
                 />
@@ -150,6 +167,7 @@ function Contacto() {
                   name="numTelefono"
                   placeholder="Ingrese su número de telefono"
                   onChange={handleChange}
+                  value={formulario.numTelefono}
                 />
               </div>
               <div className="form-group col-md-6">
@@ -160,6 +178,7 @@ function Contacto() {
                   type="texarea"
                   placeholder="Ingrese su mensaje"
                   onChange={handleChange}
+                  value={formulario.comentario}
                 />
               </div>
             </div>

@@ -5,8 +5,6 @@ import Select from "react-select"
 
 function Habitaciones({ name, handleChangeData, value = null, url }) {
     const [data, setData] = useState([]);
-    const [options, setOptions] = useState([]);
-    const [selectedOption, setSelectedOption] = useState(null);
 
     useEffect(() => {
         const getHabitaciones = async () => {
@@ -14,12 +12,6 @@ function Habitaciones({ name, handleChangeData, value = null, url }) {
                 axios.get(url)
                     .then(response => {
                         setData(response.data);
-                        const formattedOptions = data.map(item => ({
-                            value: item.id,
-                            label: item.name,
-                            data: item, // Almacenamos toda la información del elemento aquí
-                        }));
-                        setOptions(formattedOptions);
                     })
                     .catch(error => {
                         console.error('Error al obtener las opciones:', error);
@@ -49,11 +41,6 @@ function Habitaciones({ name, handleChangeData, value = null, url }) {
             },
         });
     };
-    // const handleChange = selectedOption => {
-
-    //     handleChangeData(selectedOption);
-    // };
-
 
     return (
         <div className="habitaciones">
