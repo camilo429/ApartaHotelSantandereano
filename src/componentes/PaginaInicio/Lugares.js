@@ -2,8 +2,6 @@ import React from "react";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
 import "../../css/styles.css";
-import "../estilos/banderas.jpg";
-import "../../image/tintal.jpg"
 
 function Lugares() {
   return (
