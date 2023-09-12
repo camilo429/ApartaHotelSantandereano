@@ -64,5 +64,4 @@ function Habitaciones({ name, handleChangeData, value = null, url }) {
         </div>
     );
 }
-
 export default Habitaciones;

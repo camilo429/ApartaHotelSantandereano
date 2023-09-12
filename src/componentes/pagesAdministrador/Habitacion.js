@@ -6,9 +6,13 @@ import { Form, FormGroup, Label, Input } from "reactstrap";
 import "../../App.scss";
 import { makeStyles } from "@mui/styles";
 import { Modal, Button } from "@mui/material";
+import "../../css/Habitacion.css"
 // Iconos
 import * as MdDelete from "react-icons/md";
 import * as AiFillEdit from "react-icons/ai";
+//Componentes
+import Habitaciones from "../PaginaInicio/Habitaciones";
+import SelectHuespedes from "./SelectHuespedes";
 // url
 import { Apiurl } from "../../services/userService";
 
@@ -16,12 +20,15 @@ const url = Apiurl + "habitacion/listarHabitaciones";
 const urlG = Apiurl + "habitacion/crearHabitacion";
 const urlE = Apiurl + "habitacion/actualizarHabitacion/";
 const urlD = Apiurl + "habitacion/eliminarHabitacion/";
+const urlCheckIn = Apiurl + "checkin/crearCheckin"
+const urlhabitacionesDisponibles = Apiurl + "habitacion/listarHabitaciones/estado/Disponible";
+const urlHuespedes = Apiurl + "huespedes/listarHuespedes";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
     position: "absolute",
-    width: "50%",
-    height: "60%",
+    width: "70%",
+    height: "70%",
     backgroundColor: "white",
     padding: "1%",
     boder: "2px solid #000",
@@ -36,8 +43,8 @@ const useStyles = makeStyles((theme) => ({
 const useEstilo = makeStyles((theme) => ({
   modal: {
     position: "absolute",
-    width: "40%",
-    height: "40%",
+    width: "30%",
+    height: "30%",
     backgroundColor: "white",
     padding: "5%",
     boder: "2px solid #000",
@@ -48,10 +55,13 @@ const useEstilo = makeStyles((theme) => ({
 }))
 function Habitacion() {
   const styles = useStyles();
+  const estilos = useEstilo();
   const [data, setData] = useState([]);
   const [modalInsertar, setModalInsertar] = useState(false);
   const [modalEditar, setModalEditar] = useState(false);
   const [modalEliminar, setModalEliminar] = useState(false);
+  const [modalCheckIn, setModalCheckIn] = useState(false);
+
   //const [modalVer, setModalVer] = useState(false);
 
   const [consolaSeleccionada, setConsolaSeleccionada] = useState({
@@ -65,9 +75,52 @@ function Habitacion() {
     estadoHabitacion: "",
     imagenHabitacion: ""
   });
+  const [consolaCheckIn, setConsolaCheckIn] = useState({
+    fechaIngreso: "",
+    fechaSalida: "",
+    huesped: {
+      codHuesped: "",
+      nombre: "",
+      apellido: "",
+      numCelular: "",
+      correo: "",
+      tipoDocumento: {
+        codTipoDocumento: "",
+        nomTipoDocumento: ""
+      },
+      numDocumento: "",
+      nacionalidad: {
+        codNacion: "",
+        nombre: ""
+      },
+      lugarOrigen: "",
+      nomContactoEmergencia: "",
+      numContactoEmergencia: "",
+      estadoHuesped: true,
+    },
+    habitacion: {
+      codHabitacion: "",
+      nombreHabitacion: "",
+      descripHabitacion: "",
+      numHabitacion: "",
+      pisoHabitacion: "",
+      maxPersonasDisponibles: "",
+      precioDia: "",
+      estadoHabitacion: "",
+      imagenHabitacion: ""
+    }
+  })
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setConsolaSeleccionada((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+  const manejarCambio = (e) => {
+    const { name, value } = e.target;
+    setConsolaCheckIn((prevState) => ({
       ...prevState,
       [name]: value,
     }));
@@ -85,13 +138,12 @@ function Habitacion() {
     }).then(response => {
       if (response.status === 200) {
         setData(response.data);
-        console.log(response.data);
+        //console.log(response.data);
       }
     })
   };
   const peticionPost = async (e) => {
     e.preventDefault();
-
     const response = await axios.post(urlG, consolaSeleccionada, {
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem("access_token")}`
@@ -122,7 +174,7 @@ function Habitacion() {
           if (consolaSeleccionada.codHabitacion === consola.codHabitacion) {
             consola.codHabitacion = consolaSeleccionada.codHabitacion
             consola.descripHabitacion = consolaSeleccionada.descripHabitacion
-            consola.estadoHabitacion = "ocupado"
+            consola.estadoHabitacion = consolaSeleccionada.estadoHabitacion
             consola.imagenHabitacion = consolaSeleccionada.imagenHabitacion
             consola.maxPersonasDisponibles = consolaSeleccionada.maxPersonasDisponibles
             consola.nombreHabitacion = consolaSeleccionada.nombreHabitacion
@@ -156,7 +208,19 @@ function Habitacion() {
       }
     })
   };
-
+  const peticionCheckIn = async (e) => {
+    e.preventDefault();
+    console.log("esta es la data seleccionada", consolaCheckIn);
+    const response = await axios.post(urlCheckIn, consolaCheckIn, {
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("access_token")}`
+      }
+    });
+    setData(data.concat(response.data));
+    peticionGet();
+    abrirCerrarModalCheckIn();
+    alert("La habitación número", consolaCheckIn.habitacion, "ha sido ocupada");
+  }
   const abrirCerrarModalInsertar = () => {
     setModalInsertar(!modalInsertar);
   };
@@ -166,6 +230,9 @@ function Habitacion() {
   const abrirCerrarModalEliminar = () => {
     setModalEliminar(!modalEliminar);
   };
+  const abrirCerrarModalCheckIn = () => {
+    setModalCheckIn(!modalCheckIn);
+  }
 
   const seleccionarHabitacion = (consola, caso) => {
     setConsolaSeleccionada(consola);
@@ -257,10 +324,10 @@ function Habitacion() {
               placeholder="estado Habitación"
               onChange={handleChange}
             >
-              <option value="1">Ocupada</option>
-              <option value="2">Sucia</option>
-              <option value="3">Apartada</option>
-              <option value="3">Libre</option>
+              <option value="OCUPADA">OCUPADA</option>
+              <option value="VACIA-SUCIA">SUCIA</option>
+              <option value="APARTADA">APARTADA</option>
+              <option value="DISPONIBLE">LIBRE</option>
             </select>
           </FormGroup>
           <FormGroup className="me-2" style={{ width: "70%", height: "100%" }}>
@@ -379,10 +446,10 @@ function Habitacion() {
                 consolaSeleccionada && consolaSeleccionada.estadoHabitacion
               }
             >
-              <option value="1">Ocupada</option>
-              <option value="2">Sucia</option>
-              <option value="3">Apartada</option>
-              <option value="3">Libre</option>
+              <option value="OCUPADA">OCUPADA</option>
+              <option value="VACIA-SUCIA">VACIA-SUCIA</option>
+              <option value="APARTADA">APARTADA</option>
+              <option value="DISPONIBLE">DISPONIBLE</option>
             </select>
           </FormGroup>
           <FormGroup className="me-2" style={{ width: "100%", height: "100%" }}>
@@ -410,26 +477,76 @@ function Habitacion() {
     </div>
   );
   const bodyEliminar = (
-    <div className={useEstilo.modal}>
+    <div className={estilos.modal}>
       <p>
-        Esta seguro de Eliminar la Habitación
+        Esta seguro de Eliminar la Habitación<br />
         <b>
-          {consolaSeleccionada &&
-            " " &&
-            consolaSeleccionada.nombreHabitacion &&
-            " " &&
-            consolaSeleccionada.numHabitacion}
-        </b>{" "}
+          {
+            consolaSeleccionada &&
+            consolaSeleccionada.nombreHabitacion + " " +
+            consolaSeleccionada.numHabitacion
+          }
+        </b>
         ?
       </p>
       <div align="right">
-        <Button color="secondary" onClick={() => peticionDelete()}>
-          Si
-        </Button>
-        <Button onClick={() => abrirCerrarModalEliminar()}>No</Button>
+        <button className="btn btn-primary" onClick={() => peticionDelete()} style={{ margin: "5px" }}>
+          Eliminar
+        </button>
+        <button className="btn btn-danger" onClick={() => abrirCerrarModalEliminar()}>Cancelar</button>
       </div>
     </div>
   );
+  const bodyCheckIn = (
+    <div className={styles.modal}>
+      <p>Realizar Ingreso Huesped</p>
+      <Form>
+        <div className="flex">
+          <FormGroup className="me-2" style={{ width: "30%" }}>
+            <Label for="exampleEmail">Fecha de Ingreso</Label>
+            <input
+              name="fechaIngreso"
+              type="date"
+              placeholder="fechaIngreso"
+              className="form-control"
+              onChange={manejarCambio}
+            />
+          </FormGroup>
+          <FormGroup className="me-2" style={{ width: "70%", height: "100%" }}>
+            <Label for="exampleEmail">Fecha de Salida </Label>
+            <input
+              name="fechaSalida"
+              type="date"
+              placeholder="fechaSalida"
+              className="form-control"
+              onChange={manejarCambio}
+            />
+          </FormGroup>
+          <FormGroup className="me-2" style={{ width: "70%", height: "100%" }}>
+            <Label for="exampleEmail">Habitación </Label>
+            <Habitaciones
+              name="habitacion"
+              handleChangeData={manejarCambio}
+              url={urlhabitacionesDisponibles}
+            />
+          </FormGroup>
+          <FormGroup className="me-2" style={{ width: "70%", height: "100%" }}>
+            <Label for="exampleEmail">Huesped Registrado </Label>
+            <SelectHuespedes
+              name="huesped"
+              handleChangeData={manejarCambio}
+              url={urlHuespedes} />
+          </FormGroup>a
+        </div>
+      </Form>
+      <div align="right">
+        <Button color="primary" onClick={(e) => peticionCheckIn(e)}>
+          Insertar
+        </Button>
+        <Button onClick={() => abrirCerrarModalCheckIn()}>Cancelar</Button>
+      </div>
+    </div>
+  )
   return (
     <div className="Habitacion">
       <br />
@@ -442,14 +559,25 @@ function Habitacion() {
           </div>
         </div>
         <div className="flex">
-          <Button
+          <button
             onClick={() => abrirCerrarModalInsertar()}
             className="btn btn-primary"
           >
             Agregar Habitación
-          </Button>
+          </button>
+          <button
+            onClick={() => abrirCerrarModalCheckIn()}
+            className="btn btn-success"
+          >
+            Check-in
+          </button>
+          <button
+            onClick={() => abrirCerrarModalInsertar()}
+            className="btn btn-danger"
+          >
+            Check-out
+          </button>
         </div>
-
         <div className="card-body">
           <div className="table-responsive">
             <table className="table table-bordered" cellSpacing="0">
@@ -458,7 +586,7 @@ function Habitacion() {
                   <th>Nombre</th>
                   <th>Descripción</th>
                   <th>Número</th>
-                  <th>Piso</th>
+                  <th>Estado</th>
                   <th>
                     Capacidad <br /> Máxima
                   </th>
@@ -469,11 +597,11 @@ function Habitacion() {
               <tbody>
                 {data.map((consola) => {
                   return (
-                    <tr key={consola}>
+                    <tr key={consola.codHabitacion}>
                       <th>{consola.nombreHabitacion}</th>
                       <th>{consola.descripHabitacion}</th>
                       <th>{consola.numHabitacion}</th>
-                      <th>{consola.pisoHabitacion}</th>
+                      <th>{consola.estadoHabitacion}</th>
                       <th>{consola.maxPersonasDisponibles}</th>
                       <th>{consola.precioDia}</th>
                       <th>
@@ -512,6 +640,9 @@ function Habitacion() {
       </Modal>
       <Modal open={modalEliminar} onClose={abrirCerrarModalEliminar}>
         {bodyEliminar}
+      </Modal>
+      <Modal open={modalCheckIn} onClose={abrirCerrarModalCheckIn}>
+        {bodyCheckIn}
       </Modal>
     </div>
   );

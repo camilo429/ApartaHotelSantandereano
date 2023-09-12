@@ -177,7 +177,7 @@ function Contacto() {
                   />
                 </div>
                 <div className="form-group col-md-6">
-                  <input
+                  <textarea
                     className="form-control"
                     name="comentario"
                     type="texarea"
