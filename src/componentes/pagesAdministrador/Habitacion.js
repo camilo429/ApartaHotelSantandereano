@@ -180,7 +180,7 @@ function Habitacion() {
             consola.nombreHabitacion = consolaSeleccionada.nombreHabitacion
             consola.numHabitacion = consolaSeleccionada.numHabitacion
             consola.pisoHabitacion = consolaSeleccionada.pisoHabitacion
-            consola.precioHabitacion = consolaSeleccionada.precioHabitacion
+            consola.precioDia = consolaSeleccionada.precioDia
           }
         })
         setData(dataNueva);
