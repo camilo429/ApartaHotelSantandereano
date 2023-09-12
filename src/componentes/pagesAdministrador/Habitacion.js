@@ -166,8 +166,8 @@ function Habitacion() {
         Authorization: `Bearer ${sessionStorage.getItem("access_token")}`
       }
     }).then((response) => {
-      console.log(response.status);
-      console.log(consolaSeleccionada);
+      // console.log(response.status);
+      // console.log(consolaSeleccionada);
       if (response.status == 201) {
         var dataNueva = data;
         dataNueva.map((consola) => {
