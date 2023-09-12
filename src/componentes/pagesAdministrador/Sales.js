@@ -108,7 +108,7 @@ function Sales() {
             var dataNueva = data;
             dataNueva.map((consola) => {
                 if (consolaSeleccionada.codProducto === consola.codProducto) {
-                    consola.nombreProducto = consolaSeleccionada.nombreProducto,
+                        consola.nombreProducto = consolaSeleccionada.nombreProducto,
                         consola.marca = consolaSeleccionada.marca,
                         consola.cantidad = consolaSeleccionada.cantidad,
                         consola.precio = consolaSeleccionada.precio,

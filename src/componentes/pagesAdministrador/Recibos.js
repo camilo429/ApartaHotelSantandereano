@@ -1,5 +1,8 @@
 import React from 'react'
 import * as FaHandHoldingWater from "react-icons/fa";
+import * as FaRegLightbulb from "react-icons/fa"
+import * as FaGasPump from "react-icons/fa"
+import * as LuSatelliteDish from "react-icons/lu"
 import { NavLink } from "react-router-dom";
 
 function Recibos() {
@@ -36,6 +39,33 @@ function Recibos() {
             >
                 <FaHandHoldingWater.FaHandHoldingWater className="me-2" />
                 Pagar Agua
+            </NavLink>
+            <NavLink
+                className="text-blue rounded py-2 w-100 d-inline-block px-1"
+                to="https://www.enel.com.co/es/personas/boton-de-pago.html"
+                exact="true"
+                activeclassname="active"
+            >
+                <FaRegLightbulb.FaRegLightbulb className="me-2" />
+                Pagar Luz
+            </NavLink>
+            <NavLink
+                className="text-blue rounded py-2 w-100 d-inline-block px-1"
+                to="https://www.psepagos.co/PSEHostingUI/InvoicesTicketOffice.aspx?ID=9524"
+                exact="true"
+                activeclassname="active"
+            >
+                <FaGasPump.FaGasPump className="me-2" />
+                Pagar Gas
+            </NavLink>
+            <NavLink
+                className="text-blue rounded py-2 w-100 d-inline-block px-1"
+                to="https://www.mipagoamigo.com/MPA_WebSite/ServicePayments/StartPayment?id=5724&searchedCategoryId=&searchedAgreementName=CONEXION%20DIGITAL"
+                exact="true"
+                activeclassname="active"
+            >
+                <LuSatelliteDish.LuSatelliteDish className="me-2" />
+                Pagar Parabolica
             </NavLink>
 
 
