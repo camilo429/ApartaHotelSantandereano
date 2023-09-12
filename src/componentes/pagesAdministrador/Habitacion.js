@@ -192,6 +192,7 @@ function Habitacion() {
   }
 
   const peticionDelete = async () => {
+    console.log("esta es la data", consolaSeleccionada)
     axios.request({
       method: "delete",
       url: urlD + consolaSeleccionada.codHabitacion,
