@@ -20,6 +20,7 @@ import { Form, FormGroup, Label, Input } from "reactstrap";
 import { makeStyles } from "@mui/styles";
 import { Modal } from "@mui/material";
 import Habitaciones from "./Habitaciones";
+import TestimonioHuesped from "./TestimonioHuesped/TestimonioHuesped";
 //url
 const urlhabitacionesDisponibles = Apiurl + "habitacion/listarHabitaciones/estado/Disponible";
 const urlG = Apiurl + "reservaciones/crearReservacion";
@@ -27,7 +28,7 @@ const urlG = Apiurl + "reservaciones/crearReservacion";
 const useStyles = makeStyles((theme) => ({
   modal: {
     position: "absolute",
-    width: "60%",
+    width: "70%",
     height: "70%",
     backgroundColor: "white",
     padding: "1%",
@@ -217,24 +218,55 @@ function Inicio() {
             <div className="banner_content text-center">
               <h2>Tiempo de Descanso</h2>
               <p>
-                Si necesitas en necesitas un hospedaje en Bogotá, esta es tu mejor
-                opción <br /> Diferentes habitaciones a diferentes precios pero con la
-                misma calidad.
+                Ya sea que viajes por negocios o placer, nuestras habitaciones te brindarán el refugio perfecto. Reserva tu habitación hoy y descubre por qué somos la elección preferida de viajeros exigentes. ¡Esperamos darle la bienvenida pronto!
               </p>
             </div>
           </div>
         </div>
-
       </div>
 
       <div className="testimonial_area section_gap">
         <div className="container">
           <div className="section_title text-center">
-            <h2 className="title_color">Aparta Hotel Santadereano</h2>
+            <h2 className="title_color"> Experimenta el Lujo y la Comodidad en Nuestras Habitaciones.</h2>
             <p>
-              Somos lo que usted necesita para descansar... <br />
-              No dude en ver nuestras habitaciones, precios y sobre todo AGENDAR
+              Bienvenido a Aparta Hotel Santandereano, donde el confort y la elegancia
+              se combinan para ofrecerte una estancia inolvidable. Nuestras habitaciones
+              han sido diseñadas pensando en tu comodidad y disfrute, y cada detalle ha
+              sido cuidadosamente seleccionado para garantizar una experiencia única.
             </p>
+          </div>
+          <div style={{ textAlign: "initial", marginBottom: "10px" }}>
+            <b className="title_color">Caracteristicas de Nuestas Habitaciones:</b>
+            <br />
+            <b className="title_color">Amplias y Modernas: </b>
+            Nuestras habitaciones son espaciosas  modernamente decoradas, proporcionando
+            un ambiente relajante para tu estadía.
+            <br />
+            <b className="title_color">Baños Privados: </b>
+            Cada habitación cuenta con un baño privad equipado con articulos de tocador
+            de alta calidad y duchas de lluvia.
+            <br />
+            <b className="title_color">Conexión Wi-Fi de Alta Velocidad: </b>
+            Mantente conectado con el mundo gracias a nuestra rápida conexión Wi-Fi
+            gratuita en todas las habitaciones.
+            <br />
+            <b className="title_color">Televisión de Pantalla Plana: </b>
+            Relájate viendo tus programas favoritos enuna televisión de pantalla plana
+            de alta definición.
+            <br />
+            <b className="title_color">Servicio a la Habitación: </b>
+            Disfruta de comida a domicilio de los mejores restaurante de la zona en la
+            comodidad de tu habitación con nuestro servicio a la habitación disponible hasta
+            las 11:00pm.
+            <br />
+            <b className="title_color">Limpieza Impecable: </b>
+            Nuestras habitaciones se mantienen en perfecto estado de limpieza para tu
+            seguridad y comodidad.
+            <br />
+            <b className="title_color">Atención Personalizada: </b>
+            Nuestro amable personal está siempre dispuesto a ayudarte con cualquier solicitud
+            o necesidad que puedas tener durante tu estancia.
           </div>
           {/* //espacio para poner las habitaciones  */}
           <div className="row mb_30">
@@ -339,80 +371,49 @@ function Inicio() {
         <div className="container">
           <div className="section_title text-center">
             <h2 className="title_color">
-              Comentarios de nuestros huéspedes frecuentes
+              Lo que Nuestros Huéspedes dicen sobre su Estadía en El Santandereano:
             </h2>
             <p>
-              Historias y comentarios realizados de parte de nuestros huéspedes
-              más habituales <br />
-              para nuestros futuros huéspedes
+              En El Santandereano, nos enorgullece brindar un servicio excepcional y
+              crear experiencias memorables para nuestros huéspedes. Aquí tienes algunos
+              comentarios de aquellos que han tenido la oportunidad de alojarse con nosotros.
             </p>
           </div>
         </div>
         {/* //Cuadros de testimonios */}
 
         <div className="flex" style={{ marginLeft: "15%" }}>
-          <div
-            className="testimonial_slider"
-            style={{ width: "300px", height: "250px", margin: "10px" }}
-          >
-            <div className="testimonial_item">
-              <img
-                className="rounded-circle"
-                src="../../assets/img/fotoperfil.png"
-                alt="foto del primer cliente"
-                style={{ width: "120px", height: "120px" }}
-              />
-              <div className="media-body">
-                <p>Es un hotel expectacular</p>
-                <a href="/Home">
-                  <h4 className="sec_h4">Camilo Ahumada</h4>
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex">
-            <div
-              className="testimonial_slider flex"
-              style={{ width: "300px", height: "250px", margin: "10px" }}
-            >
-              <div className=" testimonial_item">
-                <img
-                  className="rounded-circle"
-                  src="../../assets/img/fotoperfil.png"
-                  alt=""
-                  style={{ width: "120px", height: "120px" }}
-                />
-                <div className="media-body">
-                  <p>Diego medina es el mejor hotel que estado viendo</p>
-                  <a href="/Home">
-                    <h4 className="sec_h4">Diego Medina</h4>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex">
-            <div
-              className="testimonial_slider flex"
-              style={{ width: "300px", height: "250px", margin: "10px" }}
-            >
-              <div className=" testimonial_item">
-                <img
-                  className="rounded-circle"
-                  src="../../assets/img/fotoperfil.png"
-                  alt=""
-                  style={{ width: "120px", height: "120px" }}
-                />
-                <div className="media-body">
-                  <p>Diego medina es el mejor hotel que estado viendo</p>
-                  <a href="/Home">
-                    <h4 className="sec_h4">Diego Medina</h4>
-                  </a>
-                </div>
-              </div>
-            </div>
+          <TestimonioHuesped
+            nombre="- Yerson Bautista."
+            url="../../assets/img/cliente1.jpg"
+            description="Mi estancia en El Santandereano fue simplemente maravillosa. Desde
+            la cálida bienvenida hasta la atención al detalle en cada rincón, me 
+            sentí como en un hogar lejos de casa. "
+          />
+          <TestimonioHuesped
+            nombre="Diego M."
+            url="../../assets/img/cliente2.jpg"
+            description="Las habitaciones son elegantes y cómodas, con una hubicación 
+            central. No podría habe pedido un lugar mejor para relajarme durante mis 
+            vacaciones."
+          />
+          <TestimonioHuesped
+            nombre="Valentina F."
+            url="../../assets/img/cliente3.jpg"
+            description="Mi familia y yo tuvimos una experiencia inolvidable en El Santandereano
+            . Los niños se pueden dejar solos en las habitaciones, gracias a que el persona está
+            muy atentos a cualquier suceso o ruido extraño. ¡Gracias por hacer que neustras vacaciones
+            sean especiales!"
+          />
+        </div>
+        <div className="container">
+          <div className="section_title text-center">
+            <p>
+              Estos son solo algunos ejemplos de los comentarios positivos que hemos recibido
+              de nuestros huéspedes satisfechos. En El Santendereano, nos esforzamos por
+              superar tus expectativas en cada visita. Esperamos tener la oportunidad de
+              atenderte pronto y hacer que tu estancia sea igual de memorable.
+            </p>
           </div>
         </div>
       </div>

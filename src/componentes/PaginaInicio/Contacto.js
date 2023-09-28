@@ -72,7 +72,8 @@ function Contacto() {
       fechaEnviado: "",
       horaEnviado: ""
     });
-    alert("El comentario ha sido enviado");
+    alert("¡Gracias por ser parte de la familia de El Santandereano" +
+      " y por compartir tus pensamientos y sugerencias con nosotros!");
   };
 
   return (
@@ -118,12 +119,24 @@ function Contacto() {
 
       {/* //mostramos la información para el mensaje */}
       <section className="accomodation_area section_gap" style={{ paddingTop: "20px" }}>
-        <h4 style={{ width: "80%", textAlign: "center", paddingLeft:"100px", paddingBottom:"15px" }}>
-          Este espacio se encuentra información de nuestras redes sociales y un
-          espacio para que te comuniques directamente con El Santandereano dejando
-          tus comentarios acerca de nuestro servicio o sugerencia a mejorar antes,
-          durante o después de haber tomado nuestro servicio.
-        </h4>
+        <div className="container">
+          <div className="section_title text-center">
+            <h2 className="title_color">
+              ¡Tu Opinión es Importante para Nosotros!
+            </h2>
+            <p>
+              En El Santandereano, valoramos la opinión de nuestros huéspedes
+              y estamos siempre buscando maneras de mejorar tu experiencia. Si
+              has tenido una estancia reciente con nosotros o tienes alguna sugerencia,
+              por favor, compártela con nosotros a través de nuestra caja de comentarios.
+              Estamos ansiosos por escucharte y asegurarnos de que tu próxima visita sea
+              aún mejor.
+            </p>
+          </div>
+          <h2 className="title_color">
+            Caja de Comentarios y Sugerencias:
+          </h2>
+        </div>
         <div className="flex" >
           {" "}
           <div className="col-md-3" style={{ width: "100%", marginRight: "5%" }}>

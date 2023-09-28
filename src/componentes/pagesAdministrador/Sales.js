@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import axios from "axios";
 // Reactstrap
-import { Form, FormGroup, Label, Input } from "reactstrap";
+import { Form, FormGroup, Label} from "reactstrap";
 import { makeStyles } from "@mui/styles";
 import { Modal, Button } from "@mui/material";
 //Estilos
@@ -105,22 +105,23 @@ function Sales() {
                 Authorization: `Bearer ${sessionStorage.getItem("access_token")}`
             }
         }).then((response) => {
-            var dataNueva = data;
-            dataNueva.map((consola) => {
-                if (consolaSeleccionada.codProducto === consola.codProducto) {
-                    consola.codProducto = consolaSeleccionada.codProducto
-                    consola.nombreProducto = consolaSeleccionada.nombreProducto,
-                    consola.marca = consolaSeleccionada.marca,
-                    consola.cantidad = consolaSeleccionada.cantidad,
-                    consola.precio = consolaSeleccionada.precio,
-                    consola.fechaRegistro = consolaSeleccionada.fechaRegistro,
-                    consola.horaRegistro = consolaSeleccionada.horaRegistro
-                }
-            });
-            setData(dataNueva);
-            peticionGet();
-            abrirCerrarModalEditar();
-            alert("El Producto ha sido Actualizado");
+            if (response.status == 201) {
+                var dataNueva = data;
+                dataNueva.map((consola) => {
+                    if (consolaSeleccionada.codProducto == consola.codProducto) {
+                            consola.nombreProducto = consolaSeleccionada.nombreProducto
+                            consola.marca = consolaSeleccionada.marca
+                            consola.cantidad = consolaSeleccionada.cantidad
+                            consola.precio = consolaSeleccionada.precio
+                            consola.fechaRegistro = consolaSeleccionada.fechaRegistro
+                            consola.horaRegistro = consolaSeleccionada.horaRegistro
+                    }
+                })
+                setData(dataNueva);
+                peticionGet();
+                abrirCerrarModalEditar();
+                alert("El Producto ha sido Actualizado");
+            }
         });
     }
     const peticionDelete = async () => {
@@ -154,7 +155,12 @@ function Sales() {
     }
     const seleccionarProducto = (consola, caso) => {
         setConsolaSeleccionada(consola);
-        caso === "Editar" ? abrirCerrarModalEditar() : abrirCerrarModalEliminar();
+        if (caso === "Editar") {
+            abrirCerrarModalEditar();
+        }
+        if (caso === "Eliminar") {
+            abrirCerrarModalEliminar();
+        }
     }
 
     useEffect(() => {

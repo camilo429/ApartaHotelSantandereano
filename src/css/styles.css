@@ -937,12 +937,12 @@ button:focus {
 .testimonial_slider .testimonial_item {
   border: 1px solid #eeeeee;
   background: #fff;
-  padding: 40px;
+  padding: 10px;
 }
 
 .testimonial_slider .testimonial_item img {
   width: auto;
-  margin-right: 30px;
+  margin-right: 10px;
 }
 
 .testimonial_slider .testimonial_item p {
@@ -950,7 +950,7 @@ button:focus {
   font-size: 14px;
   line-height: 24px;
   margin-bottom: 0px;
-  padding-bottom: 15px;
+  padding-bottom: 5px;
 }
 
 .testimonial_slider .testimonial_item .sec_h4 {

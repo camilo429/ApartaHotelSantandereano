@@ -31,9 +31,10 @@ function Lugares() {
           <div className="section_title text-center">
             <h2 className="title_color">Lugares Cercanos</h2>
             <p>
-              El Aparta Hotel Santandereano, además de presentar varios de los
-              servicios mostrados, está ubicado en un sector donde se desarrollan
-              grandes eventos del país, los cuales se encuentran a menos de 30 minutos.
+              En El Santandereano, te ofrecemos no solo un lugar cómodo para quedarte,
+              sino también una ubicación privilegiada que te permite acceder fácilmente
+              a emocionantes atracciones y servicios cercanos. Aquí tienes una lista de
+              lugares de interés que se encuentran a poca distancia de nuestro hotel:
             </p>
           </div>
           <div className="row mb_30">
@@ -151,6 +152,15 @@ function Lugares() {
                 </a>
               </div>
             </div>
+          </div>
+          <div className="section_title text-center">
+            <h2 className="title_color">Recomendaciones</h2>
+            <p>
+              Ya sea que estés interesado en la historia, la cultura, las compras
+              o la gastronomía, hay algo para todos a solo unos pasos de nuestro hotel.
+              Nuestro amable personal estará encantado de proporcionarte recomendaciones
+              adicionales y ayudarte a planificar tu itinerario.
+            </p>
           </div>
         </div>
       </section>

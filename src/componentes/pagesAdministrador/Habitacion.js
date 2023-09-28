@@ -168,7 +168,7 @@ function Habitacion() {
     }).then((response) => {
       // console.log(response.status);
       // console.log(consolaSeleccionada);
-      if (response.status == 201) {
+      if (response.status === 201) {
         var dataNueva = data;
         dataNueva.map((consola) => {
           if (consolaSeleccionada.codHabitacion === consola.codHabitacion) {
@@ -182,6 +182,7 @@ function Habitacion() {
             consola.pisoHabitacion = consolaSeleccionada.pisoHabitacion
             consola.precioDia = consolaSeleccionada.precioDia
           }
+          return consola;
         })
         setData(dataNueva);
         peticionGet();

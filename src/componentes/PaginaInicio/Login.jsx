@@ -41,7 +41,7 @@ class Login extends React.Component {
             "password": this.state.form.password,
             "grant_type": "password",
         }
-        console.log("esta es la data enviada", this.state.form.usuario, this.state.form.password)
+        //  console.log("esta es la data enviada", this.state.form.usuario, this.state.form.password)
 
         axios.request({
 
@@ -75,6 +75,10 @@ class Login extends React.Component {
             })
         })
     }
+    olvidoSuContrasena() {
+        alert("Pongase en contacto con su administrador de plataforma para realizar el " +
+            "cambio de contraseña")
+    }
     render() {
         return (
             <div>
@@ -84,6 +88,7 @@ class Login extends React.Component {
                         <input type="text" name="usuario" placeholder="Usuario" onChange={this.manejadorChange} />
                         <input type="password" name="password" placeholder="Contraseña" onChange={this.manejadorChange} />
                         <input type="submit" value="Log In" onClick={this.manejadorBoton} />
+                        <a onClick={this.olvidoSuContrasena} style={{ color: "blue", marginBottom: "5px" }}>¿Olvido su contraseña?</a>
                     </form>
                     {
                         this.state.error === true &&
