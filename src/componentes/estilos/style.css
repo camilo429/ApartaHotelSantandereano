@@ -605,7 +605,7 @@ button:focus {
 }
 
 .book_tabel_item .form-group .input-group .form-control {
-  border: 1px solid #2b3146;
+  border: 1px solid #07080b;
   background: transparent;
   border-radius: 0px;
   font-size: 13px;
@@ -1211,7 +1211,7 @@ button:focus {
   border: 0px;
   width: 100%;
   font-weight: 300;
-  color: #fff;
+  color: #0c0b0b;
   padding-left: 20px;
   border-radius: 45px;
   z-index: 0;
@@ -1219,19 +1219,19 @@ button:focus {
 }
 
 .blog_right_sidebar .search_widget .input-group .form-control.placeholder {
-  color: #fff;
+  color: #0a0909;
 }
 
 .blog_right_sidebar .search_widget .input-group .form-control:-moz-placeholder {
-  color: #fff;
+  color: #0f0c0c;
 }
 
 .blog_right_sidebar .search_widget .input-group .form-control::-moz-placeholder {
-  color: #fff;
+  color: #060505;
 }
 
 .blog_right_sidebar .search_widget .input-group .form-control::-webkit-input-placeholder {
-  color: #fff;
+  color: #0b0808;
 }
 
 .blog_right_sidebar .search_widget .input-group .form-control:focus {
@@ -1386,19 +1386,19 @@ button:focus {
 }
 
 .blog_right_sidebar .newsletter_widget .form-control.placeholder {
-  color: #cccccc;
+  color: #090707;
 }
 
 .blog_right_sidebar .newsletter_widget .form-control:-moz-placeholder {
-  color: #cccccc;
+  color: #100d0d;
 }
 
 .blog_right_sidebar .newsletter_widget .form-control::-moz-placeholder {
-  color: #cccccc;
+  color: #0c0a0a;
 }
 
 .blog_right_sidebar .newsletter_widget .form-control::-webkit-input-placeholder {
-  color: #cccccc;
+  color: #0e0a0a;
 }
 
 .blog_right_sidebar .newsletter_widget .form-control:focus {
@@ -1785,18 +1785,18 @@ button:focus {
   padding: 8px 20px;
   margin: 10px;
   background: #fff;
-  border: none;
-  border-radius: 0px;
+  border: solid rgb(34, 32, 32);
+  border-radius: 2px;
   width: 100%;
   font-size: 14px;
-  color: #777777;
-  border: 1px solid transparent;
+  color: #0d0909;
+  border: 1px solid ;
 }
 
 .comment-form .form-control:focus {
   -webkit-box-shadow: none;
   box-shadow: none;
-  border: 1px solid #eee;
+  border: 1px solid #0d0a0a;
 }
 
 .comment-form textarea.form-control {
@@ -1899,8 +1899,8 @@ button:focus {
 .contact_form .form-group .form-control {
   font-size: 13px;
   line-height: 26px;
-  color: #999;
-  border: 1px solid #eeeeee;
+  color: #0f0b0b;
+  border: 1px solid #080606;
   font-family: "Poppins", sans-serif;
   border-radius: 0px;
   padding-left: 20px;
@@ -1913,15 +1913,15 @@ button:focus {
 }
 
 .contact_form .form-group .form-control.placeholder {
-  color: #999;
+  color: #100c0c;
 }
 
 .contact_form .form-group .form-control:-moz-placeholder {
-  color: #999;
+  color: #0b0a0a;
 }
 
 .contact_form .form-group .form-control::-moz-placeholder {
-  color: #999;
+  color: #090707;
 }
 
 .contact_form .form-group .form-control::-webkit-input-placeholder {

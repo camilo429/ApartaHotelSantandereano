@@ -18,11 +18,16 @@ import axios from "axios";
 import { Apiurl } from "../../services/userService"
 //Dirrección
 const url = Apiurl + "comentarios/crearComentario"
-
-
+//Expresiones Regulares
+const nameRegex = /^[a-zA-Z\s]+$/;
+const correoExpresion = /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6}$/
+let estilos = {
+  fontWeight: "bold",
+  color: "#dc3545"
+}
 function Contacto() {
   const [data, setData] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [errors, setErrors] = useState([]);
   const [formulario, setFormulario] = useState({
     codComentario: "",
     nombre: "",
@@ -32,6 +37,21 @@ function Contacto() {
     fechaEnviado: "",
     horaEnviado: ""
   });
+  function validacionesFormulario(formulario) {
+    if (!nameRegex.test(formulario.nombre)) {
+      errors.nombre = "Nombre no valido";
+    }
+    if (!correoExpresion.test(formulario.email)) {
+      errors.email = "Correo No valido";
+    }
+    if (formulario.numTelefono.length < 10 || formulario.numTelefono.length > 10) {
+      errors.numTelefono = "El número debe tener 10 digitos";
+    }
+    if (formulario.comentario.length > 100) {
+      errors.comentario = "El comentario enviado supera los 100 caracteres";
+    }
+    return errors;
+  }
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: "AIzaSyB98G8_CHNNlhya9B1iiolBxsxp4UDZc60",
   });
@@ -58,22 +78,30 @@ function Contacto() {
   };
 
   const peticionPost = async (e) => {
-    console.log("data seleccioada", formulario);
-    setSelectedDate(new Date());
-    formulario.fechaEnviado = selectedDate;
-    const response = await axios.post(url, formulario)
-    setData(data.concat(response.data));
-    setFormulario({
-      codComentario: "",
-      nombre: "",
-      email: "",
-      numTelefono: "",
-      comentario: "",
-      fechaEnviado: "",
-      horaEnviado: ""
-    });
-    alert("¡Gracias por ser parte de la familia de El Santandereano" +
-      " y por compartir tus pensamientos y sugerencias con nosotros!");
+
+    let fechaActual = new Date();
+    let hora = fechaActual.getHours();
+    let dia = fechaActual.getDay();
+
+    setFormulario.horaEnviado = hora;
+    setFormulario.fechaActual = dia;
+    console.log("data seleccionada", formulario);
+    setErrors(validacionesFormulario(formulario));
+    if (Object.keys(errors).length === 0) {
+      const response = await axios.post(url, formulario)
+      setData(data.concat(response.data));
+      setFormulario({
+        codComentario: "",
+        nombre: "",
+        email: "",
+        numTelefono: "",
+        comentario: "",
+        fechaEnviado: "",
+        horaEnviado: ""
+      });
+      alert("¡Gracias por ser parte de la familia de El Santandereano" +
+        " y por compartir tus pensamientos y sugerencias con nosotros!");
+    }
   };
 
   return (
@@ -168,6 +196,12 @@ function Contacto() {
                     onChange={handleChange}
                     value={formulario.nombre}
                   />
+                  {
+                    errors.nombre &&
+                    <div style={estilos}>
+                      <p>{errors.nombre}</p>
+                    </div>
+                  }
                 </div>
                 <div className="form-group col-md-6">
                   <input
@@ -178,6 +212,12 @@ function Contacto() {
                     placeholder="Ingrese su correo"
                     onChange={handleChange}
                   />
+                  {
+                    errors.email &&
+                    <div style={estilos}>
+                      <p>{errors.email}</p>
+                    </div>
+                  }
                 </div>
                 <div className="form-group col-md-6">
                   <input
@@ -188,6 +228,12 @@ function Contacto() {
                     onChange={handleChange}
                     value={formulario.numTelefono}
                   />
+                  {
+                    errors.numTelefono &&
+                    <div style={estilos}>
+                      <p>{errors.numTelefono}</p>
+                    </div>
+                  }
                 </div>
                 <div className="form-group col-md-6">
                   <textarea
@@ -198,6 +244,12 @@ function Contacto() {
                     onChange={handleChange}
                     value={formulario.comentario}
                   />
+                  {
+                    errors.comentario &&
+                    <div style={estilos}>
+                      <p>{errors.comentario}</p>
+                    </div>
+                  }
                 </div>
               </div>
             </form>

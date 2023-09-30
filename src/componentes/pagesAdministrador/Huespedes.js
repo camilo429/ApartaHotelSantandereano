@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 //Librerias
 import axios from "axios";
-//import $ from 'jquery';
-//import DataTable from 'react-data-table-component';
 //Estilos
 import { makeStyles } from "@mui/styles";
 import { Form, FormGroup, Label } from "reactstrap";

@@ -11,9 +11,14 @@ function Habitaciones({ name, handleChangeData, value = null, url }) {
             try {
                 axios.get(url)
                     .then(response => {
-                        setData(response.data);
+                        if (response.data !== null) {
+                            setData(response.data);
+                        } else {
+                            alert("¡No hay habitaciones disponible!");
+                        }
                     })
                     .catch(error => {
+                        alert("¡No hay habitaciones disponible!");
                         console.error('Error al obtener las opciones:', error);
                     });
             } catch (error) {
@@ -43,7 +48,7 @@ function Habitaciones({ name, handleChangeData, value = null, url }) {
     };
 
     return (
-        <div className="habitaciones">
+        <div className="habitaciones" style={{ margin: "10px" }}>
             <Select
                 options={
                     data.map((docu) => ({

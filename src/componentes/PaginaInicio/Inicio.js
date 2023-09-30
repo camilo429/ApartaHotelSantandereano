@@ -16,15 +16,27 @@ import Footer from "./Footer";
 import { Apiurl } from "../../services/userService";
 import TipoDocumento from "../pagesAdministrador/TipoDocumento"
 //Reactrap
-import { Form, FormGroup, Label, Input } from "reactstrap";
+import { Form, FormGroup, Label} from "reactstrap";
 import { makeStyles } from "@mui/styles";
 import { Modal } from "@mui/material";
 import Habitaciones from "./Habitaciones";
 import TestimonioHuesped from "./TestimonioHuesped/TestimonioHuesped";
+//Iconos
+import * as FaWifi from "react-icons/fa";
+import * as MdBathtub from "react-icons/md";
+import * as PiTelevisionBold from "react-icons/pi";
+import * as MdOutlineBedroomParent from "react-icons/md";
+import * as MdRoomService from "react-icons/md";
+import * as GrClearOption from "react-icons/gr";
+import * as BsPersonFillGear from "react-icons/bs";
 //url
 const urlhabitacionesDisponibles = Apiurl + "habitacion/listarHabitaciones/estado/Disponible";
 const urlG = Apiurl + "reservaciones/crearReservacion";
-
+//Expresiones regulares
+const fecha = /^\d{4}-\d{2}-\d{2}$/;
+const nameRegex = /^[a-zA-Z\s]+$/;
+const correoExpresion = /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6}$/
+const cedulaExpresion = /^[0-9]{6,10}$/
 const useStyles = makeStyles((theme) => ({
   modal: {
     position: "absolute",
@@ -40,11 +52,15 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "5px",
   },
 }));
+let estilos = {
+  fontWeight: "bold",
+  color: "#dc3545"
+}
 function Inicio() {
   const styles = useStyles();
   const [data, setData] = useState([]);
   const [modalInsertar, setModalInsertar] = useState(false);
-
+  const [errors, setErrors] = useState([]);
   const [consolaSeleccionada, setConsolaSeleccionada] = useState({
     fechaEntrada: "",
     fechaSalida: "",
@@ -70,6 +86,70 @@ function Inicio() {
       imagenHabitacion: "s"
     }
   });
+
+  const validacionesReservacion = (consolaSeleccionada) => {
+    let errors = {};
+    const fechaActual = new Date();
+    // Obtener el año, el mes y el día
+    const año = fechaActual.getFullYear(); // Año (cuatro dígitos)
+    const mes = fechaActual.getMonth() + 1; // Mes (0-11, por lo que sumamos 1)
+    const dia = fechaActual.getDate(); // Día del mes
+    // Almacenar la fecha en una variable en formato "aaaa-mm-dd"
+    const fechaEnTexto = `${año}-${mes < 10 ? '0' : ''}${mes}-${dia < 10 ? '0' : ''}${dia}`;
+
+    if (!fecha.test(consolaSeleccionada.fechaEntrada)) {
+      errors.fechaEntrada = "Fecha No Válida";
+    }
+
+    if (fechaEnTexto > consolaSeleccionada.fechaEntrada) {
+      errors.fechaEntrada = "Ya es pasado!"
+    }
+    if (consolaSeleccionada.fechaEntrada === "") {
+      errors.fechaEntrada = "Fecha No Elegida!";
+    }
+    if (!fecha.test(consolaSeleccionada.fechaSalida)) {
+      errors.fechaSalida = "Fecha No Válida";
+    }
+    if (consolaSeleccionada.fechaSalida < consolaSeleccionada.fechaEntrada) {
+      errors.fechaSalida = "Fecha de salida < Fecha de Entrada";
+    }
+
+    if (consolaSeleccionada.adultos < 1) {
+      setConsolaSeleccionada.adultos = 0;
+      errors.adultos = "La habitación debe ser ocupada";
+    }
+    if (consolaSeleccionada.ninos === 0) {
+      setConsolaSeleccionada.ninos = 0;
+      errors.ninos = "Si no llevas niños elige '0'";
+    }
+    let capacidad = parseInt(consolaSeleccionada.adultos) + parseInt(consolaSeleccionada.ninos);
+    let maxPerson = parseInt(consolaSeleccionada.habitacion.maxPersonasDisponibles);
+    if (capacidad > maxPerson) {
+      errors.habitacion = "La cantidad maximas para esta habitación es superada";
+    }
+
+    if (consolaSeleccionada.tipoDocumento.nomTipoDocument === "") {
+      errors.tipoDocumento = "Seleccione un tipo documento";
+    }
+    if (!cedulaExpresion.test(consolaSeleccionada.numDocumento)) {
+      errors.numDocumento = "Número No valido";
+    }
+    if (!nameRegex.test(consolaSeleccionada.nombre)) {
+      errors.nombre = "Nombre No valido";
+    }
+    if (!nameRegex.test(consolaSeleccionada.apellido)) {
+      errors.apellido = "Apellido No valido";
+    }
+    if (!correoExpresion.test(consolaSeleccionada.email)) {
+      errors.email = "Correo No valido";
+    }
+    if (consolaSeleccionada.habitacion.codHabitacion === "") {
+      errors.habitacion = "Debe de elegir una Habitación";
+    }
+
+
+    return errors;
+  }
   const handleChange = (e) => {
     const { name, value } = e.target;
     setConsolaSeleccionada((prevState) => ({
@@ -78,14 +158,21 @@ function Inicio() {
     }));
   };
   const peticionPost = async () => {
-    console.log(consolaSeleccionada)
-    const response = await axios.post(urlG, consolaSeleccionada);
-    setData(data.concat(response.data));
-    abrirCerrarModalInsertar();
-    alert("La reservación ha sido creada");
+    //console.log(consolaSeleccionada)
+    setErrors(validacionesReservacion(consolaSeleccionada));
+    //console.log(Object.keys(errors).length);
+    if (Object.keys(errors).length === 0) {
+      const response = await axios.post(urlG, consolaSeleccionada);
+      setData(data.concat(response.data));
+      abrirCerrarModalInsertar();
+      alert("La reservación ha sido creada");
+    } else {
+      alert("Ha ocurrido un error al solitar un reservación");
+    }
   };
   const abrirCerrarModalInsertar = () => {
     setModalInsertar(!modalInsertar);
+    clearInterval(setConsolaSeleccionada);
   };
   const bodyInsertar = (
     <div className={styles.modal}>
@@ -101,6 +188,12 @@ function Inicio() {
               className="form-control"
               onChange={handleChange}
             />
+            {
+              errors.fechaEntrada &&
+              <div style={estilos}>
+                <p>{errors.fechaEntrada}</p>
+              </div>
+            }
           </FormGroup>
           <FormGroup className="me-2">
             <Label for="exampleEmail">Fecha de Salida</Label>
@@ -111,26 +204,46 @@ function Inicio() {
               className="form-control"
               onChange={handleChange}
             />
+            {
+              errors.fechaSalida &&
+              <div style={estilos}>
+                <p>{errors.fechaSalida}</p>
+              </div>
+            }
           </FormGroup>
 
           <FormGroup className="me-2">
             <Label for="exampleEmail">Número de Adultos</Label>
             <input
               name="adultos"
+              type="number"
               placeholder="# Adultos"
               className="form-control"
               onChange={handleChange}
             />
+            {
+              errors.adultos &&
+              <div style={estilos}>
+                <p>{errors.adultos}</p>
+              </div>
+            }
           </FormGroup>
 
           <FormGroup className="me-2">
             <Label for="exampleEmail">Número de Niños</Label>
             <input
               name="ninos"
+              type="number"
               placeholder="# Niños"
               className="form-control"
               onChange={handleChange}
             />
+            {
+              errors.ninos &&
+              <div style={estilos}>
+                <p>{errors.ninos}</p>
+              </div>
+            }
           </FormGroup>
         </div>
 
@@ -141,6 +254,12 @@ function Inicio() {
               name="tipoDocumento"
               handleChangeData={handleChange}
             />
+            {
+              errors.tipoDocumento &&
+              <div style={estilos}>
+                <p>{errors.tipoDocumento}</p>
+              </div>
+            }
           </FormGroup>
           <FormGroup className="me-2">
             <Label for="exampleEmail"># Documento</Label>
@@ -151,6 +270,12 @@ function Inicio() {
               className="form-control"
               onChange={handleChange}
             />
+            {
+              errors.numDocumento &&
+              <div style={estilos}>
+                <p>{errors.numDocumento}</p>
+              </div>
+            }
           </FormGroup>
 
           <FormGroup className="me-2">
@@ -161,16 +286,28 @@ function Inicio() {
               className="form-control"
               onChange={handleChange}
             />
+            {
+              errors.nombre &&
+              <div style={estilos}>
+                <p>{errors.nombre}</p>
+              </div>
+            }
           </FormGroup>
 
           <FormGroup className="me-2">
             <Label for="exampleEmail">Apellido</Label>
-            <Input
+            <input
               name="apellido"
               placeholder="apellido"
               className="form-control"
               onChange={handleChange}
             />
+            {
+              errors.apellido &&
+              <div style={estilos}>
+                <p>{errors.apellido}</p>
+              </div>
+            }
           </FormGroup>
         </div>
         <div className="flex">
@@ -183,14 +320,26 @@ function Inicio() {
               className="form-control"
               onChange={handleChange}
             />
+            {
+              errors.email &&
+              <div style={estilos}>
+                <p>{errors.email}</p>
+              </div>
+            }
           </FormGroup>
           <FormGroup className="me-2 w-80">
-            <Label for="exampleEmail">habitacion</Label>
+            <Label for="exampleEmail">Tipo Habitación </Label>
             <Habitaciones
               name="habitacion"
               handleChangeData={handleChange}
               url={urlhabitacionesDisponibles}
             />
+            {
+              errors.habitacion &&
+              <div style={estilos}>
+                <p>{errors.habitacion}</p>
+              </div>
+            }
           </FormGroup>
         </div>
       </Form>
@@ -218,13 +367,15 @@ function Inicio() {
             <div className="banner_content text-center">
               <h2>Tiempo de Descanso</h2>
               <p>
-                Ya sea que viajes por negocios o placer, nuestras habitaciones te brindarán el refugio perfecto. Reserva tu habitación hoy y descubre por qué somos la elección preferida de viajeros exigentes. ¡Esperamos darle la bienvenida pronto!
+                Ya sea que viajes por negocios o placer, nuestras habitaciones te
+                brindarán el refugio perfecto. Reserva tu habitación hoy y descubre
+                por qué somos la elección preferida de viajeros exigentes. ¡Esperamos
+                darle la bienvenida pronto!
               </p>
             </div>
           </div>
         </div>
       </div>
-
       <div className="testimonial_area section_gap">
         <div className="container">
           <div className="section_title text-center">
@@ -236,38 +387,71 @@ function Inicio() {
               sido cuidadosamente seleccionado para garantizar una experiencia única.
             </p>
           </div>
-          <div style={{ textAlign: "initial", marginBottom: "10px" }}>
-            <b className="title_color">Caracteristicas de Nuestas Habitaciones:</b>
+
+          <b className="title_color">Caracteristicas de Nuestas Habitaciones:</b>
+          <div style={{ textAlign: "initial", margin: "10px" }} className="flex">
             <br />
-            <b className="title_color">Amplias y Modernas: </b>
-            Nuestras habitaciones son espaciosas  modernamente decoradas, proporcionando
-            un ambiente relajante para tu estadía.
-            <br />
-            <b className="title_color">Baños Privados: </b>
-            Cada habitación cuenta con un baño privad equipado con articulos de tocador
-            de alta calidad y duchas de lluvia.
-            <br />
-            <b className="title_color">Conexión Wi-Fi de Alta Velocidad: </b>
-            Mantente conectado con el mundo gracias a nuestra rápida conexión Wi-Fi
-            gratuita en todas las habitaciones.
-            <br />
-            <b className="title_color">Televisión de Pantalla Plana: </b>
-            Relájate viendo tus programas favoritos enuna televisión de pantalla plana
-            de alta definición.
-            <br />
-            <b className="title_color">Servicio a la Habitación: </b>
-            Disfruta de comida a domicilio de los mejores restaurante de la zona en la
-            comodidad de tu habitación con nuestro servicio a la habitación disponible hasta
-            las 11:00pm.
-            <br />
-            <b className="title_color">Limpieza Impecable: </b>
-            Nuestras habitaciones se mantienen en perfecto estado de limpieza para tu
-            seguridad y comodidad.
-            <br />
-            <b className="title_color">Atención Personalizada: </b>
-            Nuestro amable personal está siempre dispuesto a ayudarte con cualquier solicitud
-            o necesidad que puedas tener durante tu estancia.
+            <div>
+              <MdOutlineBedroomParent.MdOutlineBedroomParent className="me-2" />
+              <b className="title_color">Amplias y Modernas: </b>
+              <p>
+                Nuestras habitaciones son espaciosas  modernamente decoradas,
+                proporcionando un ambiente relajante para tu estadía.
+              </p>
+            </div>
+            <div>
+              <MdBathtub.MdBathtub className="me-2" />
+              <b className="title_color">Baños Privados: </b>
+              <p>
+                Cada habitación cuenta con un baño privad equipado con articulos
+                de tocador de alta calidad y duchas de lluvia.
+              </p>
+            </div>
+            <div>
+              <FaWifi.FaWifi className="me-2" />
+              <b className="title_color">Conexión Wi-Fi de Alta Velocidad: </b>
+              <p style={{ marginRight: "5px" }}>
+                Mantente conectado con el mundo gracias a nuestra rápida conexión
+                Wi-Fi gratuita en todas las habitaciones.
+              </p>
+            </div>
+            <div>
+              <PiTelevisionBold.PiTelevisionBold className="me-2" />
+              <b className="title_color">Televisión de Pantalla Plana: </b>
+              <p>
+                Relájate viendo tus programas favoritos enuna televisión de pantalla
+                plana de alta definición.
+              </p>
+            </div>
           </div>
+          <div style={{ textAlign: "initial", margin: "10px" }} className="flex">
+            <div>
+              <MdRoomService.MdRoomService className="me-2" />
+              <b className="title_color">Servicio a la Habitación: </b>
+              <p>
+                Disfruta de comida a domicilio de los mejores restaurante
+                de la zona en la comodidad de tu habitación con nuestro
+                servicio a la habitación disponible hasta las 11:00pm.
+              </p>
+            </div>
+            <div>
+              <GrClearOption.GrClearOption className="me-2" />
+              <b className="title_color">Limpieza Impecable: </b>
+              <p style={{ marginRight: "5px" }}>
+                Nuestras habitaciones se mantienen en perfecto estado de limpieza
+                para tu seguridad y comodidad.
+              </p>
+            </div>
+            <div>
+              <BsPersonFillGear.BsPersonFillGear className="me-2" />
+              <b className="title_color">Atención Personalizada: </b>
+              <p>
+                Nuestro amable personal está siempre dispuesto a ayudarte con cualquier
+                solicitud o necesidad que puedas tener durante tu estancia.
+              </p>
+            </div>
+          </div>
+
           {/* //espacio para poner las habitaciones  */}
           <div className="row mb_30">
             {/* // Espacio para poner una a una la habitación */}
@@ -366,7 +550,6 @@ function Inicio() {
         </div>
       </div>
       {/* // Testimonio de los huespedes  */}
-
       <div className="testimonial_area section_gap ">
         <div className="container">
           <div className="section_title text-center">
@@ -381,7 +564,6 @@ function Inicio() {
           </div>
         </div>
         {/* //Cuadros de testimonios */}
-
         <div className="flex" style={{ marginLeft: "15%" }}>
           <TestimonioHuesped
             nombre="- Yerson Bautista."
@@ -417,7 +599,6 @@ function Inicio() {
           </div>
         </div>
       </div>
-
       {/* // footer */}
       <Footer />
       <Modal open={modalInsertar} onClose={abrirCerrarModalInsertar}>

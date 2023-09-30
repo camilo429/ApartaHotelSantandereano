@@ -34,7 +34,6 @@ class Login extends React.Component {
         //console.log(this.state.form);
     }
 
-
     manejadorBoton = () => {
         var reqData = {
             "username": this.state.form.usuario,
@@ -42,9 +41,8 @@ class Login extends React.Component {
             "grant_type": "password",
         }
         //  console.log("esta es la data enviada", this.state.form.usuario, this.state.form.password)
-
+        
         axios.request({
-
             method: "post",
             url: Apiurl + "oauth/token",
             withCredentials: true,
@@ -71,7 +69,7 @@ class Login extends React.Component {
         }).catch(error => {
             this.setState({
                 error: true,
-                errorMsg: "Error: En los datos ingresados"
+                errorMsg: "Error: Usuario o Contraseña Equivocados"
             })
         })
     }
