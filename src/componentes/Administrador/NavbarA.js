@@ -23,7 +23,7 @@ const NavbarA = () => {
 
   return (
     <div>
-      <Navbar color="light" light expand="md" style={{width:"95%"}}>
+      <Navbar color="light" light expand="md" style={{width:"85%"}}>
         {/* <div className="topbar-divider d-none d-sm-block"></div> */}
         <hr className="topbar-divider d-none d-sm-block" style={{ borderTop: "1px solid white" }} />
 

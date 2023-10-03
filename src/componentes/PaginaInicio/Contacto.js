@@ -47,6 +47,9 @@ function Contacto() {
     if (formulario.numTelefono.length < 10 || formulario.numTelefono.length > 10) {
       errors.numTelefono = "El número debe tener 10 digitos";
     }
+    if (formulario.comentario.length === 0) {
+      errors.comentario = "El Comentario está vacio";
+    }
     if (formulario.comentario.length > 100) {
       errors.comentario = "El comentario enviado supera los 100 caracteres";
     }

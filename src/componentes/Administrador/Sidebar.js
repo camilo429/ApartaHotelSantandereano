@@ -17,11 +17,9 @@ import "../../vendor/fontawesome-free/css/all.min.css";
 const Sidebar = () => {
 
   return (
-    <div className="sidebar">
-      <ul className="navbar-nav bg-gradient-primary sidebar-dark" style={{ padding: "0px" }} >
-
-        <div style={{ margin: "5px" }}>
-
+    <div className="sidebar" style={{ height: "100%", width: "100%" }}>
+      <ul className="navbar-nav bg-gradient-primary sidebar-dark" >
+        <div>
           <div className="col-xl-2">
             <a
               className="sidebar-brand align-items-center"
@@ -31,11 +29,9 @@ const Sidebar = () => {
                 <i className="fas fa-laugh-wink"></i>
               </div>
               <br></br>
-
               <div className="text-blue rounded py-2 w-100 d-inline-block px-1">Admin</div>
             </a>
           </div>
-
           <br></br>
           <div className="sidebar-heading">Interface</div>
 

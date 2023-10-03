@@ -16,60 +16,57 @@ import Recibos from "../pagesAdministrador/Recibos";
 function
   PanelAdministrador() {
   return (
-    <div>
-      <div className="flex">
-        <Sidebar />
-        <div className="content" style={{ width: "100%" }}>
-          <NavbarA />
-
-          <Routes>
-            <Route
-              path="/"
-              exact={true}
-              element={<Home />}
-            />
-            <Route
-              path="/Home"
-              exact={true}
-              element={<Home />}
-            />
-            <Route
-              path="/Huespedes"
-              exact={true}
-              element={<Huespedes />}
-            />
-            <Route
-              path="/Empleados"
-              exact={true}
-              element={<EmpleadoComponent />}
-            />
-            <Route
-              path="/Sales"
-              exact={true}
-              element={<Sales />}
-            />
-            <Route
-              path="/Graficas"
-              exact={true}
-              element={<Graficas />}
-            />
-            <Route
-              path="/Reservaciones"
-              exact={true}
-              element={<Reservaciones />}
-            />
-            <Route
-              path="/Habitacion"
-              exact={true}
-              element={<Habitacion />}
-            />
-            <Route
-              path="/Recibos"
-              exact={true}
-              element={<Recibos />}
-            />
-          </Routes>
-        </div>
+    <div className="flex">
+      <Sidebar />
+      <div className="cotenedor" style={{ width: "85%" }} >
+        <NavbarA />
+        <Routes>
+          <Route
+            path="/"
+            exact={true}
+            element={<Home />}
+          />
+          <Route
+            path="/Home"
+            exact={true}
+            element={<Home />}
+          />
+          <Route
+            path="/Huespedes"
+            exact={true}
+            element={<Huespedes />}
+          />
+          <Route
+            path="/Empleados"
+            exact={true}
+            element={<EmpleadoComponent />}
+          />
+          <Route
+            path="/Sales"
+            exact={true}
+            element={<Sales />}
+          />
+          <Route
+            path="/Graficas"
+            exact={true}
+            element={<Graficas />}
+          />
+          <Route
+            path="/Reservaciones"
+            exact={true}
+            element={<Reservaciones />}
+          />
+          <Route
+            path="/Habitacion"
+            exact={true}
+            element={<Habitacion />}
+          />
+          <Route
+            path="/Recibos"
+            exact={true}
+            element={<Recibos />}
+          />
+        </Routes>
       </div>
     </div>
   );

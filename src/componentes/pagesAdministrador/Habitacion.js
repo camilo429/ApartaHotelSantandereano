@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 // librerias
-import axios from "axios"
+import axios from "axios";
+import MUIDataTable from "mui-datatables";
 // Estilos
 import { Form, FormGroup, Label, Input } from "reactstrap";
 import "../../App.scss";
 import { makeStyles } from "@mui/styles";
 import { Modal, Button } from "@mui/material";
-import "../../css/Habitacion.css"
+import "../../css/Habitacion.css";
 // Iconos
 import * as MdDelete from "react-icons/md";
 import * as AiFillEdit from "react-icons/ai";
@@ -20,8 +21,9 @@ const url = Apiurl + "habitacion/listarHabitaciones";
 const urlG = Apiurl + "habitacion/crearHabitacion";
 const urlE = Apiurl + "habitacion/actualizarHabitacion/";
 const urlD = Apiurl + "habitacion/eliminarHabitacion/";
-const urlCheckIn = Apiurl + "checkin/crearCheckin"
-const urlhabitacionesDisponibles = Apiurl + "habitacion/listarHabitaciones/estado/Disponible";
+const urlCheckIn = Apiurl + "checkin/crearCheckin";
+const urlhabitacionesDisponibles =
+  Apiurl + "habitacion/listarHabitaciones/estado/Disponible";
 const urlHuespedes = Apiurl + "huespedes/listarHuespedes";
 
 const useStyles = makeStyles((theme) => ({
@@ -52,7 +54,7 @@ const useEstilo = makeStyles((theme) => ({
     left: "50%",
     transform: "translate(-50%,-50%)",
   },
-}))
+}));
 function Habitacion() {
   const styles = useStyles();
   const estilos = useEstilo();
@@ -73,7 +75,7 @@ function Habitacion() {
     maxPersonasDisponibles: "",
     precioDia: "",
     estadoHabitacion: "",
-    imagenHabitacion: ""
+    imagenHabitacion: "",
   });
   const [consolaCheckIn, setConsolaCheckIn] = useState({
     fechaIngreso: "",
@@ -86,12 +88,12 @@ function Habitacion() {
       correo: "",
       tipoDocumento: {
         codTipoDocumento: "",
-        nomTipoDocumento: ""
+        nomTipoDocumento: "",
       },
       numDocumento: "",
       nacionalidad: {
         codNacion: "",
-        nombre: ""
+        nombre: "",
       },
       lugarOrigen: "",
       nomContactoEmergencia: "",
@@ -107,9 +109,9 @@ function Habitacion() {
       maxPersonasDisponibles: "",
       precioDia: "",
       estadoHabitacion: "",
-      imagenHabitacion: ""
-    }
-  })
+      imagenHabitacion: "",
+    },
+  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -127,102 +129,127 @@ function Habitacion() {
   };
 
   const peticionGet = async () => {
-    axios.request({
-      method: "get",
-      url: url,
-      withCredentials: true,
-      crossdomain: true,
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("access_token")}`
-      }
-    }).then(response => {
-      if (response.status === 200) {
-        setData(response.data);
-        //console.log(response.data);
-      }
-    })
+    axios
+      .request({
+        method: "get",
+        url: url,
+        withCredentials: true,
+        crossdomain: true,
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
+        },
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          setData(response.data);
+          //console.log(response.data);
+        }
+      });
   };
   const peticionPost = async (e) => {
     e.preventDefault();
-    const response = await axios.post(urlG, consolaSeleccionada, {
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("access_token")}`
-      }
-    });
-    setData(data.concat(response.data));
-    peticionGet();
-    abrirCerrarModalInsertar();
-    alert("La habitación ha sido creada");
+    const response = await axios
+      .post(urlG, consolaSeleccionada, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
+        },
+      })
+      .then((response) => {
+        setData(data.concat(response.data));
+        peticionGet();
+        abrirCerrarModalInsertar();
+        alert("La habitación ha sido creada");
+      })
+      .catch((error) => {
+        alert("Se ha generado un error al CREAR la habitación");
+      });
   };
 
   const peticionPut = async () => {
-    await axios.request({
-      method: "put",
-      url: urlE + consolaSeleccionada.codHabitacion,
-      withCredentials: true,
-      crossdomain: true,
-      data: consolaSeleccionada,
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("access_token")}`
-      }
-    }).then((response) => {
-      // console.log(response.status);
-      // console.log(consolaSeleccionada);
-      if (response.status === 201) {
-        var dataNueva = data;
-        dataNueva.map((consola) => {
-          if (consolaSeleccionada.codHabitacion === consola.codHabitacion) {
-            consola.codHabitacion = consolaSeleccionada.codHabitacion
-            consola.descripHabitacion = consolaSeleccionada.descripHabitacion
-            consola.estadoHabitacion = consolaSeleccionada.estadoHabitacion
-            consola.imagenHabitacion = consolaSeleccionada.imagenHabitacion
-            consola.maxPersonasDisponibles = consolaSeleccionada.maxPersonasDisponibles
-            consola.nombreHabitacion = consolaSeleccionada.nombreHabitacion
-            consola.numHabitacion = consolaSeleccionada.numHabitacion
-            consola.pisoHabitacion = consolaSeleccionada.pisoHabitacion
-            consola.precioDia = consolaSeleccionada.precioDia
-          }
-          return consola;
-        })
-        setData(dataNueva);
-        peticionGet();
-        abrirCerrarModalEditar();
-        alert("La habitación ha sido actualizada");
-      }
-    });
-  }
+    await axios
+      .request({
+        method: "put",
+        url: urlE + consolaSeleccionada.codHabitacion,
+        withCredentials: true,
+        crossdomain: true,
+        data: consolaSeleccionada,
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
+        },
+      })
+      .then((response) => {
+        // console.log(response.status);
+        // console.log(consolaSeleccionada);
+        if (response.status === 201) {
+          var dataNueva = data;
+          dataNueva.map((consola) => {
+            if (consolaSeleccionada.codHabitacion === consola.codHabitacion) {
+              consola.codHabitacion = consolaSeleccionada.codHabitacion;
+              consola.descripHabitacion = consolaSeleccionada.descripHabitacion;
+              consola.estadoHabitacion = consolaSeleccionada.estadoHabitacion;
+              consola.imagenHabitacion = consolaSeleccionada.imagenHabitacion;
+              consola.maxPersonasDisponibles =
+                consolaSeleccionada.maxPersonasDisponibles;
+              consola.nombreHabitacion = consolaSeleccionada.nombreHabitacion;
+              consola.numHabitacion = consolaSeleccionada.numHabitacion;
+              consola.pisoHabitacion = consolaSeleccionada.pisoHabitacion;
+              consola.precioDia = consolaSeleccionada.precioDia;
+            }
+            return consola;
+          });
+          setData(dataNueva);
+          peticionGet();
+          abrirCerrarModalEditar();
+          alert("La habitación ha sido actualizada");
+        }
+      })
+      .catch((error) => {
+        alert("Se ha generado un error al actualizar la habitación");
+      });
+  };
 
   const peticionDelete = async () => {
-    console.log("esta es la data", consolaSeleccionada)
-    axios.request({
-      method: "delete",
-      url: urlD + consolaSeleccionada.codHabitacion,
-      withCredentials: true,
-      crossdomain: true,
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("access_token")}`
-      }
-    }).then(response => {
-      if (response.status === 200) {
-        setData(data.filter((consola) => consola.codHabitacion !== consolaSeleccionada.codHabitacion));
-        abrirCerrarModalEliminar();
-        alert("Habitación Eliminada!")
-      }
-    })
+    axios
+      .request({
+        method: "delete",
+        url: urlD + consolaSeleccionada.codHabitacion,
+        withCredentials: true,
+        crossdomain: true,
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
+        },
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          setData(
+            data.filter(
+              (consola) =>
+                consola.codHabitacion !== consolaSeleccionada.codHabitacion
+            )
+          );
+          abrirCerrarModalEliminar();
+          alert("Habitación Eliminada!");
+        }
+      })
+      .catch((error) => {
+        alert(
+          "Se ha generado un error al eliminar la habitación porque esta reservada"
+        );
+      });
   };
   const peticionCheckIn = async (e) => {
     e.preventDefault();
     console.log("esta es la data seleccionada", consolaCheckIn);
     const response = await axios.post(urlCheckIn, consolaCheckIn, {
       headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("access_token")}`
-      }
+        Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
+      },
     });
     setData(data.concat(response.data));
     peticionGet();
     abrirCerrarModalCheckIn();
     alert("La habitación número", consolaCheckIn.habitacion, "ha sido ocupada");
-  }
+  };
   const abrirCerrarModalInsertar = () => {
     setModalInsertar(!modalInsertar);
   };
@@ -234,10 +261,20 @@ function Habitacion() {
   };
   const abrirCerrarModalCheckIn = () => {
     setModalCheckIn(!modalCheckIn);
-  }
+  };
 
   const seleccionarHabitacion = (consola, caso) => {
-    setConsolaSeleccionada(consola);
+    setConsolaSeleccionada({
+      codHabitacion: consola[0],
+      nombreHabitacion: consola[1],
+      descripHabitacion: consola[2],
+      numHabitacion: consola[3],
+      pisoHabitacion: consola[4],
+      estadoHabitacion: consola[5],
+      maxPersonasDisponibles: consola[6],
+      precioDia: consola[7],
+      imagenHabitacion: consola[8],
+    });
     if (caso === "Editar") {
       abrirCerrarModalEditar();
     }
@@ -254,7 +291,7 @@ function Habitacion() {
       <h3>Agregar Habitacion</h3>
       <Form>
         <div className="flex">
-          <FormGroup className="me-2" >
+          <FormGroup className="me-2">
             <Label for="exampleEmail">Nombre Habitación</Label>
             <input
               name="nombreHabitacion"
@@ -367,9 +404,7 @@ function Habitacion() {
               onChange={handleChange}
               value={consolaSeleccionada?.nombreHabitacion}
               placeholder={
-                !consolaSeleccionada?.nombreHabitacion
-                  ? "Nombre"
-                  : "Nombre"
+                !consolaSeleccionada?.nombreHabitacion ? "Nombre" : "Nombre"
               }
             />
           </FormGroup>
@@ -379,9 +414,7 @@ function Habitacion() {
               className="form-control"
               name="numHabitacion"
               onChange={handleChange}
-              value={
-                consolaSeleccionada && consolaSeleccionada.numHabitacion
-              }
+              value={consolaSeleccionada && consolaSeleccionada.numHabitacion}
               placeholder="Número Habitación"
             />
           </FormGroup>
@@ -405,7 +438,10 @@ function Habitacion() {
               className="form-control"
               name="maxPersonasDisponibles"
               onChange={handleChange}
-              value={consolaSeleccionada && consolaSeleccionada.maxPersonasDisponibles}
+              value={
+                consolaSeleccionada &&
+                consolaSeleccionada.maxPersonasDisponibles
+              }
               placeholder="#Personas"
               type="number"
             />
@@ -416,10 +452,7 @@ function Habitacion() {
               className="form-control"
               name="precioDia"
               onChange={handleChange}
-              value={
-                consolaSeleccionada &&
-                consolaSeleccionada.precioDia
-              }
+              value={consolaSeleccionada && consolaSeleccionada.precioDia}
               type="number"
             />
           </FormGroup>
@@ -468,7 +501,6 @@ function Habitacion() {
             />
           </FormGroup>
         </div>
-
       </Form>
       <div align="right">
         <Button color="primary" onClick={() => peticionPut()}>
@@ -481,21 +513,30 @@ function Habitacion() {
   const bodyEliminar = (
     <div className={estilos.modal}>
       <p>
-        Esta seguro de Eliminar la Habitación<br />
+        Esta seguro de Eliminar la Habitación
+        <br />
         <b>
-          {
-            consolaSeleccionada &&
-            consolaSeleccionada.nombreHabitacion + " " +
-            consolaSeleccionada.numHabitacion
-          }
+          {consolaSeleccionada &&
+            consolaSeleccionada.nombreHabitacion +
+              " " +
+              consolaSeleccionada.numHabitacion}
         </b>
         ?
       </p>
       <div align="right">
-        <button className="btn btn-primary" onClick={() => peticionDelete()} style={{ margin: "5px" }}>
+        <button
+          className="btn btn-primary"
+          onClick={() => peticionDelete()}
+          style={{ margin: "5px" }}
+        >
           Eliminar
         </button>
-        <button className="btn btn-danger" onClick={() => abrirCerrarModalEliminar()}>Cancelar</button>
+        <button
+          className="btn btn-danger"
+          onClick={() => abrirCerrarModalEliminar()}
+        >
+          Cancelar
+        </button>
       </div>
     </div>
   );
@@ -537,8 +578,10 @@ function Habitacion() {
             <SelectHuespedes
               name="huesped"
               handleChangeData={manejarCambio}
-              url={urlHuespedes} />
-          </FormGroup>a
+              url={urlHuespedes}
+            />
+          </FormGroup>
+          a
         </div>
       </Form>
       <div align="right">
@@ -548,18 +591,90 @@ function Habitacion() {
         <Button onClick={() => abrirCerrarModalCheckIn()}>Cancelar</Button>
       </div>
     </div>
-  )
+  );
+
+  const columns = [
+    {
+      name: "codHabitacion",
+      label: "codHabitacion",
+    },
+    {
+      name: "nombreHabitacion",
+      label: "Nombre",
+    },
+    {
+      name: "descripHabitacion",
+      label: "Descripción",
+      filter: false,
+      sort: false,
+    },
+    {
+      name: "numHabitacion",
+      label: "#Habitación",
+      sort: true,
+    },
+    {
+      name: "pisoHabitacion",
+      label: "#pisoHabitacion",
+      sort: true,
+    },
+    {
+      name: "estadoHabitacion",
+      label: "Estado Habitación",
+    },
+    {
+      name: "maxPersonasDisponibles",
+      label: "Capacidad (Personas)",
+    },
+    {
+      name: "precioDia",
+      label: "precioDia",
+    },
+    {
+      name: "acciones",
+      label: "Acciones",
+      options: {
+        filter: false,
+        sort: false,
+        customBodyRender: (value, tableMeta, updateValue) => {
+          return (
+            <div>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() =>
+                  seleccionarHabitacion(tableMeta.rowData, "Editar")
+                }
+              >
+                <AiFillEdit.AiFillEdit className="me-2" />
+                Editar
+              </Button>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() =>
+                  seleccionarHabitacion(tableMeta.rowData, "Eliminar")
+                }
+              >
+                <MdDelete.MdDelete className="me-2" />
+                Eliminar
+              </Button>
+            </div>
+          );
+        },
+      },
+    },
+  ];
+  const options = {
+    filterType: "dropdown",
+    responsive: "standard",
+
+    /*  customToolbarSelect: (selectedRows) => <CustomToolbarSelect selectedRows={selectedRows} />*/
+  };
   return (
     <div className="Habitacion">
       <br />
       <div className="card shadow mb-4">
-        <div className="card-header py-3">
-          <div className="flex">
-            <h6 className="m-0 font-weight-bold text-primary">
-              Lista de habitaciones
-            </h6>
-          </div>
-        </div>
         <div className="flex">
           <button
             onClick={() => abrirCerrarModalInsertar()}
@@ -580,58 +695,13 @@ function Habitacion() {
             Check-out
           </button>
         </div>
-        <div className="card-body">
-          <div className="table-responsive">
-            <table className="table table-bordered" cellSpacing="0">
-              <thead>
-                <tr>
-                  <th>Nombre</th>
-                  <th>Descripción</th>
-                  <th>Número</th>
-                  <th>Estado</th>
-                  <th>
-                    Capacidad <br /> Máxima
-                  </th>
-                  <th>Precio</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.map((consola) => {
-                  return (
-                    <tr key={consola.codHabitacion}>
-                      <th>{consola.nombreHabitacion}</th>
-                      <th>{consola.descripHabitacion}</th>
-                      <th>{consola.numHabitacion}</th>
-                      <th>{consola.estadoHabitacion}</th>
-                      <th>{consola.maxPersonasDisponibles}</th>
-                      <th>{consola.precioDia}</th>
-                      <th>
-                        <Button
-                          className="flex"
-                          onClick={() =>
-                            seleccionarHabitacion(consola, "Eliminar")
-                          }
-                        >
-                          <MdDelete.MdDelete className="me-2" />
-                          Eliminar
-                        </Button>
-
-                        <Button
-                          className="flex"
-                          onClick={() => seleccionarHabitacion(consola, "Editar")}
-                        >
-                          <AiFillEdit.AiFillEdit className="me-2" />
-                          Editar
-                        </Button>
-                      </th>
-                    </tr>
-                  )
-                })
-                }
-              </tbody>
-            </table>
-          </div>
+        <div className="card-body" style={{ width: "100%" }}>
+          <MUIDataTable
+            title={"Lista habitaciones"}
+            data={data}
+            columns={columns}
+            options={options}
+          />
         </div>
       </div>
       <Modal open={modalInsertar} onClose={abrirCerrarModalInsertar}>

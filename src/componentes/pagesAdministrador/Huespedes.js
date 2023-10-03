@@ -238,7 +238,7 @@ function Huespedes() {
   const abrirCerrarModalVer = () => {
     setModalVer(!modalVer);
   };
-  const seleccionarEmpleado = (consola, caso) => {
+  const seleccionarHuespedes = (consola, caso) => {
     setConsolaSeleccionada(consola);
     if (caso === "Editar") {
       abrirCerrarModalEditar();
@@ -815,7 +815,7 @@ function Huespedes() {
                       <th>
                         <Button
                           className="flex"
-                          onClick={() => seleccionarEmpleado(consola, "Editar")}
+                          onClick={() => seleccionarHuespedes(consola, "Editar")}
                         >
                           <AiFillEdit.AiFillEdit className="me-2" />
                           Editar
@@ -824,7 +824,7 @@ function Huespedes() {
                         <br></br>
                         <Button
                           className="flex"
-                          onClick={() => seleccionarEmpleado(consola, "Eliminar")}
+                          onClick={() => seleccionarHuespedes(consola, "Eliminar")}
                         >
                           <MdDelete.MdDelete className="me-2" />
                           Eliminar
@@ -832,7 +832,7 @@ function Huespedes() {
                         <br></br>
                         <Button
                           className="flex"
-                          onClick={() => seleccionarEmpleado(consola, "Ver")}
+                          onClick={() => seleccionarHuespedes(consola, "Ver")}
                         >
                           <BsInfoLg.BsInfoLg className="me-2" />
                           Ver Info
