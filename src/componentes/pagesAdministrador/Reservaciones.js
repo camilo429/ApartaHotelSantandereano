@@ -27,6 +27,7 @@ const url = Apiurl + "reservaciones/listarReservas";
 const urlG = Apiurl + "reservaciones/crearReservacion";
 //const urlE = Apiurl + "reservaciones/actualizarHuesped/";
 const urlD = Apiurl + "reservaciones/eliminarReservacion/";
+const urlVer = Apiurl + "reservaciones/verReservacion/";
 
 // let estilos = {
 //   fontWeight: "bold",
@@ -174,12 +175,14 @@ function Reservaciones() {
   };
   const peticionPostVer = async (e) => {
     e.preventDefault();
-    console.log("esta es la data seleccionada ", consolaSeleccionada);
-    const response = await axios.post(urlG, consolaSeleccionada);
+    console.log("esta es la data Ver ", consolaSeleccionada);
+    const response = await axios.post(
+      urlVer,
+      consolaSeleccionada.codReservacion
+    );
     setData(data.concat(response.data));
     peticionGet();
     abrirCerrarModalInsertar();
-    alert("La habitación ha sido creada");
   };
   const seleccionarReservacion = (consola, caso) => {
     console.log(consola);
