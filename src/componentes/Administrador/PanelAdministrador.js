@@ -13,59 +13,30 @@ import Habitacion from "../pagesAdministrador/Habitacion";
 import "../../App.scss";
 import Recibos from "../pagesAdministrador/Recibos";
 
-function
-  PanelAdministrador() {
+function PanelAdministrador({ nombre, apellido }) {
   return (
     <div className="flex">
       <Sidebar />
-      <div className="cotenedor" style={{ width: "85%" }} >
-        <NavbarA />
+      <div className="cotenedor" style={{ width: "85%" }}>
+        <NavbarA name={nombre} lastName={apellido} />
         <Routes>
-          <Route
-            path="/"
-            exact={true}
-            element={<Home />}
-          />
-          <Route
-            path="/Home"
-            exact={true}
-            element={<Home />}
-          />
-          <Route
-            path="/Huespedes"
-            exact={true}
-            element={<Huespedes />}
-          />
+          <Route path="/" exact={true} element={<Home />} />
+          <Route path="/Home" exact={true} element={<Home />} />
+          <Route path="/Huespedes" exact={true} element={<Huespedes />} />
           <Route
             path="/Empleados"
             exact={true}
             element={<EmpleadoComponent />}
           />
-          <Route
-            path="/Sales"
-            exact={true}
-            element={<Sales />}
-          />
-          <Route
-            path="/Graficas"
-            exact={true}
-            element={<Graficas />}
-          />
+          <Route path="/Sales" exact={true} element={<Sales />} />
+          <Route path="/Graficas" exact={true} element={<Graficas />} />
           <Route
             path="/Reservaciones"
             exact={true}
             element={<Reservaciones />}
           />
-          <Route
-            path="/Habitacion"
-            exact={true}
-            element={<Habitacion />}
-          />
-          <Route
-            path="/Recibos"
-            exact={true}
-            element={<Recibos />}
-          />
+          <Route path="/Habitacion" exact={true} element={<Habitacion />} />
+          <Route path="/Recibos" exact={true} element={<Recibos />} />
         </Routes>
       </div>
     </div>

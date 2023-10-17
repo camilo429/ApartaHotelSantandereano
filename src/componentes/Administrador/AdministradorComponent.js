@@ -80,14 +80,12 @@ function AdministradorComponent() {
                   <i className="fas fa-fw fa-cog"></i>
                   <DropdownToggle>Components</DropdownToggle>
                 </a>
-
                 <DropdownMenu>
                   <DropdownItem header>Opciones</DropdownItem>
                   <DropdownItem className="collapse-item">Buttons</DropdownItem>
                   <DropdownItem className="collapse-item">Cards</DropdownItem>
                 </DropdownMenu>
               </Dropdown>
-
             </li>
           </ul>
         </div>

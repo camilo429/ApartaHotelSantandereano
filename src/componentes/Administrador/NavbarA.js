@@ -10,22 +10,25 @@ import {
   UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
-  DropdownItem
+  DropdownItem,
 } from "reactstrap";
 
 import * as BsPerfil from "react-icons/bs";
 import * as GrConfiguration from "react-icons/gr";
 import * as GiExit from "react-icons/gi";
 
-const NavbarA = () => {
+const NavbarA = ({ name, lastName }) => {
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
 
   return (
     <div>
-      <Navbar color="light" light expand="md" style={{width:"85%"}}>
+      <Navbar color="light" light expand="md" style={{ width: "85%" }}>
         {/* <div className="topbar-divider d-none d-sm-block"></div> */}
-        <hr className="topbar-divider d-none d-sm-block" style={{ borderTop: "1px solid white" }} />
+        <hr
+          className="topbar-divider d-none d-sm-block"
+          style={{ borderTop: "1px solid white" }}
+        />
 
         <div className="w-30">
           <NavbarToggler onClick={toggle} />
@@ -33,7 +36,7 @@ const NavbarA = () => {
             <Nav className="ms-auto w-40" navbar>
               <UncontrolledDropdown nav inNavbar>
                 <DropdownToggle nav caret>
-                  Camilo Ahumada
+                  {this.Name + this.lastName}
                 </DropdownToggle>
                 <DropdownMenu end>
                   <DropdownItem>

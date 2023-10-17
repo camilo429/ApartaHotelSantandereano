@@ -14,9 +14,9 @@ import "../../vendor/fontawesome-free/css/all.min.css";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { Apiurl } from "../../services/userService";
-import TipoDocumento from "../pagesAdministrador/TipoDocumento"
+import TipoDocumento from "../pagesAdministrador/TipoDocumento";
 //Reactrap
-import { Form, FormGroup, Label} from "reactstrap";
+import { Form, FormGroup, Label } from "reactstrap";
 import { makeStyles } from "@mui/styles";
 import { Modal } from "@mui/material";
 import Habitaciones from "./Habitaciones";
@@ -30,13 +30,14 @@ import * as MdRoomService from "react-icons/md";
 import * as GrClearOption from "react-icons/gr";
 import * as BsPersonFillGear from "react-icons/bs";
 //url
-const urlhabitacionesDisponibles = Apiurl + "habitacion/listarHabitaciones/estado/Disponible";
+const urlhabitacionesDisponibles =
+  Apiurl + "habitacion/listarHabitaciones/estado/Disponible";
 const urlG = Apiurl + "reservaciones/crearReservacion";
 //Expresiones regulares
 const fecha = /^\d{4}-\d{2}-\d{2}$/;
 const nameRegex = /^[a-zA-Z\s]+$/;
-const correoExpresion = /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6}$/
-const cedulaExpresion = /^[0-9]{6,10}$/
+const correoExpresion = /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6}$/;
+const cedulaExpresion = /^[0-9]{6,10}$/;
 const useStyles = makeStyles((theme) => ({
   modal: {
     position: "absolute",
@@ -54,8 +55,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 let estilos = {
   fontWeight: "bold",
-  color: "#dc3545"
-}
+  color: "#dc3545",
+};
 function Inicio() {
   const styles = useStyles();
   const [data, setData] = useState([]);
@@ -68,7 +69,7 @@ function Inicio() {
     ninos: 0,
     tipoDocumento: {
       codTipoDocumento: "",
-      nomTipoDocument: ""
+      nomTipoDocument: "",
     },
     numDocumento: "",
     nombre: "",
@@ -83,8 +84,8 @@ function Inicio() {
       maxPersonasDisponibles: "",
       precioDia: "",
       estadoHabitacion: "",
-      imagenHabitacion: "s"
-    }
+      imagenHabitacion: "s",
+    },
   });
 
   const validacionesReservacion = (consolaSeleccionada) => {
@@ -95,14 +96,14 @@ function Inicio() {
     const mes = fechaActual.getMonth() + 1; // Mes (0-11, por lo que sumamos 1)
     const dia = fechaActual.getDate(); // Día del mes
     // Almacenar la fecha en una variable en formato "aaaa-mm-dd"
-    const fechaEnTexto = `${año}-${mes < 10 ? '0' : ''}${mes}-${dia < 10 ? '0' : ''}${dia}`;
-
+    const fechaEnTexto = `${año}-${mes < 10 ? "0" : ""}${mes}-${
+      dia < 10 ? "0" : ""
+    }${dia}`;
     if (!fecha.test(consolaSeleccionada.fechaEntrada)) {
       errors.fechaEntrada = "Fecha No Válida";
     }
-
     if (fechaEnTexto > consolaSeleccionada.fechaEntrada) {
-      errors.fechaEntrada = "Ya es pasado!"
+      errors.fechaEntrada = "Ya es pasado!";
     }
     if (consolaSeleccionada.fechaEntrada === "") {
       errors.fechaEntrada = "Fecha No Elegida!";
@@ -113,7 +114,6 @@ function Inicio() {
     if (consolaSeleccionada.fechaSalida < consolaSeleccionada.fechaEntrada) {
       errors.fechaSalida = "Fecha de salida < Fecha de Entrada";
     }
-
     if (consolaSeleccionada.adultos < 1) {
       setConsolaSeleccionada.adultos = 0;
       errors.adultos = "La habitación debe ser ocupada";
@@ -122,12 +122,16 @@ function Inicio() {
       setConsolaSeleccionada.ninos = 0;
       errors.ninos = "Si no llevas niños elige '0'";
     }
-    let capacidad = parseInt(consolaSeleccionada.adultos) + parseInt(consolaSeleccionada.ninos);
-    let maxPerson = parseInt(consolaSeleccionada.habitacion.maxPersonasDisponibles);
+    let capacidad =
+      parseInt(consolaSeleccionada.adultos) +
+      parseInt(consolaSeleccionada.ninos);
+    let maxPerson = parseInt(
+      consolaSeleccionada.habitacion.maxPersonasDisponibles
+    );
     if (capacidad > maxPerson) {
-      errors.habitacion = "La cantidad maximas para esta habitación es superada";
+      errors.habitacion =
+        "La cantidad maximas para esta habitación es superada";
     }
-
     if (consolaSeleccionada.tipoDocumento.nomTipoDocument === "") {
       errors.tipoDocumento = "Seleccione un tipo documento";
     }
@@ -146,10 +150,8 @@ function Inicio() {
     if (consolaSeleccionada.habitacion.codHabitacion === "") {
       errors.habitacion = "Debe de elegir una Habitación";
     }
-
-
     return errors;
-  }
+  };
   const handleChange = (e) => {
     const { name, value } = e.target;
     setConsolaSeleccionada((prevState) => ({
@@ -167,7 +169,7 @@ function Inicio() {
       abrirCerrarModalInsertar();
       alert("La reservación ha sido creada");
     } else {
-      alert("Ha ocurrido un error al solitar un reservación");
+      alert("Ha ocurrido un error al solitar una reservación");
     }
   };
   const abrirCerrarModalInsertar = () => {
@@ -188,12 +190,11 @@ function Inicio() {
               className="form-control"
               onChange={handleChange}
             />
-            {
-              errors.fechaEntrada &&
+            {errors.fechaEntrada && (
               <div style={estilos}>
                 <p>{errors.fechaEntrada}</p>
               </div>
-            }
+            )}
           </FormGroup>
           <FormGroup className="me-2">
             <Label for="exampleEmail">Fecha de Salida</Label>
@@ -204,12 +205,11 @@ function Inicio() {
               className="form-control"
               onChange={handleChange}
             />
-            {
-              errors.fechaSalida &&
+            {errors.fechaSalida && (
               <div style={estilos}>
                 <p>{errors.fechaSalida}</p>
               </div>
-            }
+            )}
           </FormGroup>
 
           <FormGroup className="me-2">
@@ -221,12 +221,11 @@ function Inicio() {
               className="form-control"
               onChange={handleChange}
             />
-            {
-              errors.adultos &&
+            {errors.adultos && (
               <div style={estilos}>
                 <p>{errors.adultos}</p>
               </div>
-            }
+            )}
           </FormGroup>
 
           <FormGroup className="me-2">
@@ -238,12 +237,11 @@ function Inicio() {
               className="form-control"
               onChange={handleChange}
             />
-            {
-              errors.ninos &&
+            {errors.ninos && (
               <div style={estilos}>
                 <p>{errors.ninos}</p>
               </div>
-            }
+            )}
           </FormGroup>
         </div>
 
@@ -254,12 +252,11 @@ function Inicio() {
               name="tipoDocumento"
               handleChangeData={handleChange}
             />
-            {
-              errors.tipoDocumento &&
+            {errors.tipoDocumento && (
               <div style={estilos}>
                 <p>{errors.tipoDocumento}</p>
               </div>
-            }
+            )}
           </FormGroup>
           <FormGroup className="me-2">
             <Label for="exampleEmail"># Documento</Label>
@@ -270,12 +267,11 @@ function Inicio() {
               className="form-control"
               onChange={handleChange}
             />
-            {
-              errors.numDocumento &&
+            {errors.numDocumento && (
               <div style={estilos}>
                 <p>{errors.numDocumento}</p>
               </div>
-            }
+            )}
           </FormGroup>
 
           <FormGroup className="me-2">
@@ -286,12 +282,11 @@ function Inicio() {
               className="form-control"
               onChange={handleChange}
             />
-            {
-              errors.nombre &&
+            {errors.nombre && (
               <div style={estilos}>
                 <p>{errors.nombre}</p>
               </div>
-            }
+            )}
           </FormGroup>
 
           <FormGroup className="me-2">
@@ -302,12 +297,11 @@ function Inicio() {
               className="form-control"
               onChange={handleChange}
             />
-            {
-              errors.apellido &&
+            {errors.apellido && (
               <div style={estilos}>
                 <p>{errors.apellido}</p>
               </div>
-            }
+            )}
           </FormGroup>
         </div>
         <div className="flex">
@@ -320,12 +314,11 @@ function Inicio() {
               className="form-control"
               onChange={handleChange}
             />
-            {
-              errors.email &&
+            {errors.email && (
               <div style={estilos}>
                 <p>{errors.email}</p>
               </div>
-            }
+            )}
           </FormGroup>
           <FormGroup className="me-2 w-80">
             <Label for="exampleEmail">Tipo Habitación </Label>
@@ -334,12 +327,11 @@ function Inicio() {
               handleChangeData={handleChange}
               url={urlhabitacionesDisponibles}
             />
-            {
-              errors.habitacion &&
+            {errors.habitacion && (
               <div style={estilos}>
                 <p>{errors.habitacion}</p>
               </div>
-            }
+            )}
           </FormGroup>
         </div>
       </Form>
@@ -348,7 +340,12 @@ function Inicio() {
         <button className="btn btn-success" onClick={(e) => peticionPost(e)}>
           Agendar
         </button>
-        <button className="btn btn-danger" onClick={() => abrirCerrarModalInsertar()}>Cancelar</button>
+        <button
+          className="btn btn-danger"
+          onClick={() => abrirCerrarModalInsertar()}
+        >
+          Cancelar
+        </button>
       </div>
     </div>
   );
@@ -367,10 +364,10 @@ function Inicio() {
             <div className="banner_content text-center">
               <h2>Tiempo de Descanso</h2>
               <p>
-                Ya sea que viajes por negocios o placer, nuestras habitaciones te
-                brindarán el refugio perfecto. Reserva tu habitación hoy y descubre
-                por qué somos la elección preferida de viajeros exigentes. ¡Esperamos
-                darle la bienvenida pronto!
+                Ya sea que viajes por negocios o placer, nuestras habitaciones
+                te brindarán el refugio perfecto. Reserva tu habitación hoy y
+                descubre por qué somos la elección preferida de viajeros
+                exigentes. ¡Esperamos darle la bienvenida pronto!
               </p>
             </div>
           </div>
@@ -379,23 +376,32 @@ function Inicio() {
       <div className="testimonial_area section_gap">
         <div className="container">
           <div className="section_title text-center">
-            <h2 className="title_color"> Experimenta el Lujo y la Comodidad en Nuestras Habitaciones.</h2>
+            <h2 className="title_color">
+              {" "}
+              Experimenta el Lujo y la Comodidad en Nuestras Habitaciones.
+            </h2>
             <p>
-              Bienvenido a Aparta Hotel Santandereano, donde el confort y la elegancia
-              se combinan para ofrecerte una estancia inolvidable. Nuestras habitaciones
-              han sido diseñadas pensando en tu comodidad y disfrute, y cada detalle ha
-              sido cuidadosamente seleccionado para garantizar una experiencia única.
+              Bienvenido a Aparta Hotel Santandereano, donde el confort y la
+              elegancia se combinan para ofrecerte una estancia inolvidable.
+              Nuestras habitaciones han sido diseñadas pensando en tu comodidad
+              y disfrute, y cada detalle ha sido cuidadosamente seleccionado
+              para garantizar una experiencia única.
             </p>
           </div>
 
-          <b className="title_color">Caracteristicas de Nuestas Habitaciones:</b>
-          <div style={{ textAlign: "initial", margin: "10px" }} className="flex">
+          <b className="title_color">
+            Caracteristicas de Nuestas Habitaciones:
+          </b>
+          <div
+            style={{ textAlign: "initial", margin: "10px" }}
+            className="flex"
+          >
             <br />
             <div>
               <MdOutlineBedroomParent.MdOutlineBedroomParent className="me-2" />
               <b className="title_color">Amplias y Modernas: </b>
               <p>
-                Nuestras habitaciones son espaciosas  modernamente decoradas,
+                Nuestras habitaciones son espaciosas modernamente decoradas,
                 proporcionando un ambiente relajante para tu estadía.
               </p>
             </div>
@@ -411,43 +417,47 @@ function Inicio() {
               <FaWifi.FaWifi className="me-2" />
               <b className="title_color">Conexión Wi-Fi de Alta Velocidad: </b>
               <p style={{ marginRight: "5px" }}>
-                Mantente conectado con el mundo gracias a nuestra rápida conexión
-                Wi-Fi gratuita en todas las habitaciones.
+                Mantente conectado con el mundo gracias a nuestra rápida
+                conexión Wi-Fi gratuita en todas las habitaciones.
               </p>
             </div>
             <div>
               <PiTelevisionBold.PiTelevisionBold className="me-2" />
               <b className="title_color">Televisión de Pantalla Plana: </b>
               <p>
-                Relájate viendo tus programas favoritos enuna televisión de pantalla
-                plana de alta definición.
+                Relájate viendo tus programas favoritos enuna televisión de
+                pantalla plana de alta definición.
               </p>
             </div>
           </div>
-          <div style={{ textAlign: "initial", margin: "10px" }} className="flex">
+          <div
+            style={{ textAlign: "initial", margin: "10px" }}
+            className="flex"
+          >
             <div>
               <MdRoomService.MdRoomService className="me-2" />
               <b className="title_color">Servicio a la Habitación: </b>
               <p>
-                Disfruta de comida a domicilio de los mejores restaurante
-                de la zona en la comodidad de tu habitación con nuestro
-                servicio a la habitación disponible hasta las 11:00pm.
+                Disfruta de comida a domicilio de los mejores restaurante de la
+                zona en la comodidad de tu habitación con nuestro servicio a la
+                habitación disponible hasta las 11:00pm.
               </p>
             </div>
             <div>
               <GrClearOption.GrClearOption className="me-2" />
               <b className="title_color">Limpieza Impecable: </b>
               <p style={{ marginRight: "5px" }}>
-                Nuestras habitaciones se mantienen en perfecto estado de limpieza
-                para tu seguridad y comodidad.
+                Nuestras habitaciones se mantienen en perfecto estado de
+                limpieza para tu seguridad y comodidad.
               </p>
             </div>
             <div>
               <BsPersonFillGear.BsPersonFillGear className="me-2" />
               <b className="title_color">Atención Personalizada: </b>
               <p>
-                Nuestro amable personal está siempre dispuesto a ayudarte con cualquier
-                solicitud o necesidad que puedas tener durante tu estancia.
+                Nuestro amable personal está siempre dispuesto a ayudarte con
+                cualquier solicitud o necesidad que puedas tener durante tu
+                estancia.
               </p>
             </div>
           </div>
@@ -554,12 +564,14 @@ function Inicio() {
         <div className="container">
           <div className="section_title text-center">
             <h2 className="title_color">
-              Lo que Nuestros Huéspedes dicen sobre su Estadía en El Santandereano:
+              Lo que Nuestros Huéspedes dicen sobre su Estadía en El
+              Santandereano:
             </h2>
             <p>
-              En El Santandereano, nos enorgullece brindar un servicio excepcional y
-              crear experiencias memorables para nuestros huéspedes. Aquí tienes algunos
-              comentarios de aquellos que han tenido la oportunidad de alojarse con nosotros.
+              En El Santandereano, nos enorgullece brindar un servicio
+              excepcional y crear experiencias memorables para nuestros
+              huéspedes. Aquí tienes algunos comentarios de aquellos que han
+              tenido la oportunidad de alojarse con nosotros.
             </p>
           </div>
         </div>
@@ -591,10 +603,11 @@ function Inicio() {
         <div className="container">
           <div className="section_title text-center">
             <p>
-              Estos son solo algunos ejemplos de los comentarios positivos que hemos recibido
-              de nuestros huéspedes satisfechos. En El Santendereano, nos esforzamos por
-              superar tus expectativas en cada visita. Esperamos tener la oportunidad de
-              atenderte pronto y hacer que tu estancia sea igual de memorable.
+              Estos son solo algunos ejemplos de los comentarios positivos que
+              hemos recibido de nuestros huéspedes satisfechos. En El
+              Santendereano, nos esforzamos por superar tus expectativas en cada
+              visita. Esperamos tener la oportunidad de atenderte pronto y hacer
+              que tu estancia sea igual de memorable.
             </p>
           </div>
         </div>
