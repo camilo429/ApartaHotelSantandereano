@@ -84,7 +84,7 @@ function Inicio() {
       maxPersonasDisponibles: "",
       precioDia: "",
       estadoHabitacion: "",
-      imagenHabitacion: "s",
+      imagenHabitacion: "",
     },
   });
 
@@ -99,6 +99,7 @@ function Inicio() {
     const fechaEnTexto = `${año}-${mes < 10 ? "0" : ""}${mes}-${
       dia < 10 ? "0" : ""
     }${dia}`;
+
     if (!fecha.test(consolaSeleccionada.fechaEntrada)) {
       errors.fechaEntrada = "Fecha No Válida";
     }
@@ -164,12 +165,41 @@ function Inicio() {
     setErrors(validacionesReservacion(consolaSeleccionada));
     //console.log(Object.keys(errors).length);
     if (Object.keys(errors).length === 0) {
-      const response = await axios.post(urlG, consolaSeleccionada);
-      setData(data.concat(response.data));
-      abrirCerrarModalInsertar();
-      alert("La reservación ha sido creada");
-    } else {
-      alert("Ha ocurrido un error al solitar una reservación");
+      await axios
+        .post(urlG, consolaSeleccionada)
+        .then((response) => {
+          setData(data.concat(response.data));
+          abrirCerrarModalInsertar();
+          alert("La reservación ha sido creada");
+          setConsolaSeleccionada({
+            fechaEntrada: "",
+            fechaSalida: "",
+            adultos: 0,
+            ninos: 0,
+            tipoDocumento: {
+              codTipoDocumento: "",
+              nomTipoDocument: "",
+            },
+            numDocumento: "",
+            nombre: "",
+            apellido: "",
+            email: "",
+            habitacion: {
+              codHabitacion: "",
+              nombreHabitacion: "",
+              descripHabitacion: "",
+              numHabitacion: "",
+              pisoHabitacion: "",
+              maxPersonasDisponibles: "",
+              precioDia: "",
+              estadoHabitacion: "",
+              imagenHabitacion: "",
+            },
+          });
+        })
+        .catch((error) => {
+          console.log("error reservacion", error);
+        });
     }
   };
   const abrirCerrarModalInsertar = () => {

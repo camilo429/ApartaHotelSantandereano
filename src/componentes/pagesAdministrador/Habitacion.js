@@ -148,7 +148,7 @@ function Habitacion() {
   };
   const peticionPost = async (e) => {
     e.preventDefault();
-    const response = await axios
+    await axios
       .post(urlG, consolaSeleccionada, {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,

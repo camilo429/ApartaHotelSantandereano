@@ -37,29 +37,21 @@ function Habitaciones({ name, handleChangeData, value = null, url }) {
     pisoHabitacion,
     maxPersonasDisponibles,
     precioDia,
-    codEstadoHabitacion,
     imagenHabitacion,
-    codTipoHabitacion,
+    estadoHabitacion,
   }) => {
     handleChangeData({
       target: {
         name,
         value: {
           codHabitacion: value,
-          nombreHabitacion: {
-            nombre: label,
-            codTipoHabitacion: codTipoHabitacion,
-            precioDia: precioDia,
-          },
+          nombreHabitacion: label,
           descripHabitacion: descripHabitacion,
           numHabitacion: numHabitacion,
           pisoHabitacion: pisoHabitacion,
           maxPersonasDisponibles: maxPersonasDisponibles,
           precioDia: precioDia,
-          estadoHabitacion: {
-            codEstadoHabitacion: codEstadoHabitacion,
-            nombre: nombreEstado,
-          },
+          estadoHabitacion: estadoHabitacion,
           imagenHabitacion: imagenHabitacion,
         },
       },
