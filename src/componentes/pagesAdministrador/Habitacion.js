@@ -144,6 +144,11 @@ function Habitacion() {
           setData(response.data);
           //console.log(response.data);
         }
+      })
+      .catch((error) => {
+        if (error.status === 404) {
+          alert("No hay habitaciones registradas!!");
+        }
       });
   };
   const peticionPost = async (e) => {
@@ -156,12 +161,14 @@ function Habitacion() {
       })
       .then((response) => {
         setData(data.concat(response.data));
+        console.log(response.data);
         peticionGet();
         abrirCerrarModalInsertar();
         alert("La habitación ha sido creada");
       })
       .catch((error) => {
         alert("Se ha generado un error al CREAR la habitación");
+        console.log(error);
       });
   };
 

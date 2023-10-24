@@ -7,6 +7,8 @@ import * as BsIcons from "react-icons/bs";
 import * as GrIcons from "react-icons/gr";
 import * as MdHotel from "react-icons/md";
 import * as TbReceipt2 from "react-icons/tb";
+import * as GrWorkshop from "react-icons/gr";
+import * as AiOutlineMessage from "react-icons/ai";
 
 import "../../App.scss";
 import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
@@ -15,25 +17,23 @@ import "../../css/sb-admin-2.min.css";
 import "../../vendor/fontawesome-free/css/all.min.css";
 
 const Sidebar = () => {
-
   return (
     <div className="sidebar" style={{ height: "100%", width: "100%" }}>
-      <ul className="navbar-nav bg-gradient-primary sidebar-dark" >
+      <ul className="navbar-nav bg-gradient-primary sidebar-dark">
         <div>
           <div className="col-xl-2">
-            <a
-              className="sidebar-brand align-items-center"
-              href="index.html"
-            >
+            <a className="sidebar-brand align-items-left" href="index.html">
               <div className="sidebar-brand-icon rotate-n-15">
                 <i className="fas fa-laugh-wink"></i>
               </div>
               <br></br>
-              <div className="text-blue rounded py-2 w-100 d-inline-block px-1">Admin</div>
+              <div className="text-blue rounded py-2 w-100 d-inline-block px-1">
+                Administrador
+              </div>
             </a>
           </div>
           <br></br>
-          <div className="sidebar-heading">Interface</div>
+          <div className="sidebar-heading">Opciones</div>
 
           <li className="nav-item active">
             <NavLink
@@ -126,8 +126,28 @@ const Sidebar = () => {
               Recibos
             </NavLink>
           </li>
-        </div>
 
+          <li className="nav-item active">
+            <NavLink
+              className="text-blue rounded py-2 w-100 d-inline-block px-1"
+              to="Home"
+              activeclassname="active"
+            >
+              <GrWorkshop.GrWorkshop className="me-2" />
+              Tareas
+            </NavLink>
+          </li>
+          <li className="nav-item active">
+            <NavLink
+              className="text-blue rounded py-2 w-100 d-inline-block px-1"
+              to="Home"
+              activeclassname="active"
+            >
+              <AiOutlineMessage.AiOutlineMessage className="me-2" />
+              Comentarios
+            </NavLink>
+          </li>
+        </div>
       </ul>
     </div>
   );

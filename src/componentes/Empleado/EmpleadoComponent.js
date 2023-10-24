@@ -52,7 +52,7 @@ function EmpleadoComponent() {
   const [modalVer, setModalVer] = useState(false);
 
   const [consolaSeleccionada, setConsolaSeleccionada] = useState({
-    codEmpleado:"",
+    codEmpleado: "",
     nombre: "",
     apellido: "",
     tipDocumento: {
@@ -88,89 +88,123 @@ function EmpleadoComponent() {
   };
 
   const peticionGet = async () => {
-    await axios.get(url).then((response) => {
-      setData(response.data);
-    });
+    await axios
+      .get(url)
+      .then((response) => {
+        setData(response.data);
+      })
+      .catch((error) => {
+        if (error === 404) {
+          alert("No hay empleados registrados");
+          console.log("empleados", error);
+        }
+        console.log("empleado", error);
+      });
   };
 
   const peticionPost = async (e) => {
-    console.log("data seleccioada", consolaSeleccionada)
+    console.log("data seleccioada", consolaSeleccionada);
     const response = await axios.post(urlG, consolaSeleccionada, {
       headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("access_token")}`
-      }
+        Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
+      },
     });
-
-    setData(data.concat(response.data));
-    peticionGet();
-    abrirCerrarModalInsertar();
-    alert("El Empleado ha sido creado");
+    if (response.status === 200) {
+      setData(data.concat(response.data));
+      peticionGet();
+      abrirCerrarModalInsertar();
+      alert("El Empleado ha sido creado");
+    } else {
+      alert("El empleado No se ha creado correctamente");
+    }
   };
 
   const peticionPut = async () => {
     //setErrors(validacionesFormulario(consolaSeleccionada));
     console.log("esta es la data seleccionada" + consolaSeleccionada);
-    await axios.request({
-      method: "put",
-      url: urlE + consolaSeleccionada.codEmpleado,
-      withCredentials: true,
-      crossdomain: true,
-      data: consolaSeleccionada,
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("access_token")}`
-      }
-    }).then(response => {
-      //console.log(response.status);
-      console.log(response.data);
-      if (response.status == 201) {
-        var dataNueva = data;
-        dataNueva.map((consola) => {
-          if (consolaSeleccionada.codEmpleado === consola.codEmpleado) {
-            consola.nombre = consolaSeleccionada.nombre
-            consola.apellido = consolaSeleccionada.apellido
-            consola.tipDocumento.codTipoDocumento = consolaSeleccionada.tipDocumento.codTipoDocumento
-            consola.tipDocumento.nomTipoDocumento = consolaSeleccionada.tipDocumento.nomTipoDocumento
-            consola.numDocumento = consolaSeleccionada.numDocumento
-            consola.edad = consolaSeleccionada.edad
-            consola.numTelefono = consolaSeleccionada.numTelefono
-            consola.correo = consolaSeleccionada.correo
-            consola.fechaNacimiento = consolaSeleccionada.fechaNacimiento
-            consola.direccion = consolaSeleccionada.direccion
-            consola.nomContactoEmergencia = consolaSeleccionada.nomContactoEmergencia
-            consola.numContactoEmergencia = consolaSeleccionada.numContactoEmergencia
-            consola.eps = consolaSeleccionada.eps
-            consola.arl = consolaSeleccionada.arl
-            consola.sexo.codSexo = consolaSeleccionada.sexo.codSexo
-            consola.sexo.nomSexo = consolaSeleccionada.sexo.nomSexo
-            consola.tipoSangre.codTipoSangre = consolaSeleccionada.tipoSangre.codTipoSangre
-            consola.tipoSangre.nomTipoSangre = consolaSeleccionada.tipoSangre.nomTipoSangre
-            consola.fotoEmpleado = consolaSeleccionada.fotoEmpleado
-          }
-        })
-        setData(dataNueva);
-        peticionGet();
-        abrirCerrarModalEditar();
-        alert("El empleado ha sido actualizado");
-      }
-    })
+    await axios
+      .request({
+        method: "put",
+        url: urlE + consolaSeleccionada.codEmpleado,
+        withCredentials: true,
+        crossdomain: true,
+        data: consolaSeleccionada,
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
+        },
+      })
+      .then((response) => {
+        //console.log(response.status);
+        console.log(response.data);
+        if (response.status == 201) {
+          var dataNueva = data;
+          dataNueva.map((consola) => {
+            if (consolaSeleccionada.codEmpleado === consola.codEmpleado) {
+              consola.nombre = consolaSeleccionada.nombre;
+              consola.apellido = consolaSeleccionada.apellido;
+              consola.tipDocumento.codTipoDocumento =
+                consolaSeleccionada.tipDocumento.codTipoDocumento;
+              consola.tipDocumento.nomTipoDocumento =
+                consolaSeleccionada.tipDocumento.nomTipoDocumento;
+              consola.numDocumento = consolaSeleccionada.numDocumento;
+              consola.edad = consolaSeleccionada.edad;
+              consola.numTelefono = consolaSeleccionada.numTelefono;
+              consola.correo = consolaSeleccionada.correo;
+              consola.fechaNacimiento = consolaSeleccionada.fechaNacimiento;
+              consola.direccion = consolaSeleccionada.direccion;
+              consola.nomContactoEmergencia =
+                consolaSeleccionada.nomContactoEmergencia;
+              consola.numContactoEmergencia =
+                consolaSeleccionada.numContactoEmergencia;
+              consola.eps = consolaSeleccionada.eps;
+              consola.arl = consolaSeleccionada.arl;
+              consola.sexo.codSexo = consolaSeleccionada.sexo.codSexo;
+              consola.sexo.nomSexo = consolaSeleccionada.sexo.nomSexo;
+              consola.tipoSangre.codTipoSangre =
+                consolaSeleccionada.tipoSangre.codTipoSangre;
+              consola.tipoSangre.nomTipoSangre =
+                consolaSeleccionada.tipoSangre.nomTipoSangre;
+              consola.fotoEmpleado = consolaSeleccionada.fotoEmpleado;
+            }
+          });
+          setData(dataNueva);
+          peticionGet();
+          abrirCerrarModalEditar();
+          alert("El empleado ha sido actualizado");
+        }
+      })
+      .catch((error) => {
+        alert("Error al editar empleado");
+        console.log("Error editar empleado", error);
+      });
   };
 
-
   const peticionDelete = async () => {
-    axios.request({
-      method: "delete",
-      url: urlD + consolaSeleccionada.codEmpleado,
-      withCredentials: true,
-      crossdomain: true,
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("access_token")}`
-      }
-    }).then(response => {
-      if (response.status === 200) {
-        setData(data.filter((consola) => consola.codEmpleado !== consolaSeleccionada.codEmpleado));
-        abrirCerrarModalEliminar();
-      }
-    })
+    axios
+      .request({
+        method: "delete",
+        url: urlD + consolaSeleccionada.codEmpleado,
+        withCredentials: true,
+        crossdomain: true,
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
+        },
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          setData(
+            data.filter(
+              (consola) =>
+                consola.codEmpleado !== consolaSeleccionada.codEmpleado
+            )
+          );
+          abrirCerrarModalEliminar();
+        }
+      })
+      .catch((error) => {
+        alert("Error al aliminar el Empleado");
+        console.log("error eliminar empleado", error);
+      });
   };
 
   const abrirCerrarModalInsertar = () => {
@@ -210,7 +244,6 @@ function EmpleadoComponent() {
               placeholder="Nombre"
               className="form-control"
               onChange={handleChange}
-
             />
           </FormGroup>
           <FormGroup className="me-2">
@@ -249,7 +282,6 @@ function EmpleadoComponent() {
               onChange={handleChange}
             />
           </FormGroup>
-
         </div>
 
         <div className="flex">
@@ -549,9 +581,7 @@ function EmpleadoComponent() {
               name="nombre"
               onChange={handleChange}
               value={consolaSeleccionada?.nombre}
-              placeholder={
-                !consolaSeleccionada?.nombre ? "Nombre" : "Nombre"
-              }
+              placeholder={!consolaSeleccionada?.nombre ? "Nombre" : "Nombre"}
             />
           </FormGroup>
           <FormGroup className="me-2">
@@ -564,7 +594,7 @@ function EmpleadoComponent() {
               className="form-control"
             />
           </FormGroup>
-          <FormGroup >
+          <FormGroup>
             <Label for="exampleEmail">Tipo de Documento</Label>
             <TipoDocumento
               name="tipDocumento"
@@ -626,7 +656,6 @@ function EmpleadoComponent() {
               className="form-control"
               onChange={handleChange}
               value={consolaSeleccionada && consolaSeleccionada.fechaNacimiento}
-
             />
           </FormGroup>
         </div>
@@ -678,8 +707,6 @@ function EmpleadoComponent() {
               className="form-control"
             />
           </FormGroup>
-
-
         </div>
 
         <div className="flex">

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 //Librerias
 import axios from "axios";
+import MUIDataTable from "mui-datatables";
 //Estilos
 import { makeStyles } from "@mui/styles";
 import { Form, FormGroup, Label } from "reactstrap";
@@ -33,8 +34,8 @@ const cedulaExpresion = /^[0-9]{6,10}$/;
 const useStyles = makeStyles((theme) => ({
   modal: {
     position: "absolute",
-    width: "60%",
-    height: "70%",
+    width: "90%",
+    height: "90%",
     backgroundColor: "white",
     padding: "1%",
     boder: "2px solid #000",
@@ -48,8 +49,8 @@ const useStyles = makeStyles((theme) => ({
 const useEstilo = makeStyles((theme) => ({
   modal: {
     position: "absolute",
-    width: "40%",
-    height: "40%",
+    width: "30%",
+    height: "30%",
     backgroundColor: "white",
     padding: "5%",
     boder: "2px solid #000",
@@ -160,6 +161,9 @@ function Huespedes() {
           setData(response.data);
           console.log(response.data);
         }
+      })
+      .catch((error) => {
+        alert("No hay huespedes registrados!!");
       });
   };
 
@@ -790,6 +794,84 @@ function Huespedes() {
     peticionGet();
   }, []);
 
+  const columns = [
+    {
+      name: "nombre",
+      label: "Nombre",
+    },
+    {
+      name: "apellido",
+      label: "apellido",
+    },
+    {
+      name: "numCelular",
+      label: "Celular",
+    },
+    {
+      name: "numDocumento",
+      label: "Número Documento",
+    },
+    {
+      name: "fechaNacimiento",
+      label: "Fecha Nacimiento",
+    },
+    {
+      name: "lugarOrigen",
+      label: "Lugar Proviene",
+    },
+    {
+      name: "numContactoEmergencia",
+      label: "Contacto Emergencia",
+    },
+    {
+      name: "nacionalidad.nombre",
+      label: "Nacionalidad",
+    },
+    {
+      name: "Documento",
+      label: "TipoDocumento",
+    },
+    {
+      name: "acciones",
+      label: "Acciones",
+      options: {
+        filter: false,
+        sort: false,
+        customBodyRender: (value, tableMeta, updateValue) => {
+          return (
+            <div>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() =>
+                  seleccionarHuespedes(tableMeta.rowData, "Editar")
+                }
+              >
+                <AiFillEdit.AiFillEdit className="me-2" />
+                Editar
+              </Button>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() =>
+                  seleccionarHuespedes(tableMeta.rowData, "Eliminar")
+                }
+              >
+                <MdDelete.MdDelete className="me-2" />
+                Eliminar
+              </Button>
+            </div>
+          );
+        },
+      },
+    },
+  ];
+  const options = {
+    filterType: "dropdown",
+    responsive: "standard",
+
+    /*  customToolbarSelect: (selectedRows) => <CustomToolbarSelect selectedRows={selectedRows} />*/
+  };
   return (
     <div className="Huespedes">
       <br />
@@ -810,85 +892,12 @@ function Huespedes() {
           </Button>
         </div>
         <div className="card-body">
-          <div className="table-responsive">
-            <table className="table table-bordered">
-              <thead>
-                <tr>
-                  <th>Nombre</th>
-                  <th>Apellido</th>
-
-                  <th>Número celular</th>
-                  <th>Tipo Documento</th>
-                  <th>Lugar Origen</th>
-                  <th>Fecha nacimiento</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.map((consola, idx) => {
-                  return (
-                    <tr key={consola.codHuesped}>
-                      <td>{consola.nombre}</td>
-                      <td>{consola.apellido}</td>
-                      <td>{consola.numCelular}</td>
-                      <th>{consola.numDocumento}</th>
-                      <th>{consola.fechaNacimiento}</th>
-                      <th>{consola.lugarOrigen}</th>
-                      <th>
-                        <Button
-                          className="flex"
-                          onClick={() =>
-                            seleccionarHuespedes(consola, "Editar")
-                          }
-                        >
-                          <AiFillEdit.AiFillEdit className="me-2" />
-                          Editar
-                        </Button>
-
-                        <br></br>
-                        <Button
-                          className="flex"
-                          onClick={() =>
-                            seleccionarHuespedes(consola, "Eliminar")
-                          }
-                        >
-                          <MdDelete.MdDelete className="me-2" />
-                          Eliminar
-                        </Button>
-                        <br></br>
-                        <Button
-                          className="flex"
-                          onClick={() => seleccionarHuespedes(consola, "Ver")}
-                        >
-                          <BsInfoLg.BsInfoLg className="me-2" />
-                          Ver Info
-                        </Button>
-                      </th>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-            <nav aria-label="Page navigation example">
-              <ul className="pagination">
-                <li className="page-item">
-                  <a className="page-link">Anterior</a>
-                </li>
-                <li className="page-item">
-                  <a className="page-link">1</a>
-                </li>
-                <li className="page-item">
-                  <a className="page-link">2</a>
-                </li>
-                <li className="page-item">
-                  <a className="page-link">3</a>
-                </li>
-                <li className="page-item">
-                  <a className="page-link">Siguiente</a>
-                </li>
-              </ul>
-            </nav>
-          </div>
+          <MUIDataTable
+            title={"Lista Huespedes"}
+            data={data}
+            columns={columns}
+            options={options}
+          />
         </div>
       </div>
 

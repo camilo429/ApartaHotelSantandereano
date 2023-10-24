@@ -36,7 +36,7 @@ const NavbarA = ({ name, lastName }) => {
             <Nav className="ms-auto w-40" navbar>
               <UncontrolledDropdown nav inNavbar>
                 <DropdownToggle nav caret>
-                  {name + lastName}
+                  Geovanny Ahumada
                 </DropdownToggle>
                 <DropdownMenu end>
                   <DropdownItem>

@@ -95,15 +95,7 @@ function Contacto() {
       if (Object.keys(errors).length === 0) {
         const response = await axios.post(url, formulario);
         setData(data.concat(response.data));
-        setFormulario({
-          codComentario: "",
-          nombre: "",
-          email: "",
-          numTelefono: "",
-          comentario: "",
-          fechaEnviado: "",
-          horaEnviado: "",
-        });
+
         alert(
           "¡Gracias por ser parte de la familia de El Santandereano" +
             " y por compartir tus pensamientos y sugerencias con nosotros!"
