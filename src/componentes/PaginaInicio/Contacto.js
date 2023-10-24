@@ -15,16 +15,16 @@ import "../../css/sb-admin-2.min.css";
 import "../../vendor/fontawesome-free/css/all.min.css";
 //librerias
 import axios from "axios";
-import { Apiurl } from "../../services/userService"
+import { Apiurl } from "../../services/userService";
 //Dirrección
-const url = Apiurl + "comentarios/crearComentario"
+const url = Apiurl + "comentarios/crearComentario";
 //Expresiones Regulares
 const nameRegex = /^[a-zA-Z\s]+$/;
-const correoExpresion = /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6}$/
+const correoExpresion = /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6}$/;
 let estilos = {
   fontWeight: "bold",
-  color: "#dc3545"
-}
+  color: "#dc3545",
+};
 function Contacto() {
   const [data, setData] = useState([]);
   const [errors, setErrors] = useState([]);
@@ -35,7 +35,7 @@ function Contacto() {
     numTelefono: "",
     comentario: "",
     fechaEnviado: "",
-    horaEnviado: ""
+    horaEnviado: "",
   });
   function validacionesFormulario(formulario) {
     if (!nameRegex.test(formulario.nombre)) {
@@ -44,7 +44,10 @@ function Contacto() {
     if (!correoExpresion.test(formulario.email)) {
       errors.email = "Correo No valido";
     }
-    if (formulario.numTelefono.length < 10 || formulario.numTelefono.length > 10) {
+    if (
+      formulario.numTelefono.length < 10 ||
+      formulario.numTelefono.length > 10
+    ) {
       errors.numTelefono = "El número debe tener 10 digitos";
     }
     if (formulario.comentario.length === 0) {
@@ -81,29 +84,33 @@ function Contacto() {
   };
 
   const peticionPost = async (e) => {
-
-    let fechaActual = new Date();
-    let hora = fechaActual.getHours();
-    let dia = fechaActual.getDay();
-
-    setFormulario.horaEnviado = hora;
-    setFormulario.fechaActual = dia;
-    console.log("data seleccionada", formulario);
-    setErrors(validacionesFormulario(formulario));
-    if (Object.keys(errors).length === 0) {
-      const response = await axios.post(url, formulario)
-      setData(data.concat(response.data));
-      setFormulario({
-        codComentario: "",
-        nombre: "",
-        email: "",
-        numTelefono: "",
-        comentario: "",
-        fechaEnviado: "",
-        horaEnviado: ""
-      });
-      alert("¡Gracias por ser parte de la familia de El Santandereano" +
-        " y por compartir tus pensamientos y sugerencias con nosotros!");
+    try {
+      let fechaActual = new Date();
+      let hora = fechaActual.getHours();
+      let dia = fechaActual.getDay();
+      setFormulario.horaEnviado = hora;
+      setFormulario.fechaActual = dia;
+      console.log("data seleccionada", formulario);
+      setErrors(validacionesFormulario(formulario));
+      if (Object.keys(errors).length === 0) {
+        const response = await axios.post(url, formulario);
+        setData(data.concat(response.data));
+        setFormulario({
+          codComentario: "",
+          nombre: "",
+          email: "",
+          numTelefono: "",
+          comentario: "",
+          fechaEnviado: "",
+          horaEnviado: "",
+        });
+        alert(
+          "¡Gracias por ser parte de la familia de El Santandereano" +
+            " y por compartir tus pensamientos y sugerencias con nosotros!"
+        );
+      }
+    } catch (error) {
+      console.log("error mensaje", error);
     }
   };
 
@@ -149,28 +156,32 @@ function Contacto() {
       </section>
 
       {/* //mostramos la información para el mensaje */}
-      <section className="accomodation_area section_gap" style={{ paddingTop: "20px" }}>
+      <section
+        className="accomodation_area section_gap"
+        style={{ paddingTop: "20px" }}
+      >
         <div className="container">
           <div className="section_title text-center">
             <h2 className="title_color">
               ¡Tu Opinión es Importante para Nosotros!
             </h2>
             <p>
-              En El Santandereano, valoramos la opinión de nuestros huéspedes
-              y estamos siempre buscando maneras de mejorar tu experiencia. Si
-              has tenido una estancia reciente con nosotros o tienes alguna sugerencia,
-              por favor, compártela con nosotros a través de nuestra caja de comentarios.
-              Estamos ansiosos por escucharte y asegurarnos de que tu próxima visita sea
-              aún mejor.
+              En El Santandereano, valoramos la opinión de nuestros huéspedes y
+              estamos siempre buscando maneras de mejorar tu experiencia. Si has
+              tenido una estancia reciente con nosotros o tienes alguna
+              sugerencia, por favor, compártela con nosotros a través de nuestra
+              caja de comentarios. Estamos ansiosos por escucharte y asegurarnos
+              de que tu próxima visita sea aún mejor.
             </p>
           </div>
-          <h2 className="title_color">
-            Caja de Comentarios y Sugerencias:
-          </h2>
+          <h2 className="title_color">Caja de Comentarios y Sugerencias:</h2>
         </div>
-        <div className="flex" >
+        <div className="flex">
           {" "}
-          <div className="col-md-3" style={{ width: "100%", marginRight: "5%" }}>
+          <div
+            className="col-md-3"
+            style={{ width: "100%", marginRight: "5%" }}
+          >
             <div className="contact_info">
               <div className="info_item">
                 <i className="lnr lnr-home"></i>
@@ -189,22 +200,22 @@ function Contacto() {
           </div>
           {/* // enviar mensaje o pregunta */}
           <div className="form">
-            <form >
+            <form>
               <div className="form-row" style={{ width: "80%" }}>
                 <div className="form-group col-md-6">
                   <input
+                    type="text"
                     className="form-control"
                     name="nombre"
+                    value={formulario.nombre}
                     placeholder="Ingrese su nombre"
                     onChange={handleChange}
-                    value={formulario.nombre}
                   />
-                  {
-                    errors.nombre &&
+                  {errors.nombre && (
                     <div style={estilos}>
                       <p>{errors.nombre}</p>
                     </div>
-                  }
+                  )}
                 </div>
                 <div className="form-group col-md-6">
                   <input
@@ -215,12 +226,11 @@ function Contacto() {
                     placeholder="Ingrese su correo"
                     onChange={handleChange}
                   />
-                  {
-                    errors.email &&
+                  {errors.email && (
                     <div style={estilos}>
                       <p>{errors.email}</p>
                     </div>
-                  }
+                  )}
                 </div>
                 <div className="form-group col-md-6">
                   <input
@@ -231,12 +241,11 @@ function Contacto() {
                     onChange={handleChange}
                     value={formulario.numTelefono}
                   />
-                  {
-                    errors.numTelefono &&
+                  {errors.numTelefono && (
                     <div style={estilos}>
                       <p>{errors.numTelefono}</p>
                     </div>
-                  }
+                  )}
                 </div>
                 <div className="form-group col-md-6">
                   <textarea
@@ -247,12 +256,11 @@ function Contacto() {
                     onChange={handleChange}
                     value={formulario.comentario}
                   />
-                  {
-                    errors.comentario &&
+                  {errors.comentario && (
                     <div style={estilos}>
                       <p>{errors.comentario}</p>
                     </div>
-                  }
+                  )}
                 </div>
               </div>
             </form>

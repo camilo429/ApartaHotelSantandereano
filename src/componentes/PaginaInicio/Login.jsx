@@ -72,7 +72,7 @@ class Login extends React.Component {
               window.location.href = "PanelAdministrador";
               break;
             case "ROLE_RECEPCIONISTA":
-              window.location.href = "ROLE_RECEPCIONISTA";
+              window.location.href = "PanelRecepcionista";
               break;
             case "ROLE_SERVICIOS":
               WindowSharp.location.href = "SERVICIOS";
