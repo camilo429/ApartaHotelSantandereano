@@ -68,14 +68,14 @@ class Login extends React.Component {
           console.log("Payload:", decoded.authorities[0]);
 
           switch (decoded.authorities[0]) {
-            case "ADMINISTRADOR":
+            case "ROLE_ADMINISTRADOR":
               window.location.href = "PanelAdministrador";
               break;
-            case "EMPLEADO-SERVICIO":
-              window.location.href = "EmpleadoServicio";
+            case "ROLE_RECEPCIONISTA":
+              window.location.href = "ROLE_RECEPCIONISTA";
               break;
-            case "Recepsionista":
-              WindowSharp.location.href = "Recepsionista";
+            case "ROLE_SERVICIOS":
+              WindowSharp.location.href = "SERVICIOS";
               break;
             default:
               alert("No pertenece a ningun usuario dentro del sistema");
