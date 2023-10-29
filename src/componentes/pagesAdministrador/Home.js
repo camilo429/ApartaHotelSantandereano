@@ -5,7 +5,7 @@ import "../../../node_modules/bootstrap/scss/bootstrap.scss";
 import "../../App.scss";
 // components
 import Tarjeta from "./Home/Tarjeta";
-import TablaIngresos from "./Home/TablaIngresos";
+import LinesChart from "./Home/LinesChart";
 import RegistroGastos from "./Home/RegistroGastos";
 
 function Home() {
@@ -38,7 +38,7 @@ function Home() {
         <div className="flex">
           {/* //Tabla Ingresos */}
 
-          <TablaIngresos />
+          <LinesChart />
 
           {/* //Grafica de porcentajes  */}
           <RegistroGastos />

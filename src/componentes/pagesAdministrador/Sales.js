@@ -378,6 +378,36 @@ function Sales() {
     </div>
   );
 
+  const columns = [
+    {
+      name: "codProducto",
+      label: "Código",
+    },
+    {
+      name: "nombreProducto",
+      label: "Producto",
+    },
+    {
+      name: "precio",
+      label: "Valor (Unidad)",
+    },
+    {
+      name: "cantidad",
+      label: "Cantidad",
+    },
+    {
+      name: "marca",
+      label: "Empresa",
+    },
+    {
+      name: "fechaRegistro",
+      label: "Fecha Registro",
+    },
+    {
+      name: "horaRegistro",
+      label: "Hora Registro",
+    },
+  ];
   return (
     <div className="Productos">
       <br />

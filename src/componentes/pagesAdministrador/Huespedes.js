@@ -14,7 +14,7 @@ import "../../css/Huesped.css";
 import { Modal, Button } from "@mui/material";
 import * as AiFillEdit from "react-icons/ai";
 import * as MdDelete from "react-icons/md";
-import * as BsInfoLg from "react-icons/bs";
+//import * as BsInfoLg from "react-icons/bs";
 //Componentes
 import Nacionalidades from "../../componentes/pagesAdministrador/Nacionalidades";
 import TipoDocumento from "./TipoDocumento";
@@ -34,8 +34,8 @@ const cedulaExpresion = /^[0-9]{6,10}$/;
 const useStyles = makeStyles((theme) => ({
   modal: {
     position: "absolute",
-    width: "90%",
-    height: "90%",
+    width: "70%",
+    height: "70%",
     backgroundColor: "white",
     padding: "1%",
     boder: "2px solid #000",
@@ -159,7 +159,7 @@ function Huespedes() {
       .then((response) => {
         if (response.status === 200) {
           setData(response.data);
-          console.log(response.data);
+          // console.log(response.data);
         }
       })
       .catch((error) => {
@@ -168,17 +168,25 @@ function Huespedes() {
   };
 
   const peticionPost = async () => {
-    setErrors(validacionesFormulario(consolaSeleccionada));
-    if (Object.keys(errors).length === 0) {
-      const response = await axios.post(urlG, consolaSeleccionada, {
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
-        },
-      });
-      setData(data.concat(response.data));
-      peticionGet();
-      abrirCerrarModalInsertar();
-      alert("El Huesped ha sido creado");
+    try {
+      setErrors(validacionesFormulario(consolaSeleccionada));
+      if (Object.keys(errors).length === 0) {
+        const response = await axios.post(urlG, consolaSeleccionada, {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
+          },
+        });
+        setData(data.concat(response.data));
+        peticionGet();
+        abrirCerrarModalInsertar();
+        alert("El Huesped ha sido creado");
+      }
+    } catch (error) {
+      if (error.response.status === 400) {
+        alert("El usuario ya se encuetra registrado");
+      } else {
+        console.log(error.response.status);
+      }
     }
   };
 
@@ -874,16 +882,11 @@ function Huespedes() {
   };
   return (
     <div className="Huespedes">
-      <br />
       <div className="card shadow mb-4">
-        <div className="card-header py-3">
-          <div className="flex">
-            <h6 className="m-0 font-weight-bold text-primary">
-              Base de Datos Huespedes
-            </h6>
-          </div>
-        </div>
-        <div className="flex">
+        <h6 className="m-0 font-weight-bold text-primary">
+          Base de Datos Huespedes
+        </h6>
+        <div>
           <Button
             onClick={() => abrirCerrarModalInsertar()}
             className="btn btn-primary"
@@ -891,7 +894,7 @@ function Huespedes() {
             Agregar Huesped
           </Button>
         </div>
-        <div className="card-body">
+        <div>
           <MUIDataTable
             title={"Lista Huespedes"}
             data={data}

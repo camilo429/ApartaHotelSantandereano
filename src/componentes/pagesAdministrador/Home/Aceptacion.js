@@ -10,24 +10,12 @@ var options = {
 };
 
 var data = {
-  labels: [
-    "Inversión 15%",
-    "Gastos 20%",
-    "Costos 40%",
-    "Ganancias 20%",
-    "Ahorro 5%",
-  ],
+  labels: ["Aceptación 80&", "No aceptación 20%"],
   datasets: [
     {
-      label: "Tabla de Porcentages",
-      data: [15, 20, 40, 20, 5],
-      backgroundColor: [
-        "rgba(255,99,132,0.2)",
-        "rgba(255,206,86,0.2)",
-        "rgba(54,162,235,0.2)",
-        "rgba(75,192,192,0.2)",
-        "rgba(153,102,255,0.2)",
-      ],
+      label: "Tabla de Aceptación",
+      data: [80, 20],
+      backgroundColor: ["rgba(255,99,132,0.2)", "rgba(255,206,86,0.2)"],
       borderColor: [
         "rgba(255,99,132,1)",
         "rgba(255,206,86,1)",
@@ -39,7 +27,7 @@ var data = {
     },
   ],
 };
-export default function RegistroGastos() {
+export default function Aceptacion() {
   return (
     <div style={{ width: "60%", height: "60%" }}>
       <Pie data={data} options={options} />;
