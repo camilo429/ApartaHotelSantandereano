@@ -37,6 +37,7 @@ function Contacto() {
     fechaEnviado: "",
     horaEnviado: "",
   });
+
   function validacionesFormulario(formulario) {
     if (!nameRegex.test(formulario.nombre)) {
       errors.nombre = "Nombre no valido";
@@ -91,11 +92,20 @@ function Contacto() {
       setFormulario.horaEnviado = hora;
       setFormulario.fechaActual = dia;
       console.log("data seleccionada", formulario);
+      validacionesFormulario(formulario);
       setErrors(validacionesFormulario(formulario));
       if (Object.keys(errors).length === 0) {
         const response = await axios.post(url, formulario);
         setData(data.concat(response.data));
-
+        setFormulario({
+          codComentario: "",
+          nombre: "",
+          email: "",
+          numTelefono: "",
+          comentario: "",
+          fechaEnviado: "",
+          horaEnviado: "",
+        });
         alert(
           "¡Gracias por ser parte de la familia de El Santandereano" +
             " y por compartir tus pensamientos y sugerencias con nosotros!"
