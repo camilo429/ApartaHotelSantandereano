@@ -13,13 +13,21 @@ import {
   DropdownItem,
 } from "reactstrap";
 
-import * as BsPerfil from "react-icons/bs";
-import * as GrConfiguration from "react-icons/gr";
+import { useNavigate, Link } from "react-router-dom";
+
 import * as GiExit from "react-icons/gi";
+import { Apiurl } from "../../services/userService";
 
 const NavbarA = ({ name, lastName }) => {
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
+  const navigate = useNavigate();
+
+  let user = sessionStorage.getItem("access_token");
+  function logOUt() {
+    sessionStorage.clear();
+    navigate("/");
+  }
 
   return (
     <div>
@@ -33,28 +41,31 @@ const NavbarA = ({ name, lastName }) => {
         <div className="w-30">
           <NavbarToggler onClick={toggle} />
           <Collapse isOpen={isOpen} navbar className="w-40">
-            <Nav className="ms-auto w-40" navbar>
-              <UncontrolledDropdown nav inNavbar>
-                <DropdownToggle nav caret>
-                  Geovanny Ahumada
-                </DropdownToggle>
-                <DropdownMenu end>
-                  <DropdownItem>
-                    <BsPerfil.BsFillPersonFill className="me-2" />
-                    Administrador
-                  </DropdownItem>
-                  <DropdownItem>
-                    <GrConfiguration.GrConfigure className="me-2" />
-                    Configuaciones
-                  </DropdownItem>
-                  <DropdownItem />
-                  <DropdownItem>
-                    <GiExit.GiExitDoor className="me-2" />
-                    Salir
-                  </DropdownItem>
-                </DropdownMenu>
-              </UncontrolledDropdown>
-            </Nav>
+            {sessionStorage.getItem("acces_token") ? (
+              <>
+                <Link to={Apiurl}></Link>
+              </>
+            ) : (
+              <>
+                <Link to={Apiurl}></Link>
+              </>
+            )}
+            {sessionStorage.getItem("access_token") ? (
+              <Nav className="ms-auto w-40" navbar>
+                <UncontrolledDropdown nav inNavbar>
+                  <DropdownToggle nav caret>
+                    {user && user.nombre}
+                  </DropdownToggle>
+
+                  <DropdownMenu end>
+                    <DropdownItem onClick={logOUt}>
+                      <GiExit.GiExitDoor className="me-2" />
+                      Salir
+                    </DropdownItem>
+                  </DropdownMenu>
+                </UncontrolledDropdown>
+              </Nav>
+            ) : null}
           </Collapse>
         </div>
       </Navbar>

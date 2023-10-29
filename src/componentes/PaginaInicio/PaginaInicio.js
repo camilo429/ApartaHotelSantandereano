@@ -6,11 +6,13 @@ import "../../vendor/owl-carousel/owl.carousel.min.css";
 import "../../vendor/nice-select/css/nice-select.css";
 import "../../vendor/owl-carousel/owl.carousel.min.css";
 
-
 const PaginaInicio = () => {
   return (
     <div>
-      <nav className="navbar navbar-expand-lg navbar-light bg-light" id="mainNav">
+      <nav
+        className="navbar navbar-expand-lg navbar-light bg-light"
+        id="mainNav"
+      >
         <div className="container px-4 px-lg-5">
           <a className="navbar-brand" href="index.html">
             Aparta Hotel Santandereano
@@ -33,7 +35,9 @@ const PaginaInicio = () => {
               marginRight: "0px",
             }}
           />
-          <div style={{ color: "white", marginLeft: "0px" }}>(+57)3107763328</div>
+          <div style={{ color: "white", marginLeft: "0px" }}>
+            (+57)3107763328
+          </div>
           <img
             src="/assets/img/instagram.png"
             alt="Es la imagen de instragram"
@@ -62,8 +66,6 @@ const PaginaInicio = () => {
           </div>
         </div>
       </nav>
-
-
       <header
         className="App-header"
         style={{
@@ -180,7 +182,7 @@ const PaginaInicio = () => {
                 height: "250px",
                 float: "left",
                 marginLeft: "25px",
-                padding: "15px"
+                padding: "15px",
               }}
             />
             <img
