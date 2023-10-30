@@ -69,7 +69,7 @@ export default function LinesChart() {
     <div style={{ width: "96%", height: "96%", margin: "10px" }}>
       <Line data={midata} options={misoptions} />;
       <div>
-        <p>Recervaciones que se obtuvieron por Celular vs Pagína Web</p>
+        <p>Reservaciones que se obtuvieron por Celular vs Pagína Web</p>
       </div>
     </div>
   );
