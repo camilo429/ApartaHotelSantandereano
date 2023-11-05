@@ -34,7 +34,7 @@ const cedulaExpresion = /^[0-9]{6,10}$/;
 const useStyles = makeStyles((theme) => ({
   modal: {
     position: "absolute",
-    width: "70%",
+    width: "60%",
     height: "70%",
     backgroundColor: "white",
     padding: "1%",
@@ -74,6 +74,7 @@ function Huespedes() {
   const [modalVer, setModalVer] = useState(false);
 
   const [consolaSeleccionada, setConsolaSeleccionada] = useState({
+    codHuesped: "",
     nombre: "",
     apellido: "",
     numCelular: "",
@@ -83,7 +84,6 @@ function Huespedes() {
       nomTipoDocumento: "",
     },
     numDocumento: "",
-    fechaNacimiento: "",
     nacionalidad: {
       codNacion: "",
       nombre: "",
@@ -91,7 +91,7 @@ function Huespedes() {
     lugarOrigen: "",
     nomContactoEmergencia: "",
     numContactoEmergencia: "",
-    estadoHuesped: "true",
+    estadoHuesped: true,
   });
 
   const validacionesFormulario = (consolaSeleccionada) => {
@@ -146,6 +146,7 @@ function Huespedes() {
   };
 
   const peticionGet = async () => {
+    setErrors({});
     axios
       .request({
         method: "get",
@@ -170,6 +171,7 @@ function Huespedes() {
   const peticionPost = async () => {
     try {
       setErrors(validacionesFormulario(consolaSeleccionada));
+      console.log(errors);
       if (Object.keys(errors).length === 0) {
         const response = await axios.post(urlG, consolaSeleccionada, {
           headers: {
@@ -180,10 +182,32 @@ function Huespedes() {
         peticionGet();
         abrirCerrarModalInsertar();
         alert("El Huesped ha sido creado");
+        setConsolaSeleccionada({
+          codHuesped: "",
+          nombre: "",
+          apellido: "",
+          numCelular: "",
+          correo: "",
+          tipoDocumento: {
+            codTipoDocumento: "",
+            nomTipoDocumento: "",
+          },
+          numDocumento: "",
+          nacionalidad: {
+            codNacion: "",
+            nombre: "",
+          },
+          lugarOrigen: "",
+          nomContactoEmergencia: "",
+          numContactoEmergencia: "",
+          estadoHuesped: true,
+        });
+        setErrors({});
       }
     } catch (error) {
       if (error.response.status === 400) {
-        alert("El usuario ya se encuetra registrado");
+        alert("Error al insertar un huesped");
+        console.log(error);
       } else {
         console.log(error.response.status);
       }
@@ -206,7 +230,7 @@ function Huespedes() {
         })
         .then((response) => {
           console.log(response.status);
-          if (response.status == 201) {
+          if (response.status === 201) {
             var dataNueva = data;
             dataNueva.map((consola) => {
               if (consolaSeleccionada.codHuesped === consola.codHuesped) {
@@ -227,7 +251,7 @@ function Huespedes() {
                   consolaSeleccionada.nomContactoEmergencia;
                 consola.numContactoEmergencia =
                   consolaSeleccionada.numContactoEmergencia;
-                consola.estadoHuesped = true;
+                consola.estadoHuesped = consolaSeleccionada.estadoHuesped;
               }
             });
             setData(dataNueva);
@@ -235,6 +259,7 @@ function Huespedes() {
             abrirCerrarModalEditar();
             alert("El huesped ha sido actualizado");
           }
+          setErrors({});
         });
     }
   };
@@ -258,6 +283,7 @@ function Huespedes() {
             )
           );
           abrirCerrarModalEliminar();
+          setErrors({});
         }
       });
   };
@@ -275,7 +301,29 @@ function Huespedes() {
     setModalVer(!modalVer);
   };
   const seleccionarHuespedes = (consola, caso) => {
-    setConsolaSeleccionada(consola);
+    console.log("Consola", consola);
+    setConsolaSeleccionada({
+      codHuesped: consola[0],
+      nombre: consola[1],
+      apellido: consola[2],
+      numCelular: consola[3],
+      correo: consola[4],
+      tipoDocumento: {
+        codTipoDocumento: consola[5].codTipoDocumento,
+        nomTipoDocumento: consola[5].nomTipoDocumento,
+      },
+      numDocumento: consola[6],
+      nacionalidad: {
+        codNacion: consola[7].codNacion,
+        nombre: consola[7].nombre,
+      },
+      lugarOrigen: consola[8],
+      nomContactoEmergencia: consola[9],
+      numContactoEmergencia: consola[10],
+      estadoHuesped: consola[11],
+    });
+
+    // console.log("ConsolaSeleccionada", consolaSeleccionada);
     if (caso === "Editar") {
       abrirCerrarModalEditar();
     }
@@ -360,7 +408,10 @@ function Huespedes() {
             )}
           </FormGroup>
 
-          <FormGroup className="me-2">
+          <FormGroup
+            className="me-2"
+            style={{ width: "300px", margin: "20px" }}
+          >
             <Label for="exampleEmail">Tipo Documento</Label>
             <TipoDocumento
               name="tipoDocumento"
@@ -386,7 +437,10 @@ function Huespedes() {
             )}
           </FormGroup>
 
-          <FormGroup className="me-2">
+          <FormGroup
+            className="me-2"
+            style={{ width: "250px", margin: "20px" }}
+          >
             <Label for="exampleEmail">Nacionalidad</Label>
             <Nacionalidades
               name="nacionalidad"
@@ -593,11 +647,12 @@ function Huespedes() {
   const bodyEditar = (
     <div className={styles.modal}>
       <h3>Editar Huesped</h3>
-      <Form style={{ textAlign: "center", marginLeft: "15%" }}>
+      <Form style={{ textAlign: "center" }}>
         <div className="flex">
           <FormGroup className="me-2">
             <Label for="exampleEmail">Nombre</Label>
             <input
+              required
               className="form-control"
               name="nombre"
               onChange={handleChange}
@@ -613,6 +668,7 @@ function Huespedes() {
           <FormGroup className="me-2">
             <Label for="Apellido">Apellido</Label>
             <input
+              required
               className="form-control"
               name="apellido"
               onChange={handleChange}
@@ -627,12 +683,10 @@ function Huespedes() {
               </div>
             )}
           </FormGroup>
-        </div>
-
-        <div className="flex">
           <FormGroup className="me-2">
             <Label for="exampleEmail">Número Celular</Label>
             <input
+              required
               className="form-control"
               name="numCelular"
               onChange={handleChange}
@@ -649,10 +703,10 @@ function Huespedes() {
               </div>
             )}
           </FormGroup>
-
           <FormGroup className="me-2">
             <Label for="email">Correo Electronico</Label>
             <input
+              required
               className="form-control"
               name="correo"
               onChange={handleChange}
@@ -665,21 +719,25 @@ function Huespedes() {
               </div>
             )}
           </FormGroup>
+        </div>
 
-          <FormGroup className="me-2" style={{ width: "15%" }}>
+        <div className="flex">
+          <FormGroup
+            className="me-2"
+            style={{ width: "250px", margin: "20px" }}
+          >
             <Label for="exampleEmail">Tipo Documento</Label>
             <TipoDocumento
+              required
               name="tipoDocumento"
               handleChangeData={handleChange}
               value={consolaSeleccionada.tipoDocumento}
             />
           </FormGroup>
-        </div>
-
-        <div className="flex">
           <FormGroup className="me-2">
             <Label for="exampleEmail">Número Documento</Label>
             <input
+              required
               className="form-control"
               name="numDocumento"
               onChange={handleChange}
@@ -696,20 +754,23 @@ function Huespedes() {
               </div>
             )}
           </FormGroup>
-
-          <FormGroup className="me-2">
+          <FormGroup
+            className="me-2"
+            style={{ width: "200px", margin: "20px" }}
+          >
             <Label for="exampleEmail">Nacionalidad</Label>
             <Nacionalidades
+              required
               name="nacionalidad"
               handleChangeData={handleChange}
               value={consolaSeleccionada.nacionalidad}
               style={{ width: "15%" }}
             />
           </FormGroup>
-
           <FormGroup className="me-2">
             <Label for="exampleEmail">¿Lugar de dónde viene?</Label>
             <input
+              required
               className="form-control"
               name="lugarProviene"
               onChange={handleChange}
@@ -732,6 +793,7 @@ function Huespedes() {
           <FormGroup className="me-2">
             <Label for="exampleEmail">Nombre Emergencia</Label>
             <input
+              required
               className="form-control"
               name="nomContactoEmergencia"
               onChange={handleChange}
@@ -753,6 +815,7 @@ function Huespedes() {
           <FormGroup className="me-2">
             <Label for="exampleEmail">#Contacto Emergencia</Label>
             <input
+              required
               className="form-control"
               name="numContactoEmergencia"
               onChange={handleChange}
@@ -771,7 +834,38 @@ function Huespedes() {
               </div>
             )}
           </FormGroup>
+          <FormGroup
+            className="me-2"
+            style={{ width: "200px", margin: "20px" }}
+          >
+            <Label for="exampleEmail">Estado Huesped</Label>
+            <select
+              required
+              className="form-select"
+              aria-label="Default select example"
+              name="estadoHuesped"
+              onChange={handleChange}
+              value={
+                consolaSeleccionada &&
+                consolaSeleccionada.estadoHuesped === true
+                  ? "HABILITADO"
+                  : "INHABILITADO"
+              }
+            >
+              <option value="TRUE">Habilitado</option>
+              <option value="false" selected>
+                Inhabilitado
+              </option>
+            </select>
+            {errors.estadoHuesped && (
+              <div style={estilos}>
+                <p>{errors.estadoHuesped}</p>
+              </div>
+            )}
+          </FormGroup>
         </div>
+
+        <div className="flex"></div>
       </Form>
       <div align="right">
         <Button color="primary" onClick={() => peticionPut()}>
@@ -804,8 +898,13 @@ function Huespedes() {
 
   const columns = [
     {
+      name: "codHuesped",
+      label: "Código",
+    },
+    {
       name: "nombre",
       label: "Nombre",
+      sort: false,
     },
     {
       name: "apellido",
@@ -816,28 +915,90 @@ function Huespedes() {
       label: "Celular",
     },
     {
+      name: "correo",
+      label: "Correo Electronico",
+    },
+    {
+      name: "tipoDocumento",
+      label: "Tipo Documento",
+      options: {
+        filter: false,
+        sort: false,
+        customBodyRender: (value, tableMeta, updateValue) => {
+          // Accede a la propiedad anidada y muestra su valor
+          try {
+            data.map((consola, ind) => {
+              value = [
+                consola.tipoDocumento.codTipoDocumento,
+                consola.tipoDocumento.nomTipoDocumento,
+              ];
+            });
+          } catch (error) {
+            console.log("Error al cargar los tipos documentos en Huespedes");
+          }
+          return value; // Esto mostrará el valor de tipoDocumento.nomTipoDocumento en la celda
+        },
+      },
+    },
+    {
       name: "numDocumento",
       label: "Número Documento",
     },
     {
-      name: "fechaNacimiento",
-      label: "Fecha Nacimiento",
+      name: "nacionalidad",
+      label: "Nacionalidad",
+      options: {
+        filter: false,
+        sort: false,
+        customBodyRender: (value, tableMeta, updateValue) => {
+          // Accede a la propiedad anidada y muestra su valor
+          try {
+            data.map((consola, ind) => {
+              value = [
+                consola.nacionalidad.codNacion,
+                consola.nacionalidad.nombre,
+              ];
+            });
+          } catch (error) {
+            console.log("Error al cargar los tipos documentos en Huespedes");
+          }
+          return value; // Esto mostrará el valor de tipoDocumento.nomTipoDocumento en la celda
+        },
+      },
     },
     {
       name: "lugarOrigen",
-      label: "Lugar Proviene",
+      label: "Lugar De incio de viaje",
+    },
+    {
+      name: "nomContactoEmergencia",
+      label: "Nombre Contacto ",
     },
     {
       name: "numContactoEmergencia",
-      label: "Contacto Emergencia",
+      label: "Número de Emergencia",
     },
     {
-      name: "nacionalidad.nombre",
-      label: "Nacionalidad",
-    },
-    {
-      name: "Documento",
-      label: "TipoDocumento",
+      name: "estadoHuesped",
+      label: "Estado Huesped",
+      options: {
+        filter: false,
+        sort: false,
+        customBodyRender: (value, tableMeta, updateValue) => {
+          try {
+            data.map((consola, ind) => {
+              if (consola.estadoHuesped === true) {
+                value = "Habilitado";
+              } else {
+                value = "Inhabilitado";
+              }
+            });
+          } catch (error) {
+            console.log("No carga el valor de Estado Huesped");
+          }
+          return value;
+        },
+      },
     },
     {
       name: "acciones",
@@ -877,7 +1038,6 @@ function Huespedes() {
   const options = {
     filterType: "dropdown",
     responsive: "standard",
-
     /*  customToolbarSelect: (selectedRows) => <CustomToolbarSelect selectedRows={selectedRows} />*/
   };
   return (

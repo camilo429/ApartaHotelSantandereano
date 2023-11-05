@@ -50,7 +50,7 @@ function NacionalidadComponent() {
 
   const [consolaSeleccionada, setConsolaSeleccionada] = useState({
     codNacion: "",
-    nombre: ""
+    nombre: "",
   });
 
   const handleChange = (e) => {
@@ -81,7 +81,7 @@ function NacionalidadComponent() {
       .put(urlE + consolaSeleccionada.id, consolaSeleccionada)
       .then((response) => {
         var dataNueva = data;
-        dataNueva.map((consola) => {
+        dataNueva.map((consola, index) => {
           if (consolaSeleccionada.id === consola.id) {
             consola.nombre = consolaSeleccionada.nombre;
           }

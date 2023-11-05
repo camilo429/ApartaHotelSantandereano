@@ -544,7 +544,11 @@ function Inicio() {
             <div className="col-lg-3 col-sm-6">
               <div className="accomodation_item text-center">
                 <div className="hotel_img">
-                  <img src="../../assets/img/205.jpg" alt="" />
+                  <img
+                    src="../../assets/img/305.jpg"
+                    alt=""
+                    style={{ height: "350px" }}
+                  />
                 </div>
                 <button
                   onClick={() => abrirCerrarModalInsertar()}
@@ -567,7 +571,11 @@ function Inicio() {
             <div className="col-lg-3 col-sm-6">
               <div className="accomodation_item text-center">
                 <div className="hotel_img">
-                  <img src="../../assets/img/101.jpg" alt="" />
+                  <img
+                    src="../../assets/img/302.jpg"
+                    alt=""
+                    style={{ height: "350px" }}
+                  />
                 </div>
                 <button
                   onClick={() => abrirCerrarModalInsertar()}
@@ -609,21 +617,21 @@ function Inicio() {
         <div className="flex" style={{ marginLeft: "15%" }}>
           <TestimonioHuesped
             nombre="- Yerson Bautista."
-            url="../../assets/img/cliente1.jpg"
+            url="../../assets/img/yerson.jpg"
             description="Mi estancia en El Santandereano fue simplemente maravillosa. Desde
             la cálida bienvenida hasta la atención al detalle en cada rincón, me 
             sentí como en un hogar lejos de casa. "
           />
           <TestimonioHuesped
             nombre="Diego M."
-            url="../../assets/img/cliente2.jpg"
+            url="../../assets/img/yerson.jpg"
             description="Las habitaciones son elegantes y cómodas, con una hubicación 
             central. No podría habe pedido un lugar mejor para relajarme durante mis 
             vacaciones."
           />
           <TestimonioHuesped
             nombre="Valentina F."
-            url="../../assets/img/cliente3.jpg"
+            url="../../assets/img/valentina.png"
             description="Mi familia y yo tuvimos una experiencia inolvidable en El Santandereano
             . Los niños se pueden dejar solos en las habitaciones, gracias a que el persona está
             muy atentos a cualquier suceso o ruido extraño. ¡Gracias por hacer que neustras vacaciones

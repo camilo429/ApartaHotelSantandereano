@@ -12,21 +12,22 @@ function TipoSangre({ name, handleChangeData, value = null }) {
   const [data, setData] = useState([]);
 
   const getTipoSangre = async () => {
-    axios.request({
-      method: "get",
-      url: url,
-      withCredentials: true,
-      crossdomain: true,
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("access_token")}`
-      }
-    }).then(response => {
-      if (response.status === 200) {
-        setData(response.data);
-        console.log(response.data);
-      }
-
-    })
+    axios
+      .request({
+        method: "get",
+        url: url,
+        withCredentials: true,
+        crossdomain: true,
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
+        },
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          setData(response.data);
+          // console.log(response.data);
+        }
+      });
   };
 
   useEffect(() => {
@@ -45,9 +46,9 @@ function TipoSangre({ name, handleChangeData, value = null }) {
         defaultValue={
           value
             ? {
-              label: value?.nomTipoSangre,
-              value: value?.codTipoSangre,
-            }
+                label: value?.nomTipoSangre,
+                value: value?.codTipoSangre,
+              }
             : null
         }
         options={data.map((docu) => ({

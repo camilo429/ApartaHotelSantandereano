@@ -79,12 +79,12 @@ function DocumentoComponent() {
 
   const peticionPut = async () => {
     await axios
-      .put(urlE + consolaSeleccionada.id_tip_documento, consolaSeleccionada)
+      .put(urlE + consolaSeleccionada.codTipoDocumento, consolaSeleccionada)
       .then((response) => {
         var dataNueva = data;
         dataNueva.map((consola) => {
           if (
-            consolaSeleccionada.id_tip_documento === consola.id_tip_documento
+            consolaSeleccionada.codTipoDocumento === consola.codTipoDocumento
           ) {
             consola.tipDocumento = consolaSeleccionada.tipDocumento;
           }

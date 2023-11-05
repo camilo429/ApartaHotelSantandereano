@@ -70,6 +70,7 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@types/jquery": "^3.5.16",
     "ajv": "^7.2.4",
     "mini-css-extract-plugin": "^2.7.2",

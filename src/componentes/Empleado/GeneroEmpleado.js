@@ -9,25 +9,25 @@ import { Apiurl } from "../../services/userService";
 const url = Apiurl + "sexo/listarSexo";
 
 function GeneroEmpleado({ name, handleChangeData, value = null }) {
-
   const [data, setData] = useState([]);
 
   const getGeneroEmpleado = async () => {
-    axios.request({
-      method: "get",
-      url: url,
-      withCredentials: true,
-      crossdomain: true,
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("access_token")}`
-      }
-    }).then(response => {
-      if (response.status === 200) {
-        setData(response.data);
-        console.log(response.data);
-      }
-
-    })
+    axios
+      .request({
+        method: "get",
+        url: url,
+        withCredentials: true,
+        crossdomain: true,
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
+        },
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          setData(response.data);
+          // console.log(response.data);
+        }
+      });
   };
 
   useEffect(() => {
@@ -43,10 +43,14 @@ function GeneroEmpleado({ name, handleChangeData, value = null }) {
   return (
     <div className="GeneroEmpleado">
       <Select
-        defaultValue={value ? {
-          label: value?.nomSexo,
-          value: value?.codSexo,
-        } : null}
+        defaultValue={
+          value
+            ? {
+                label: value?.nomSexo,
+                value: value?.codSexo,
+              }
+            : null
+        }
         options={data.map((docu) => ({
           label: docu.nomSexo,
           value: docu.codSexo,

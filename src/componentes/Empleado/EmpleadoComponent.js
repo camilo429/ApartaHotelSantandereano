@@ -21,6 +21,7 @@ import GeneroEmpleado from "./GeneroEmpleado";
 import TipoDocumento from "../pagesAdministrador/TipoDocumento";
 //url
 import { Apiurl } from "../../services/userService";
+import MUIDataTable from "mui-datatables";
 
 const url = Apiurl + "empleados/listarEmpleados";
 const urlG = Apiurl + "empleados/crearEmpleado";
@@ -136,7 +137,7 @@ function EmpleadoComponent() {
       .then((response) => {
         //console.log(response.status);
         console.log(response.data);
-        if (response.status == 201) {
+        if (response.status === 201) {
           var dataNueva = data;
           dataNueva.map((consola) => {
             if (consolaSeleccionada.codEmpleado === consola.codEmpleado) {
@@ -220,7 +221,36 @@ function EmpleadoComponent() {
     setModalVer(!modalVer);
   };
   const seleccionarEmpleado = (consola, caso) => {
-    setConsolaSeleccionada(consola);
+    console.log(consola);
+    setConsolaSeleccionada({
+      codEmpleado: consola[0],
+      nombre: consola[1],
+      apellido: consola[2],
+      tipDocumento: {
+        codTipoDocumento: consola[3].codTipoDocumento,
+        nomTipoDocumento: consola[3].nomTipoDocumento,
+      },
+      numDocumento: consola[4],
+      edad: consola[5],
+      numTelefono: consola[6],
+      correo: consola[7],
+      fechaNacimiento: consola[8],
+      direccion: consola[9],
+      nomContactoEmergencia: consola[10],
+      numContactoEmergencia: consola[11],
+      eps: consola[12],
+      arl: consola[13],
+      sexo: {
+        codSexo: consola[14].codSexo,
+        nomSexo: consola[14].nomSexo,
+      },
+      tipoSangre: {
+        codTipoSangre: consola[15].codTipoSangre,
+        nomTipoSangre: consola[15].nomTipoSangre,
+      },
+      fotoEmpleado: consola[16],
+    });
+    // console.log(consolaSeleccionada);
     if (caso === "Editar") {
       abrirCerrarModalEditar();
     }
@@ -461,13 +491,7 @@ function EmpleadoComponent() {
             <Input
               name="fechaNacimiento"
               onChange={handleChange}
-              value={
-                consolaSeleccionada?.fechaNacimiento.split("-")[2] +
-                "-" +
-                consolaSeleccionada?.fechaNacimiento.split("-")[1] +
-                "-" +
-                consolaSeleccionada?.fechaNacimiento.split("-")[0]
-              }
+              value={consolaSeleccionada?.fechaNacimiento}
               type="date"
               disabled
             />
@@ -571,7 +595,7 @@ function EmpleadoComponent() {
   );
   const bodyEditar = (
     <div className={styles.modal}>
-      <h3>Editar Huesped</h3>
+      <h3>Editar Empleado</h3>
       <Form>
         <div className="flex">
           <FormGroup className="me-2">
@@ -767,6 +791,161 @@ function EmpleadoComponent() {
     peticionGet();
   }, []);
 
+  const columns = [
+    {
+      name: "codEmpleado",
+      label: "Código",
+    },
+    {
+      name: "nombre",
+      label: "Nombre",
+    },
+    {
+      name: "apellido",
+      label: "apellido",
+    },
+    {
+      name: "tipDocumento",
+      label: "Tipo Documento",
+      options: {
+        filter: false,
+        sort: false,
+        customBodyRender: (value, tableMeta, updateValue) => {
+          try {
+            data.map((consola, idn) => {
+              value = [
+                consola.tipDocumento.codTipoDocumento,
+                consola.tipDocumento.nomTipoDocumento,
+              ];
+            });
+          } catch (error) {
+            console.log(
+              "Error al eliminar eliminar tipo Documento en Empleado",
+              error
+            );
+          }
+          return value;
+        },
+      },
+    },
+    {
+      name: "numDocumento",
+      label: "Número Documento",
+    },
+    {
+      name: "edad",
+      label: "Edad",
+    },
+    {
+      name: "numTelefono",
+      label: "Celular",
+    },
+    {
+      name: "correo",
+      label: "correo",
+    },
+    {
+      name: "fechaNacimiento",
+      label: "Fecha Nacimiento",
+    },
+    {
+      name: "direccion",
+      label: "Dirección",
+    },
+    {
+      name: "nomContactoEmergencia",
+      label: "Conctacto Emergencia",
+    },
+    {
+      name: "numContactoEmergencia",
+      label: "Celular Contacto Emergencia",
+    },
+    {
+      name: "eps",
+      label: "EPS",
+    },
+    {
+      name: "arl",
+      label: "ARL",
+    },
+    {
+      name: "sexo",
+      label: "Genero",
+      options: {
+        filter: false,
+        sort: false,
+        customBodyRender: (value, tableMeta, updateValue) => {
+          try {
+            data.map((consola, idn) => {
+              value = [consola.sexo.codSexo, consola.sexo.nomSexo];
+            });
+          } catch (error) {
+            console.log("Error al cargar el Genero en Empleado", error);
+          }
+          return value;
+        },
+      },
+    },
+    {
+      name: "tipoSangre",
+      label: "Grupo Sanguineo",
+      options: {
+        filter: false,
+        sort: false,
+        customBodyRender: (value, tableMeta, updateValue) => {
+          try {
+            data.map((consola, idn) => {
+              value = [
+                consola.tipoSangre.codTipoSangre,
+                consola.tipoSangre.nomTipoSangre,
+              ];
+            });
+          } catch (error) {
+            console.log(
+              "Error al cargar el Grupo Sanguineo en Empleado",
+              error
+            );
+          }
+          return value;
+        },
+      },
+    },
+    {
+      name: "acciones",
+      label: "Acciones",
+      options: {
+        filter: false,
+        sort: false,
+        customBodyRender: (value, tableMeta, updateValue) => {
+          return (
+            <div>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => seleccionarEmpleado(tableMeta.rowData, "Editar")}
+              >
+                <AiFillEdit.AiFillEdit className="me-2" />
+                Editar
+              </Button>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() =>
+                  seleccionarEmpleado(tableMeta.rowData, "Eliminar")
+                }
+              >
+                <MdDelete.MdDelete className="me-2" />
+                Eliminar
+              </Button>
+            </div>
+          );
+        },
+      },
+    },
+  ];
+
+  const options = { filterType: "dropdown", responsive: "standard" };
+
   return (
     <div className="EmpleadoComponent">
       <br></br>
@@ -791,57 +970,12 @@ function EmpleadoComponent() {
 
         <div className="card-body">
           <div className="table-responsive">
-            <table className="table table-bordered" cellSpacing="0">
-              <thead>
-                <tr>
-                  <th>Nombre</th>
-                  <th>Apellido</th>
-                  <th>Número Documento</th>
-                  <th>Número de Celular</th>
-                  <th>Correo</th>
-                  <th>Fecha Nacimiento</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.map((consola) => (
-                  <tr key={consola.idEmpleado}>
-                    <th>{consola.nombre}</th>
-                    <th>{consola.apellido}</th>
-                    <th>{consola.numDocumento}</th>
-                    <th>{consola.numTelefono}</th>
-                    <th>{consola.correo}</th>
-                    <th>{consola.fechaNacimiento}</th>
-                    <th>
-                      <Button
-                        className="flex"
-                        onClick={() => seleccionarEmpleado(consola, "Editar")}
-                      >
-                        <AiFillEdit.AiFillEdit className="me-2" />
-                        Editar
-                      </Button>
-
-                      <br></br>
-                      <Button
-                        className="flex"
-                        onClick={() => seleccionarEmpleado(consola, "Eliminar")}
-                      >
-                        <MdDelete.MdDelete className="me-2" />
-                        Eliminar
-                      </Button>
-                      <br></br>
-                      <Button
-                        className="flex"
-                        onClick={() => seleccionarEmpleado(consola, "Ver")}
-                      >
-                        <BsInfoLg.BsInfoLg className="me-2" />
-                        Ver Info
-                      </Button>
-                    </th>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <MUIDataTable
+              title={"Lista de Empleados"}
+              data={data}
+              columns={columns}
+              options={options}
+            />
           </div>
         </div>
       </div>

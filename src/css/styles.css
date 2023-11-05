@@ -509,7 +509,7 @@ button:focus {
 }
 
 .banner_area .bg-parallax {
-  background: url("../image/facilites_bg.jpg") no-repeat center 0/cover;
+  background: url("../image/portada.jpg") no-repeat center 0/cover;
   height: auto;
   opacity: 0.50;
 }

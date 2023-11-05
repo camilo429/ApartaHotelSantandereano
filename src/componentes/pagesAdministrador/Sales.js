@@ -112,10 +112,10 @@ function Sales() {
         },
       })
       .then((response) => {
-        if (response.status == 201) {
+        if (response.status === 201) {
           var dataNueva = data;
           dataNueva.map((consola) => {
-            if (consolaSeleccionada.codProducto == consola.codProducto) {
+            if (consolaSeleccionada.codProducto === consola.codProducto) {
               consola.nombreProducto = consolaSeleccionada.nombreProducto;
               consola.marca = consolaSeleccionada.marca;
               consola.cantidad = consolaSeleccionada.cantidad;

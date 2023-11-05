@@ -166,7 +166,7 @@ function Reservaciones() {
 
   const peticionPost = async (e) => {
     e.preventDefault();
-    console.log("esta es la data seleccionada ", consolaSeleccionada);
+    console.log("Esta es la data de Reservacion", consolaSeleccionada);
     const response = await axios.post(urlG, consolaSeleccionada);
     setData(data.concat(response.data));
     peticionGet();

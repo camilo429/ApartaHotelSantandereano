@@ -9,25 +9,24 @@ import { Apiurl } from "../../services/userService";
 const url = Apiurl + "actividades/listarActividades";
 
 function ActividadesComponent({ name, handleChangeData, value = null }) {
-
   const [data, setData] = useState([]);
-
   const getActividadesComponent = async () => {
-    axios.request({
-      method: "get",
-      url: url,
-      withCredentials: true,
-      crossdomain: true,
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("access_token")}`
-      }
-    }).then(response => {
-      if (response.status === 200) {
-        setData(response.data);
-        console.log(response.data);
-      }
-
-    })
+    axios
+      .request({
+        method: "get",
+        url: url,
+        withCredentials: true,
+        crossdomain: true,
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
+        },
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          setData(response.data);
+          console.log(response.data);
+        }
+      });
   };
 
   useEffect(() => {
@@ -43,10 +42,14 @@ function ActividadesComponent({ name, handleChangeData, value = null }) {
   return (
     <div className="ActividadesComponent">
       <Select
-        defaultValue={value ? {
-          label: value?.titulo,
-          value: value?.codActividad,
-        } : null}
+        defaultValue={
+          value
+            ? {
+                label: value?.titulo,
+                value: value?.codActividad,
+              }
+            : null
+        }
         options={data.map((docu) => ({
           label: docu.titulo,
           value: docu.codActividad,

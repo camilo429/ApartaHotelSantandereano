@@ -1,13 +1,6 @@
 import React from "react";
 import "../estilos/style.css";
 import "../../css/responsive.css";
-// url
-import { Apiurl } from "../../services/userService";
-const inicio = Apiurl + "/";
-const SobreNosotros = Apiurl + "/SobreNosotros";
-const lugares = Apiurl + "/lugares";
-const Contactanos = Apiurl + "/Contactanos";
-const Login = Apiurl + "/Login";
 
 function Footer() {
   return (
@@ -24,6 +17,7 @@ function Footer() {
                   <a
                     href="https://www.facebook.com/HotelSantandereanoBogota"
                     target="_blank"
+                    rel="noreferrer"
                   >
                     <img
                       src="/assets/img/facebook.png"
@@ -40,6 +34,7 @@ function Footer() {
                     style={{ textAlign: "center" }}
                     className="flex"
                     target="_blank"
+                    rel="noreferrer"
                   >
                     <img
                       src="/assets/img/whatsapp.png"

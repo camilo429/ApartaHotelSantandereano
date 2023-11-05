@@ -31,23 +31,23 @@ function DocumentoEmpleado({ name, handleChangeData, value = null }) {
   //     )
   //   };
 
-    // useEffect(() => {
-    //  // getDocumentos();
-    // }, [localStorage]);
+  // useEffect(() => {
+  //  // getDocumentos();
+  // }, [localStorage]);
 
-    useEffect(() => {
-     // getDocumentos();
-    }, []);
+  useEffect(() => {
+    // getDocumentos();
+  }, []);
 
-    // const handleChange = ({ label, value }) => {
-    //   handleChangeData({
-    //     target: { name, value: { idTipDocumento: value, tipDocumento: label } },
-    //   });
-    // };
+  // const handleChange = ({ label, value }) => {
+  //   handleChangeData({
+  //     target: { name, value: { idTipDocumento: value, tipDocumento: label } },
+  //   });
+  // };
 
-    return (
-      <div className="DocumentoEmpleado">
-        {/* <Select
+  return (
+    <div className="DocumentoEmpleado">
+      {/* <Select
           defaultValue={value ? {
             label: value?.tipDocumento,
             value: value?.idTipDocumento
@@ -59,9 +59,8 @@ function DocumentoEmpleado({ name, handleChangeData, value = null }) {
           onChange={handleChange}
           placeholder="Seccione Documento"
         /> */}
-      </div>
-    );
-  }
+    </div>
+  );
+}
 
-  
 export default DocumentoEmpleado;
