@@ -47,6 +47,7 @@ const useStyles = makeStyles((theme) => ({
     transform: "translate(-50%,-50%)",
     fontSize: "1.2rem",
     borderRadius: "5px",
+    overflow: "scroll",
   },
 }));
 const useEstilo = makeStyles((theme) => ({
@@ -75,8 +76,8 @@ function Reservaciones() {
   const [modalVer, setModalVer] = useState(false);
 
   const [consolaSeleccionada, setConsolaSeleccionada] = useState({
-    fechaEntrada: "",
     codReservacion: "",
+    fechaEntrada: "",
     fechaSalida: "",
     totalDias: "",
     adultos: "",
@@ -171,31 +172,34 @@ function Reservaciones() {
     setData(data.concat(response.data));
     peticionGet();
     abrirCerrarModalInsertar();
-    alert("La habitación ha sido creada");
+    alert("La Reservacíon ha sido Creada");
   };
-  const peticionPostVer = async (e) => {
-    e.preventDefault();
-    console.log("esta es la data Ver ", consolaSeleccionada);
-    const response = await axios.post(
-      urlVer,
-      consolaSeleccionada.codReservacion
-    );
-    setData(data.concat(response.data));
-    peticionGet();
-    abrirCerrarModalInsertar();
+  const peticionGetVer = async (consola) => {
+    try {
+      await axios.get(urlVer + consola).then((response) => {
+        console.log(response.status);
+        if (response.status === 200) {
+          setConsolaSeleccionada(response.data);
+          abrirCerrarModalVer();
+        } else {
+          alert("Error al ver Reservación");
+        }
+      });
+    } catch (error) {
+      console.log("error al ver Reservación", error);
+    }
   };
+
   const seleccionarReservacion = (consola, caso) => {
-    console.log(consola);
-    setConsolaSeleccionada({
-      codReservacion: consola[0],
-    });
+    console.log(consolaSeleccionada);
     if (caso === "Eliminar") {
       abrirCerrarModalEliminar();
     }
     if (caso === "Ver") {
-      abrirCerrarModalVer();
+      peticionGetVer(consola[0]);
     }
   };
+
   const abrirCerrarModalInsertar = () => {
     setModalInsertar(!modalInsertar);
   };
@@ -340,17 +344,18 @@ function Reservaciones() {
   );
   const bodyVer = (
     <div className={styles.modal}>
-      <h3>Agendar una Reservación</h3>
+      <h3>Ver Reservación</h3>
       <Form style={{ marginLeft: "3%" }}>
         <div className="flex">
           <FormGroup className="me-2">
             <Label for="exampleEmail">Fecha de Entrada</Label>
             <input
+              className="form-control"
               name="fechaEntrada"
               type="date"
+              value={consolaSeleccionada?.fechaEntrada}
               placeholder="fechaEntrada"
-              className="form-control"
-              onChange={handleChange}
+              readOnly
             />
           </FormGroup>
           <FormGroup className="me-2">
@@ -360,27 +365,28 @@ function Reservaciones() {
               type="date"
               placeholder="fechaSalida"
               className="form-control"
-              onChange={handleChange}
+              value={consolaSeleccionada?.fechaSalida}
+              readOnly
             />
           </FormGroup>
-
           <FormGroup className="me-2">
             <Label for="exampleEmail">Número de Adultos</Label>
             <input
               name="adultos"
               placeholder="# Adultos"
               className="form-control"
-              onChange={handleChange}
+              value={consolaSeleccionada?.adultos}
+              readOnly
             />
           </FormGroup>
-
           <FormGroup className="me-2">
             <Label for="exampleEmail">Número de Niños</Label>
             <input
               name="ninos"
               placeholder="# Niños"
               className="form-control"
-              onChange={handleChange}
+              value={consolaSeleccionada?.ninos}
+              readOnly
             />
           </FormGroup>
         </div>
@@ -389,8 +395,10 @@ function Reservaciones() {
           <FormGroup className="me-2">
             <Label for="exampleEmail">Tipo de Documento</Label>
             <TipoDocumento
-              name="tipoDocumento"
+              name="tipDocumento"
               handleChangeData={handleChange}
+              value={consolaSeleccionada.tipoDocumento}
+              readOnly
             />
           </FormGroup>
           <FormGroup className="me-2">
@@ -400,7 +408,8 @@ function Reservaciones() {
               type="number"
               placeholder="Número de Documento"
               className="form-control"
-              onChange={handleChange}
+              value={consolaSeleccionada?.numDocumento}
+              readOnly
             />
           </FormGroup>
 
@@ -410,51 +419,73 @@ function Reservaciones() {
               name="nombre"
               placeholder="Nombre"
               className="form-control"
-              onChange={handleChange}
+              value={consolaSeleccionada?.nombre}
+              readOnly
             />
           </FormGroup>
 
           <FormGroup className="me-2">
             <Label for="exampleEmail">Apellido</Label>
-            <Input
+            <input
               name="apellido"
-              placeholder="apellido"
+              placeholder="Apellido"
               className="form-control"
-              onChange={handleChange}
+              value={consolaSeleccionada?.apellido}
+              readOnly
             />
           </FormGroup>
         </div>
         <div className="flex">
-          <FormGroup className="me-2">
+          <FormGroup className="me-2" style={{ width: "250px" }}>
             <Label for="exampleEmail">Correo Electronico</Label>
             <input
               name="email"
               type="email"
-              placeholder="email"
+              placeholder="Correo Electronico"
               className="form-control"
-              onChange={handleChange}
+              value={consolaSeleccionada?.email}
+              readOnly
             />
           </FormGroup>
-          <FormGroup className="me-2 w-80">
-            <Label for="exampleEmail">habitacion</Label>
-            <Habitaciones
+          <FormGroup className="me-2 ">
+            <Label for="exampleEmail">Número Habitación</Label>
+            <input
               name="habitacion"
-              handleChangeData={handleChange}
               url={urlhabitacionesDisponibles}
+              className="form-control"
+              value={consolaSeleccionada?.habitacion.numHabitacion}
+              readOnly
+            />
+          </FormGroup>
+          <FormGroup className="me-2 ">
+            <Label for="exampleEmail">Nombre Habitación</Label>
+            <input
+              name="habitacion"
+              url={urlhabitacionesDisponibles}
+              className="form-control"
+              value={consolaSeleccionada?.habitacion.nombreHabitacion}
+              readOnly
+            />
+          </FormGroup>
+          <FormGroup className="me-2 ">
+            <Label for="exampleEmail">Capacidad Personas</Label>
+            <input
+              name="habitacion"
+              url={urlhabitacionesDisponibles}
+              className="form-control"
+              value={consolaSeleccionada?.habitacion.maxPersonasDisponibles}
+              readOnly
             />
           </FormGroup>
         </div>
       </Form>
       <br />
       <div align="right">
-        <button className="btn btn-success" onClick={(e) => peticionPostVer(e)}>
-          Agendar
-        </button>
         <button
           className="btn btn-danger"
           onClick={() => abrirCerrarModalVer()}
         >
-          Cancelar
+          Volver
         </button>
       </div>
     </div>
@@ -489,7 +520,7 @@ function Reservaciones() {
       label: "# Niños",
     },
     {
-      name: "tipoDocumento.nomTipoDocumento",
+      name: "tipoDocumento",
       label: "Tipo Documento",
       options: {
         filter: false,
@@ -508,12 +539,26 @@ function Reservaciones() {
       },
     },
     {
-      name: "habitacion.numHabitacion",
-      label: "# habitacion",
-    },
-    {
       name: "numDocumento",
       label: "# Documento",
+    },
+    {
+      name: "habitacion",
+      label: "Habitación",
+      options: {
+        filter: false,
+        sort: false,
+        customBodyRender: (value, tableMeta, updateValue) => {
+          try {
+            data.map((consola, idn) => {
+              value = [consola.habitacion.numHabitacion];
+            });
+          } catch (error) {
+            console.log("Error al cargar habitación reservación", error);
+          }
+          return value;
+        },
+      },
     },
     {
       name: "nombre",
@@ -524,8 +569,8 @@ function Reservaciones() {
       label: "Apellido",
     },
     {
-      name: "Email",
-      label: "email",
+      name: "email",
+      label: "Correo",
     },
     {
       name: "acciones",

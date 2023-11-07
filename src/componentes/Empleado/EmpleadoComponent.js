@@ -9,7 +9,7 @@ import "../../../node_modules/bootstrap/scss/bootstrap.scss";
 // Iconos
 import * as AiFillEdit from "react-icons/ai";
 import * as MdDelete from "react-icons/md";
-import * as BsInfoLg from "react-icons/bs";
+// import * as BsInfoLg from "react-icons/bs";
 //Reactrap
 import { Form, FormGroup, Label, Input } from "reactstrap";
 import { makeStyles } from "@mui/styles";
@@ -27,11 +27,16 @@ const url = Apiurl + "empleados/listarEmpleados";
 const urlG = Apiurl + "empleados/crearEmpleado";
 const urlE = Apiurl + "empleados/actualizarEmpleado/";
 const urlD = Apiurl + "empleados/eliminarEmpleado/";
-
+// expresiones regulares
+const nameRegex = /^[a-zA-Z\s]+$/;
+const numeroCelularExpresion =
+  /^(3(?:0[0-5]|1[0-9]|2[0-7]|3[0-5]|4[0-8]|5[0-7]|6[0-5]|7[0-5]|9[0-8]))\d{7}$/;
+const correoExpresion = /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6}$/;
+const cedulaExpresion = /^[0-9]{6,10}$/;
 const useStyles = makeStyles((theme) => ({
   modal: {
     position: "absolute",
-    width: "60%",
+    width: "70%",
     height: "70%",
     backgroundColor: "white",
     padding: "1%",
@@ -41,9 +46,13 @@ const useStyles = makeStyles((theme) => ({
     transform: "translate(-50%,-50%)",
     fontSize: "0.9rem",
     borderRadius: "5px",
+    overflow: "scroll",
   },
 }));
-
+let estilos = {
+  fontWeight: "bold",
+  color: "#dc3545",
+};
 function EmpleadoComponent() {
   const styles = useStyles();
   const [data, setData] = useState([]);
@@ -51,6 +60,7 @@ function EmpleadoComponent() {
   const [modalEditar, setModalEditar] = useState(false);
   const [modalEliminar, setModalEliminar] = useState(false);
   const [modalVer, setModalVer] = useState(false);
+  const [errors, setErrors] = useState([]);
 
   const [consolaSeleccionada, setConsolaSeleccionada] = useState({
     codEmpleado: "",
@@ -80,6 +90,48 @@ function EmpleadoComponent() {
     fotoEmpleado: "",
   });
 
+  const validacionesFormulario = (consolaSeleccionada) => {
+    let errors = {};
+    if (!nameRegex.test(consolaSeleccionada.nombre)) {
+      errors.nombre = "Nombre NO válido";
+    }
+    if (
+      consolaSeleccionada.nombre.length < 4 ||
+      consolaSeleccionada.nombre.length > 30
+    ) {
+      errors.nombre = "El nombre es corto o muy largo";
+    }
+    if (!nameRegex.test(consolaSeleccionada.apellido)) {
+      errors.apelldio = "Apellido NO válido";
+    }
+    if (
+      consolaSeleccionada.apellido.length < 4 ||
+      consolaSeleccionada.apellido.length > 30
+    ) {
+      errors.apellido = "Apellido es corto o muy largo";
+    }
+    if (!numeroCelularExpresion.test(consolaSeleccionada.numTelefono)) {
+      errors.numTelefono = "Número No válido";
+    }
+    if (!correoExpresion.test(consolaSeleccionada.correo)) {
+      errors.correo = "Correo No válido";
+    }
+    if (!cedulaExpresion.test(consolaSeleccionada.numDocumento)) {
+      errors.numDocumento = "Número de documento no valido";
+    }
+    if (!nameRegex.test(consolaSeleccionada.lugarOrigen)) {
+      errors.lugarOrigen = "Lugar Origen No valido";
+    }
+    if (!nameRegex.test(consolaSeleccionada.nomContactoEmergencia)) {
+      errors.nomContactoEmergencia = "Lugar Origen No valido";
+    }
+    if (
+      !numeroCelularExpresion.test(consolaSeleccionada.numContactoEmergencia)
+    ) {
+      errors.numContactoEmergencia = "Número No válido";
+    }
+    return errors;
+  };
   const handleChange = (e) => {
     const { name, value } = e.target;
     setConsolaSeleccionada((prevState) => ({
@@ -104,80 +156,92 @@ function EmpleadoComponent() {
   };
 
   const peticionPost = async (e) => {
-    console.log("data seleccioada", consolaSeleccionada);
-    const response = await axios.post(urlG, consolaSeleccionada, {
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
-      },
-    });
-    if (response.status === 200) {
-      setData(data.concat(response.data));
-      peticionGet();
-      abrirCerrarModalInsertar();
-      alert("El Empleado ha sido creado");
-    } else {
-      alert("El empleado No se ha creado correctamente");
-    }
-  };
-
-  const peticionPut = async () => {
-    //setErrors(validacionesFormulario(consolaSeleccionada));
-    console.log("esta es la data seleccionada" + consolaSeleccionada);
-    await axios
-      .request({
-        method: "put",
-        url: urlE + consolaSeleccionada.codEmpleado,
-        withCredentials: true,
-        crossdomain: true,
-        data: consolaSeleccionada,
+    // console.log("Crear Empleado", consolaSeleccionada);
+    setErrors(validacionesFormulario(consolaSeleccionada));
+    if (Object.keys(errors).length === 0) {
+      const response = await axios.post(urlG, consolaSeleccionada, {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
         },
-      })
-      .then((response) => {
-        //console.log(response.status);
-        console.log(response.data);
-        if (response.status === 201) {
-          var dataNueva = data;
-          dataNueva.map((consola) => {
-            if (consolaSeleccionada.codEmpleado === consola.codEmpleado) {
-              consola.nombre = consolaSeleccionada.nombre;
-              consola.apellido = consolaSeleccionada.apellido;
-              consola.tipDocumento.codTipoDocumento =
-                consolaSeleccionada.tipDocumento.codTipoDocumento;
-              consola.tipDocumento.nomTipoDocumento =
-                consolaSeleccionada.tipDocumento.nomTipoDocumento;
-              consola.numDocumento = consolaSeleccionada.numDocumento;
-              consola.edad = consolaSeleccionada.edad;
-              consola.numTelefono = consolaSeleccionada.numTelefono;
-              consola.correo = consolaSeleccionada.correo;
-              consola.fechaNacimiento = consolaSeleccionada.fechaNacimiento;
-              consola.direccion = consolaSeleccionada.direccion;
-              consola.nomContactoEmergencia =
-                consolaSeleccionada.nomContactoEmergencia;
-              consola.numContactoEmergencia =
-                consolaSeleccionada.numContactoEmergencia;
-              consola.eps = consolaSeleccionada.eps;
-              consola.arl = consolaSeleccionada.arl;
-              consola.sexo.codSexo = consolaSeleccionada.sexo.codSexo;
-              consola.sexo.nomSexo = consolaSeleccionada.sexo.nomSexo;
-              consola.tipoSangre.codTipoSangre =
-                consolaSeleccionada.tipoSangre.codTipoSangre;
-              consola.tipoSangre.nomTipoSangre =
-                consolaSeleccionada.tipoSangre.nomTipoSangre;
-              consola.fotoEmpleado = consolaSeleccionada.fotoEmpleado;
-            }
-          });
-          setData(dataNueva);
-          peticionGet();
-          abrirCerrarModalEditar();
-          alert("El empleado ha sido actualizado");
-        }
-      })
-      .catch((error) => {
-        alert("Error al editar empleado");
-        console.log("Error editar empleado", error);
       });
+      if (response.status === 201) {
+        setData(data.concat(response.data));
+        peticionGet();
+        abrirCerrarModalInsertar();
+        alert("El Empleado ha sido creado");
+      } else {
+        alert("El empleado No se ha creado correctamente");
+      }
+    } else {
+      console.log("tiene errores en crear empleado", errors);
+    }
+  };
+  const peticionPut = async () => {
+    setErrors(validacionesFormulario(consolaSeleccionada));
+    // console.log("Editar", consolaSeleccionada);
+    if (Object.keys(errors).length === 0) {
+      console.log(consolaSeleccionada);
+      await axios
+        .request({
+          method: "put",
+          url: urlE + consolaSeleccionada.codEmpleado,
+          withCredentials: true,
+          crossdomain: true,
+          data: consolaSeleccionada,
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
+          },
+        })
+        .then((response) => {
+          // console.log(response.status);
+          // console.log(response.data);
+          if (response.status === 201) {
+            var dataNueva = data;
+            dataNueva.map((consola) => {
+              if (consolaSeleccionada.codEmpleado === consola.codEmpleado) {
+                consola.nombre = consolaSeleccionada.nombre;
+                consola.apellido = consolaSeleccionada.apellido;
+                consola.tipDocumento =
+                  consolaSeleccionada.tipDocumento.codTipoDocumento;
+                consola.tipDocumento = {
+                  nomTipoDocumento:
+                    consolaSeleccionada.tipDocumento.nomTipoDocumento,
+                  codTipoDocumento:
+                    consolaSeleccionada.tipDocumento.codTipoDocumento,
+                };
+                consola.edad = consolaSeleccionada.edad;
+                consola.numTelefono = consolaSeleccionada.numTelefono;
+                consola.correo = consolaSeleccionada.correo;
+                consola.fechaNacimiento = consolaSeleccionada.fechaNacimiento;
+                consola.direccion = consolaSeleccionada.direccion;
+                consola.nomContactoEmergencia =
+                  consolaSeleccionada.nomContactoEmergencia;
+                consola.numContactoEmergencia =
+                  consolaSeleccionada.numContactoEmergencia;
+                consola.eps = consolaSeleccionada.eps;
+                consola.arl = consolaSeleccionada.arl;
+                consola.sexo.codSexo = consolaSeleccionada.sexo.codSexo;
+                consola.sexo.nomSexo = consolaSeleccionada.sexo.nomSexo;
+                consola.tipoSangre.codTipoSangre =
+                  consolaSeleccionada.tipoSangre.codTipoSangre;
+                consola.tipoSangre.nomTipoSangre =
+                  consolaSeleccionada.tipoSangre.nomTipoSangre;
+                consola.fotoEmpleado = consolaSeleccionada.fotoEmpleado;
+              }
+            });
+            setData(dataNueva);
+            peticionGet();
+            abrirCerrarModalEditar();
+            alert("El empleado ha sido actualizado");
+            setConsolaSeleccionada({});
+          }
+          setErrors({});
+        })
+        .catch((error) => {
+          alert("Error al editar empleado");
+          console.log("Error editar empleado", error);
+        });
+    }
   };
 
   const peticionDelete = async () => {
@@ -221,7 +285,7 @@ function EmpleadoComponent() {
     setModalVer(!modalVer);
   };
   const seleccionarEmpleado = (consola, caso) => {
-    console.log(consola);
+    // console.log(consola);
     setConsolaSeleccionada({
       codEmpleado: consola[0],
       nombre: consola[1],
@@ -250,7 +314,7 @@ function EmpleadoComponent() {
       },
       fotoEmpleado: consola[16],
     });
-    // console.log(consolaSeleccionada);
+    console.log("seleccionada", consolaSeleccionada);
     if (caso === "Editar") {
       abrirCerrarModalEditar();
     }
@@ -275,6 +339,11 @@ function EmpleadoComponent() {
               className="form-control"
               onChange={handleChange}
             />
+            {errors.nombre && (
+              <div style={estilos}>
+                <p>{errors.nombre}</p>
+              </div>
+            )}
           </FormGroup>
           <FormGroup className="me-2">
             <Label for="exampleEmail">Apellido</Label>
@@ -284,9 +353,17 @@ function EmpleadoComponent() {
               className="form-control"
               onChange={handleChange}
             />
+            {errors.apellido && (
+              <div style={estilos}>
+                <p>{errors.apellido}</p>
+              </div>
+            )}
           </FormGroup>
 
-          <FormGroup className="me-2">
+          <FormGroup
+            className="me-2"
+            style={{ width: "300px", margin: "20px" }}
+          >
             <Label for="exampleEmail">Tipo Documento</Label>
             <TipoDocumento
               name="tipDocumento"
@@ -295,25 +372,20 @@ function EmpleadoComponent() {
           </FormGroup>
 
           <FormGroup className="me-2">
-            <Label for="exampleEmail">Número identidad</Label>
+            <Label for="exampleEmail">Número Documento</Label>
             <input
               name="numDocumento"
               placeholder="Número Documento"
               className="form-control"
               onChange={handleChange}
             />
-          </FormGroup>
-          <FormGroup className="me-2">
-            <Label for="exampleEmail">Edad</Label>
-            <input
-              name="edad"
-              placeholder="Edad"
-              className="form-control"
-              onChange={handleChange}
-            />
+            {errors.numDocumento && (
+              <div style={estilos}>
+                <p>{errors.numDocumento}</p>
+              </div>
+            )}
           </FormGroup>
         </div>
-
         <div className="flex">
           <FormGroup className="me-2">
             <Label for="exampleEmail">Número Celular</Label>
@@ -323,6 +395,11 @@ function EmpleadoComponent() {
               className="form-control"
               onChange={handleChange}
             />
+            {errors.numTelefono && (
+              <div style={estilos}>
+                <p>{errors.numTelefono}</p>
+              </div>
+            )}
           </FormGroup>
 
           <FormGroup className="me-2">
@@ -333,6 +410,11 @@ function EmpleadoComponent() {
               className="form-control"
               onChange={handleChange}
             />
+            {errors.correo && (
+              <div style={estilos}>
+                <p>{errors.correo}</p>
+              </div>
+            )}
           </FormGroup>
 
           <FormGroup className="me-2">
@@ -340,6 +422,8 @@ function EmpleadoComponent() {
             <Input
               name="fechaNacimiento"
               type="date"
+              required
+              pattern="\d{4}-\d{2}-\d{2}"
               className="form-control"
               onChange={handleChange}
             />
@@ -355,13 +439,18 @@ function EmpleadoComponent() {
             />
           </FormGroup>
           <FormGroup className="me-2 w-80">
-            <Label for="exampleEmail">Nombre Contacto Emergencia</Label>
+            <Label for="exampleEmail">Nombre Emergencia</Label>
             <input
               name="nomContactoEmergencia"
               placeholder="Nombre Contacto Emergencia"
               className="form-control"
               onChange={handleChange}
             />
+            {errors.nomContactoEmergencia && (
+              <div style={estilos}>
+                <p>{errors.nomContactoEmergencia}</p>
+              </div>
+            )}
           </FormGroup>
         </div>
         <div className="flex">
@@ -373,6 +462,11 @@ function EmpleadoComponent() {
               className="form-control"
               onChange={handleChange}
             />
+            {errors.numContactoEmergencia && (
+              <div style={estilos}>
+                <p>{errors.numContactoEmergencia}</p>
+              </div>
+            )}
           </FormGroup>
 
           <FormGroup className="me-2">
@@ -393,23 +487,20 @@ function EmpleadoComponent() {
               onChange={handleChange}
             />
           </FormGroup>
-          <FormGroup className="me-2">
-            <Label for="exampleEmail">Foto</Label>
-            <input
-              name="fotoEmpleado"
-              placeholder="fotoEmpleado"
-              className="form-control"
-              onChange={handleChange}
-            />
-          </FormGroup>
         </div>
         <div className="flex">
-          <FormGroup className="me-2">
+          <FormGroup
+            className="me-2"
+            style={{ width: "300px", margin: "20px" }}
+          >
             <Label for="exampleEmail">Genero</Label>
             <GeneroEmpleado name="sexo" handleChangeData={handleChange} />
           </FormGroup>
 
-          <FormGroup className="me-2">
+          <FormGroup
+            className="me-2"
+            style={{ width: "300px", margin: "20px" }}
+          >
             <Label for="exampleEmail">Tipo Grupo Sanguineo</Label>
             <TipoSangre name="tipoSangre" handleChangeData={handleChange} />
           </FormGroup>
@@ -607,6 +698,11 @@ function EmpleadoComponent() {
               value={consolaSeleccionada?.nombre}
               placeholder={!consolaSeleccionada?.nombre ? "Nombre" : "Nombre"}
             />
+            {errors.nombre && (
+              <div style={estilos}>
+                <p>{errors.nombre}</p>
+              </div>
+            )}
           </FormGroup>
           <FormGroup className="me-2">
             <Label for="exampleEmail">Apellido</Label>
@@ -617,16 +713,23 @@ function EmpleadoComponent() {
               placeholder="Apellido"
               className="form-control"
             />
+            {errors.apellido && (
+              <div style={estilos}>
+                <p>{errors.apellido}</p>
+              </div>
+            )}
           </FormGroup>
-          <FormGroup>
-            <Label for="exampleEmail">Tipo de Documento</Label>
+          <FormGroup
+            className="me-2"
+            style={{ width: "250px", margin: "20px" }}
+          >
+            <Label for="exampleEmail">Tipo Documento</Label>
             <TipoDocumento
               name="tipDocumento"
               handleChangeData={handleChange}
               value={consolaSeleccionada.tipDocumento}
             />
           </FormGroup>
-
           <FormGroup className="me-2">
             <Label for="exampleEmail">Número Documento Indentidad</Label>
             <input
@@ -636,9 +739,13 @@ function EmpleadoComponent() {
               placeholder="Numero Identidad"
               className="form-control"
             />
+            {errors.numDocumento && (
+              <div style={estilos}>
+                <p>{errors.numDocumento}</p>
+              </div>
+            )}
           </FormGroup>
         </div>
-
         <div className="flex">
           <FormGroup className="me-2">
             <Label for="exampleEmail">Edad</Label>
@@ -650,7 +757,6 @@ function EmpleadoComponent() {
               className="form-control"
             />
           </FormGroup>
-
           <FormGroup className="me-2">
             <Label for="exampleEmail">Número de Celular</Label>
             <input
@@ -660,6 +766,11 @@ function EmpleadoComponent() {
               placeholder="Número Celular"
               className="form-control"
             />
+            {errors.numTelefono && (
+              <div style={estilos}>
+                <p>{errors.numTelefono}</p>
+              </div>
+            )}
           </FormGroup>
           <FormGroup className="me-2">
             <Label for="exampleEmail">Correo Electronico</Label>
@@ -670,13 +781,19 @@ function EmpleadoComponent() {
               placeholder="Correo Electronico"
               className="form-control"
             />
+            {errors.correo && (
+              <div style={estilos}>
+                <p>{errors.correo}</p>
+              </div>
+            )}
           </FormGroup>
-
           <FormGroup className="me-2">
             <Label for="exampleEmail">Fecha de Nacimiento</Label>
             <input
               name="fechaNacimiento"
               type="date"
+              required
+              pattern="\d{4}-\d{2}-\d{2}"
               className="form-control"
               onChange={handleChange}
               value={consolaSeleccionada && consolaSeleccionada.fechaNacimiento}
@@ -708,9 +825,7 @@ function EmpleadoComponent() {
             />
           </FormGroup>
           <FormGroup className="me-2">
-            <Label className="w-100" for="exampleEmail">
-              #Número Emergencia
-            </Label>
+            <Label for="exampleEmail">#Número Emergencia</Label>
             <input
               name="numContactoEmergencia"
               onChange={handleChange}
@@ -744,7 +859,20 @@ function EmpleadoComponent() {
               className="form-control"
             />
           </FormGroup>
-          <FormGroup className="me-2 w-100">
+          <FormGroup className="me-2">
+            <Label for="exampleEmail">Foto</Label>
+            <input
+              name="fotoEmpleado"
+              onChange={handleChange}
+              value={consolaSeleccionada && consolaSeleccionada.fotoEmpleado}
+              placeholder="foto"
+              className="form-control"
+            />
+          </FormGroup>
+          <FormGroup
+            className="me-2"
+            style={{ width: "300px", margin: "20px" }}
+          >
             <Label for="exampleEmail">Genero</Label>
             <GeneroEmpleado
               name="sexo"
@@ -753,7 +881,10 @@ function EmpleadoComponent() {
             />
           </FormGroup>
 
-          <FormGroup className="me-2 w-100">
+          <FormGroup
+            className="me-2"
+            style={{ width: "300px", margin: "20px" }}
+          >
             <Label for="exampleEmail">Tipo de Sangre</Label>
             <TipoSangre
               name="tipoSangre"
@@ -808,15 +939,10 @@ function EmpleadoComponent() {
       name: "tipDocumento",
       label: "Tipo Documento",
       options: {
-        filter: false,
-        sort: false,
         customBodyRender: (value, tableMeta, updateValue) => {
           try {
             data.map((consola, idn) => {
-              value = [
-                consola.tipDocumento.codTipoDocumento,
-                consola.tipDocumento.nomTipoDocumento,
-              ];
+              value = [consola.tipDocumento.nomTipoDocumento];
             });
           } catch (error) {
             console.log(
@@ -877,7 +1003,7 @@ function EmpleadoComponent() {
         customBodyRender: (value, tableMeta, updateValue) => {
           try {
             data.map((consola, idn) => {
-              value = [consola.sexo.codSexo, consola.sexo.nomSexo];
+              value = [consola.sexo.nomSexo];
             });
           } catch (error) {
             console.log("Error al cargar el Genero en Empleado", error);
@@ -895,10 +1021,7 @@ function EmpleadoComponent() {
         customBodyRender: (value, tableMeta, updateValue) => {
           try {
             data.map((consola, idn) => {
-              value = [
-                consola.tipoSangre.codTipoSangre,
-                consola.tipoSangre.nomTipoSangre,
-              ];
+              value = [consola.tipoSangre.nomTipoSangre];
             });
           } catch (error) {
             console.log(
@@ -909,6 +1032,10 @@ function EmpleadoComponent() {
           return value;
         },
       },
+    },
+    {
+      name: "fotoEmpleado",
+      label: "No foto",
     },
     {
       name: "acciones",
@@ -944,11 +1071,8 @@ function EmpleadoComponent() {
     },
   ];
 
-  const options = { filterType: "dropdown", responsive: "standard" };
-
   return (
     <div className="EmpleadoComponent">
-      <br></br>
       <br></br>
       <br></br>
       <div className="card shadow mb-4">
@@ -974,12 +1098,10 @@ function EmpleadoComponent() {
               title={"Lista de Empleados"}
               data={data}
               columns={columns}
-              options={options}
             />
           </div>
         </div>
       </div>
-
       <Modal open={modalInsertar} onClose={abrirCerrarModalInsertar}>
         {bodyInsertar}
       </Modal>

@@ -1,28 +1,31 @@
 import React, { useEffect, useState } from "react";
+//librerias
 import axios from "axios";
-// Reactstrap
-import { Form, FormGroup, Label } from "reactstrap";
-import { makeStyles } from "@mui/styles";
-import { Modal, Button } from "@mui/material";
+import MUIDataTable from "mui-datatables";
 //Estilos
 import "../../App.scss";
 import "../../css/Sales.css";
+import { Form, FormGroup, Label } from "reactstrap";
+import { makeStyles } from "@mui/styles";
+import { Modal, Button } from "@mui/material";
 //Iconos
-import * as MdDelete from "react-icons/md";
-// import * as BsInfoLg from "react-icons/bs";
 import * as AiFillEdit from "react-icons/ai";
+import * as MdDelete from "react-icons/md";
+//import * as BsInfoLg from "react-icons/bs";
 //url
 import { Apiurl } from "../../services/userService";
 const url = Apiurl + "producto/listarProductos";
 const urlG = Apiurl + "producto/crearProducto";
 const urlE = Apiurl + "producto/actualizarProducto/";
 const urlD = Apiurl + "producto/eliminarProducto/";
+// expresiones regulares
+const nameRegex = /^[a-zA-Z\s]+$/;
 
 const useStyles = makeStyles((them) => ({
   modal: {
     position: "absolute",
-    width: "50%",
-    height: "50%",
+    width: "60%",
+    height: "45%",
     backgroundColor: "white",
     padding: "1%",
     boder: "2px solid #000",
@@ -39,13 +42,17 @@ const useStyles = makeStyles((them) => ({
     width: "100%",
   },
 }));
-
+let estilos = {
+  fontWeight: "bold",
+  color: "#dc3545",
+};
 function Sales() {
   const styles = useStyles();
   const [data, setData] = useState([]);
   const [modalInsertar, setModalInsertar] = useState(false);
   const [modalEditar, setModalEditar] = useState(false);
   const [modalEliminar, setModalEliminar] = useState(false);
+  const [errors, setErrors] = useState([]);
 
   const [consolaSeleccionada, setConsolaSeleccionada] = useState({
     codProducto: "",
@@ -56,14 +63,39 @@ function Sales() {
     fechaRegistro: "",
     horaRegistro: "",
   });
+  const validacionesFormulario = (consolaSeleccionada) => {
+    let errors = {};
+    if (!nameRegex.test(consolaSeleccionada.nombreProducto)) {
+      errors.nombreProducto = "Nombre NO valido";
+    }
+    if (
+      consolaSeleccionada.nombreProducto.length < 4 ||
+      consolaSeleccionada.nombreProducto.length > 30
+    ) {
+      errors.nombre = "El nombre es corto o muy largo";
+    }
 
+    if (
+      consolaSeleccionada.precio.length < 3 ||
+      consolaSeleccionada.precio.length > 7
+    ) {
+      errors.precio = "Verificar el Precio";
+    }
+    if (!nameRegex.test(consolaSeleccionada.marca)) {
+      errors.marca = "El Nombre de la empresa No valido";
+    }
+    if (consolaSeleccionada.cantidad < 3 || consolaSeleccionada.cantidad > 45) {
+      errors.cantidad = "La cantidad minima es 3 y máxima 45";
+    }
+    return errors;
+  };
   const handleChange = (e) => {
     const { name, value } = e.target;
     setConsolaSeleccionada((prevState) => ({
       ...prevState,
       [name]: value,
     }));
-    console.log(consolaSeleccionada);
+    // console.log(consolaSeleccionada);
   };
   const peticionGet = async () => {
     axios
@@ -87,49 +119,65 @@ function Sales() {
       });
   };
   const peticionPost = async (e) => {
-    e.preventDefault();
-    console.log("esta es la data seleccionada", consolaSeleccionada);
-    const response = await axios.post(urlG, consolaSeleccionada, {
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
-      },
-    });
-    setData(data.concat(response.data));
-    peticionGet();
-    abrirCerrarModalInsertar();
-    alert("El producto ha sido Registrado");
+    try {
+      setErrors(validacionesFormulario(consolaSeleccionada));
+      console.log(errors);
+      if (Object.keys(errors).length === 0) {
+        e.preventDefault();
+        const response = await axios.post(urlG, consolaSeleccionada, {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
+          },
+        });
+        setData(data.concat(response.data));
+        peticionGet();
+        abrirCerrarModalInsertar();
+        alert("El producto ha sido Registrado");
+      } else {
+        alert("Error al ingresar un Producto");
+        setErrors({});
+      }
+    } catch (error) {
+      console.log("Error Al agregar un producto", error);
+    }
   };
   const peticionPut = async () => {
-    await axios
-      .request({
-        method: "put",
-        url: urlE + consolaSeleccionada.codProducto,
-        withCredentials: true,
-        crossdomain: true,
-        data: consolaSeleccionada,
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
-        },
-      })
-      .then((response) => {
-        if (response.status === 201) {
-          var dataNueva = data;
-          dataNueva.map((consola) => {
-            if (consolaSeleccionada.codProducto === consola.codProducto) {
-              consola.nombreProducto = consolaSeleccionada.nombreProducto;
-              consola.marca = consolaSeleccionada.marca;
-              consola.cantidad = consolaSeleccionada.cantidad;
-              consola.precio = consolaSeleccionada.precio;
-              consola.fechaRegistro = consolaSeleccionada.fechaRegistro;
-              consola.horaRegistro = consolaSeleccionada.horaRegistro;
-            }
-          });
-          setData(dataNueva);
-          peticionGet();
-          abrirCerrarModalEditar();
-          alert("El Producto ha sido Actualizado");
-        }
-      });
+    setErrors(validacionesFormulario(consolaSeleccionada));
+    console.log(errors);
+    if (Object.keys(errors).length === 0) {
+      await axios
+        .request({
+          method: "put",
+          url: urlE + consolaSeleccionada.codProducto,
+          withCredentials: true,
+          crossdomain: true,
+          data: consolaSeleccionada,
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
+          },
+        })
+        .then((response) => {
+          if (response.status === 201) {
+            var dataNueva = data;
+            dataNueva.map((consola) => {
+              if (consolaSeleccionada.codProducto === consola.codProducto) {
+                consola.nombreProducto = consolaSeleccionada.nombreProducto;
+                consola.marca = consolaSeleccionada.marca;
+                consola.cantidad = consolaSeleccionada.cantidad;
+                consola.precio = consolaSeleccionada.precio;
+                consola.fechaRegistro = consolaSeleccionada.fechaRegistro;
+                consola.horaRegistro = consolaSeleccionada.horaRegistro;
+              }
+            });
+            setData(dataNueva);
+            peticionGet();
+            abrirCerrarModalEditar();
+            alert("El Producto ha sido Actualizado");
+          }
+        });
+    } else {
+      alert("Error al actualizar Producto");
+    }
   };
   const peticionDelete = async () => {
     console.log(consolaSeleccionada);
@@ -167,7 +215,16 @@ function Sales() {
     setModalEliminar(!modalEliminar);
   };
   const seleccionarProducto = (consola, caso) => {
-    setConsolaSeleccionada(consola);
+    // console.log(consola);
+    setConsolaSeleccionada({
+      codProducto: consola[0],
+      nombreProducto: consola[1],
+      precio: consola[2],
+      cantidad: consola[3],
+      marca: consola[4],
+      fechaRegistro: consola[5],
+      horaRegistro: consola[6],
+    });
     if (caso === "Editar") {
       abrirCerrarModalEditar();
     }
@@ -186,49 +243,18 @@ function Sales() {
       <Form style={{ marginLeft: "3%" }}>
         <div className="flex">
           <FormGroup className="me-2">
-            <Label for="exampleEmail">Fecha de Entrada</Label>
+            <Label for="exampleEmail">Nombre Producto</Label>
             <input
-              name="fechaRegistro"
-              type="date"
-              placeholder="fechaRegistro"
+              name="nombreProducto"
+              placeholder="Nombre Producto"
               className="form-control"
               onChange={handleChange}
             />
-          </FormGroup>
-          <FormGroup className="me-2">
-            <Label for="exampleEmail">Hora de Registro</Label>
-            <input
-              name="horaRegistro"
-              type="time"
-              value="11:00"
-              min="09:00"
-              max="22:00"
-              step="30"
-              placeholder="horaRegistro"
-              className="form-control"
-              onChange={handleChange}
-            />
-          </FormGroup>
-
-          <FormGroup className="me-2">
-            <Label for="exampleEmail">Precio(Unidad)</Label>
-            <input
-              name="precio"
-              placeholder="# precio"
-              className="form-control"
-              onChange={handleChange}
-            />
-          </FormGroup>
-        </div>
-        <div className="flex">
-          <FormGroup className="me-2">
-            <Label for="exampleEmail">Unidades</Label>
-            <input
-              name="cantidad"
-              placeholder="# cantidad"
-              className="form-control"
-              onChange={handleChange}
-            />
+            {errors.nombreProducto && (
+              <div style={estilos}>
+                <p>{errors.nombreProducto}</p>
+              </div>
+            )}
           </FormGroup>
           <FormGroup className="me-2">
             <Label for="exampleEmail">Empresa</Label>
@@ -238,15 +264,39 @@ function Sales() {
               className="form-control"
               onChange={handleChange}
             />
+            {errors.marca && (
+              <div style={estilos}>
+                <p>{errors.marca}</p>
+              </div>
+            )}
+          </FormGroup>{" "}
+          <FormGroup className="me-2">
+            <Label for="exampleEmail">Precio(Unidad)</Label>
+            <input
+              name="precio"
+              placeholder="# precio"
+              className="form-control"
+              onChange={handleChange}
+            />{" "}
+            {errors.precio && (
+              <div style={estilos}>
+                <p>{errors.precio}</p>
+              </div>
+            )}
           </FormGroup>
           <FormGroup className="me-2">
-            <Label for="exampleEmail">Nombre Producto</Label>
+            <Label for="exampleEmail">Unidades</Label>
             <input
-              name="nombreProducto"
-              placeholder="Nombre Producto"
+              name="cantidad"
+              placeholder="# cantidad"
               className="form-control"
               onChange={handleChange}
             />
+            {errors.cantidad && (
+              <div style={estilos}>
+                <p>{errors.cantidad}</p>
+              </div>
+            )}
           </FormGroup>
         </div>
       </Form>
@@ -269,49 +319,19 @@ function Sales() {
       <Form style={{ marginLeft: "3%" }}>
         <div className="flex">
           <FormGroup className="me-2">
-            <Label for="exampleEmail">Fecha de Entrada</Label>
+            <Label for="exampleEmail">Nombre Producto</Label>
             <input
-              className="form-control"
-              name="fechaRegistro"
-              onChange={handleChange}
-              value={consolaSeleccionada?.fechaRegistro}
-              type="date"
-              placeholder="fechaRegistro"
-            />
-          </FormGroup>
-          <FormGroup className="me-2">
-            <Label for="exampleEmail">Hora de Registro</Label>
-            <input
-              name="horaRegistro"
-              type="time"
-              value={consolaSeleccionada?.horaRegistro}
-              placeholder="horaRegistro"
+              name="nombreProducto"
+              placeholder="Nombre Producto"
               className="form-control"
               onChange={handleChange}
+              value={consolaSeleccionada && consolaSeleccionada.nombreProducto}
             />
-          </FormGroup>
-
-          <FormGroup className="me-2">
-            <Label for="exampleEmail">Precio(Unidad)</Label>
-            <input
-              name="precio"
-              placeholder="# precio"
-              className="form-control"
-              onChange={handleChange}
-              value={consolaSeleccionada && consolaSeleccionada.precio}
-            />
-          </FormGroup>
-        </div>
-        <div className="flex">
-          <FormGroup className="me-2">
-            <Label for="exampleEmail">Unidades</Label>
-            <input
-              name="cantidad"
-              placeholder="# cantidad"
-              className="form-control"
-              onChange={handleChange}
-              value={consolaSeleccionada && consolaSeleccionada.cantidad}
-            />
+            {errors.nombreProducto && (
+              <div style={estilos}>
+                <p>{errors.nombreProducto}</p>
+              </div>
+            )}
           </FormGroup>
           <FormGroup className="me-2">
             <Label for="exampleEmail">Empresa</Label>
@@ -322,16 +342,41 @@ function Sales() {
               onChange={handleChange}
               value={consolaSeleccionada && consolaSeleccionada.marca}
             />
+            {errors.marca && (
+              <div style={estilos}>
+                <p>{errors.marca}</p>
+              </div>
+            )}
           </FormGroup>
           <FormGroup className="me-2">
-            <Label for="exampleEmail">Nombre Producto</Label>
+            <Label for="exampleEmail">Precio(Unidad)</Label>
             <input
-              name="nombreProducto"
-              placeholder="Nombre Producto"
+              name="precio"
+              placeholder="# precio"
               className="form-control"
               onChange={handleChange}
-              value={consolaSeleccionada && consolaSeleccionada.nombreProducto}
+              value={consolaSeleccionada && consolaSeleccionada.precio}
             />
+            {errors.precio && (
+              <div style={estilos}>
+                <p>{errors.precio}</p>
+              </div>
+            )}
+          </FormGroup>
+          <FormGroup className="me-2">
+            <Label for="exampleEmail">Unidades</Label>
+            <input
+              name="cantidad"
+              placeholder="# cantidad"
+              className="form-control"
+              onChange={handleChange}
+              value={consolaSeleccionada && consolaSeleccionada.cantidad}
+            />
+            {errors.cantidad && (
+              <div style={estilos}>
+                <p>{errors.cantidad}</p>
+              </div>
+            )}
           </FormGroup>
         </div>
       </Form>
@@ -407,7 +452,46 @@ function Sales() {
       name: "horaRegistro",
       label: "Hora Registro",
     },
+    {
+      name: "Acciones",
+      label: "Acciones",
+      options: {
+        filter: false,
+        sort: false,
+        customBodyRender: (value, tableMeta, UpdateValue) => {
+          return (
+            <div>
+              <Button
+                variant="contained"
+                color="primary"
+                className="flex"
+                onClick={() => seleccionarProducto(tableMeta.rowData, "Editar")}
+              >
+                <MdDelete.MdDelete className="me-2" />
+                Editar
+              </Button>
+
+              <Button
+                variant="contained"
+                color="secondary"
+                className="flex"
+                onClick={() =>
+                  seleccionarProducto(tableMeta.rowData, "Eliminar")
+                }
+              >
+                <AiFillEdit.AiFillEdit className="me-2" />
+                Eliminar
+              </Button>
+            </div>
+          );
+        },
+      },
+    },
   ];
+  const options = {
+    filterType: "dropdown",
+    responsive: "standard",
+  };
   return (
     <div className="Productos">
       <br />
@@ -428,54 +512,12 @@ function Sales() {
           </button>
         </div>
         <div className="card-body">
-          <div className="table-responsive">
-            <table className="table table-bordered" cellSpacing="0">
-              <thead>
-                <tr>
-                  <th>Nombre</th>
-                  <th>Precio</th>
-                  <th>Unidades</th>
-                  <th> Marca</th>
-                  <th>Fecha de ingreso</th>
-                  <th>Hora de registro</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.map((consola) => {
-                  return (
-                    <tr key={consola.codProducto}>
-                      <th>{consola.nombreProducto}</th>
-                      <th>{consola.precio}</th>
-                      <th>{consola.cantidad}</th>
-                      <th>{consola.marca}</th>
-                      <th>{consola.fechaRegistro}</th>
-                      <th>{consola.horaRegistro}</th>
-                      <th>
-                        <Button
-                          className="flex"
-                          onClick={() =>
-                            seleccionarProducto(consola, "Eliminar")
-                          }
-                        >
-                          <MdDelete.MdDelete className="me-2" />
-                          Eliminar
-                        </Button>
-
-                        <Button
-                          className="flex"
-                          onClick={() => seleccionarProducto(consola, "Editar")}
-                        >
-                          <AiFillEdit.AiFillEdit className="me-2" />
-                          Editar
-                        </Button>
-                      </th>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+          <MUIDataTable
+            title={"Lista de Productos"}
+            data={data}
+            columns={columns}
+            options={options}
+          />
         </div>
       </div>
       <Modal open={modalInsertar} onClose={abrirCerrarModalInsertar}>
