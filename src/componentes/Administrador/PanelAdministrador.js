@@ -12,6 +12,8 @@ import EmpleadoComponent from "../Empleado/EmpleadoComponent";
 import Habitacion from "../pagesAdministrador/Habitacion";
 import "../../App.scss";
 import Recibos from "../pagesAdministrador/Recibos";
+import Tarea from "../pagesAdministrador/Tarea";
+import Comentario from "../pagesAdministrador/Comentario";
 
 function PanelAdministrador({ nombre, apellido }) {
   return (
@@ -37,6 +39,8 @@ function PanelAdministrador({ nombre, apellido }) {
           />
           <Route path="/Habitacion" exact={true} element={<Habitacion />} />
           <Route path="/Recibos" exact={true} element={<Recibos />} />
+          <Route path="/Tarea" exact={true} element={<Tarea />} />
+          <Route path="/Comentario" exact={true} element={<Comentario />} />
         </Routes>
       </div>
     </div>

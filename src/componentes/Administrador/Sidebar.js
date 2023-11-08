@@ -130,7 +130,7 @@ const Sidebar = () => {
           <li className="nav-item active">
             <NavLink
               className="text-blue rounded py-2 w-100 d-inline-block px-1"
-              to="Home"
+              to="Tarea"
               activeclassname="active"
             >
               <GrWorkshop.GrWorkshop className="me-2" />
@@ -140,7 +140,7 @@ const Sidebar = () => {
           <li className="nav-item active">
             <NavLink
               className="text-blue rounded py-2 w-100 d-inline-block px-1"
-              to="Home"
+              to="Comentario"
               activeclassname="active"
             >
               <AiOutlineMessage.AiOutlineMessage className="me-2" />

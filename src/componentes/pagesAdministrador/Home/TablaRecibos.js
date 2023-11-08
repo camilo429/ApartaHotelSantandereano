@@ -4,16 +4,16 @@ import React, { useEffect, useState } from "react";
 import { Apiurl } from "../../../services/userService";
 import axios from "axios";
 import { makeStyles } from "@mui/styles";
-import { Form, FormGroup, Label } from "reactstrap";
+import { Form, FormGroup, Label, Input } from "reactstrap";
 //iconos
 import { Modal, Button } from "@mui/material";
-// import * as AiFillEdit from "react-icons/ai";
-// import * as MdDelete from "react-icons/md";
-
+import * as AiFillEdit from "react-icons/ai";
+import * as MdDelete from "react-icons/md";
+import Empresa from "./Empresa";
 const url = Apiurl + "recibosPublicos/listarRecibosPublicos";
 const urlG = Apiurl + "recibosPublicos/crearReciboPublico";
 // const urlE = Apiurl + "recibosPublicos/actualizarEmpleado/";
-// const urlD = Apiurl + "recibosPublicos/eliminarRegistro/";
+const urlD = Apiurl + "recibosPublicos/eliminarRegistro/";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -43,6 +43,10 @@ const useEstilo = makeStyles((theme) => ({
     transform: "translate(-50%,-50%)",
   },
 }));
+let estilos = {
+  fontWeight: "bold",
+  color: "#dc3545",
+};
 function TablaRecibos() {
   const styles = useStyles();
   const estilo = useEstilo();
@@ -65,6 +69,17 @@ function TablaRecibos() {
     totalPagar: "",
     docRecibo: "",
   });
+
+  const validacionesFormulario = (consolaSeleccionada) => {
+    let errors = {};
+    if (
+      consolaSeleccionada.numReferencia.length < 4 ||
+      consolaSeleccionada.numReferencia.length > 30
+    ) {
+      errors.nombre = "El número es muy corto o muy largo";
+    }
+    return errors;
+  };
   const handleChange = (e) => {
     const { name, value } = e.target;
     setConsolaSeleccionada((prevState) => ({
@@ -96,7 +111,6 @@ function TablaRecibos() {
   const peticionPost = async () => {
     try {
       setErrors(validacionesFormulario(consolaSeleccionada));
-      console.log(errors);
       if (Object.keys(errors).length === 0) {
         const response = await axios.post(urlG, consolaSeleccionada, {
           headers: {
@@ -126,10 +140,34 @@ function TablaRecibos() {
         alert("Error al insertar un recibo");
         console.log(error);
       } else {
-        console.log(error.response.status);
+        console.log(error);
       }
     }
   };
+  const peticionDelete = async () => {
+    axios
+      .request({
+        method: "delete",
+        url: urlD + consolaSeleccionada.codRecibo,
+        withCredentials: true,
+        crossdomain: true,
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
+        },
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          setData(
+            data.filter(
+              (consola) => consola.codRecibo !== consolaSeleccionada.codRecibo
+            )
+          );
+          abrirCerrarModalEliminar();
+          setErrors({});
+        }
+      });
+  };
+
   const abrirCerrarModalInsertar = () => {
     setModalInsertar(!modalInsertar);
   };
@@ -142,6 +180,32 @@ function TablaRecibos() {
   const abrirCerrarModalVer = () => {
     setModalVer(!modalVer);
   };
+  const seleccionarRecibo = (consola, caso) => {
+    // console.log(consola);
+    setConsolaSeleccionada({
+      codRecibo: consola[0],
+      tipRecibo: {
+        codTipRecibo: consola[1].codTipRecibo,
+        empresaPub: consola[1].empresaPub,
+      },
+      numReferencia: consola[2],
+      pagoOportuno: consola[3],
+      supension: consola[4],
+      totalPagar: consola[5],
+      docRecibo: consola[6],
+    });
+    console.log("seleccionada", consolaSeleccionada);
+    if (caso === "Editar") {
+      abrirCerrarModalEditar();
+    }
+    if (caso === "Eliminar") {
+      abrirCerrarModalEliminar();
+    }
+    if (caso === "Ver") {
+      abrirCerrarModalVer();
+    }
+  };
+
   const columns = [
     {
       name: "codRecibo",
@@ -154,7 +218,7 @@ function TablaRecibos() {
         customBodyRender: (value, tableMeta, updateValue) => {
           try {
             data.map((consola, idn) => {
-              value = [consola.tipRecibo.empresaPub];
+              value = consola.tipRecibo.empresaPub;
             });
           } catch (error) {
             console.log("Error Al cargar tipo de empresa tabla Recibos", error);
@@ -183,6 +247,36 @@ function TablaRecibos() {
       name: "docRecibo",
       label: "ReciboUrl",
     },
+    {
+      name: "acciones",
+      label: "Acciones",
+      options: {
+        filter: false,
+        sort: false,
+        customBodyRender: (value, tableMeta, updateValue) => {
+          return (
+            <div>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => seleccionarRecibo(tableMeta.rowData, "Editar")}
+              >
+                <AiFillEdit.AiFillEdit className="me-2" />
+                Editar
+              </Button>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => seleccionarRecibo(tableMeta.rowData, "Eliminar")}
+              >
+                <MdDelete.MdDelete className="me-2" />
+                Eliminar
+              </Button>
+            </div>
+          );
+        },
+      },
+    },
   ];
 
   const bodyInsertar = (
@@ -190,11 +284,19 @@ function TablaRecibos() {
       <h3>Agregar Recibo</h3>
       <Form>
         <div className="flex">
+          <FormGroup
+            className="me-2"
+            style={{ width: "300px", margin: "20px" }}
+          >
+            <Label for="exampleEmail">Empresa</Label>
+            <Empresa name="tipRecibo" handleChangeData={handleChange} />
+          </FormGroup>
           <FormGroup className="me-2">
             <Label for="exampleEmail">numReferencia</Label>
             <input
               className="form-control"
               name="numReferencia"
+              type="number"
               onChange={handleChange}
               placeholder={
                 !consolaSeleccionada?.nombre ? "numReferencia" : "numReferencia"
@@ -207,14 +309,14 @@ function TablaRecibos() {
             )}
           </FormGroup>
           <FormGroup className="me-2">
-            <Label for="pagoOportuno">pagoOportuno</Label>
-            <input
-              className="form-control"
+            <Label for="pagoOportuno">Fecha Limite</Label>
+            <Input
               name="pagoOportuno"
+              type="date"
+              required
+              pattern="\d{4}-\d{2}-\d{2}"
+              className="form-control"
               onChange={handleChange}
-              placeholder={
-                !consolaSeleccionada?.apellido ? "pagoOportuno" : "pagoOportuno"
-              }
             />
             {errors.pagoOportuno && (
               <div style={estilos}>
@@ -222,15 +324,17 @@ function TablaRecibos() {
               </div>
             )}
           </FormGroup>
+        </div>
+        <div className="flex">
           <FormGroup className="me-2">
-            <Label for="exampleEmail">supension </Label>
-            <input
-              className="form-control"
+            <Label for="exampleEmail">Fecha Suspensión </Label>
+            <Input
               name="supension"
+              type="date"
+              required
+              pattern="\d{4}-\d{2}-\d{2}"
+              className="form-control"
               onChange={handleChange}
-              placeholder={
-                !consolaSeleccionada?.supension ? "supension" : "supension"
-              }
             />
             {errors.supension && (
               <div style={estilos}>
@@ -243,6 +347,7 @@ function TablaRecibos() {
             <input
               className="form-control"
               name="totalPagar"
+              type="number"
               onChange={handleChange}
               placeholder={
                 !consolaSeleccionada?.totalPagar ? "totalPagar " : "totalPagar"
@@ -254,17 +359,14 @@ function TablaRecibos() {
               </div>
             )}
           </FormGroup>
-        </div>
-        <div className="flex">
           <FormGroup className="me-2">
             <Label for="exampleEmail">docRecibo </Label>
             <input
               className="form-control"
               name="docRecibo"
               onChange={handleChange}
-              placeholder={
-                !consolaSeleccionada?.docRecibo ? "docRecibo" : "docRecibo"
-              }
+              placeholder={!consolaSeleccionada?.docRecibo ? "url" : "URL"}
+              readOnly
             />
             {errors.docRecibo && (
               <div style={estilos}>
