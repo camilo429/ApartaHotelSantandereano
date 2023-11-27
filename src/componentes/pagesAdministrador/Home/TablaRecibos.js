@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
   modal: {
     position: "absolute",
     width: "60%",
-    height: "70%",
+    height: "50%",
     backgroundColor: "white",
     padding: "1%",
     boder: "2px solid #000",
@@ -52,7 +52,6 @@ function TablaRecibos() {
   const estilo = useEstilo();
   const [data, setData] = useState([]);
   const [modalInsertar, setModalInsertar] = useState(false);
-  const [modalEditar, setModalEditar] = useState(false);
   const [modalEliminar, setModalEliminar] = useState(false);
   const [modalVer, setModalVer] = useState(false);
   const [errors, setErrors] = useState([]);
@@ -171,9 +170,6 @@ function TablaRecibos() {
   const abrirCerrarModalInsertar = () => {
     setModalInsertar(!modalInsertar);
   };
-  const abrirCerrarModalEditar = () => {
-    setModalEditar(!modalEditar);
-  };
   const abrirCerrarModalEliminar = () => {
     setModalEliminar(!modalEliminar);
   };
@@ -195,89 +191,13 @@ function TablaRecibos() {
       docRecibo: consola[6],
     });
     console.log("seleccionada", consolaSeleccionada);
-    if (caso === "Editar") {
-      abrirCerrarModalEditar();
+    if (caso === "Ver") {
+      abrirCerrarModalVer();
     }
     if (caso === "Eliminar") {
       abrirCerrarModalEliminar();
     }
-    if (caso === "Ver") {
-      abrirCerrarModalVer();
-    }
   };
-
-  const columns = [
-    {
-      name: "codRecibo",
-      label: "Código",
-    },
-    {
-      name: "tipRecibo",
-      label: "Empresa",
-      options: {
-        customBodyRender: (value, tableMeta, updateValue) => {
-          try {
-            data.map((consola, idn) => {
-              value = consola.tipRecibo.empresaPub;
-            });
-          } catch (error) {
-            console.log("Error Al cargar tipo de empresa tabla Recibos", error);
-          }
-          return value;
-        },
-      },
-    },
-    {
-      name: "numReferencia",
-      label: "Número Referencia",
-    },
-    {
-      name: "pagoOportuno",
-      label: "Fecha Limite",
-    },
-    {
-      name: "supension",
-      label: "Fecha Suspensión",
-    },
-    {
-      name: "totalPagar",
-      label: "totalPagar",
-    },
-    {
-      name: "docRecibo",
-      label: "ReciboUrl",
-    },
-    {
-      name: "acciones",
-      label: "Acciones",
-      options: {
-        filter: false,
-        sort: false,
-        customBodyRender: (value, tableMeta, updateValue) => {
-          return (
-            <div>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => seleccionarRecibo(tableMeta.rowData, "Editar")}
-              >
-                <AiFillEdit.AiFillEdit className="me-2" />
-                Editar
-              </Button>
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={() => seleccionarRecibo(tableMeta.rowData, "Eliminar")}
-              >
-                <MdDelete.MdDelete className="me-2" />
-                Eliminar
-              </Button>
-            </div>
-          );
-        },
-      },
-    },
-  ];
 
   const bodyInsertar = (
     <div className={styles.modal}>
@@ -384,106 +304,6 @@ function TablaRecibos() {
       </div>
     </div>
   );
-  const bodyEditar = (
-    <div className={styles.modal}>
-      <h3>Agregar Huesped</h3>
-      <Form>
-        <div className="flex">
-          <FormGroup className="me-2">
-            <Label for="exampleEmail">numReferencia</Label>
-            <input
-              className="form-control"
-              name="numReferencia"
-              onChange={handleChange}
-              placeholder={
-                !consolaSeleccionada?.nombre ? "numReferencia" : "numReferencia"
-              }
-            />
-            {errors.numReferencia && (
-              <div style={estilos}>
-                <p>{errors.numReferencia}</p>
-              </div>
-            )}
-          </FormGroup>
-          <FormGroup className="me-2">
-            <Label for="pagoOportuno">pagoOportuno</Label>
-            <input
-              className="form-control"
-              name="pagoOportuno"
-              onChange={handleChange}
-              placeholder={
-                !consolaSeleccionada?.apellido ? "pagoOportuno" : "pagoOportuno"
-              }
-            />
-            {errors.pagoOportuno && (
-              <div style={estilos}>
-                <p>{errors.pagoOportuno}</p>
-              </div>
-            )}
-          </FormGroup>
-          <FormGroup className="me-2">
-            <Label for="exampleEmail">supension </Label>
-            <input
-              className="form-control"
-              name="supension"
-              onChange={handleChange}
-              placeholder={
-                !consolaSeleccionada?.supension ? "supension" : "supension"
-              }
-            />
-            {errors.supension && (
-              <div style={estilos}>
-                <p>{errors.supension}</p>
-              </div>
-            )}
-          </FormGroup>
-        </div>
-
-        <div className="flex">
-          <FormGroup className="me-2">
-            <Label for="email">totalPagar </Label>
-            <input
-              className="form-control"
-              name="totalPagar"
-              onChange={handleChange}
-              placeholder={
-                !consolaSeleccionada?.totalPagar ? "totalPagar " : "totalPagar"
-              }
-            />
-            {errors.totalPagar && (
-              <div style={estilos}>
-                <p>{errors.totalPagar}</p>
-              </div>
-            )}
-          </FormGroup>
-        </div>
-        <div className="flex">
-          <FormGroup className="me-2">
-            <Label for="exampleEmail">docRecibo </Label>
-            <input
-              className="form-control"
-              name="docRecibo"
-              onChange={handleChange}
-              placeholder={
-                !consolaSeleccionada?.docRecibo ? "docRecibo" : "docRecibo"
-              }
-            />
-            {errors.docRecibo && (
-              <div style={estilos}>
-                <p>{errors.docRecibo}</p>
-              </div>
-            )}
-          </FormGroup>
-        </div>
-      </Form>
-      <div align="right">
-        <Button color="primary" onClick={(e) => peticionPost(e)}>
-          Insertar
-        </Button>
-        <Button onClick={() => abrirCerrarModalInsertar()}>Cancelar</Button>
-      </div>
-    </div>
-  );
   const bodyEliminar = (
     <div className={estilo.modal}>
       <p>
@@ -502,18 +322,20 @@ function TablaRecibos() {
   );
   const bodyVer = (
     <div className={styles.modal}>
-      <h3>Agregar Huesped</h3>
+      <h3>Detalles Recibo</h3>
       <Form>
         <div className="flex">
           <FormGroup className="me-2">
-            <Label for="exampleEmail">numReferencia</Label>
+            <Label for="exampleEmail">Número de Referencia</Label>
             <input
               className="form-control"
               name="numReferencia"
               onChange={handleChange}
+              value={consolaSeleccionada?.numReferencia}
               placeholder={
                 !consolaSeleccionada?.nombre ? "numReferencia" : "numReferencia"
               }
+              readOnly
             />
             {errors.numReferencia && (
               <div style={estilos}>
@@ -522,14 +344,16 @@ function TablaRecibos() {
             )}
           </FormGroup>
           <FormGroup className="me-2">
-            <Label for="pagoOportuno">pagoOportuno</Label>
+            <Label for="pagoOportuno">Fecha de Pago</Label>
             <input
               className="form-control"
               name="pagoOportuno"
               onChange={handleChange}
+              value={consolaSeleccionada?.pagoOportuno}
               placeholder={
                 !consolaSeleccionada?.apellido ? "pagoOportuno" : "pagoOportuno"
               }
+              readOnly
             />
             {errors.pagoOportuno && (
               <div style={estilos}>
@@ -538,14 +362,16 @@ function TablaRecibos() {
             )}
           </FormGroup>
           <FormGroup className="me-2">
-            <Label for="exampleEmail">supension </Label>
+            <Label for="exampleEmail">Fecha de Suspensión </Label>
             <input
               className="form-control"
               name="supension"
               onChange={handleChange}
+              value={consolaSeleccionada?.supension}
               placeholder={
                 !consolaSeleccionada?.supension ? "supension" : "supension"
               }
+              readOnly
             />
             {errors.supension && (
               <div style={estilos}>
@@ -557,14 +383,16 @@ function TablaRecibos() {
 
         <div className="flex">
           <FormGroup className="me-2">
-            <Label for="email">totalPagar </Label>
+            <Label for="email">Total a Pagar </Label>
             <input
               className="form-control"
               name="totalPagar"
               onChange={handleChange}
+              value={consolaSeleccionada?.totalPagar}
               placeholder={
                 !consolaSeleccionada?.totalPagar ? "totalPagar " : "totalPagar"
               }
+              readOnly
             />
             {errors.totalPagar && (
               <div style={estilos}>
@@ -572,17 +400,17 @@ function TablaRecibos() {
               </div>
             )}
           </FormGroup>
-        </div>
-        <div className="flex">
           <FormGroup className="me-2">
             <Label for="exampleEmail">docRecibo </Label>
             <input
               className="form-control"
               name="docRecibo"
               onChange={handleChange}
+              value={consolaSeleccionada?.docRecibo}
               placeholder={
                 !consolaSeleccionada?.docRecibo ? "docRecibo" : "docRecibo"
               }
+              readOnly
             />
             {errors.docRecibo && (
               <div style={estilos}>
@@ -593,13 +421,82 @@ function TablaRecibos() {
         </div>
       </Form>
       <div align="right">
-        <Button color="primary" onClick={(e) => peticionPost(e)}>
-          Insertar
-        </Button>
-        <Button onClick={() => abrirCerrarModalInsertar()}>Cancelar</Button>
+        <Button onClick={() => abrirCerrarModalVer()}>Volver</Button>
       </div>
     </div>
   );
+  const columns = [
+    {
+      name: "codRecibo",
+      label: "Código",
+    },
+    {
+      name: "tipRecibo",
+      label: "Empresa",
+      options: {
+        customBodyRender: (value, tableMeta, updateValue) => {
+          try {
+            data.map((consola, idn) => {
+              value = consola.tipRecibo.empresaPub;
+            });
+          } catch (error) {
+            console.log("Error Al cargar tipo de empresa tabla Recibos", error);
+          }
+          return value;
+        },
+      },
+    },
+    {
+      name: "numReferencia",
+      label: "Número Referencia",
+    },
+    {
+      name: "pagoOportuno",
+      label: "Fecha Limite",
+    },
+    {
+      name: "supension",
+      label: "Fecha Suspensión",
+    },
+    {
+      name: "totalPagar",
+      label: "totalPagar",
+    },
+    {
+      name: "docRecibo",
+      label: "ReciboUrl",
+    },
+    {
+      name: "acciones",
+      label: "Acciones",
+      options: {
+        filter: false,
+        sort: false,
+        customBodyRender: (value, tableMeta, updateValue) => {
+          return (
+            <div>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => seleccionarRecibo(tableMeta.rowData, "Ver")}
+              >
+                <AiFillEdit.AiFillEdit className="me-2" />
+                Ver
+              </Button>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => seleccionarRecibo(tableMeta.rowData, "Eliminar")}
+              >
+                <MdDelete.MdDelete className="me-2" />
+                Eliminar
+              </Button>
+            </div>
+          );
+        },
+      },
+    },
+  ];
 
   useEffect(() => {
     peticionGet();
@@ -633,11 +530,6 @@ function TablaRecibos() {
       <Modal open={modalInsertar} onClose={abrirCerrarModalInsertar}>
         {bodyInsertar}
       </Modal>
-
-      <Modal open={modalEditar} onClose={abrirCerrarModalEditar}>
-        {bodyEditar}
-      </Modal>
-
       <Modal open={modalEliminar} onClose={abrirCerrarModalEliminar}>
         {bodyEliminar}
       </Modal>

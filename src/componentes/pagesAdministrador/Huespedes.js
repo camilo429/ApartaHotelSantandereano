@@ -20,6 +20,7 @@ import Nacionalidades from "../../componentes/pagesAdministrador/Nacionalidades"
 import TipoDocumento from "./TipoDocumento";
 // url
 import { Apiurl } from "../../services/userService";
+// import { useLoaderData } from "react-router-dom";
 const url = Apiurl + "huespedes/listarHuespedes";
 const urlG = Apiurl + "huespedes/crearHuesped";
 const urlE = Apiurl + "huespedes/actualizarHuesped/";
@@ -67,7 +68,7 @@ function Huespedes() {
   const styles = useStyles();
   const estilo = useEstilo();
   const [data, setData] = useState([]);
-  const [errors, setErrors] = useState([]);
+  const [errors, setErrors] = useState({});
   const [modalInsertar, setModalInsertar] = useState(false);
   const [modalEditar, setModalEditar] = useState(false);
   const [modalEliminar, setModalEliminar] = useState(false);
@@ -160,11 +161,11 @@ function Huespedes() {
       .then((response) => {
         if (response.status === 200) {
           setData(response.data);
-          // console.log(response.data);
         }
       })
       .catch((error) => {
-        alert("No hay huespedes registrados!!");
+        console.error("Error al obtener los huespedes:", error);
+        setErrors({ message: "No hay Huéspedes registrados." });
       });
   };
 
@@ -308,10 +309,6 @@ function Huespedes() {
       apellido: consola[2],
       numCelular: consola[3],
       correo: consola[4],
-      tipoDocumento: {
-        codTipoDocumento: consola[5].codTipoDocumento,
-        nomTipoDocumento: consola[5].nomTipoDocumento,
-      },
       numDocumento: consola[6],
       nacionalidad: {
         codNacion: consola[7].codNacion,
@@ -923,20 +920,8 @@ function Huespedes() {
       label: "Tipo Documento",
       options: {
         filter: false,
-        sort: false,
-        customBodyRender: (value, tableMeta, updateValue) => {
-          // Accede a la propiedad anidada y muestra su valor
-          try {
-            data.map((consola, ind) => {
-              value = [
-                consola.tipoDocumento.codTipoDocumento,
-                consola.tipoDocumento.nomTipoDocumento,
-              ];
-            });
-          } catch (error) {
-            console.log("Error al cargar los tipos documentos en Huespedes");
-          }
-          return value; // Esto mostrará el valor de tipoDocumento.nomTipoDocumento en la celda
+        customBodyRender: (value, tableMeta) => {
+          return `${value.codTipoDocumento} (${value.nomTipoDocumento})`;
         },
       },
     },
@@ -960,7 +945,7 @@ function Huespedes() {
               ];
             });
           } catch (error) {
-            console.log("Error al cargar los tipos documentos en Huespedes");
+            console.log("Error al cargar nacionalidades  en Huespedes");
           }
           return value; // Esto mostrará el valor de tipoDocumento.nomTipoDocumento en la celda
         },

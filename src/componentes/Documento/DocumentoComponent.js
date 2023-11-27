@@ -51,6 +51,7 @@ function DocumentoComponent() {
   const [modalEliminar, setModalEliminar] = useState(false);
 
   const [consolaSeleccionada, setConsolaSeleccionada] = useState({
+    codTipoDocumento: "",
     tipDocumento: "",
   });
 
