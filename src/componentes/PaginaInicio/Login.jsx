@@ -8,7 +8,7 @@ import axios from "axios";
 import $ from "jquery";
 import jwt_decode from "jwt-decode";
 //Componentenes
-import Navbar from "./Navbar";
+import NavbarInicio from "./Navbar/NavbarInicio";
 import Footer from "./Footer";
 import { WindowSharp } from "@mui/icons-material";
 class Login extends React.Component {
@@ -106,7 +106,7 @@ class Login extends React.Component {
   render() {
     return (
       <div>
-        <Navbar />
+        <NavbarInicio />
         <div className="login">
           <form onSubmit={this.manejadorSubmit}>
             <input

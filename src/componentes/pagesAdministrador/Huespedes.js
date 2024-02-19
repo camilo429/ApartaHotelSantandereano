@@ -20,6 +20,7 @@ import Nacionalidades from "../../componentes/pagesAdministrador/Nacionalidades"
 import TipoDocumento from "./TipoDocumento";
 // url
 import { Apiurl } from "../../services/userService";
+//import { wait } from "@testing-library/user-event/dist/utils";
 // import { useLoaderData } from "react-router-dom";
 const url = Apiurl + "huespedes/listarHuespedes";
 const urlG = Apiurl + "huespedes/crearHuesped";
@@ -217,6 +218,7 @@ function Huespedes() {
 
   const peticionPut = async () => {
     setErrors(validacionesFormulario(consolaSeleccionada));
+    console.log(Object.keys(errors).length);
     if (Object.keys(errors).length === 0) {
       await axios
         .request({
@@ -230,7 +232,7 @@ function Huespedes() {
           },
         })
         .then((response) => {
-          console.log(response.status);
+          // console.log(response.status);
           if (response.status === 201) {
             var dataNueva = data;
             dataNueva.map((consola) => {
@@ -260,7 +262,6 @@ function Huespedes() {
             abrirCerrarModalEditar();
             alert("El huesped ha sido actualizado");
           }
-          setErrors({});
         });
     }
   };
@@ -302,13 +303,17 @@ function Huespedes() {
     setModalVer(!modalVer);
   };
   const seleccionarHuespedes = (consola, caso) => {
-    console.log("Consola", consola);
+    // console.log("Consola", consola);
     setConsolaSeleccionada({
       codHuesped: consola[0],
       nombre: consola[1],
       apellido: consola[2],
       numCelular: consola[3],
       correo: consola[4],
+      tipoDocumento: {
+        codTipoDocumento: consola[5].codTipoDocumento,
+        nomTipoDocumento: consola[5].nomTipoDocumento,
+      },
       numDocumento: consola[6],
       nacionalidad: {
         codNacion: consola[7].codNacion,
@@ -319,7 +324,6 @@ function Huespedes() {
       numContactoEmergencia: consola[10],
       estadoHuesped: consola[11],
     });
-
     // console.log("ConsolaSeleccionada", consolaSeleccionada);
     if (caso === "Editar") {
       abrirCerrarModalEditar();
@@ -842,9 +846,10 @@ function Huespedes() {
               aria-label="Default select example"
               name="estadoHuesped"
               onChange={handleChange}
+              defaultValue={"Habilitado"}
               value={
                 consolaSeleccionada &&
-                consolaSeleccionada.estadoHuesped === true
+                  consolaSeleccionada.estadoHuesped === true
                   ? "HABILITADO"
                   : "INHABILITADO"
               }
@@ -921,7 +926,7 @@ function Huespedes() {
       options: {
         filter: false,
         customBodyRender: (value, tableMeta) => {
-          return `${value.codTipoDocumento} (${value.nomTipoDocumento})`;
+          return `${value.nomTipoDocumento}`;
         },
       },
     },
@@ -936,18 +941,7 @@ function Huespedes() {
         filter: false,
         sort: false,
         customBodyRender: (value, tableMeta, updateValue) => {
-          // Accede a la propiedad anidada y muestra su valor
-          try {
-            data.map((consola, ind) => {
-              value = [
-                consola.nacionalidad.codNacion,
-                consola.nacionalidad.nombre,
-              ];
-            });
-          } catch (error) {
-            console.log("Error al cargar nacionalidades  en Huespedes");
-          }
-          return value; // Esto mostrará el valor de tipoDocumento.nomTipoDocumento en la celda
+          return `${value.nombre}`;
         },
       },
     },
@@ -969,7 +963,7 @@ function Huespedes() {
       options: {
         filter: false,
         sort: false,
-        customBodyRender: (value, tableMeta, updateValue) => {
+        customBodyRender: (value) => {
           try {
             data.map((consola, ind) => {
               if (consola.estadoHuesped === true) {

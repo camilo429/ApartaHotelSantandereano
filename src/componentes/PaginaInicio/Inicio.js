@@ -11,10 +11,11 @@ import "../../../node_modules/bootstrap/scss/bootstrap.scss";
 import "../../css/sb-admin-2.min.css";
 import "../../vendor/fontawesome-free/css/all.min.css";
 //Components
-import Navbar from "./Navbar";
+import NavbarInicio from "./Navbar/NavbarInicio";
 import Footer from "./Footer";
 import { Apiurl } from "../../services/userService";
 import TipoDocumento from "../pagesAdministrador/TipoDocumento";
+import CaracteristicaHabitacion from "./CaracteristicaHabitacion"
 //Reactrap
 import { Form, FormGroup, Label } from "reactstrap";
 import { makeStyles } from "@mui/styles";
@@ -96,9 +97,8 @@ function Inicio() {
     const mes = fechaActual.getMonth() + 1; // Mes (0-11, por lo que sumamos 1)
     const dia = fechaActual.getDate(); // Día del mes
     // Almacenar la fecha en una variable en formato "aaaa-mm-dd"
-    const fechaEnTexto = `${año}-${mes < 10 ? "0" : ""}${mes}-${
-      dia < 10 ? "0" : ""
-    }${dia}`;
+    const fechaEnTexto = `${año}-${mes < 10 ? "0" : ""}${mes}-${dia < 10 ? "0" : ""
+      }${dia}`;
 
     if (!fecha.test(consolaSeleccionada.fechaEntrada)) {
       errors.fechaEntrada = "Fecha No Válida";
@@ -381,23 +381,18 @@ function Inicio() {
   );
   return (
     <div>
-      <Navbar />
+      <NavbarInicio />
       {/* // is de background more the text in the center de display */}
       <div className="banner_area" style={{ height: "500px" }}>
         <div className="booking_table d_flex align-items-center">
-          <div
-            className="overlay bg-parallax"
-            data-stellar-ratio="0.9"
-            data-stellar-vertical-offset="0"
-          ></div>
+          <div className="overlay bg-parallax" data-stellar-ratio="0.9" data-stellar-vertical-offset="0"></div>
           <div className="container">
             <div className="banner_content text-center">
               <h2>Tiempo de Descanso</h2>
               <p>
-                Ya sea que viajes por negocios o placer, nuestras habitaciones
-                te brindarán el refugio perfecto. Reserva tu habitación hoy y
-                descubre por qué somos la elección preferida de viajeros
-                exigentes. ¡Esperamos darle la bienvenida pronto!
+                ¡Tanto si viajas por negocios como por placer, nuestras habitaciones están diseñadas para
+                ofrecerte el refugio perfecto! Reserva tu habitación hoy mismo y descubre por qué somos la
+                elección preferida de viajeros exigentes. ¡Estamos emocionados por darte la bienvenida pronto!
               </p>
             </div>
           </div>
@@ -405,7 +400,7 @@ function Inicio() {
       </div>
       <div className="testimonial_area section_gap">
         <div className="container">
-          <div className="section_title text-center">
+          <div className="section_title text-left">
             <h2 className="title_color">
               {" "}
               Experimenta el Lujo y la Comodidad en Nuestras Habitaciones.
@@ -419,197 +414,108 @@ function Inicio() {
             </p>
           </div>
 
+          {/* Caracteristicas de las habitaciones */}
           <b className="title_color">
             Caracteristicas de Nuestas Habitaciones:
           </b>
-          <div
-            style={{ textAlign: "initial", margin: "10px" }}
-            className="flex"
-          >
+          <div style={{ textAlign: "initial", margin: "10px" }} className="flex">
             <br />
-            <div>
-              <MdOutlineBedroomParent.MdOutlineBedroomParent className="me-2" />
-              <b className="title_color">Amplias y Modernas: </b>
-              <p>
-                Nuestras habitaciones son espaciosas modernamente decoradas,
-                proporcionando un ambiente relajante para tu estadía.
-              </p>
-            </div>
-            <div>
-              <MdBathtub.MdBathtub className="me-2" />
-              <b className="title_color">Baños Privados: </b>
-              <p>
-                Cada habitación cuenta con un baño privad equipado con articulos
-                de tocador de alta calidad y duchas de lluvia.
-              </p>
-            </div>
-            <div>
-              <FaWifi.FaWifi className="me-2" />
-              <b className="title_color">Conexión Wi-Fi de Alta Velocidad: </b>
-              <p style={{ marginRight: "5px" }}>
-                Mantente conectado con el mundo gracias a nuestra rápida
-                conexión Wi-Fi gratuita en todas las habitaciones.
-              </p>
-            </div>
-            <div>
-              <PiTelevisionBold.PiTelevisionBold className="me-2" />
-              <b className="title_color">Televisión de Pantalla Plana: </b>
-              <p>
-                Relájate viendo tus programas favoritos enuna televisión de
-                pantalla plana de alta definición.
-              </p>
-            </div>
-          </div>
-          <div
-            style={{ textAlign: "initial", margin: "10px" }}
-            className="flex"
-          >
-            <div>
-              <MdRoomService.MdRoomService className="me-2" />
-              <b className="title_color">Servicio a la Habitación: </b>
-              <p>
-                Disfruta de comida a domicilio de los mejores restaurante de la
-                zona en la comodidad de tu habitación con nuestro servicio a la
-                habitación disponible hasta las 11:00pm.
-              </p>
-            </div>
-            <div>
-              <GrClearOption.GrClearOption className="me-2" />
-              <b className="title_color">Limpieza Impecable: </b>
-              <p style={{ marginRight: "5px" }}>
-                Nuestras habitaciones se mantienen en perfecto estado de
-                limpieza para tu seguridad y comodidad.
-              </p>
-            </div>
-            <div>
-              <BsPersonFillGear.BsPersonFillGear className="me-2" />
-              <b className="title_color">Atención Personalizada: </b>
-              <p>
-                Nuestro amable personal está siempre dispuesto a ayudarte con
-                cualquier solicitud o necesidad que puedas tener durante tu
-                estancia.
-              </p>
-            </div>
+            <CaracteristicaHabitacion
+              componenteImg={<MdOutlineBedroomParent.MdOutlineBedroomParent />}
+              caracteristica="Amplias y Modernas"
+              description="Nuestras habitaciones son espaciosas modernamente decoradas, proporcionando un ambiente relajante para tu estadía." />
+            <CaracteristicaHabitacion
+              componenteImg={<MdBathtub.MdBathtub />}
+              caracteristica="Baños Privados:"
+              description="Cada habitación cuenta con un baño privad equipado con articulos de tocador de alta calidad y duchas de lluvia." />
+            <CaracteristicaHabitacion
+              componenteImg={<FaWifi.FaWifi />}
+              caracteristica="Conexión Wi-Fi de Alta Velocidad"
+              description="Mantente conectado con el mundo gracias a nuestra rápida conexión Wi-Fi gratuita en todas las habitaciones." />
+            <CaracteristicaHabitacion
+              componenteImg={<PiTelevisionBold.PiTelevisionBold />}
+              caracteristica="Televisión de Pantalla Plana"
+              description="   Relájate viendo tus programas favoritos enuna televisión de pantalla plana de alta definición." />
           </div>
 
-          {/* //espacio para poner las habitaciones  */}
+          <div style={{ textAlign: "initial", margin: "10px" }} className="flex" >
+            <CaracteristicaHabitacion
+              componenteImg={<MdRoomService.MdRoomService />}
+              caracteristica="Servicio a la Habitación"
+              description="Disfruta de comida a domicilio de los mejores restaurante de la zona en la comodidad de tu habitación con nuestro servicio a la habitación disponible hasta las 11:00pm." />
+
+            <CaracteristicaHabitacion
+              componenteImg={<GrClearOption.GrClearOption />}
+              caracteristica="Limpieza Impecable"
+              description="Nuestras habitaciones se mantienen en perfecto estado de limpieza para tu seguridad y comodidad." />
+
+            <CaracteristicaHabitacion
+              componenteImg={<BsPersonFillGear.BsPersonFillGear />}
+              caracteristica="Atención Personalizada"
+              description="Nuestro amable personal está siempre dispuesto a ayudarte con cualquier solicitud o necesidad que puedas tener durante tu estancia." />
+          </div>
+
+          {/*Habitaciones  */}
           <div className="row mb_30">
-            {/* // Espacio para poner una a una la habitación */}
             <div className="col-lg-3 col-sm-6">
               <div className="accomodation_item text-center">
                 <div className="hotel_img">
-                  <img src="../../assets/img/101.jpg" alt="" />
+                  <img src="../../assets/img/302.jpg" alt="" style={{ height: "350px" }} />
                 </div>
-                <button
-                  onClick={() => abrirCerrarModalInsertar()}
-                  className="btn btn-warning"
-                  style={{ marginTop: "2%", width: "100%", height: "40%" }}
-                >
-                  Agendar Habitación
-                </button>
-                <a href="/Home">
-                  <h4 className="sec_h4">
-                    Habitación Familiar <br /> (5 Personas)
-                  </h4>
-                </a>
-                <h5>
-                  $50.000<small>/Noche</small>
-                </h5>
+                <h4 className="sec_h4"> Individual <br /> (1 Persona)</h4>
+                <h5> $35.000<small>/Noche</small></h5>
               </div>
             </div>
-            {/* // Segunda habitación */}
+
             <div className="col-lg-3 col-sm-6">
               <div className="accomodation_item text-center">
                 <div className="hotel_img">
-                  <img src="../../assets/img/205.jpg" alt="" />
+                  <img src="../../assets/img/205.jpg" alt="Habitación Para Pareja" />
                 </div>
-                <button
-                  onClick={() => abrirCerrarModalInsertar()}
-                  className="btn btn-warning"
-                  style={{ marginTop: "2%", width: "100%", height: "40%" }}
-                >
-                  Agendar Habitación
-                </button>
-                <a href="/Home">
-                  <h4 className="sec_h4">
-                    Matrimonial <br /> (Pareja o Personas){" "}
-                  </h4>
-                </a>
-                <h5>
-                  $35.000<small>/Noche</small>
-                </h5>
+                <h4 className="sec_h4">Matrimonial <br /> (Pareja o Personas)</h4>
+                <h5> $40.000<small>/Noche</small></h5>
               </div>
             </div>
-            {/* // Tercer habitación */}
+
             <div className="col-lg-3 col-sm-6">
               <div className="accomodation_item text-center">
                 <div className="hotel_img">
-                  <img
-                    src="../../assets/img/305.jpg"
-                    alt=""
-                    style={{ height: "350px" }}
-                  />
+                  <img src="../../assets/img/305.jpg" alt="" style={{ height: "350px" }} />
                 </div>
-                <button
-                  onClick={() => abrirCerrarModalInsertar()}
-                  className="btn btn-warning"
-                  style={{ marginTop: "2%", width: "100%", height: "40%" }}
-                >
-                  Agendar Habitación
-                </button>
-                <a href="/Home">
-                  <h4 className="sec_h4">
-                    Individual <br /> (1 Persona)
-                  </h4>
-                </a>
-                <h5>
-                  $30.000<small>/Noche</small>
-                </h5>
+                <h4 className="sec_h4"> Amigos <br /> (2 Personas)</h4>
+                <h5>$45.000<small>/Noche</small></h5>
               </div>
             </div>
-            {/* //Cuarta Habitación */}
             <div className="col-lg-3 col-sm-6">
               <div className="accomodation_item text-center">
-                <div className="hotel_img">
-                  <img
-                    src="../../assets/img/302.jpg"
-                    alt=""
-                    style={{ height: "350px" }}
-                  />
-                </div>
-                <button
-                  onClick={() => abrirCerrarModalInsertar()}
-                  className="btn btn-warning"
-                  style={{ marginTop: "2%", width: "100%", height: "40%" }}
-                >
-                  Agendar Habitación
-                </button>
-                <a href="/Home">
-                  <h4 className="sec_h4">
-                    Amigos <br /> (2 Personas)
-                  </h4>
-                </a>
-                <h5>
-                  $40.000<small>/Noche</small>
-                </h5>
+                <div className="hotel_img"><img src="../../assets/img/101.jpg" alt="" /></div>
+                <h4 className="sec_h4">
+                  Habitación Familiar <br /> (5 Personas)
+                </h4>
+
+                <h5>$70.000<small>/Noche</small></h5>
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      <div className="testimonial_area section_gap " >
+        <button onClick={() => abrirCerrarModalInsertar()} className="btn btn-warning" style={{ height: "60px", width: "50%", marginLeft: "25%" }}>
+          <h5 className="sec_h5">¡Reserva tu Habitación Aquí!</h5>
+        </button>
+      </div>
+
       {/* // Testimonio de los huespedes  */}
       <div className="testimonial_area section_gap ">
         <div className="container">
           <div className="section_title text-center">
-            <h2 className="title_color">
-              Lo que Nuestros Huéspedes dicen sobre su Estadía en El
-              Santandereano:
+            <h2 className="title_color">Lo que Nuestros Huéspedes dicen sobre su Estadía en El Santandereano:
             </h2>
             <p>
-              En El Santandereano, nos enorgullece brindar un servicio
-              excepcional y crear experiencias memorables para nuestros
-              huéspedes. Aquí tienes algunos comentarios de aquellos que han
-              tenido la oportunidad de alojarse con nosotros.
+              En El Santandereano, nos enorgullece ofrecer un servicio excepcional y crear experiencias memorables
+              para nuestros huéspedes. A continuación, compartimos algunos comentarios de aquellos que han tenido la
+              oportunidad de alojarse con nosotros.
             </p>
           </div>
         </div>
@@ -618,24 +524,20 @@ function Inicio() {
           <TestimonioHuesped
             nombre="- Yerson Bautista."
             url="../../assets/img/yerson.jpg"
-            description="Mi estancia en El Santandereano fue simplemente maravillosa. Desde
-            la cálida bienvenida hasta la atención al detalle en cada rincón, me 
-            sentí como en un hogar lejos de casa. "
+            description="Mi estancia en El Santandereano fue simplemente maravillosa. Desde la cálida bienvenida hasta 
+            la atención al detalle en cada rincón, me sentí como en un hogar lejos de casa."
           />
           <TestimonioHuesped
             nombre="Diego M."
             url="../../assets/img/yerson.jpg"
-            description="Las habitaciones son elegantes y cómodas, con una hubicación 
-            central. No podría habe pedido un lugar mejor para relajarme durante mis 
-            vacaciones."
+            description="Las habitaciones son elegantes y cómodas, con una hubicacióncentral. No podría habe pedido un 
+            lugar mejor para relajarme durante mis vacaciones."
           />
           <TestimonioHuesped
             nombre="Valentina F."
             url="../../assets/img/valentina.png"
-            description="Mi familia y yo tuvimos una experiencia inolvidable en El Santandereano
-            . Los niños se pueden dejar solos en las habitaciones, gracias a que el persona está
-            muy atentos a cualquier suceso o ruido extraño. ¡Gracias por hacer que neustras vacaciones
-            sean especiales!"
+            description=" Mi familia y yo tuvimos una experiencia inolvidable en El Santandereano. Agradecemos 
+            la atención del personal, que nos permitió sentirnos tranquilos.¡Gracias por hacer nuestras vacaciones tan especiales!"
           />
         </div>
         <div className="container">
@@ -655,7 +557,7 @@ function Inicio() {
       <Modal open={modalInsertar} onClose={abrirCerrarModalInsertar}>
         {bodyInsertar}
       </Modal>
-    </div>
+    </div >
   );
 }
 export default Inicio;

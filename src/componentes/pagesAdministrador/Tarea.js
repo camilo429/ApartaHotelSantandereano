@@ -16,7 +16,7 @@ import SelectEmpleado from "./SelectEmpleados";
 import { Apiurl } from "../../services/userService";
 const url = Apiurl + "actividades/listarActividades";
 const urlG = Apiurl + "actividades/crearActividad";
-const urlE = Apiurl + "actividades/verActividad/";
+//const urlE = Apiurl + "actividades/verActividad/";
 const urlD = Apiurl + "actividades/eliminarActividad/";
 const urlEmpleados = Apiurl + "empleados/listarEmpleados";
 
@@ -459,8 +459,8 @@ function Tarea() {
         <b>
           {consolaSeleccionada &&
             consolaSeleccionada.titulo +
-              " " +
-              consolaSeleccionada.estadoActividad}
+            " " +
+            consolaSeleccionada.estadoActividad}
         </b>
         ?
       </p>

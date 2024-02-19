@@ -60,7 +60,6 @@ function TipoDocumento({ name, handleChangeData, value = null }) {
           value: docu.codTipoDocumento,
         }))}
         onChange={handleChange}
-        placeholder="Seleccione TipoDocumento"
       />
     </div>
   );

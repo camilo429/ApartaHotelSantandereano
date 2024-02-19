@@ -1,6 +1,6 @@
 //componentes
 import Footer from "./Footer";
-import Navbar from "./Navbar";
+import NavbarInicio from "./Navbar/NavbarInicio";
 //Hooks
 import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
 import React, { useState } from "react";
@@ -107,8 +107,8 @@ function Contacto() {
           horaEnviado: "",
         });
         alert(
-          "¡Gracias por ser parte de la familia de El Santandereano" +
-            " y por compartir tus pensamientos y sugerencias con nosotros!"
+          "¡Gracias por ser parte de la familia" +
+          " y por compartir tus pensamientos y sugerencias con nosotros!"
         );
       }
     } catch (error) {
@@ -118,23 +118,12 @@ function Contacto() {
 
   return (
     <div className="Contacto">
-      <Navbar />
+      <NavbarInicio />
       <section className="breadcrumb_area">
-        <div
-          className="overlay bg-parallax"
-          data-stellar-ratio="0.8"
-          data-stellar-vertical-offset="0"
-          data-background=""
-        />
+        <div className="overlay bg-parallax" data-stellar-ratio="0.8" data-stellar-vertical-offset="0" data-background="" />
         <div className="container">
           <div className="page-cover text-center">
             <h2 className="page-cover-tittle">Contactanos</h2>
-            <ol className="breadcrumb">
-              <li>
-                <a href="inicio.html">Inicio</a>
-              </li>
-              <li className="active">Contactanos</li>
-            </ol>
           </div>
         </div>
       </section>
@@ -144,46 +133,30 @@ function Contacto() {
           <h2 className="post-title">Estamos Ubicados en: Carrera 80a#2-15</h2>
           <br></br>
           <div className="container">
-            <GoogleMap
-              mapContainerStyle={{ height: "400px", with: "400px" }}
-              zoom={13}
-              center={mapCenter}
-            >
-              <Marker
-                position={{ lat: 4.632369452800604, lng: -74.15449512172077 }}
-              />
+            <GoogleMap mapContainerStyle={{ height: "400px", with: "400px" }} zoom={13} center={mapCenter}>
+              <Marker position={{ lat: 4.632369452800604, lng: -74.15449512172077 }} />
             </GoogleMap>
           </div>
         </div>
       </section>
-
       {/* //mostramos la información para el mensaje */}
-      <section
-        className="accomodation_area section_gap"
-        style={{ paddingTop: "20px" }}
-      >
+      <section className="accomodation_area section_gap" style={{ paddingTop: "20px" }}>
         <div className="container">
           <div className="section_title text-center">
-            <h2 className="title_color">
-              ¡Tu Opinión es Importante para Nosotros!
-            </h2>
+            <h2 className="title_color">  ¡Queremos conocer tu opinión! </h2>
             <p>
-              En El Santandereano, valoramos la opinión de nuestros huéspedes y
-              estamos siempre buscando maneras de mejorar tu experiencia. Si has
-              tenido una estancia reciente con nosotros o tienes alguna
-              sugerencia, por favor, compártela con nosotros a través de nuestra
-              caja de comentarios. Estamos ansiosos por escucharte y asegurarnos
-              de que tu próxima visita sea aún mejor.
+              En El Santandereano, nos importa profundamente lo que piensas. Estamos constantemente buscando maneras de mejorar tu
+              experiencia como huésped. Si has tenido una estancia reciente con nosotros o tienes alguna sugerencia que pueda hacer
+              que tu próxima visita sea aún mejor, por favor, compártela con nosotros a través de nuestra caja de comentarios.
+              Tu opinión es invaluable y nos ayuda a perfeccionar nuestros servicios para ti. Estamos ansiosos por escucharte y asegurarnos
+              de que cada experiencia en El Santandereano sea excepcional. ¡Gracias por ser parte de nuestra comunidad!
             </p>
           </div>
           <h2 className="title_color">Caja de Comentarios y Sugerencias:</h2>
         </div>
         <div className="flex">
           {" "}
-          <div
-            className="col-md-3"
-            style={{ width: "100%", marginRight: "5%" }}
-          >
+          <div className="col-md-3" style={{ width: "100%", marginRight: "5%" }}>
             <div className="contact_info">
               <div className="info_item">
                 <i className="lnr lnr-home"></i>
@@ -193,9 +166,7 @@ function Contacto() {
               </div>
               <div className="info_item">
                 <i className="lnr lnr-envelope"></i>
-                <h6>
-                  <a href="/gmail.com">apartahotelsantandereano@gmail.com</a>
-                </h6>
+                <h6><a href="/gmail.com">apartahotelsantandereano@gmail.com</a></h6>
                 <p>Envie su comentario o pregunta.</p>
               </div>
             </div>
@@ -205,14 +176,7 @@ function Contacto() {
             <form>
               <div className="form-row" style={{ width: "80%" }}>
                 <div className="form-group col-md-6">
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="nombre"
-                    value={formulario.nombre}
-                    placeholder="Ingrese su nombre"
-                    onChange={handleChange}
-                  />
+                  <input type="text" className="form-control" name="nombre" value={formulario.nombre} placeholder="Ingrese su nombre" onChange={handleChange} />
                   {errors.nombre && (
                     <div style={estilos}>
                       <p>{errors.nombre}</p>
@@ -220,14 +184,7 @@ function Contacto() {
                   )}
                 </div>
                 <div className="form-group col-md-6">
-                  <input
-                    type="email"
-                    className="form-control"
-                    name="email"
-                    value={formulario.email}
-                    placeholder="Ingrese su correo"
-                    onChange={handleChange}
-                  />
+                  <input type="email" className="form-control" name="email" value={formulario.email} placeholder="Ingrese su correo" onChange={handleChange} />
                   {errors.email && (
                     <div style={estilos}>
                       <p>{errors.email}</p>
@@ -235,14 +192,7 @@ function Contacto() {
                   )}
                 </div>
                 <div className="form-group col-md-6">
-                  <input
-                    type="number"
-                    className="form-control"
-                    name="numTelefono"
-                    placeholder="Ingrese su número de telefono"
-                    onChange={handleChange}
-                    value={formulario.numTelefono}
-                  />
+                  <input type="number" className="form-control" name="numTelefono" placeholder="Ingrese su número de telefono" onChange={handleChange} value={formulario.numTelefono} />
                   {errors.numTelefono && (
                     <div style={estilos}>
                       <p>{errors.numTelefono}</p>
@@ -250,14 +200,7 @@ function Contacto() {
                   )}
                 </div>
                 <div className="form-group col-md-6">
-                  <textarea
-                    className="form-control"
-                    name="comentario"
-                    type="texarea"
-                    placeholder="Ingrese su mensaje"
-                    onChange={handleChange}
-                    value={formulario.comentario}
-                  />
+                  <textarea className="form-control" name="comentario" type="texarea" placeholder="Ingrese su mensaje" onChange={handleChange} value={formulario.comentario} />
                   {errors.comentario && (
                     <div style={estilos}>
                       <p>{errors.comentario}</p>
@@ -267,12 +210,7 @@ function Contacto() {
               </div>
             </form>
             <div className="col-md-12 text-center">
-              <button
-                type="submit"
-                value="submit"
-                className="btn theme_btn button_hover"
-                onClick={(e) => peticionPost(e)}
-              >
+              <button type="submit" value="submit" className="btn theme_btn button_hover" onClick={(e) => peticionPost(e)}>
                 Enviar Mensaje
               </button>
             </div>

@@ -1,5 +1,5 @@
 import React from "react";
-import Navbar from "./Navbar";
+import NavbarInicio from "./Navbar/NavbarInicio";
 import Footer from "./Footer";
 
 import "../estilos/style.css";
@@ -12,7 +12,7 @@ import "../../css/styles.css";
 function About() {
   return (
     <div className="sobreNosotros">
-      <Navbar />
+      <NavbarInicio />
       <section className="breadcrumb_area">
         <div
           className="overlay bg-parallax"
@@ -20,17 +20,6 @@ function About() {
           data-stellar-vertical-offset="0"
           data-background=""
         />
-        <div className="container">
-          <div className="page-cover text-center">
-            <h2 className="page-cover-tittle">Acerca de nosotros</h2>
-            <ol className="breadcrumb">
-              <li>
-                <a href="/Inicio">Inicio</a>
-              </li>
-              <li className="active">Sobre Nosotros</li>
-            </ol>
-          </div>
-        </div>
       </section>
 
       <section className="accomodation_area section_gap">
