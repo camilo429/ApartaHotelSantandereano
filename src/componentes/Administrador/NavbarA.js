@@ -1,20 +1,6 @@
 import React, { useState } from "react";
-import "../../App.scss";
-import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
-import "../../../node_modules/bootstrap/scss/bootstrap.scss";
-import {
-  Collapse,
-  Navbar,
-  NavbarToggler,
-  Nav,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-} from "reactstrap";
 
 import { useNavigate, Link } from "react-router-dom";
-
 import * as GiExit from "react-icons/gi";
 import { Apiurl } from "../../services/userService";
 
@@ -33,11 +19,7 @@ const NavbarA = ({ name, lastName }) => {
     <div>
       <Navbar color="light" light expand="md" style={{ width: "85%" }}>
         {/* <div className="topbar-divider d-none d-sm-block"></div> */}
-        <hr
-          className="topbar-divider d-none d-sm-block"
-          style={{ borderTop: "1px solid white" }}
-        />
-
+        <hr className="topbar-divider d-none d-sm-block" style={{ borderTop: "1px solid white" }} />
         <div className="w-30">
           <NavbarToggler onClick={toggle} />
           <Collapse isOpen={isOpen} navbar className="w-40">

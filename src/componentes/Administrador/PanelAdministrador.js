@@ -14,13 +14,14 @@ import "../../App.scss";
 import Recibos from "../pagesAdministrador/Recibos";
 import Tarea from "../pagesAdministrador/Tarea";
 import Comentario from "../pagesAdministrador/Comentario";
+import SidebarAdmin from "./SidebarAdmin";
 
 function PanelAdministrador({ nombre, apellido }) {
   return (
     <div className="flex">
       <Sidebar />
       <div className="cotenedor" style={{ width: "85%" }}>
-        <NavbarA name={nombre} lastName={apellido} />
+        <SidebarAdmin />
         <Routes>
           <Route path="/" exact={true} element={<Home />} />
           <Route path="/Home" exact={true} element={<Home />} />

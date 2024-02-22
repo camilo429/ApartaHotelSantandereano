@@ -100,40 +100,24 @@ class Login extends React.Component {
   olvidoSuContrasena() {
     alert(
       "Pongase en contacto con su administrador de plataforma para realizar el " +
-        "cambio de contraseña"
+      "cambio de contraseña"
     );
   }
   render() {
     return (
-      <div>
+      <div className="testimonial_area section_gap" style={{ margin: "0px" }}>
         <NavbarInicio />
-        <div className="login">
-          <form onSubmit={this.manejadorSubmit}>
-            <input
-              type="text"
-              name="usuario"
-              placeholder="Usuario"
-              onChange={this.manejadorChange}
-            />
-            <input
-              type="password"
-              name="password"
-              placeholder="Contraseña"
-              onChange={this.manejadorChange}
-            />
-            <input type="submit" value="Log In" onClick={this.manejadorBoton} />
-            <a
-              onClick={this.olvidoSuContrasena}
-              style={{ color: "blue", marginBottom: "5px" }}
-            >
-              ¿Olvido su contraseña?
-            </a>
-          </form>
-          {this.state.error === true && (
-            <div className="alert alert-danger" role="alert">
-              {this.state.errorMsg}
-            </div>
-          )}
+        <div style={{ height: "450px", margin: "0px" }}>
+          <div style={{ width: "300px", alignItems: "center", justifyContent: "center", margin: "auto" }}>
+            <form onSubmit={this.manejadorSubmit}>
+              <input type="text" name="usuario" placeholder="Usuario" onChange={this.manejadorChange} />
+              <input type="password" name="password" placeholder="Contraseña" onChange={this.manejadorChange} />
+              <input type="submit" value="Log In" onClick={this.manejadorBoton} />
+              <a onClick={this.olvidoSuContrasena} style={{ color: "blue", height: "100%" }}>
+                ¿Olvido su contraseña?
+              </a>
+            </form>
+          </div>
         </div>
         <Footer />
       </div>

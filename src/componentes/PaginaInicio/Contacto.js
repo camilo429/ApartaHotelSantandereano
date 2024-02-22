@@ -122,9 +122,7 @@ function Contacto() {
       <section className="breadcrumb_area">
         <div className="overlay bg-parallax" data-stellar-ratio="0.8" data-stellar-vertical-offset="0" data-background="" />
         <div className="container">
-          <div className="page-cover text-center">
-            <h2 className="page-cover-tittle">Contactanos</h2>
-          </div>
+          <div className="page-cover text-center"> <h2 className="page-cover-tittle">Contactanos</h2></div>
         </div>
       </section>
       <section>
@@ -152,46 +150,30 @@ function Contacto() {
               de que cada experiencia en El Santandereano sea excepcional. ¡Gracias por ser parte de nuestra comunidad!
             </p>
           </div>
-          <h2 className="title_color">Caja de Comentarios y Sugerencias:</h2>
         </div>
-        <div className="flex">
-          {" "}
-          <div className="col-md-3" style={{ width: "100%", marginRight: "5%" }}>
-            <div className="contact_info">
-              <div className="info_item">
-                <i className="lnr lnr-home"></i>
-                <h6>Bogotá, Colombia</h6>
-                <p>Aparta Hotel Santandereano (kennedy) +(57) 3107763328</p>
-                <p>Servicio las 24/7/365 año</p>
-              </div>
-              <div className="info_item">
-                <i className="lnr lnr-envelope"></i>
-                <h6><a href="/gmail.com">apartahotelsantandereano@gmail.com</a></h6>
-                <p>Envie su comentario o pregunta.</p>
-              </div>
-            </div>
-          </div>
-          {/* // enviar mensaje o pregunta */}
-          <div className="form">
-            <form>
-              <div className="form-row" style={{ width: "80%" }}>
-                <div className="form-group col-md-6">
-                  <input type="text" className="form-control" name="nombre" value={formulario.nombre} placeholder="Ingrese su nombre" onChange={handleChange} />
+        <div className="Formulario" style={{ width: "900px", alignItems: "center", margin: "auto" }}>
+          <h2 className="title_color" style={{ marginLeft: "14%" }}>Caja de Comentarios y Sugerencias</h2>
+          <form>
+            <div className="form-row">
+              <div className="form-group col-md-6">
+                <div>
+                  <label for="inputEmail4">Email</label>
+                  <input type="email" className="form-control" id="inputEmail4" value={formulario.nombre} placeholder="Ingrese su Nombre Completo" onChange={handleChange} />
                   {errors.nombre && (
                     <div style={estilos}>
                       <p>{errors.nombre}</p>
                     </div>
                   )}
                 </div>
-                <div className="form-group col-md-6">
-                  <input type="email" className="form-control" name="email" value={formulario.email} placeholder="Ingrese su correo" onChange={handleChange} />
+                <div>
+                  <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="email" name="email" value={formulario.email} placeholder="Ingrese su correo o email" onChange={handleChange} />
                   {errors.email && (
                     <div style={estilos}>
                       <p>{errors.email}</p>
                     </div>
                   )}
                 </div>
-                <div className="form-group col-md-6">
+                <div>
                   <input type="number" className="form-control" name="numTelefono" placeholder="Ingrese su número de telefono" onChange={handleChange} value={formulario.numTelefono} />
                   {errors.numTelefono && (
                     <div style={estilos}>
@@ -199,21 +181,22 @@ function Contacto() {
                     </div>
                   )}
                 </div>
-                <div className="form-group col-md-6">
-                  <textarea className="form-control" name="comentario" type="texarea" placeholder="Ingrese su mensaje" onChange={handleChange} value={formulario.comentario} />
-                  {errors.comentario && (
-                    <div style={estilos}>
-                      <p>{errors.comentario}</p>
-                    </div>
-                  )}
-                </div>
               </div>
-            </form>
-            <div className="col-md-12 text-center">
-              <button type="submit" value="submit" className="btn theme_btn button_hover" onClick={(e) => peticionPost(e)}>
-                Enviar Mensaje
-              </button>
+              <div className="" style={{ width: "45%" }}>
+                <label for="comentarios"> Comentario</label>
+                <textarea className="form-control" name="comentario" rows="3" type="texarea" placeholder="Ingrese Comentario o Sugerencia" onChange={handleChange} value={formulario.comentario} style={{ height: "70%" }} />
+                {errors.comentario && (
+                  <div style={estilos}>
+                    <p>{errors.comentario}</p>
+                  </div>
+                )}
+              </div>
             </div>
+          </form>
+          <div className="col-md-12 text-center">
+            <button type="submit" value="submit" className="btn btn-primary" onClick={(e) => peticionPost(e)}>
+              Enviar Mensaje
+            </button>
           </div>
         </div>
       </section>

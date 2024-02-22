@@ -201,31 +201,24 @@ function EmpleadoComponent() {
               if (consolaSeleccionada.codEmpleado === consola.codEmpleado) {
                 consola.nombre = consolaSeleccionada.nombre;
                 consola.apellido = consolaSeleccionada.apellido;
-                consola.tipDocumento =
-                  consolaSeleccionada.tipDocumento.codTipoDocumento;
+                consola.tipDocumento = consolaSeleccionada.tipDocumento.codTipoDocumento;
                 consola.tipDocumento = {
-                  nomTipoDocumento:
-                    consolaSeleccionada.tipDocumento.nomTipoDocumento,
-                  codTipoDocumento:
-                    consolaSeleccionada.tipDocumento.codTipoDocumento,
+                  nomTipoDocumento: consolaSeleccionada.tipDocumento.nomTipoDocumento,
+                  codTipoDocumento: consolaSeleccionada.tipDocumento.codTipoDocumento,
                 };
                 consola.edad = consolaSeleccionada.edad;
                 consola.numTelefono = consolaSeleccionada.numTelefono;
                 consola.correo = consolaSeleccionada.correo;
                 consola.fechaNacimiento = consolaSeleccionada.fechaNacimiento;
                 consola.direccion = consolaSeleccionada.direccion;
-                consola.nomContactoEmergencia =
-                  consolaSeleccionada.nomContactoEmergencia;
-                consola.numContactoEmergencia =
-                  consolaSeleccionada.numContactoEmergencia;
+                consola.nomContactoEmergencia = consolaSeleccionada.nomContactoEmergencia;
+                consola.numContactoEmergencia = consolaSeleccionada.numContactoEmergencia;
                 consola.eps = consolaSeleccionada.eps;
                 consola.arl = consolaSeleccionada.arl;
                 consola.sexo.codSexo = consolaSeleccionada.sexo.codSexo;
                 consola.sexo.nomSexo = consolaSeleccionada.sexo.nomSexo;
-                consola.tipoSangre.codTipoSangre =
-                  consolaSeleccionada.tipoSangre.codTipoSangre;
-                consola.tipoSangre.nomTipoSangre =
-                  consolaSeleccionada.tipoSangre.nomTipoSangre;
+                consola.tipoSangre.codTipoSangre = consolaSeleccionada.tipoSangre.codTipoSangre;
+                consola.tipoSangre.nomTipoSangre = consolaSeleccionada.tipoSangre.nomTipoSangre;
                 consola.fotoEmpleado = consolaSeleccionada.fotoEmpleado;
               }
             });
@@ -333,174 +326,70 @@ function EmpleadoComponent() {
         <div className="flex">
           <FormGroup className="me-2">
             <Label for="exampleEmail">Nombre</Label>
-            <input
-              name="nombre"
-              placeholder="Nombre"
-              className="form-control"
-              onChange={handleChange}
-            />
-            {errors.nombre && (
-              <div style={estilos}>
-                <p>{errors.nombre}</p>
-              </div>
-            )}
+            <input name="nombre" placeholder="Nombre" className="form-control" onChange={handleChange} />
+            {errors.nombre && (<div style={estilos}> <p>{errors.nombre}</p></div>)}
           </FormGroup>
           <FormGroup className="me-2">
             <Label for="exampleEmail">Apellido</Label>
-            <input
-              name="apellido"
-              placeholder="Apellido"
-              className="form-control"
-              onChange={handleChange}
-            />
-            {errors.apellido && (
-              <div style={estilos}>
-                <p>{errors.apellido}</p>
-              </div>
-            )}
+            <input name="apellido" placeholder="Apellido" className="form-control" onChange={handleChange} />
+            {errors.apellido && (<div style={estilos}> <p>{errors.apellido}</p></div>)}
           </FormGroup>
-
-          <FormGroup
-            className="me-2"
-            style={{ width: "300px", margin: "20px" }}
-          >
+          <FormGroup className="me-2" style={{ width: "300px", margin: "20px" }}>
             <Label for="exampleEmail">Tipo Documento</Label>
-            <TipoDocumento
-              name="tipDocumento"
-              handleChangeData={handleChange}
-            />
+            <TipoDocumento name="tipDocumento" handleChangeData={handleChange} />
           </FormGroup>
-
           <FormGroup className="me-2">
             <Label for="exampleEmail">Número Documento</Label>
-            <input
-              name="numDocumento"
-              placeholder="Número Documento"
-              className="form-control"
-              onChange={handleChange}
-            />
-            {errors.numDocumento && (
-              <div style={estilos}>
-                <p>{errors.numDocumento}</p>
-              </div>
-            )}
+            <input name="numDocumento" placeholder="Número Documento" className="form-control" onChange={handleChange} />
+            {errors.numDocumento && (<div style={estilos}> <p>{errors.numDocumento}</p> </div>)}
           </FormGroup>
         </div>
         <div className="flex">
           <FormGroup className="me-2">
             <Label for="exampleEmail">Número Celular</Label>
-            <input
-              name="numTelefono"
-              placeholder="# Celular"
-              className="form-control"
-              onChange={handleChange}
-            />
-            {errors.numTelefono && (
-              <div style={estilos}>
-                <p>{errors.numTelefono}</p>
-              </div>
-            )}
+            <input name="numTelefono" placeholder="# Celular" className="form-control" onChange={handleChange} />
+            {errors.numTelefono && (<div style={estilos}> <p>{errors.numTelefono}</p> </div>)}
           </FormGroup>
-
           <FormGroup className="me-2">
             <Label for="exampleEmail">Correo Electronico</Label>
-            <input
-              name="correo"
-              placeholder="Correo Electronico"
-              className="form-control"
-              onChange={handleChange}
-            />
-            {errors.correo && (
-              <div style={estilos}>
-                <p>{errors.correo}</p>
-              </div>
-            )}
+            <input name="correo" placeholder="Correo Electronico" className="form-control" onChange={handleChange} />
+            {errors.correo && (<div style={estilos}> <p>{errors.correo}</p></div>)}
           </FormGroup>
-
           <FormGroup className="me-2">
             <Label for="exampleEmail">Fecha de Nacimiento</Label>
-            <Input
-              name="fechaNacimiento"
-              type="date"
-              required
-              pattern="\d{4}-\d{2}-\d{2}"
-              className="form-control"
-              onChange={handleChange}
-            />
+            <Input name="fechaNacimiento" type="date" required pattern="\d{4}-\d{2}-\d{2}" className="form-control" onChange={handleChange} />
           </FormGroup>
-
           <FormGroup className="me-2">
             <Label for="exampleEmail">Dirección</Label>
-            <input
-              name="direccion"
-              placeholder="Dirección"
-              className="form-control"
-              onChange={handleChange}
-            />
+            <input name="direccion" placeholder="Dirección" className="form-control" onChange={handleChange} />
           </FormGroup>
           <FormGroup className="me-2 w-80">
             <Label for="exampleEmail">Nombre Emergencia</Label>
-            <input
-              name="nomContactoEmergencia"
-              placeholder="Nombre Contacto Emergencia"
-              className="form-control"
-              onChange={handleChange}
-            />
-            {errors.nomContactoEmergencia && (
-              <div style={estilos}>
-                <p>{errors.nomContactoEmergencia}</p>
-              </div>
-            )}
+            <input name="nomContactoEmergencia" placeholder="Nombre Contacto Emergencia" className="form-control" onChange={handleChange} />
+            {errors.nomContactoEmergencia && (<div style={estilos}> <p>{errors.nomContactoEmergencia}</p></div>)}
           </FormGroup>
         </div>
         <div className="flex">
           <FormGroup className="me-2">
             <Label for="exampleEmail">Número Emergencia</Label>
-            <input
-              name="numContactoEmergencia"
-              placeholder="#Contacto Emergencia"
-              className="form-control"
-              onChange={handleChange}
-            />
-            {errors.numContactoEmergencia && (
-              <div style={estilos}>
-                <p>{errors.numContactoEmergencia}</p>
-              </div>
-            )}
+            <input name="numContactoEmergencia" placeholder="#Contacto Emergencia" className="form-control" onChange={handleChange} />
+            {errors.numContactoEmergencia && (<div style={estilos}> <p>{errors.numContactoEmergencia}</p></div>)}
           </FormGroup>
-
           <FormGroup className="me-2">
             <Label for="exampleEmail">EPS</Label>
-            <input
-              name="eps"
-              placeholder="EPS"
-              className="form-control"
-              onChange={handleChange}
-            />
+            <input name="eps" placeholder="EPS" className="form-control" onChange={handleChange} />
           </FormGroup>
           <FormGroup className="me-2">
             <Label for="exampleEmail">ARL</Label>
-            <input
-              name="arl"
-              placeholder="ARL"
-              className="form-control"
-              onChange={handleChange}
-            />
+            <input name="arl" placeholder="ARL" className="form-control" onChange={handleChange} />
           </FormGroup>
         </div>
         <div className="flex">
-          <FormGroup
-            className="me-2"
-            style={{ width: "300px", margin: "20px" }}
-          >
+          <FormGroup className="me-2" style={{ width: "300px", margin: "20px" }}>
             <Label for="exampleEmail">Genero</Label>
             <GeneroEmpleado name="sexo" handleChangeData={handleChange} />
           </FormGroup>
-
-          <FormGroup
-            className="me-2"
-            style={{ width: "300px", margin: "20px" }}
-          >
+          <FormGroup className="me-2" style={{ width: "300px", margin: "20px" }}>
             <Label for="exampleEmail">Tipo Grupo Sanguineo</Label>
             <TipoSangre name="tipoSangre" handleChangeData={handleChange} />
           </FormGroup>
@@ -508,9 +397,7 @@ function EmpleadoComponent() {
       </Form>
       <br />
       <div align="right">
-        <Button color="primary" onClick={(e) => peticionPost(e)}>
-          Insertar
-        </Button>
+        <Button color="primary" onClick={(e) => peticionPost(e)}> Insertar </Button>
         <Button onClick={() => abrirCerrarModalInsertar()}>Cancelar</Button>
       </div>
     </div>
@@ -523,159 +410,65 @@ function EmpleadoComponent() {
         <div className="flex">
           <FormGroup className="me-2">
             <Label for="exampleEmail">Nombre</Label>
-            <Input
-              name="nombre"
-              onChange={handleChange}
-              value={consolaSeleccionada?.nombre}
-              placeholder={
-                !consolaSeleccionada?.nombre ? "Diligencia su nombre" : "Nombre"
-              }
-              disabled
-            />
+            <Input name="nombre" onChange={handleChange} value={consolaSeleccionada?.nombre} placeholder={!consolaSeleccionada?.nombre ? "Diligencia su nombre" : "Nombre"} disabled />
           </FormGroup>
           <FormGroup className="me-2">
             <Label for="exampleEmail">Apellido</Label>
-            <Input
-              name="apellido"
-              onChange={handleChange}
-              value={consolaSeleccionada && consolaSeleccionada.apellido}
-              placeholder="Apellido"
-              disabled
-            />
+            <Input name="apellido" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.apellido} placeholder="Apellido" disabled />
           </FormGroup>
           <FormGroup className="me-2">
             <Label for="exampleEmail">Número Documento Indentidad</Label>
-            <Input
-              name="numDocumento"
-              onChange={handleChange}
-              value={consolaSeleccionada && consolaSeleccionada.numDocumento}
-              disabled
-              placeholder="Numero Identidad"
-            />
+            <Input name="numDocumento" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.numDocumento} disabled placeholder="Numero Identidad" />
           </FormGroup>
           <FormGroup className="me-2">
             <Label for="exampleEmail">Número de Celular</Label>
-            <Input
-              name="numTelefono"
-              onChange={handleChange}
-              value={consolaSeleccionada && consolaSeleccionada.numTelefono}
-              placeholder="Número Celular"
-              disabled
-            />
+            <Input name="numTelefono" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.numTelefono} placeholder="Número Celular" disabled />
           </FormGroup>
         </div>
-
         <div className="flex">
           <FormGroup className="me-2">
             <Label for="exampleEmail">Correo Electronico</Label>
-            <Input
-              name="correo"
-              onChange={handleChange}
-              value={consolaSeleccionada && consolaSeleccionada.correo}
-              placeholder="Correo Electronico"
-              disabled
-            />
+            <Input name="correo" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.correo} placeholder="Correo Electronico" disabled />
           </FormGroup>
-
           <FormGroup className="me-2">
             <Label for="exampleEmail">Fecha de Nacimiento</Label>
-            <Input
-              name="fechaNacimiento"
-              onChange={handleChange}
-              value={consolaSeleccionada?.fechaNacimiento}
-              type="date"
-              disabled
-            />
+            <Input name="fechaNacimiento" onChange={handleChange} value={consolaSeleccionada?.fechaNacimiento} type="date" disabled />
           </FormGroup>
           <FormGroup className="me-2">
             <Label for="exampleEmail">Dirección</Label>
-            <Input
-              name="direccion"
-              onChange={handleChange}
-              value={consolaSeleccionada && consolaSeleccionada.direccion}
-              placeholder="Dirección"
-              disabled
-            />
+            <Input name="direccion" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.direccion} placeholder="Dirección" disabled />
           </FormGroup>
           <FormGroup className="me-2">
             <Label for="exampleEmail">Contacto Emergencia</Label>
-            <Input
-              name="nomContactoEmergencia"
-              onChange={handleChange}
-              value={
-                consolaSeleccionada && consolaSeleccionada.nomContactoEmergencia
-              }
-              placeholder="Nombre Familiar"
-              disabled
-            />
+            <Input name="nomContactoEmergencia" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.nomContactoEmergencia} placeholder="Nombre Familiar" disabled />
           </FormGroup>
         </div>
         <div className="flex">
           <FormGroup className="me-2">
-            <Label className="w-100" for="exampleEmail">
-              #Contacto Emergencia
-            </Label>
-            <Input
-              name="numContactoEmergencia"
-              onChange={handleChange}
-              value={
-                consolaSeleccionada && consolaSeleccionada.numContactoEmergencia
-              }
-              placeholder="# Contacto Emergencia"
-              className="w-100"
-              disabled
-            />
+            <Label className="w-100" for="exampleEmail"> #Contacto Emergencia </Label>
+            <Input name="numContactoEmergencia" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.numContactoEmergencia} placeholder="# Contacto Emergencia" className="w-100" disabled />
           </FormGroup>
           <FormGroup className="me-2">
             <Label for="exampleEmail">EPS</Label>
-            <Input
-              name="eps"
-              onChange={handleChange}
-              value={consolaSeleccionada && consolaSeleccionada.eps}
-              placeholder="EPS"
-              disabled
-            />
+            <Input name="eps" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.eps} placeholder="EPS" disabled />
           </FormGroup>
-
           <FormGroup className="me-2">
             <Label for="exampleEmail">ARL</Label>
-            <Input
-              name="arl"
-              onChange={handleChange}
-              value={consolaSeleccionada && consolaSeleccionada.arl}
-              placeholder="ARL"
-              disabled
-            />
+            <Input name="arl" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.arl} placeholder="ARL" disabled />
           </FormGroup>
         </div>
-
         <div className="flex">
           <FormGroup className="me-2 w-100">
             <Label for="exampleEmail">Genero</Label>
-            <GeneroEmpleado
-              name="idSexoBio"
-              handleChangeData={handleChange}
-              value={consolaSeleccionada.idSexoBio}
-              disabled
-            />
+            <GeneroEmpleado name="idSexoBio" handleChangeData={handleChange} value={consolaSeleccionada.idSexoBio} disabled />
           </FormGroup>
           <FormGroup className="me-2 w-100">
             <Label for="exampleEmail">Tipo de Documento de Indentidad</Label>
-            <DocumentoEmpleado
-              name="idTipoDocumento"
-              handleChangeData={handleChange}
-              value={consolaSeleccionada.idTipoDocumento}
-              disabled
-            />
+            <DocumentoEmpleado name="idTipoDocumento" handleChangeData={handleChange} value={consolaSeleccionada.idTipoDocumento} disabled />
           </FormGroup>
           <FormGroup className="me-2 w-100">
             <Label for="exampleEmail">Tipo de Sangre</Label>
-            <TipoSangre
-              name="idTipoSangre"
-              handleChangeData={handleChange}
-              value={consolaSeleccionada.idTipoSangre}
-              disabled
-            />
+            <TipoSangre name="idTipoSangre" handleChangeData={handleChange} value={consolaSeleccionada.idTipoSangre} disabled />
           </FormGroup>
         </div>
       </Form>
@@ -684,6 +477,7 @@ function EmpleadoComponent() {
       </div>
     </div>
   );
+
   const bodyEditar = (
     <div className={styles.modal}>
       <h3>Editar Empleado</h3>
@@ -691,213 +485,83 @@ function EmpleadoComponent() {
         <div className="flex">
           <FormGroup className="me-2">
             <Label for="exampleEmail">Nombre</Label>
-            <input
-              className="form-control"
-              name="nombre"
-              onChange={handleChange}
-              value={consolaSeleccionada?.nombre}
-              placeholder={!consolaSeleccionada?.nombre ? "Nombre" : "Nombre"}
-            />
-            {errors.nombre && (
-              <div style={estilos}>
-                <p>{errors.nombre}</p>
-              </div>
-            )}
+            <input className="form-control" name="nombre" onChange={handleChange} value={consolaSeleccionada?.nombre} placeholder={!consolaSeleccionada?.nombre ? "Nombre" : "Nombre"} />
+            {errors.nombre && (<div style={estilos}> <p>{errors.nombre}</p> </div>)}
           </FormGroup>
           <FormGroup className="me-2">
             <Label for="exampleEmail">Apellido</Label>
-            <input
-              name="apellido"
-              onChange={handleChange}
-              value={consolaSeleccionada && consolaSeleccionada.apellido}
-              placeholder="Apellido"
-              className="form-control"
-            />
-            {errors.apellido && (
-              <div style={estilos}>
-                <p>{errors.apellido}</p>
-              </div>
-            )}
+            <input name="apellido" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.apellido} placeholder="Apellido" className="form-control" />
+            {errors.apellido && (<div style={estilos}>  <p>{errors.apellido}</p></div>)}
           </FormGroup>
-          <FormGroup
-            className="me-2"
-            style={{ width: "250px", margin: "20px" }}
-          >
+          <FormGroup className="me-2" style={{ width: "250px", margin: "20px" }}>
             <Label for="exampleEmail">Tipo Documento</Label>
-            <TipoDocumento
-              name="tipDocumento"
-              handleChangeData={handleChange}
-              value={consolaSeleccionada.tipDocumento}
-            />
+            <TipoDocumento name="tipDocumento" handleChangeData={handleChange} value={consolaSeleccionada.tipDocumento} />
           </FormGroup>
           <FormGroup className="me-2">
             <Label for="exampleEmail">Número Documento Indentidad</Label>
-            <input
-              name="numDocumento"
-              onChange={handleChange}
-              value={consolaSeleccionada && consolaSeleccionada.numDocumento}
-              placeholder="Numero Identidad"
-              className="form-control"
-            />
-            {errors.numDocumento && (
-              <div style={estilos}>
-                <p>{errors.numDocumento}</p>
-              </div>
-            )}
+            <input name="numDocumento" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.numDocumento} placeholder="Numero Identidad" className="form-control" />
+            {errors.numDocumento && (<div style={estilos}> <p>{errors.numDocumento}</p> </div>)}
           </FormGroup>
         </div>
         <div className="flex">
           <FormGroup className="me-2">
             <Label for="exampleEmail">Edad</Label>
-            <input
-              name="edad"
-              onChange={handleChange}
-              value={consolaSeleccionada && consolaSeleccionada.edad}
-              placeholder="Numero Identidad"
-              className="form-control"
-            />
+            <input name="edad" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.edad} placeholder="Numero Identidad" className="form-control" />
           </FormGroup>
           <FormGroup className="me-2">
             <Label for="exampleEmail">Número de Celular</Label>
-            <input
-              name="numTelefono"
-              onChange={handleChange}
-              value={consolaSeleccionada && consolaSeleccionada.numTelefono}
-              placeholder="Número Celular"
-              className="form-control"
-            />
-            {errors.numTelefono && (
-              <div style={estilos}>
-                <p>{errors.numTelefono}</p>
-              </div>
-            )}
+            <input name="numTelefono" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.numTelefono} placeholder="Número Celular" className="form-control" />
+            {errors.numTelefono && (<div style={estilos}><p>{errors.numTelefono}</p></div>)}
           </FormGroup>
           <FormGroup className="me-2">
             <Label for="exampleEmail">Correo Electronico</Label>
-            <input
-              name="correo"
-              onChange={handleChange}
-              value={consolaSeleccionada && consolaSeleccionada.correo}
-              placeholder="Correo Electronico"
-              className="form-control"
-            />
-            {errors.correo && (
-              <div style={estilos}>
-                <p>{errors.correo}</p>
-              </div>
-            )}
+            <input name="correo" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.correo} placeholder="Correo Electronico" className="form-control" />
+            {errors.correo && (<div style={estilos}><p>{errors.correo}</p></div>)}
           </FormGroup>
           <FormGroup className="me-2">
             <Label for="exampleEmail">Fecha de Nacimiento</Label>
-            <input
-              name="fechaNacimiento"
-              type="date"
-              required
-              pattern="\d{4}-\d{2}-\d{2}"
-              className="form-control"
-              onChange={handleChange}
-              value={consolaSeleccionada && consolaSeleccionada.fechaNacimiento}
-            />
+            <input name="fechaNacimiento" type="date" required pattern="\d{4}-\d{2}-\d{2}" className="form-control" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.fechaNacimiento} />
           </FormGroup>
         </div>
-
         <div className="flex">
           <FormGroup className="me-2">
             <Label for="exampleEmail">Dirección</Label>
-            <input
-              name="direccion"
-              onChange={handleChange}
-              value={consolaSeleccionada && consolaSeleccionada.direccion}
-              placeholder="Dirección"
-              className="form-control"
-            />
+            <input name="direccion" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.direccion} placeholder="Dirección" className="form-control" />
           </FormGroup>
           <FormGroup className="me-2">
             <Label for="exampleEmail">Nombre Contacto Emergencia</Label>
-            <input
-              name="nomContactoEmergencia"
-              onChange={handleChange}
-              value={
-                consolaSeleccionada && consolaSeleccionada.nomContactoEmergencia
-              }
-              placeholder="Nombre Familiar"
-              className="form-control"
-            />
+            <input name="nomContactoEmergencia" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.nomContactoEmergencia} placeholder="Nombre Familiar" className="form-control" />
           </FormGroup>
           <FormGroup className="me-2">
             <Label for="exampleEmail">#Número Emergencia</Label>
-            <input
-              name="numContactoEmergencia"
-              onChange={handleChange}
-              value={
-                consolaSeleccionada && consolaSeleccionada.numContactoEmergencia
-              }
-              placeholder="# Contacto Emergencia"
-              className="form-control"
-            />
+            <input name="numContactoEmergencia" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.numContactoEmergencia} placeholder="# Contacto Emergencia" className="form-control" />
           </FormGroup>
           <FormGroup className="me-2">
             <Label for="exampleEmail">EPS</Label>
-            <input
-              name="eps"
-              onChange={handleChange}
-              value={consolaSeleccionada && consolaSeleccionada.eps}
-              placeholder="EPS"
-              className="form-control"
-            />
+            <input name="eps" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.eps} placeholder="EPS" className="form-control" />
           </FormGroup>
         </div>
-
         <div className="flex">
           <FormGroup className="me-2">
             <Label for="exampleEmail">ARL</Label>
-            <input
-              name="arl"
-              onChange={handleChange}
-              value={consolaSeleccionada && consolaSeleccionada.arl}
-              placeholder="ARL"
-              className="form-control"
-            />
+            <input name="arl" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.arl} placeholder="ARL" className="form-control" />
           </FormGroup>
           <FormGroup className="me-2">
             <Label for="exampleEmail">Foto</Label>
-            <input
-              name="fotoEmpleado"
-              onChange={handleChange}
-              value={consolaSeleccionada && consolaSeleccionada.fotoEmpleado}
-              placeholder="foto"
-              className="form-control"
-            />
+            <input name="fotoEmpleado" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.fotoEmpleado} placeholder="foto" className="form-control" />
           </FormGroup>
-          <FormGroup
-            className="me-2"
-            style={{ width: "300px", margin: "20px" }}
-          >
+          <FormGroup className="me-2" style={{ width: "300px", margin: "20px" }}>
             <Label for="exampleEmail">Genero</Label>
-            <GeneroEmpleado
-              name="sexo"
-              handleChangeData={handleChange}
-              value={consolaSeleccionada.sexo}
-            />
+            <GeneroEmpleado name="sexo" handleChangeData={handleChange} value={consolaSeleccionada.sexo} />
           </FormGroup>
-
-          <FormGroup
-            className="me-2"
-            style={{ width: "300px", margin: "20px" }}
-          >
+          <FormGroup className="me-2" style={{ width: "300px", margin: "20px" }}>
             <Label for="exampleEmail">Tipo de Sangre</Label>
-            <TipoSangre
-              name="tipoSangre"
-              handleChangeData={handleChange}
-              value={consolaSeleccionada.tipoSangre}
-            />
+            <TipoSangre name="tipoSangre" handleChangeData={handleChange} value={consolaSeleccionada.tipoSangre} />
           </FormGroup>
         </div>
       </Form>
       <div align="right">
-        <Button color="primary" onClick={() => peticionPut()}>
-          Actualizar
-        </Button>
+        <Button color="primary" onClick={() => peticionPut()}> Actualizar </Button>
         <Button onClick={() => abrirCerrarModalEditar()}>Cancelar</Button>
       </div>
     </div>
@@ -905,14 +569,9 @@ function EmpleadoComponent() {
 
   const bodyEliminar = (
     <div className={styles.modal}>
-      <p>
-        Esta seguro de Eliminar Empleado{" "}
-        <b>{consolaSeleccionada && consolaSeleccionada.nombre}</b> ?
-      </p>
+      <p>Esta seguro de Eliminar Empleado{" "}<b>{consolaSeleccionada && consolaSeleccionada.nombre}</b> ?</p>
       <div align="right">
-        <Button color="secondary" onClick={() => peticionDelete()}>
-          Si
-        </Button>
+        <Button color="secondary" onClick={() => peticionDelete()}> Si </Button>
         <Button onClick={() => abrirCerrarModalEliminar()}>No</Button>
       </div>
     </div>
@@ -926,16 +585,13 @@ function EmpleadoComponent() {
     {
       name: "codEmpleado",
       label: "Código",
-    },
-    {
+    }, {
       name: "nombre",
       label: "Nombre",
-    },
-    {
+    }, {
       name: "apellido",
       label: "apellido",
-    },
-    {
+    }, {
       name: "tipDocumento",
       label: "Tipo Documento",
       options: {
@@ -957,44 +613,34 @@ function EmpleadoComponent() {
     {
       name: "numDocumento",
       label: "Número Documento",
-    },
-    {
+    }, {
       name: "edad",
       label: "Edad",
-    },
-    {
+    }, {
       name: "numTelefono",
       label: "Celular",
-    },
-    {
+    }, {
       name: "correo",
       label: "correo",
-    },
-    {
+    }, {
       name: "fechaNacimiento",
       label: "Fecha Nacimiento",
-    },
-    {
+    }, {
       name: "direccion",
       label: "Dirección",
-    },
-    {
+    }, {
       name: "nomContactoEmergencia",
       label: "Conctacto Emergencia",
-    },
-    {
+    }, {
       name: "numContactoEmergencia",
       label: "Celular Contacto Emergencia",
-    },
-    {
+    }, {
       name: "eps",
       label: "EPS",
-    },
-    {
+    }, {
       name: "arl",
       label: "ARL",
-    },
-    {
+    }, {
       name: "sexo",
       label: "Genero",
       options: {
@@ -1011,8 +657,7 @@ function EmpleadoComponent() {
           return value;
         },
       },
-    },
-    {
+    }, {
       name: "tipoSangre",
       label: "Grupo Sanguineo",
       options: {
@@ -1032,12 +677,10 @@ function EmpleadoComponent() {
           return value;
         },
       },
-    },
-    {
+    }, {
       name: "fotoEmpleado",
       label: "No foto",
-    },
-    {
+    }, {
       name: "acciones",
       label: "Acciones",
       options: {
@@ -1046,23 +689,11 @@ function EmpleadoComponent() {
         customBodyRender: (value, tableMeta, updateValue) => {
           return (
             <div>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => seleccionarEmpleado(tableMeta.rowData, "Editar")}
-              >
-                <AiFillEdit.AiFillEdit className="me-2" />
-                Editar
+              <Button variant="contained" color="primary" onClick={() => seleccionarEmpleado(tableMeta.rowData, "Editar")}>
+                <AiFillEdit.AiFillEdit className="me-2" /> Editar
               </Button>
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={() =>
-                  seleccionarEmpleado(tableMeta.rowData, "Eliminar")
-                }
-              >
-                <MdDelete.MdDelete className="me-2" />
-                Eliminar
+              <Button variant="contained" color="secondary" onClick={() => seleccionarEmpleado(tableMeta.rowData, "Eliminar")}>
+                <MdDelete.MdDelete className="me-2" />Eliminar
               </Button>
             </div>
           );
@@ -1078,38 +709,24 @@ function EmpleadoComponent() {
       <div className="card shadow mb-4">
         <div className="card-header py-3">
           <div className="flex">
-            <h6 className="m-0 font-weight-bold text-primary">
-              Base de Datos Empleados
-            </h6>
+            <h6 className="m-0 font-weight-bold text-primary">Base de Datos Empleados</h6>
           </div>
         </div>
         <div className="flex">
-          <Button
-            onClick={() => abrirCerrarModalInsertar()}
-            className="btn btn-primary"
-          >
-            Insertar Empleado
-          </Button>
+          <Button onClick={() => abrirCerrarModalInsertar()} className="btn btn-primary" > Insertar Empleado </Button>
         </div>
-
         <div className="card-body">
           <div className="table-responsive">
-            <MUIDataTable
-              title={"Lista de Empleados"}
-              data={data}
-              columns={columns}
-            />
+            <MUIDataTable title={"Lista de Empleados"} data={data} columns={columns} />
           </div>
         </div>
       </div>
       <Modal open={modalInsertar} onClose={abrirCerrarModalInsertar}>
         {bodyInsertar}
       </Modal>
-
       <Modal open={modalEditar} onClose={abrirCerrarModalEditar}>
         {bodyEditar}
       </Modal>
-
       <Modal open={modalEliminar} onClose={abrirCerrarModalEliminar}>
         {bodyEliminar}
       </Modal>
@@ -1119,5 +736,4 @@ function EmpleadoComponent() {
     </div>
   );
 }
-
 export default EmpleadoComponent;
