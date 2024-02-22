@@ -1,13 +1,5 @@
 import React, { useState } from "react";
-import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
-import {
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownToggle,
-} from "reactstrap";
-
-import "../../vendor/fontawesome-free/css/all.min.css";
+import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from "reactstrap";
 
 function AdministradorComponent() {
   const [dropdown, setDropdown] = useState(false);
@@ -18,7 +10,7 @@ function AdministradorComponent() {
   return (
     <div className="AdministradorComponent">
       <div id="page-top">
-        <div id="wrapper">
+        <div id="w">
           <ul className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
             <a className="sidebar-brand d-flex align-items-center justify-content-center" href="index.html" >
               <div className="sidebar-brand-icon rotate-n-15"> <i className="fas fa-laugh-wink"></i> </div>
@@ -48,13 +40,7 @@ function AdministradorComponent() {
 
             <li className="nav-item">
               <Dropdown isOpen={dropdown} toggle={abrirCerrarDropdown}>
-                <a className="nav-link collapsed"
-                  data-toggle="collapse"
-                  data-target="#collapseTwo"
-                  aria-expanded="true"
-                  aria-controls="collapseTwo"
-                  href="/Home"
-                >
+                <a className="nav-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo" href="/Home">
                   <i className="fas fa-fw fa-cog"></i>
                   <DropdownToggle>Components</DropdownToggle>
                 </a>

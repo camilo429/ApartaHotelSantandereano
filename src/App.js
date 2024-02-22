@@ -1,6 +1,5 @@
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import React from "react";
-
 import NacionalidadComponent from "./componentes/Nacionalidad/NacionalidadComponent";
 import EmpleadoComponent from "./componentes/Empleado/EmpleadoComponent";
 import AdministradorComponent from "./componentes/Administrador/AdministradorComponent";
@@ -12,7 +11,6 @@ import About from "./componentes/PaginaInicio/About";
 import Lugares from "./componentes/PaginaInicio/Lugares";
 import Contacto from "./componentes/PaginaInicio/Contacto";
 import Login from "./componentes/PaginaInicio/Login";
-
 
 function App() {
   return (
@@ -27,14 +25,12 @@ function App() {
             <Route path="/Lugares" element={<Lugares />} />
             <Route path="/Contactanos" element={<Contacto />} />
             <Route path="/Login" element={<Login />} />
-
             {/* url para navegar en empleado */}
-            <Route path="/ListarNacionalidades" element={<NacionalidadComponent />}/>
+            <Route path="/ListarNacionalidades" element={<NacionalidadComponent />} />
             <Route path="/ListarDocumento" element={<DocumentoComponent />} />
             <Route path="/documentoEmpleado" element={<DocumentoEmpleado />} />
             <Route path="/Administrador" element={<AdministradorComponent />} />
             <Route path="/ListarEmpleado" element={<EmpleadoComponent />} />
-
             {/* Rutas para El administrador */}
             <Route path="/PanelAdministrador/*" element={<PanelAdministrador />} />
           </Routes>
@@ -43,5 +39,4 @@ function App() {
     </div>
   );
 }
-
 export default App;

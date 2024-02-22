@@ -31,7 +31,6 @@ const Sidebar = () => {
             </a>
           </div>
           <br></br>
-
           <div className="sidebar-heading">Opciones</div>
           <li className="nav-item active">
             <NavLink className="text-blue rounded py-2 w-100 d-inline-block px-1" to="Home" activeclassname="active">

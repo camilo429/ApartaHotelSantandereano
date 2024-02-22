@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-// import { CiSun } from "react-icons/ci";
-// import { FaMoon } from "react-icons/fa";
-// import AdminDashboard from "./AdminDashboard"
-// import Footer from './Footer';
+import { CiSun } from "react-icons/ci";
+import { FaMoon } from "react-icons/fa";
+import AdminDashboard from "./AdminDashboard"
+import Footer from './Footer';
 
 function SidebarAdmin() {
 
@@ -85,9 +85,13 @@ function SidebarAdmin() {
                     </ul>
                 </div>
             </nav>
-
+            <AdminDashboard />
+            <a href='#html' className='theme-toggle'>
+                <CiSun />
+                <FaMoon />
+            </a>
+            <Footer />
         </div>
     )
 }
-
 export default SidebarAdmin
