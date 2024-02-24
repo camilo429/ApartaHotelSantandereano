@@ -16,7 +16,7 @@ import Footer from "./Footer";
 import { Apiurl } from "../../services/userService";
 import TipoDocumento from "../pagesAdministrador/TipoDocumento";
 import CaracteristicaHabitacion from "./CaracteristicaHabitacion"
-import { useForm } from "react-hook-form";
+import { useForm } from 'react-hook-form';
 //Reactrap
 import { Form, FormGroup, Label } from "reactstrap";
 import { makeStyles } from "@mui/styles";
@@ -32,7 +32,6 @@ import * as MdRoomService from "react-icons/md";
 import * as GrClearOption from "react-icons/gr";
 import * as BsPersonFillGear from "react-icons/bs";
 //url
-const urlhabitacionesDisponibles = Apiurl + "habitacion/listarHabitaciones/estado/Disponible";
 const urlG = Apiurl + "reservaciones/crearReservacion";
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -55,7 +54,7 @@ function Inicio() {
   const styles = useStyles();
   const [data, setData] = useState([]);
   const [modalInsertar, setModalInsertar] = useState(false);
-  const { register, formState: { errors }, watch, handleSubmit } = useForm();
+  const { register, handleSubmit, formState: { errors }, watch } = useForm();
   const [consolaSeleccionada, setConsolaSeleccionada] = useState({
     fechaEntrada: "",
     fechaSalida: "",
@@ -63,7 +62,7 @@ function Inicio() {
     ninos: 0,
     tipoDocumento: {
       codTipoDocumento: "",
-      nomTipoDocument: "",
+      nomTipoDocumento: "",
     },
     numDocumento: "",
     nombre: "",
@@ -71,15 +70,22 @@ function Inicio() {
     email: "",
     habitacion: {
       codHabitacion: "",
-      nombreHabitacion: "",
+      nombreHabitacion: {
+        codTipoHabitacio: "",
+        nombre: "",
+        precioXPersona: "",
+        precioXAcompanante: ""
+      },
       descripHabitacion: "",
       numHabitacion: "",
       pisoHabitacion: "",
       maxPersonasDisponibles: "",
-      precioDia: "",
-      estadoHabitacion: "",
-      imagenHabitacion: "",
-    },
+      estadoHabitacion: {
+        codEstadoHabitacion: "",
+        nombre: ""
+      },
+      imagenHabitacion: null
+    }
   });
 
   const handleChange = (e) => {
@@ -89,71 +95,80 @@ function Inicio() {
       [name]: value,
     }));
   };
-  const peticionPost = async () => {
-    console.log(consolaSeleccionada)
-    await axios
-      .post(urlG, consolaSeleccionada)
-      .then((response) => {
-        setData(data.concat(response.data));
-        abrirCerrarModalInsertar();
-        alert("La reservación ha sido creada");
-        setConsolaSeleccionada({
-          fechaEntrada: "",
-          fechaSalida: "",
-          adultos: 0,
-          ninos: 0,
-          tipoDocumento: {
-            codTipoDocumento: "",
-            nomTipoDocument: "",
-          },
-          numDocumento: "",
-          nombre: "",
-          apellido: "",
-          email: "",
-          habitacion: {
-            codHabitacion: "",
-            nombreHabitacion: "",
-            descripHabitacion: "",
-            numHabitacion: "",
-            pisoHabitacion: "",
-            maxPersonasDisponibles: "",
-            precioDia: "",
-            estadoHabitacion: "",
-            imagenHabitacion: "",
-          },
-        });
+
+  const onSubmit = async (info) => {
+    console.log(info.fechaEntrada);
+    console.log("consola", consolaSeleccionada)
+    try {
+      setConsolaSeleccionada({
+        fechaEntrada: info.fechaEntrada,
+        fechaSalida: info.fechaSalida,
+        adultos: info.adultos,
+        ninos: info.ninos,
+        numDocumento: info.numDocumento,
+        nombre: info.nombre,
+        apellido: info.apellido,
+        email: info.email,
+        habitacion: consolaSeleccionada.habitacion,
+        tipoDocumento: consolaSeleccionada.tipoDocumento
       })
-      .catch((error) => {
-        console.error("Error al realizar la reservación", error);
-        alert("Hubo un error al crear la reservación. Por favor, intenta nuevamente.");
-      });
-  };
+
+      console.log("consola2", consolaSeleccionada)
+      const response = await axios.post(urlG, consolaSeleccionada);
+      console.log(response.status);
+      setData(data.concat(response.data));
+      abrirCerrarModalInsertar();
+      alert("La reservación ha sido creada");
+      setConsolaSeleccionada({
+        fechaEntrada: "",
+        fechaSalida: "",
+        adultos: 0,
+        ninos: 0,
+        tipoDocumento: {
+          codTipoDocumento: "",
+          nomTipoDocument: "",
+        },
+        numDocumento: "",
+        nombre: "",
+        apellido: "",
+        email: "",
+        habitacion: {
+          codHabitacion: "",
+          nombreHabitacion: "",
+          descripHabitacion: "",
+          numHabitacion: "",
+          pisoHabitacion: "",
+          maxPersonasDisponibles: "",
+          precioDia: "",
+          estadoHabitacion: "",
+          imagenHabitacion: "",
+        },
+      })
+    } catch (error) {
+      console.error("Error al realizar la reservación", error);
+      alert("Hubo un error al crear la reservación. Por favor, intenta nuevamente.");
+    }
+  }
+
   const abrirCerrarModalInsertar = () => {
     setModalInsertar(!modalInsertar);
     clearInterval(setConsolaSeleccionada);
   };
-  const onSubmit = handleSubmit((data) => {
-    console.log(data);
-  });
+
   const bodyInsertar = (
     <div className={styles.modal}>
       <h3>Agendar una Reservación</h3>
-      <Form>
-        <div className="flex" style={{ justifyContent: "center", alignItems: "center", margin: "auto", width: "100%", marginBottom: "0px" }} onSubmit={handleSubmit(onSubmit)}>
+      <Form onSubmit={handleSubmit(onSubmit)}>
+        <div className="flex" style={{ width: "100%", justifyContent: "center", alignItems: "center", marginBottom: "0px", fontSize: "0.6rem", placeholder: "0.6rem" }}>
           <FormGroup className="flex me-2" style={{ marginBottom: "0px" }} >
-            <div style={{ margin: "6px" }}>
+            <div style={{ margin: "6px", width: "150px" }}>
               <Label for="exampleEmail">Fecha de Entrada</Label>
-              <input name="fechaEntrada" type="date" placeholder="fechaEntrada" className="form-control" onChange={handleChange} {...register('fechaEntrada', {
-                required: {
-                  value: true,
-                  message: "El campo es requerido"
-                },
-                maxLength: 10
-              })} />
+              <input name="fechaEntrada" type="date" placeholder="fechaEntrada" className="form-control" onChange={handleChange} {...register('fechaEntrada', { required: "El campo es requerido", maxLength: 10 })} />
               {errors.fechaEntrada && <p id="errores">{errors.fechaEntrada.message}</p>}
-              {errors.fechaEntrada?.type === 'maxLength' && <p id="errores">La Fecha no valida</p>}
             </div>
-            <div style={{ margin: "6px" }}>
+          </FormGroup>
+          <FormGroup  >
+            <div style={{ margin: "6px", width: "150px" }}>
               <Label for="exampleEmail">Fecha de Salida</Label>
               <input name="fechaSalida" type="date" placeholder="fechaSalida" className="form-control" onChange={handleChange} {...register('fechaSalida', {
                 required: true,
@@ -170,14 +185,18 @@ function Inicio() {
               {errors.fechaSalida?.type === 'maxLength' && <p id="errores">Fecha no valida</p>}
               {errors.fechaSalida && <p id="errores">{errors.fechaSalida.message}</p>}
             </div>
-            <div style={{ margin: "6px" }}>
+          </FormGroup>
+          <FormGroup>
+            <div style={{ margin: "6px", width: "150px" }}>
               <Label for="exampleEmail">Número de Adultos</Label>
               <input name="adultos" type="number" placeholder="# Adultos" max="5" min="1" className="form-control" onChange={handleChange} {...register('adultos', {
                 required: true,
               })} />
               {errors.adultos?.type === "required" && <p id="errores">Es Requerido</p>}
             </div>
-            <div style={{ margin: "6px" }}>
+          </FormGroup>
+          <FormGroup>
+            <div style={{ margin: "6px", width: "150px" }}>
               <Label for="exampleEmail">Número de Niños</Label>
               <input name="ninos" type="number" placeholder="# Niños" min="0" max="4" className="form-control" onChange={handleChange} {...register('ninos', {
                 required: true
@@ -185,14 +204,16 @@ function Inicio() {
               {errors.ninos?.type === 'required' && <p id="errores"> Es requerido</p>}
             </div>
           </FormGroup>
+          <FormGroup>
+            <div style={{ margin: "6px", width: "170px" }}>
+              <Label for="exampleEmail">Tipo de Documento</Label>
+              <TipoDocumento name="tipoDocumento" handleChangeData={handleChange} />
+            </div>
+          </FormGroup>
         </div>
 
         <div className="flex" style={{ justifyContent: "center", alignItems: "center", margin: "auto", width: "100%", marginTop: "0px" }} >
           <FormGroup className="flex me-2" >
-            <div style={{ margin: "6px" }}>
-              <Label for="exampleEmail">Tipo de Documento</Label>
-              <TipoDocumento name="tipoDocumento" handleChangeData={handleChange} />
-            </div>
             <div style={{ margin: "6px" }}>
               <Label for="exampleEmail"># Documento</Label>
               <input name="numDocumento" type="number" placeholder="Número de Documento" className="form-control" onChange={handleChange} {...register('numDocumento', {
@@ -216,11 +237,6 @@ function Inicio() {
               {errors.apellido?.type === 'required' && <p id="errores">El campo es requerido</p>}
               {errors.apellido?.type === 'maxLength' && <p id="errores">Es muy largo</p>}
             </div>
-          </FormGroup>
-        </div>
-
-        <div className="flex" style={{ justifyContent: "center", alignItems: "center", margin: "auto", width: "100%", marginTop: "0px" }}>
-          <FormGroup className="flex me-2" >
             <div style={{ margin: "6px" }}>
               <Label for="exampleEmail">Correo Electronico</Label>
               <input name="email" type="email" placeholder="email" className="form-control" onChange={handleChange} {...register('email', {
@@ -232,35 +248,17 @@ function Inicio() {
             </div>
             <div>
               <Label for="exampleEmail">Tipo Habitación </Label>
-              <Habitaciones name="habitacion" handleChangeData={handleChange} url={urlhabitacionesDisponibles} {...register('habitacion', {
-                required: true,
-                validate: (value) => {
-                  let numeroPersonas = watch("adultos") + watch("ninos");
-                  if (value.nombreHabitacion === "INDIVIDUAL" && numeroPersonas > 1) {
-                    return "Las habitaciones individuales son para 1 persona";
-                  }
-                  if (value.nombreHabitacion === "MATRIMONIAL" && numeroPersonas > 2) {
-                    return "Las habitaciones MATRIMONIAL son para 2 persona";
-                  }
-                  if (value.nombreHabitacion === "AMIGOS" && numeroPersonas > 3) {
-                    return "Las habitaciones AMIGOS son para 2  o 3 persona";
-                  }
-                  if (value.nombreHabitacion === "AMIGOS" && numeroPersonas > 5) {
-                    return "Las habitación FAMILIAR es para máxicmo 5 personas";
-                  }
-                }
-              })} />
+              <Habitaciones name="habitacion" handleChangeData={handleChange} />
               {errors.habitacion && <p id="errores">{errors.habitacion.message}</p>}
             </div>
           </FormGroup>
         </div>
         <div>
-          <button className="btn btn-success" onClick={(e) => peticionPost(e)}> Agendar </button>
+          <button type="submit" className="btn btn-success">Agendar</button>
           <button className="btn btn-danger" onClick={() => abrirCerrarModalInsertar()}> Cancelar</button>
         </div >
       </Form>
       <br />
-
     </div>
   );
   return (

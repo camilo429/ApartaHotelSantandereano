@@ -3,6 +3,7 @@ import { CiSun } from "react-icons/ci";
 import { FaMoon } from "react-icons/fa";
 import AdminDashboard from "./AdminDashboard"
 import Footer from './Footer';
+import Cliente1 from '../../image/cliente1.jpg'
 
 function SidebarAdmin() {
 
@@ -74,12 +75,12 @@ function SidebarAdmin() {
                     <ul className='navbar-nav'>
                         <li className='nav-item dropdown'>
                             <a href='#hml' data-bs-toggle="dropdown" className='nav-icon pe-md-0'>
-                                <img src='./cliente1.jpg' className='avatar img-fluid rounded' alt='monacho' />
+                                <img src={Cliente1} className='avatar img-fluid rounded' alt='monacho' />
                             </a>
                             <div className='dropdown-menu dropdown-menu-end'>
-                                <a href='#fe' className='dropdown-item'>Profile</a>
-                                <a href='#fe' className='dropdown-item'>Setting</a>
-                                <a href='#fe' className='dropdown-item'>Logout</a>
+                                <a href='#fe' className='dropdown-item'>Perfil</a>
+                                <a href='#fe' className='dropdown-item'>Configuracione</a>
+                                <a href='#fe' className='dropdown-item'>Salir</a>
                             </div>
                         </li>
                     </ul>

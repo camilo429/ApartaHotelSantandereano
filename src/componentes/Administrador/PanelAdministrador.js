@@ -1,10 +1,10 @@
 import React from "react";
+import { Routes, Route } from "react-router-dom";
 import Home from "../pagesAdministrador/Home";
 import Huespedes from "../pagesAdministrador/Huespedes";
 import Sales from "../pagesAdministrador/Sales";
 import Reservaciones from "../pagesAdministrador/Reservaciones";
 import Graficas from "../pagesAdministrador/Graficas";
-import { Routes, Route } from "react-router-dom";
 import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import EmpleadoComponent from "../Empleado/EmpleadoComponent";
 import Habitacion from "../pagesAdministrador/Habitacion";

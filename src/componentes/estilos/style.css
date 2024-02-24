@@ -141,6 +141,10 @@ button:focus {
   display: flex;
 }
 
+input {
+  width: 200px;
+}
+
 .row_reverse {
   -webkit-box-orient: horizontal;
   -webkit-box-direction: reverse;

@@ -4,6 +4,8 @@ import NavbarInicio from "./Navbar/NavbarInicio";
 //Hooks
 import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
 import React, { useState } from "react";
+import { Form, FormGroup, Label } from "reactstrap";
+import { useForm } from 'react-hook-form';
 //Estilos
 import "../../vendors/bootstrap-datepicker/bootstrap-datetimepicker.min.css";
 import "../../vendors/nice-select/css/nice-select.css";
@@ -18,16 +20,10 @@ import axios from "axios";
 import { Apiurl } from "../../services/userService";
 //Dirrección
 const url = Apiurl + "comentarios/crearComentario";
-//Expresiones Regulares
-const nameRegex = /^[a-zA-Z\s]+$/;
-const correoExpresion = /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6}$/;
-let estilos = {
-  fontWeight: "bold",
-  color: "#dc3545",
-};
+
 function Contacto() {
   const [data, setData] = useState([]);
-  const [errors, setErrors] = useState([]);
+  const { register, handleSubmit, formState: { errors }, watch } = useForm();
   const [formulario, setFormulario] = useState({
     codComentario: "",
     nombre: "",
@@ -38,27 +34,6 @@ function Contacto() {
     horaEnviado: "",
   });
 
-  function validacionesFormulario(formulario) {
-    if (!nameRegex.test(formulario.nombre)) {
-      errors.nombre = "Nombre no valido";
-    }
-    if (!correoExpresion.test(formulario.email)) {
-      errors.email = "Correo No valido";
-    }
-    if (
-      formulario.numTelefono.length < 10 ||
-      formulario.numTelefono.length > 10
-    ) {
-      errors.numTelefono = "El número debe tener 10 digitos";
-    }
-    if (formulario.comentario.length === 0) {
-      errors.comentario = "El Comentario está vacio";
-    }
-    if (formulario.comentario.length > 100) {
-      errors.comentario = "El comentario enviado supera los 100 caracteres";
-    }
-    return errors;
-  }
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: "AIzaSyB98G8_CHNNlhya9B1iiolBxsxp4UDZc60",
   });
@@ -84,37 +59,30 @@ function Contacto() {
     }));
   };
 
-  const peticionPost = async (e) => {
+
+  const onSubmit = async (info) => {
+    console.log(info);
     try {
-      let fechaActual = new Date();
-      let hora = fechaActual.getHours();
-      let dia = fechaActual.getDay();
-      setFormulario.horaEnviado = hora;
-      setFormulario.fechaActual = dia;
-      console.log("data seleccionada", formulario);
-      validacionesFormulario(formulario);
-      setErrors(validacionesFormulario(formulario));
-      if (Object.keys(errors).length === 0) {
-        const response = await axios.post(url, formulario);
-        setData(data.concat(response.data));
-        setFormulario({
-          codComentario: "",
-          nombre: "",
-          email: "",
-          numTelefono: "",
-          comentario: "",
-          fechaEnviado: "",
-          horaEnviado: "",
-        });
-        alert(
-          "¡Gracias por ser parte de la familia" +
-          " y por compartir tus pensamientos y sugerencias con nosotros!"
-        );
-      }
-    } catch (error) {
-      console.log("error mensaje", error);
+      const response = await axios.post(url, info);
+      setData(data.concat(response.data));
+      setFormulario({
+        codComentario: "",
+        nombre: "",
+        email: "",
+        numTelefono: "",
+        comentario: "",
+        fechaEnviado: "",
+        horaEnviado: "",
+      });
+      alert(
+        "¡Gracias por ser parte de la familia" +
+        " y por compartir tus pensamientos y sugerencias con nosotros!"
+      );
     }
-  };
+    catch (error) {
+      console.log("error mensaje", error);
+    };
+  }
 
   return (
     <div className="Contacto">
@@ -153,51 +121,45 @@ function Contacto() {
         </div>
         <div className="Formulario" style={{ width: "900px", alignItems: "center", margin: "auto" }}>
           <h2 className="title_color" style={{ marginLeft: "14%" }}>Caja de Comentarios y Sugerencias</h2>
-          <form>
+
+          <Form onSubmit={handleSubmit(onSubmit)}>
             <div className="form-row">
               <div className="form-group col-md-6">
                 <div>
-                  <label for="inputEmail4">Email</label>
-                  <input type="email" className="form-control" id="inputEmail4" value={formulario.nombre} placeholder="Ingrese su Nombre Completo" onChange={handleChange} />
-                  {errors.nombre && (
-                    <div style={estilos}>
-                      <p>{errors.nombre}</p>
-                    </div>
-                  )}
+                  <label htmlFor="inputEmail4">Nombre y Apellido</label>
+                  <input type="text" className="form-control" placeholder="Ingrese su nombre y apellido" onChange={handleChange} {...register('nombre', {
+                    required: "El campo es requerido"
+                  })} />
+                  {errors.nombre && <p id="errores">{errors.nombre.message}</p>}
                 </div>
                 <div>
-                  <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="email" name="email" value={formulario.email} placeholder="Ingrese su correo o email" onChange={handleChange} />
-                  {errors.email && (
-                    <div style={estilos}>
-                      <p>{errors.email}</p>
-                    </div>
-                  )}
+                  <label htmlFor="inputEmail4">Email</label>
+                  <input type="email" className="form-control" placeholder="Ingrese su correo o email" onChange={handleChange}  {...register('email', {
+                    required: "El campo es requerido"
+                  })} />
+                  {errors.email && <p id="errores">{errors.email.message}</p>}
                 </div>
                 <div>
-                  <input type="number" className="form-control" name="numTelefono" placeholder="Ingrese su número de telefono" onChange={handleChange} value={formulario.numTelefono} />
-                  {errors.numTelefono && (
-                    <div style={estilos}>
-                      <p>{errors.numTelefono}</p>
-                    </div>
-                  )}
+                  <label htmlFor="inputEmail4">Número Celular</label>
+                  <input type="number" className="form-control" name="numTelefono" placeholder="Ingrese su número de telefono" onChange={handleChange}  {...register('numTelefono', {
+                    required: "El campo es requerido", maxLength: 10
+                  })} />
+                  {errors.numTelefono && <p id="errores">{errors.numTelefono.message}</p>}
                 </div>
               </div>
               <div className="" style={{ width: "45%" }}>
                 <label for="comentarios"> Comentario</label>
-                <textarea className="form-control" name="comentario" rows="3" type="texarea" placeholder="Ingrese Comentario o Sugerencia" onChange={handleChange} value={formulario.comentario} style={{ height: "70%" }} />
-                {errors.comentario && (
-                  <div style={estilos}>
-                    <p>{errors.comentario}</p>
-                  </div>
-                )}
+                <textarea className="form-control" name="comentario" rows="3" type="texarea" placeholder="Ingrese Comentario o Sugerencia" onChange={handleChange} style={{ height: "70%" }}  {...register('comentario', {
+                  required: "El campo es requerido"
+                })} />
+                {errors.comentario && <p id="errores">{errors.comentario.message}</p>}
               </div>
             </div>
-          </form>
-          <div className="col-md-12 text-center">
-            <button type="submit" value="submit" className="btn btn-primary" onClick={(e) => peticionPost(e)}>
-              Enviar Mensaje
-            </button>
-          </div>
+            <div>
+              <button type="submit" className="btn btn-success">Enviar</button>
+              <button className="btn btn-danger" onClick={() => resetFormulario()}> Cancelar</button>
+            </div >
+          </Form>
         </div>
       </section>
       <Footer />

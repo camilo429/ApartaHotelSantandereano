@@ -2,93 +2,91 @@ import React, { useEffect, useState } from "react";
 // librerias
 import axios from "axios";
 import Select from "react-select";
-import { useForm, Controller } from "react-hook-form";
-function Habitaciones({ name, handleChangeData, value = null, url }) {
+import { Apiurl } from "../../services/userService";
+const url = Apiurl + "habitacion/listarHabitaciones/estado/1";
+
+function Habitaciones({ name, handleChangeData, value = null }) {
   const [data, setData] = useState([]);
-  //const { register, formState: { errors }, watch, handleSubmit } = useForm();
-  const { control, setValue } = useForm();
-  useEffect(() => {
-    const getHabitaciones = async () => {
-      try {
-        axios
-          .get(url)
-          .then((response) => {
-            if (response.data !== null) {
-              setData(response.data);
-            } else {
-              alert("¡No hay habitaciones disponible!");
-            }
-          })
-          .catch((error) => {
-            alert("¡No hay habitaciones disponible!");
-            console.error("Error al obtener las opciones:", error);
-          });
-      } catch (error) {
-        console.log("Error al obtener las opciones:", error);
+
+  const getHabitaciones = async () => {
+    try {
+      const response = await axios.request({ method: "get", url: url });
+      if (response.status === 200) {
+        setData(response.data);
+        console.log(response.data);
+      } else {
+        console.log("Error", response.data.mensaje);
       }
-    };
-    getHabitaciones();
-  }, [url]);
-  const handleChange = (selectedOption) => {
-    setValue('habitaciones', selectedOption);
+    } catch (error) {
+      console.log("Error al obtener las habitaciones", error)
+    }
+  }
+
+  useEffect(() => {
+    getHabitaciones()
+  }, [])
+
+  const handleChange = ({ label, value, nombreHabitacion: { codTipoHabitacion, precioXPersona, precioXAcompanante }, descripHabitacion, numHabitacion, pisoHabitacion, maxPersonasDisponibles, imagenHabitacion, estadoHabitacion: { codEstadoHabitacion, nombre },
+  }) => {
+    handleChangeData({
+      target: {
+        name,
+        value: {
+          codHabitacion: value,
+          nombre: label,
+
+          nombreHabitacion: {
+            codTipoHabitacion: codTipoHabitacion,
+            nombre: label,
+            precioXPersona: precioXPersona,
+            precioXAcompanante: precioXAcompanante
+          },
+          descripHabitacion: descripHabitacion,
+          numHabitacion: numHabitacion,
+          pisoHabitacion: pisoHabitacion,
+          maxPersonasDisponibles: maxPersonasDisponibles,
+          estadoHabitacion: {
+            codEstadoHabitacion: codEstadoHabitacion,
+            nombre: nombre
+          },
+          imagenHabitacion: imagenHabitacion,
+        },
+      },
+    });
   };
-  // const handleChange = ({
-  //   label,
-  //   value,
-  //   descripHabitacion,
-  //   numHabitacion,
-  //   pisoHabitacion,
-  //   maxPersonasDisponibles,
-  //   precioDia,
-  //   imagenHabitacion,
-  //   estadoHabitacion,
-  // }) => {
-  //   handleChangeData({
-  //     target: {
-  //       name,
-  //       value: {
-  //         codHabitacion: value,
-  //         nombreHabitacion: label,
-  //         descripHabitacion: descripHabitacion,
-  //         numHabitacion: numHabitacion,
-  //         pisoHabitacion: pisoHabitacion,
-  //         maxPersonasDisponibles: maxPersonasDisponibles,
-  //         precioDia: precioDia,
-  //         estadoHabitacion: estadoHabitacion,
-  //         imagenHabitacion: imagenHabitacion,
-  //       },
-  //     },
-  //   });
-  // };
 
   return (
     <div className="habitaciones" style={{ margin: "10px" }}>
-      <Controller
-        name="habitaciones"
-        control={control}
-        render={({ field }) => (
-          <Select
-            {...field}
-            options={data.map((docu) => ({
-              label: docu.nombreHabitacion,
-              value: docu.codHabitacion,
-              descripHabitacion: docu.descripHabitacion,
-              numHabitacion: docu.numHabitacion,
-              pisoHabitacion: docu.pisoHabitacion,
-              maxPersonasDisponibles: docu.maxPersonasDisponibles,
-              precioDia: docu.precioDia,
-              estadoHabitacion: docu.estadoHabitacion,
-              imagenHabitacion: docu.imagenHabitacion,
-            }))}
-            onChange={(selectedOption) => {
-              handleChange(selectedOption);
-              field.onChange(selectedOption);
-            }}
-            placeholder="Seleccione Habitacion"
-          />
-        )}
+      <Select
+        defaultValue={
+          value
+            ? {
+              label: value?.nombreHabitacion.nombre,
+              value: value.codHabitacion
+            }
+            : null
+        }
+        options={data.map((docu) => ({
+          label: docu.nombreHabitacion.nombre,
+          value: docu.codHabitacion,
+          nombreHabitacion: {
+            codTipoHabitacion: docu.nombreHabitacion.codTipoHabitacion,
+            nombre: docu.nombreHabitacion.nombre,
+            precioXPersona: docu.nombreHabitacion.precioXPersona,
+            precioXAcompanante: docu.nombreHabitacion.precioXAcompanante
+          },
+          descripHabitacion: docu.descripHabitacion,
+          numHabitacion: docu.numHabitacion,
+          pisoHabitacion: docu.pisoHabitacion,
+          maxPersonasDisponibles: docu.maxPersonasDisponibles,
+          estadoHabitacion: {
+            codEstadoHabitacion: docu.estadoHabitacion.codEstadoHabitacion,
+            nombre: docu.estadoHabitacion.nombre
+          },
+          imagenHabitacion: docu.imagenHabitacion,
+        }))}
+        onChange={handleChange}
       />
-      {/* //{JSON.stringify(watch(), null, 2)} */}
     </div>
   );
 }

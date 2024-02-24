@@ -5,8 +5,7 @@ function TableElements() {
         <div className='card border-0'>
             <div className='card-header'>
                 <h5 className='card-title'> Tabla de Usuarios</h5>
-                <h6 className='card-subtitle'> Lorem ipsum dolor sit amet consectetur.
-                    Necesitamos más tablas como estas para estar renderizando los tipos de usuarios que tenemos
+                <h6 className='card-subtitle'> Mejores Huespedes
                 </h6>
             </div>
             <table className="table">

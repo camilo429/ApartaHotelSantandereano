@@ -1,5 +1,6 @@
 import React from 'react'
 import TableElements from './TableElements'
+import Estadisticas from './../../image/estadisticas.png';
 
 function AdminDashboard() {
     return (
@@ -20,7 +21,7 @@ function AdminDashboard() {
                                         </div>
                                     </div>
                                     <div className='col-6 align-self-end text-end'>
-                                        <img src='./estadisticas.png' className='img-fluid illustration-img' alt='estadisiticas' />
+                                        <img src={Estadisticas} className='img-fluid illustration-img' alt='estadisticas' />
                                     </div>
                                 </div>
                             </div>
@@ -31,7 +32,7 @@ function AdminDashboard() {
                             <div className='car-body py-4 px-3'>
                                 <div className='d-flex align-items-start'>
                                     <div className='flex-grow-1'>
-                                        <h4 className='mb-2'> $ 2.00.000.00 </h4>
+                                        <h4 className='mb-2'> $ 2.00.000.oo </h4>
                                         <p className='mb-2'> Ingresos Totales </p>
                                         <div className='mb-0'>
                                             <span className='badge text-success me-2'> + 9.0% </span>
