@@ -20,6 +20,7 @@ import Nacionalidades from "../../componentes/pagesAdministrador/Nacionalidades"
 import TipoDocumento from "./TipoDocumento";
 // url
 import { Apiurl } from "../../services/userService";
+import Region from "./Region";
 //import { wait } from "@testing-library/user-event/dist/utils";
 // import { useLoaderData } from "react-router-dom";
 const url = Apiurl + "huespedes/listarHuespedes";
@@ -75,6 +76,7 @@ function Huespedes() {
   const [modalEliminar, setModalEliminar] = useState(false);
   const [modalVer, setModalVer] = useState(false);
 
+
   const [consolaSeleccionada, setConsolaSeleccionada] = useState({
     codHuesped: "",
     nombre: "",
@@ -83,61 +85,28 @@ function Huespedes() {
     correo: "",
     tipoDocumento: {
       codTipoDocumento: "",
-      nomTipoDocumento: "",
+      nomTipoDocumento: ""
     },
     numDocumento: "",
+    fechaNacimiento: "",
+    edad: "",
     nacionalidad: {
       codNacion: "",
-      nombre: "",
+      nombre: ""
     },
-    lugarOrigen: "",
+    lugarOrigen: {
+      codRegion: "",
+      nacionalidad: {
+        codNacion: "",
+        nombre: ""
+      },
+      nombre: ""
+    },
     nomContactoEmergencia: "",
     numContactoEmergencia: "",
-    estadoHuesped: true,
+    checkin: [],
+    estadoHuesped: ""
   });
-
-  const validacionesFormulario = (consolaSeleccionada) => {
-    let errors = {};
-    if (!nameRegex.test(consolaSeleccionada.nombre)) {
-      errors.nombre = "Nombre NO válido";
-    }
-    if (
-      consolaSeleccionada.nombre.length < 4 ||
-      consolaSeleccionada.nombre.length > 30
-    ) {
-      errors.nombre = "El nombre es corto o muy largo";
-    }
-    if (!nameRegex.test(consolaSeleccionada.apellido)) {
-      errors.apelldio = "Apellido NO válido";
-    }
-    if (
-      consolaSeleccionada.apellido.length < 4 ||
-      consolaSeleccionada.apellido.length > 30
-    ) {
-      errors.apellido = "Apellido es corto o muy largo";
-    }
-    if (!numeroCelularExpresion.test(consolaSeleccionada.numCelular)) {
-      errors.numCelular = "Número No válido";
-    }
-    if (!correoExpresion.test(consolaSeleccionada.correo)) {
-      errors.correo = "Correo No válido";
-    }
-    if (!cedulaExpresion.test(consolaSeleccionada.numDocumento)) {
-      errors.numDocumento = "Número de documento no valido";
-    }
-    if (!nameRegex.test(consolaSeleccionada.lugarOrigen)) {
-      errors.lugarOrigen = "Lugar Origen No valido";
-    }
-    if (!nameRegex.test(consolaSeleccionada.nomContactoEmergencia)) {
-      errors.nomContactoEmergencia = "Lugar Origen No valido";
-    }
-    if (
-      !numeroCelularExpresion.test(consolaSeleccionada.numContactoEmergencia)
-    ) {
-      errors.numContactoEmergencia = "Número No válido";
-    }
-    return errors;
-  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -158,6 +127,7 @@ function Huespedes() {
         Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
       },
     }).then((response) => {
+      console.log(response.data);
       if (response.status === 200) {
         setData(response.data);
       }
@@ -169,6 +139,16 @@ function Huespedes() {
 
   const peticionPost = async () => {
     try {
+      setConsolaSeleccionada({
+        lugarOrigen: {
+          codRegion: consolaSeleccionada.region.codRegion,
+          nacionalidad: {
+            codNacion: consolaSeleccionada.nacionalidad.codNacion,
+            nombre: consolaSeleccionada.nacionalidad.nombre
+          },
+          nombre: consolaSeleccionada.region.nombre
+        }
+      })
       console.log(consolaSeleccionada)
       const response = await axios.post(urlG, consolaSeleccionada, {
         headers: {
@@ -334,24 +314,24 @@ function Huespedes() {
           <FormGroup className="me-2">
             <Label for="exampleEmail">Nombre</Label>
             <input className="form-control" name="nombre" onChange={handleChange} placeholder={!consolaSeleccionada?.nombre ? "Nombres" : "Nombre"} />
-            {errors.nombre && (<div style={estilos}> <p>{errors.nombre}</p></div>)}
           </FormGroup>
           <FormGroup className="me-2">
             <Label for="Apellido">Apellido</Label>
             <input className="form-control" name="apellido" onChange={handleChange} placeholder={!consolaSeleccionada?.apellido ? "Apellido" : "Apellido"} />
-            {errors.apellido && (<div style={estilos}> <p>{errors.apellido}</p> </div>)}
           </FormGroup>
           <FormGroup className="me-2">
             <Label for="exampleEmail">Número Celular</Label>
             <input className="form-control" name="numCelular" onChange={handleChange} placeholder={!consolaSeleccionada?.numCelular ? "Número de celular Personal" : "Numero de celular"} />
-            {errors.numCelular && (<div style={estilos}> <p>{errors.numCelular}</p> </div>)}
+          </FormGroup>
+          <FormGroup className="me-2">
+            <Label for="exampleEmail">Fecha de Nacimiento</Label>
+            <input type="date" className="form-control" name="fechaNacimiento" onChange={handleChange} placeholder={!consolaSeleccionada?.fechaNacimiento ? "fecha Nacimiento" : "Fecha Nacimiento"} />
           </FormGroup>
         </div>
         <div className="flex">
           <FormGroup className="me-2">
             <Label for="email">Correo Electronico</Label>
             <input className="form-control" name="correo" onChange={handleChange} placeholder={!consolaSeleccionada?.correo ? "Correo Personal" : "Correo"} />
-            {errors.correo && (<div style={estilos}> <p>{errors.correo}</p></div>)}
           </FormGroup>
           <FormGroup className="me-2" style={{ width: "300px", margin: "20px" }}>
             <Label for="exampleEmail">Tipo Documento</Label>
@@ -360,7 +340,6 @@ function Huespedes() {
           <FormGroup className="me-2">
             <Label for="exampleEmail">Número Documento</Label>
             <input className="form-control" name="numDocumento" onChange={handleChange} placeholder={!consolaSeleccionada?.numDocumento ? "Número Idenficación" : "Número de documento"} />
-            {errors.numDocumento && (<div style={estilos}> <p>{errors.numDocumento}</p></div>)}
           </FormGroup>
           <FormGroup className="me-2" style={{ width: "250px", margin: "20px" }}>
             <Label for="exampleEmail">Nacionalidad</Label>
@@ -368,20 +347,24 @@ function Huespedes() {
           </FormGroup>
         </div>
         <div className="flex">
-          <FormGroup className="me-2">
-            <Label for="exampleEmail">¿Lugar de dónde viene?</Label>
-            <input className="form-control" name="lugarOrigen" onChange={handleChange} placeholder={!consolaSeleccionada?.lugarOrigen ? "Lugar de donde proviene" : "LugarProveniente"} />
-            {errors.lugarOrigen && (<div style={estilos}> <p>{errors.lugarOrigen}</p> </div>)}
+          <FormGroup>
+            <Label for="eampleemail"> ¿ Región de dónde proviene ?</Label>
+            <Region name="region" handleChangeData={handleChange} codNacion={2} />
           </FormGroup>
           <FormGroup className="me-2">
             <Label for="exampleEmail">Nombre Emergencia</Label>
             <input className="form-control" name="nomContactoEmergencia" onChange={handleChange} placeholder={!consolaSeleccionada?.nomContactoEmergencia ? "Nombre del acompañante" : "Acompañante"} />
-            {errors.nomContactoEmergencia && (<div style={estilos}> <p>{errors.nomContactoEmergencia}</p></div>)}
           </FormGroup>
           <FormGroup className="me-2">
             <Label for="exampleEmail">#Contacto Emergencia</Label>
             <input className="form-control" name="numContactoEmergencia" onChange={handleChange} placeholder={!consolaSeleccionada?.numContactoEmergencia ? "Número de contacto de Emergencia" : "NúmeroEmergencia"} />
-            {errors.numContactoEmergencia && (<div style={estilos}> <p>{errors.numContactoEmergencia}</p></div>)}
+          </FormGroup>
+          <FormGroup styles={{ margin: "6px" }}>
+            <Label for="eampleemail"> Estado Huesped</Label>
+            <select className="form-select" name="estadoHuesped" placeholder="estado Huesped" onChange={handleChange}>
+              <option value="1">HABILITADO</option>
+              <option value="0">DESHABILITADO</option>
+            </select>
           </FormGroup>
         </div>
       </Form>
@@ -584,10 +567,11 @@ function Huespedes() {
     //     },
     //   },
     // }, 
+    // {
+    //   name: "lugarOrigen",
+    //   label: "Lugar De incio de viaje",
+    // }, 
     {
-      name: "lugarOrigen",
-      label: "Lugar De incio de viaje",
-    }, {
       name: "nomContactoEmergencia",
       label: "Nombre Contacto ",
     }, {

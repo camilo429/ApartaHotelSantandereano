@@ -22,7 +22,7 @@ function Nacionalidades({ name, handleChangeData, value = null }) {
     }).then(response => {
       if (response.status === 200) {
         setData(response.data);
-        //console.log(response.data);
+        console.log(response.data);
       }
     })
   };
@@ -32,7 +32,13 @@ function Nacionalidades({ name, handleChangeData, value = null }) {
 
   const handleChange = ({ label, value }) => {
     handleChangeData({
-      target: { name, value: { codNacion: value, nombre: label } },
+      target: {
+        name,
+        value: {
+          codNacion: value,
+          nombre: label
+        }
+      },
     });
   };
 
@@ -58,5 +64,4 @@ function Nacionalidades({ name, handleChangeData, value = null }) {
     </div>
   );
 }
-
 export default Nacionalidades;
