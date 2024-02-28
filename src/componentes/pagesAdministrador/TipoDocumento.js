@@ -45,14 +45,14 @@ function TipoDocumento({ name, handleChangeData, value = null }) {
   };
 
   return (
-    <div className="TipoDocumento">
+    <div className="TipoDocumento" style={{ height: "25px", width: "170px" }}>
       <Select
         defaultValue={
           value
             ? {
-                label: value?.nomTipoDocumento,
-                value: value?.codTipoDocumento,
-              }
+              label: value?.nomTipoDocumento,
+              value: value?.codTipoDocumento,
+            }
             : null
         }
         options={data.map((docu) => ({

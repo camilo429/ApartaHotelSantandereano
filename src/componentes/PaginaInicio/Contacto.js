@@ -157,7 +157,7 @@ function Contacto() {
             </div>
             <div>
               <button type="submit" className="btn btn-success">Enviar</button>
-              <button className="btn btn-danger" onClick={() => resetFormulario()}> Cancelar</button>
+              <button className="btn btn-danger" > Cancelar</button>
             </div >
           </Form>
         </div>

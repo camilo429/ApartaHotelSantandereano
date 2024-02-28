@@ -56,7 +56,7 @@ function Habitaciones({ name, handleChangeData, value = null }) {
   };
 
   return (
-    <div className="habitaciones" style={{ margin: "10px" }}>
+    <div className="habitaciones" style={{ height: "25px", width: "170px" }}>
       <Select
         defaultValue={
           value

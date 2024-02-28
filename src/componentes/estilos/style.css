@@ -83,6 +83,29 @@ a:focus {
   font-size: x-small;
 }
 
+#reservacion {
+  margin-left: 6px;
+  margin-right: 6px
+}
+
+#botones {
+  text-align: center;
+  margin: 10px;
+}
+
+#botones button {
+  margin: 10px;
+  width: 200px;
+}
+
+#fomularioReservacion {
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  width: 100%;
+  margin-top: 0px
+}
+
 .row.m0 {
   margin: 0px;
 }
