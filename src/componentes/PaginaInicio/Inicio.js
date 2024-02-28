@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 //librerias
 import axios from "axios";
 //Estilos
@@ -32,6 +32,7 @@ import * as MdOutlineBedroomParent from "react-icons/md";
 import * as MdRoomService from "react-icons/md";
 import * as GrClearOption from "react-icons/gr";
 import * as BsPersonFillGear from "react-icons/bs";
+import { FaCheck } from "react-icons/fa";
 //url
 const urlG = Apiurl + "reservaciones/crearReservacion";
 const useStyles = makeStyles((theme) => ({
@@ -51,10 +52,28 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const usoEstilos = makeStyles((theme) => ({
+  modal: {
+    position: "absolute",
+    width: "40%",
+    height: "15%",
+    backgroundColor: "white",
+    padding: "1%",
+    boder: "2px solid #000",
+    top: "40%",
+    left: "50%",
+    transform: "translate(-50%,-50%)",
+    fontSize: "2.25rem",
+    borderRadius: "5px",
+  },
+}));
+
 function Inicio() {
   const styles = useStyles();
+  const estilos = usoEstilos();
   const [data, setData] = useState([]);
   const [modalInsertar, setModalInsertar] = useState(false);
+  const [modalMensaje, setModalMensaje] = useState(false);
   const { register, handleSubmit, formState: { errors }, watch, setValue, reset } = useForm();
   const [isLoading, setIsLoading] = useState(false);
   const [consolaSeleccionada, setConsolaSeleccionada] = useState({
@@ -99,25 +118,15 @@ function Inicio() {
     }));
   };
 
-
-  useEffect(() => {
-    if (isLoading) {
-      enviarReservacion();
-    }
-  }, [isLoading]);
-
   const enviarReservacion = async () => {
     try {
       console.log("consola Actualizada", consolaSeleccionada)
-
       const response = await axios.post(urlG, consolaSeleccionada);
-
       if (response.status === 201) {
         setData(data.concat(response.data));
-
         abrirCerrarModalInsertar();
-        alert("La reservación ha sido creada");
-
+        //alert("La reservación ha sido creada");
+        abrirCerrarModalMensaje();
         setConsolaSeleccionada({
           tipoDocumento: {
             codTipoDocumento: "",
@@ -145,6 +154,13 @@ function Inicio() {
       alert("Hubo un error al crear la reservación. Por favor, intenta nuevamente.");
     }
   }
+  const enviarReservacionMemoized = useCallback(enviarReservacion, [enviarReservacion]);
+
+  useEffect(() => {
+    if (isLoading) {
+      enviarReservacionMemoized();
+    }
+  }, [isLoading, consolaSeleccionada, enviarReservacionMemoized]);
 
   const onSubmit = (info) => {
     try {
@@ -169,11 +185,29 @@ function Inicio() {
     }
   };
 
-
   const abrirCerrarModalInsertar = () => {
     setModalInsertar(!modalInsertar);
     clearInterval(setConsolaSeleccionada);
+    reset();
   };
+
+  const abrirCerrarModalMensaje = () => {
+    setModalMensaje(!modalMensaje);
+    setTimeout(() => {
+      setModalMensaje(false);
+    }, 2000); // 2000 milisegundos = 2 segundos
+  };
+
+  const popUp = (
+    <div className={estilos.modal}>
+      <div style={{ alignContent: "center", alignItems: "center", marginLeft: "45px" }}>
+        <div className="flex" style={{ alignContent: "center", alignItems: "center", margin: "auto" }}>
+          <FaCheck className="me-3" color="green" /> <p>La reservación ha sido exitosa</p>
+        </div>
+      </div>
+
+    </div>
+  )
 
   const bodyInsertar = (
     <div className={styles.modal}>
@@ -231,7 +265,6 @@ function Inicio() {
             </div>
           </FormGroup>
         </div>
-
         <div className="flex" id="fomularioReservacion">
           <FormGroup >
             <div id="reservacion">
@@ -328,7 +361,6 @@ function Inicio() {
               para garantizar una experiencia única.
             </p>
           </div>
-
           {/* Caracteristicas de las habitaciones */}
           <b className="title_color">
             Caracteristicas de Nuestas Habitaciones:
@@ -352,7 +384,6 @@ function Inicio() {
               caracteristica="Televisión de Pantalla Plana"
               description="   Relájate viendo tus programas favoritos enuna televisión de pantalla plana de alta definición." />
           </div>
-
           <div style={{ textAlign: "initial", margin: "10px" }} className="flex" >
             <CaracteristicaHabitacion
               componenteImg={<MdRoomService.MdRoomService />}
@@ -367,7 +398,6 @@ function Inicio() {
               caracteristica="Atención Personalizada"
               description="Nuestro amable personal está siempre dispuesto a ayudarte con cualquier solicitud o necesidad que puedas tener durante tu estancia." />
           </div>
-
           {/*Habitaciones  */}
           <div className="row mb_30" style={{ alignItems: "center", justifyContent: "center" }}>
             <div className="col-lg-3 col-sm-6">
@@ -409,13 +439,11 @@ function Inicio() {
           </div>
         </div>
       </div>
-
       <div className="testimonial_area section_gap " >
         <button onClick={() => abrirCerrarModalInsertar()} className="btn btn-warning" style={{ height: "60px", width: "50%", marginLeft: "25%" }}>
           <h5 className="sec_h5">¡Reserva tu Habitación Aquí!</h5>
         </button>
       </div>
-
       {/* // Testimonio de los huespedes  */}
       <div className="testimonial_area section_gap" style={{ marginBottom: "0px" }}>
         <div className="container">
@@ -461,6 +489,9 @@ function Inicio() {
       <Footer />
       <Modal open={modalInsertar} onClose={abrirCerrarModalInsertar}>
         {bodyInsertar}
+      </Modal>
+      <Modal open={modalMensaje} onClose={abrirCerrarModalMensaje}>
+        {popUp}
       </Modal>
     </div >
   );
