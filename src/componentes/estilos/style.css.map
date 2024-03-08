@@ -1,0 +1,19 @@
+{
+  "version": 3,
+  "sources": [
+    "../scss/style.scss",
+    "../scss/_variables.scss",
+    "../scss/_predefine.scss",
+    "../scss/style.css",
+    "../scss/_button.scss",
+    "../scss/_header.scss",
+    "../scss/_banner.scss",
+    "../scss/_accomodation.scss",
+    "../scss/_testimonial.scss",
+    "../scss/_blog.scss",
+    "../scss/_contact.scss",
+    "../scss/_elements.scss",
+    "../scss/_footer.scss"
+  ],
+  "names": []
+}

@@ -1,0 +1,13 @@
+.modal {
+    position: absolute;
+    width: 70%;
+    height: 70%;
+    background-color: white;
+    padding: 1%;
+    border: 2px solid hsl(0, 0%, 0%);
+    margin: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.9rem;
+    border-radius: 5px;
+}
