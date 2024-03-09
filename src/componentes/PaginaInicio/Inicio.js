@@ -19,7 +19,7 @@ import CaracteristicaHabitacion from "./CaracteristicaHabitacion"
 import { useForm } from 'react-hook-form';
 //Reactrap
 import { Form, FormGroup, Label } from "reactstrap";
-import { makeStyles } from "@mui/styles";
+import { styled } from "@mui/system";
 import { Modal } from "@mui/material";
 import Habitaciones from "./Habitaciones";
 import TestimonioHuesped from "./TestimonioHuesped/TestimonioHuesped";
@@ -35,7 +35,7 @@ import * as BsPersonFillGear from "react-icons/bs";
 import { FaCheck } from "react-icons/fa";
 //url
 const urlG = Apiurl + "reservaciones/crearReservacion";
-const useStyles = makeStyles((theme) => ({
+const useStyles = styled("div")(({theme}) => ({
   modal: {
     position: "absolute",
     width: "60%",
@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const usoEstilos = makeStyles((theme) => ({
+const usoEstilos = styled("div")(({theme}) => ({
   modal: {
     position: "absolute",
     width: "40%",
@@ -69,7 +69,7 @@ const usoEstilos = makeStyles((theme) => ({
 }));
 
 function Inicio() {
-  const styles = useStyles();
+  const styles = styled();
   const estilos = usoEstilos();
   const [data, setData] = useState([]);
   const [modalInsertar, setModalInsertar] = useState(false);

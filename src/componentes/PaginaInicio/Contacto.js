@@ -18,13 +18,13 @@ import NavbarInicio from "./Navbar/NavbarInicio";
 import Footer from "./Footer";
 //Reactrap
 import { FaCheck } from "react-icons/fa";
-import { makeStyles } from "@mui/styles";
+import { styled } from "@mui/system";
 import { Modal } from "@mui/material";
 //url
 import { Apiurl } from "../../services/userService";
 const url = Apiurl + "comentarios/crearComentario";
 
-const usoEstilos = makeStyles((theme) => ({
+const usoEstilos = styled("div")(({theme}) => ({
   modal: {
     position: "absolute",
     width: "40%",
@@ -209,5 +209,4 @@ function Contacto() {
     </div>
   );
 }
-
 export default Contacto;

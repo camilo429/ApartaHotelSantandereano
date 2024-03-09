@@ -5,7 +5,7 @@ import MUIDataTable from "mui-datatables";
 //Estilos
 import "../../App.scss";
 import { Form, FormGroup, Label } from "reactstrap";
-import { makeStyles } from "@mui/styles";
+import { styled } from "@mui/system";
 import { Modal, Button } from "@mui/material";
 //Iconos
 import * as AiFillEdit from "react-icons/ai";
@@ -23,7 +23,7 @@ const urlEmpleados = Apiurl + "empleados/listarEmpleados";
 // expresiones regulares
 const nameRegex = /^[a-zA-Z\s]+$/;
 
-const useStyles = makeStyles((them) => ({
+const useStyles = styled("div")(({ theme }) => ({
   modal: {
     position: "absolute",
     width: "60%",
@@ -465,19 +465,8 @@ function Tarea() {
         ?
       </p>
       <div align="right">
-        <button
-          className="btn btn-primary"
-          onClick={() => peticionDelete()}
-          style={{ margin: "5px" }}
-        >
-          Eliminar
-        </button>
-        <button
-          className="btn btn-danger"
-          onClick={() => abrirCerrarModalEliminar()}
-        >
-          Cancelar
-        </button>
+        <button className="btn btn-primary" onClick={() => peticionDelete()} style={{ margin: "5px" }}> Eliminar </button>
+        <button className="btn btn-danger" onClick={() => abrirCerrarModalEliminar()}> Cancelar </button>
       </div>
     </div>
   );
@@ -510,15 +499,13 @@ function Tarea() {
         filter: false,
         sort: false,
         customBodyRender: (value, tableMeta, updateValue) => {
-          // Accede a la propiedad anidada y muestra su valor
-          try {
-            data.map((consola, ind) => {
-              value = [consola.empleado.nombre, " ", consola.empleado.apellido];
-            });
-          } catch (error) {
-            console.log("Error al cargar Nombre Empleado");
-          }
-          return value; // Esto mostrará el valor de tipoDocumento.nomTipoDocumento en la celda
+          // Utiliza map para obtener un arreglo de nombres completos
+          const nombresCompletos = data.map((consola) => {
+            return `${consola.empleado.nombre} ${consola.empleado.apellido}`;
+          });
+          // Utiliza join para concatenar los nombres con un espacio entre ellos
+          value = nombresCompletos.join(" ");
+          return value;
         },
       },
     },
@@ -535,26 +522,11 @@ function Tarea() {
         customBodyRender: (value, tableMeta, UpdateValue) => {
           return (
             <div>
-              <Button
-                variant="contained"
-                color="primary"
-                className="flex"
-                onClick={() => seleccionarProducto(tableMeta.rowData, "Editar")}
-              >
-                <MdDelete.MdDelete className="me-2" />
-                Ver
+              <Button variant="contained" color="primary" className="flex" onClick={() => seleccionarProducto(tableMeta.rowData, "Editar")}>
+                <MdDelete.MdDelete className="me-2" />Ver
               </Button>
-
-              <Button
-                variant="contained"
-                color="secondary"
-                className="flex"
-                onClick={() =>
-                  seleccionarProducto(tableMeta.rowData, "Eliminar")
-                }
-              >
-                <AiFillEdit.AiFillEdit className="me-2" />
-                Eliminar
+              <Button variant="contained" color="secondary" className="flex" onClick={() => seleccionarProducto(tableMeta.rowData, "Eliminar")}>
+                <AiFillEdit.AiFillEdit className="me-2" /> Eliminar
               </Button>
             </div>
           );
@@ -578,10 +550,7 @@ function Tarea() {
           </div>
         </div>
         <div className="flex">
-          <button
-            onClick={() => abrirCerrarModalInsertar()}
-            className="btn btn-primary"
-          >
+          <button onClick={() => abrirCerrarModalInsertar()} className="btn btn-primary">
             Agregar Actividades
           </button>
         </div>

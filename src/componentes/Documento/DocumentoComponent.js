@@ -1,17 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { makeStyles } from "@mui/styles";
-import {
-  Table,
-  TableContainer,
-  TableHead,
-  TableCell,
-  TableBody,
-  TableRow,
-  Modal,
-  Button,
-  TextField,
-} from "@mui/material";
+import { styled } from "@mui/system";
+import { Table, TableContainer, TableHead, TableCell, TableBody, TableRow, Modal, Button, TextField, } from "@mui/material";
 import { Edit, Delete } from "@mui/icons-material";
 import { Apiurl } from "../../services/userService";
 
@@ -20,7 +10,7 @@ const urlG = Apiurl + "registrarTipoDocumento";
 const urlE = Apiurl + "tipoDocumento/actualizarTipoDocumento/";
 const urlD = Apiurl + "tipoDocumento/deleteTipoDocumento/";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = styled("div")(({ theme }) => ({
   modal: {
     position: "absolute",
     width: 800,
@@ -79,23 +69,27 @@ function DocumentoComponent() {
   };
 
   const peticionPut = async () => {
-    await axios
-      .put(urlE + consolaSeleccionada.codTipoDocumento, consolaSeleccionada)
-      .then((response) => {
-        var dataNueva = data;
-        dataNueva.map((consola) => {
-          if (
-            consolaSeleccionada.codTipoDocumento === consola.codTipoDocumento
-          ) {
-            consola.tipDocumento = consolaSeleccionada.tipDocumento;
-          }
-        });
+    try {
+      const response = await axios.put(urlE + consolaSeleccionada.codTipoDocumento, consolaSeleccionada);
+      if (response.status === 200) {
+        // Crear una copia de la data
+        const dataNueva = [...data];
+        // Actualizar la consola seleccionada en la copia de la data
+        const indice = dataNueva.findIndex(consola => consola.codTipoDocumento === consolaSeleccionada.codTipoDocumento);
+        if (indice !== -1) {
+          dataNueva[indice].tipDocumento = consolaSeleccionada.tipDocumento;
+        }
+        // Actualizar el estado con la nueva data
         setData(dataNueva);
+        // Realizar una nueva petición GET (si es necesario)
         peticionGet();
+        // Cerrar el modal de edición
         abrirCerrarModalEditar();
-      });
-  };
-
+      }
+    } catch (error) {
+      console.error("Error al realizar la solicitud PUT:", error);
+    }
+  }
   const peticionDelete = async () => {
     await axios
       .delete(urlD + consolaSeleccionada.id_tip_documento)

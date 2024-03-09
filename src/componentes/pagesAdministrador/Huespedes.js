@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import MUIDataTable from "mui-datatables";
 //Estilos
-import { makeStyles } from "@mui/styles";
+import { styled } from "@mui/system";
 import { Form, FormGroup, Label } from "reactstrap";
 import "../../App.scss";
 import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
@@ -27,14 +27,8 @@ const url = Apiurl + "huespedes/listarHuespedes";
 const urlG = Apiurl + "huespedes/crearHuesped";
 const urlE = Apiurl + "huespedes/actualizarHuesped/";
 const urlD = Apiurl + "huespedes/eliminarhuesped/";
-// expresiones regulares
-const nameRegex = /^[a-zA-Z\s]+$/;
-const numeroCelularExpresion =
-  /^(3(?:0[0-5]|1[0-9]|2[0-7]|3[0-5]|4[0-8]|5[0-7]|6[0-5]|7[0-5]|9[0-8]))\d{7}$/;
-const correoExpresion = /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6}$/;
-const cedulaExpresion = /^[0-9]{6,10}$/;
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = styled("div")(({ theme }) => ({
   modal: {
     position: "absolute",
     width: "60%",
@@ -49,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "5px",
   },
 }));
-const useEstilo = makeStyles((theme) => ({
+const useEstilo = styled("div")(({ theme }) => ({
   modal: {
     position: "absolute",
     width: "30%",
@@ -195,47 +189,36 @@ function Huespedes() {
 
   const peticionPut = async () => {
     console.log(consolaSeleccionada);
-    await axios
-      .request({
-        method: "put",
-        url: urlE + consolaSeleccionada.codHuesped,
-        withCredentials: true,
-        crossdomain: true,
-        data: consolaSeleccionada,
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
-        },
-      })
-      .then((response) => {
-        // console.log(response.status);
-        if (response.status === 201) {
-          var dataNueva = data;
-          dataNueva.map((consola) => {
-            if (consolaSeleccionada.codHuesped === consola.codHuesped) {
-              consola.nombre = consolaSeleccionada.nombre;
-              consola.apellido = consolaSeleccionada.apellido;
-              consola.numCelular = consolaSeleccionada.numCelular;
-              consola.correo = consolaSeleccionada.correo;
-              consola.codTipoDocumento = consolaSeleccionada.tipoDocumento.codTipoDocumento;
-              consola.nomTipoDocumento = consolaSeleccionada.tipoDocumento.nomTipoDocumento;
-              consola.numDocumento = consolaSeleccionada.numDocumento;
-              consola.fechaNacimiento = consolaSeleccionada.fechaNacimiento;
-              consola.codNacion = consolaSeleccionada.nacionalidad.codNacion;
-              consola.nombre = consolaSeleccionada.nacionalidad.nombre;
-              consola.lugarOrigen = consolaSeleccionada.lugarOrigen;
-              consola.nomContactoEmergencia = consolaSeleccionada.nomContactoEmergencia;
-              consola.numContactoEmergencia = consolaSeleccionada.numContactoEmergencia;
-              consola.estadoHuesped = consolaSeleccionada.estadoHuesped;
-            }
-          });
-          setData(dataNueva);
-          peticionGet();
-          abrirCerrarModalEditar();
-          alert("El huesped ha sido actualizado");
+    const response = await axios.put(urlE + consolaSeleccionada.codHuesped, {headers: {
+      Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
+    }});
+    // console.log(response.status);
+    if (response.status === 201) {
+      var dataNueva = data;
+      dataNueva.map((consola) => {
+        if (consolaSeleccionada.codHuesped === consola.codHuesped) {
+          consola.nombre = consolaSeleccionada.nombre;
+          consola.apellido = consolaSeleccionada.apellido;
+          consola.numCelular = consolaSeleccionada.numCelular;
+          consola.correo = consolaSeleccionada.correo;
+          consola.codTipoDocumento = consolaSeleccionada.tipoDocumento.codTipoDocumento;
+          consola.nomTipoDocumento = consolaSeleccionada.tipoDocumento.nomTipoDocumento;
+          consola.numDocumento = consolaSeleccionada.numDocumento;
+          consola.fechaNacimiento = consolaSeleccionada.fechaNacimiento;
+          consola.codNacion = consolaSeleccionada.nacionalidad.codNacion;
+          consola.nombre = consolaSeleccionada.nacionalidad.nombre;
+          consola.lugarOrigen = consolaSeleccionada.lugarOrigen;
+          consola.nomContactoEmergencia = consolaSeleccionada.nomContactoEmergencia;
+          consola.numContactoEmergencia = consolaSeleccionada.numContactoEmergencia;
+          consola.estadoHuesped = consolaSeleccionada.estadoHuesped;
         }
-      });
-  };
-
+        setData(dataNueva);
+        peticionGet();
+        abrirCerrarModalEditar();
+        alert("El huesped ha sido actualizado");
+      })
+    }
+  }
   const peticionDelete = async () => {
     axios
       .request({

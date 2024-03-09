@@ -6,7 +6,7 @@ import MUIDataTable from "mui-datatables";
 import "../../App.scss";
 import "../../css/Sales.css";
 import { Form, FormGroup, Label } from "reactstrap";
-import { makeStyles } from "@mui/styles";
+import { styled } from "@mui/system";
 import { Modal, Button } from "@mui/material";
 //Iconos
 import * as AiFillEdit from "react-icons/ai";
@@ -21,7 +21,7 @@ const urlD = Apiurl + "producto/eliminarProducto/";
 // expresiones regulares
 const nameRegex = /^[a-zA-Z\s]+$/;
 
-const useStyles = makeStyles((them) => ({
+const useStyles = styled("div")(({ them }) => ({
   modal: {
     position: "absolute",
     width: "60%",
@@ -400,8 +400,8 @@ function Sales() {
         <b>
           {consolaSeleccionada &&
             consolaSeleccionada.nombreProducto +
-              " " +
-              consolaSeleccionada.cantidad}
+            " " +
+            consolaSeleccionada.cantidad}
         </b>
         ?
       </p>

@@ -5,7 +5,7 @@ import MUIDataTable from "mui-datatables";
 // Estilos
 import { Form, FormGroup, Label, Input } from "reactstrap";
 import "../../App.scss";
-import { makeStyles } from "@mui/styles";
+import { styled } from "@mui/system";
 import { Modal, Button } from "@mui/material";
 import "../../css/Habitacion.css";
 // Iconos
@@ -26,7 +26,7 @@ const urlhabitacionesDisponibles =
   Apiurl + "habitacion/listarHabitaciones/estado/Disponible";
 const urlHuespedes = Apiurl + "huespedes/listarHuespedes";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = styled("div")(({ theme }) => ({
   modal: {
     position: "absolute",
     width: "70%",
@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const useEstilo = makeStyles((theme) => ({
+const useEstilo = styled("div")(({ theme }) => ({
   modal: {
     position: "absolute",
     width: "30%",

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 //url
 import { Apiurl } from "../../../services/userService";
 import axios from "axios";
-import { makeStyles } from "@mui/styles";
+import { styled } from "@mui/system";
 import { Form, FormGroup, Label, Input } from "reactstrap";
 //iconos
 import { Modal, Button } from "@mui/material";
@@ -15,7 +15,7 @@ const urlG = Apiurl + "recibosPublicos/crearReciboPublico";
 // const urlE = Apiurl + "recibosPublicos/actualizarEmpleado/";
 const urlD = Apiurl + "recibosPublicos/eliminarRegistro/";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = styled("div")(({ theme }) => ({
   modal: {
     position: "absolute",
     width: "60%",
@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "5px",
   },
 }));
-const useEstilo = makeStyles((theme) => ({
+const useEstilo = styled("div")(({ theme }) => ({
   modal: {
     position: "absolute",
     width: "30%",

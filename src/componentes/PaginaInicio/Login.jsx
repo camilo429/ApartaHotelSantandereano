@@ -5,8 +5,7 @@ import "../../css/Login.css";
 import { Apiurl } from "../../services/userService";
 //librerias
 import axios from "axios";
-import $ from "jquery";
-import jwt_decode from "jwt-decode";
+import { jwtDecode } from 'jwt-decode';
 //Componentenes
 import NavbarInicio from "./Navbar/NavbarInicio";
 import Footer from "./Footer";
@@ -35,74 +34,62 @@ class Login extends React.Component {
     //console.log(this.state.form);
   };
 
-  manejadorBoton = () => {
-    var reqData = {
-      username: this.state.form.usuario,
-      password: this.state.form.password,
-      grant_type: "password",
-    };
-    //  console.log("esta es la data enviada", this.state.form.usuario, this.state.form.password)
-    axios
-      .request({
-        method: "post",
-        url: Apiurl + "oauth/token",
+  manejadorBoton = async () => {
+    try {
+      var reqData = {
+        username: this.state.form.usuario,
+        password: this.state.form.password,
+        grant_type: "password",
+      };
+      //  console.log("esta es la data enviada", this.state.form.usuario, this.state.form.password)
+
+      const response = await axios.post(Apiurl + "oauth/token",
+        new URLSearchParams(reqData), {
         withCredentials: true,
         crossdomain: true,
-        data: $.param(reqData),
         auth: {
-          username: "angularapp", // This is the client_id
-          password: "angu1234lar", // This is the client_secret
+          username: "angularapp",
+          password: "angu1234lar",
         },
-        header: {
+        headers: {
           "Content-Type": "application/x-www-form-urlencoded",
-          "Cache-Control": "no-cache",
+          "Cache-Control": "no cache"
         },
-      })
-      .then((response) => {
-        if (response.status === 200) {
-          sessionStorage.setItem("access_token", response.data.access_token);
-          //   if (response.data.ADMINISTRADOR == "ADMINISTRADOR") {
-          //     window.location.href = "PanelAdministrador";
-          //   }
-          const decoded = jwt_decode(response.data.access_token);
-          console.log("Payload:", decoded.authorities[0]);
+      }
+      );
+      if (response.status === 200) {
+        sessionStorage.setItem("acces_token", response.data.access_toke);
+        const decoded = jwtDecode(response.data.access_toke);
+        console.log("Payload:", decoded.authorities[0]);
 
-          switch (decoded.authorities[0]) {
-            case "ROLE_ADMINISTRADOR":
-              window.location.href = "PanelAdministrador";
-              break;
-            case "ROLE_RECEPCIONISTA":
-              window.location.href = "PanelRecepcionista";
-              break;
-            case "ROLE_SERVICIOS":
-              WindowSharp.location.href = "SERVICIOS";
-              break;
-            default:
-              alert("No pertenece a ningun usuario dentro del sistema");
-              break;
-          }
-          // console.log(response.data);
-          // en la anterio linea es donde voy a redireccionar dependiendo del usuario que ingrese
-        } else {
-          this.setState({
-            error: true,
-            errorMsg: response.data.error_description,
-          });
+        switch (decoded.authorities[0]) {
+          case "ROLE_ADMINISTRADOR":
+            window.location.replace = "PanelAdministrador";
+            break;
+          case "ROLE_RECEPCIONISTA":
+            window.location.replace = "PanelRecepcionista";
+            break;
+          case "ROLE_SERVICIOS":
+            WindowSharp.location.replace = "SERVICIOS";
+            break;
+          default:
+            alert("No pertenece a ningun usuario dentro del sistema");
+            break;
         }
-      })
-      .catch((error) => {
+      } else {
         this.setState({
           error: true,
-          errorMsg: "Error: Usuario o Contraseña Equivocados",
+          errorMsg: response.data.error_description,
         });
-      });
+      }
+    } catch (error) {
+      this.setState({
+        error: true,
+        errorMsg: "Error: Usuario o Contraseña equivocados"
+      })
+    }
   };
-  olvidoSuContrasena() {
-    alert(
-      "Pongase en contacto con su administrador de plataforma para realizar el " +
-      "cambio de contraseña"
-    );
-  }
+
   render() {
     return (
       <div className="testimonial_area section_gap" style={{ margin: "0px" }}>

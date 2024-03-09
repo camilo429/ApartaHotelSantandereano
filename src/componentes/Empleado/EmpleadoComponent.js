@@ -12,7 +12,7 @@ import * as MdDelete from "react-icons/md";
 // import * as BsInfoLg from "react-icons/bs";
 //Reactrap
 import { Form, FormGroup, Label, Input } from "reactstrap";
-import { makeStyles } from "@mui/styles";
+import { styled } from "@mui/system";
 import { Modal, Button } from "@mui/material";
 //Componentes
 import DocumentoEmpleado from "./DocumentoEmpleado";
@@ -33,7 +33,7 @@ const numeroCelularExpresion =
   /^(3(?:0[0-5]|1[0-9]|2[0-7]|3[0-5]|4[0-8]|5[0-7]|6[0-5]|7[0-5]|9[0-8]))\d{7}$/;
 const correoExpresion = /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6}$/;
 const cedulaExpresion = /^[0-9]{6,10}$/;
-const useStyles = makeStyles((theme) => ({
+const useStyles = styled("div")(({theme}) => ({
   modal: {
     position: "absolute",
     width: "70%",

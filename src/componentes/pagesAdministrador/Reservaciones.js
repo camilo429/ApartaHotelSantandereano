@@ -10,7 +10,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "../../css/Huesped.css";
 // Reactstrap
 import { Form, FormGroup, Label, Input } from "reactstrap";
-import { makeStyles } from "@mui/styles";
+import { styled } from "@mui/system";
 import { Modal, Button } from "@mui/material";
 //componentes
 import TipoDocumento from "../pagesAdministrador/TipoDocumento";
@@ -34,7 +34,7 @@ const urlVer = Apiurl + "reservaciones/verReservacion/";
 //   color: "#dc3545"
 // }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = styled("div")(({theme}) => ({
   modal: {
     position: "absolute",
     width: "80%",
@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
     overflow: "scroll",
   },
 }));
-const useEstilo = makeStyles((theme) => ({
+const useEstilo = styled("div")(({theme}) => ({
   modal: {
     position: "absolute",
     width: "40%",
@@ -227,13 +227,7 @@ function Reservaciones() {
           </FormGroup>
           <FormGroup className="me-2">
             <Label for="exampleEmail">Fecha de Salida</Label>
-            <input
-              name="fechaSalida"
-              type="date"
-              placeholder="fechaSalida"
-              className="form-control"
-              onChange={handleChange}
-            />
+            <input name="fechaSalida" type="date" placeholder="fechaSalida" className="form-control" onChange={handleChange} />
           </FormGroup>
 
           <FormGroup className="me-2">

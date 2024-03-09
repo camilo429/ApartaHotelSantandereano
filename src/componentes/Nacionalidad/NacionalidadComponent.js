@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { makeStyles } from "@mui/styles";
+import { styled } from "@mui/system";
 
 import {
   Table,
@@ -22,7 +22,7 @@ const urlG = Apiurl + "nacionalidad/registrarNacionalidad";
 const urlE = Apiurl + "nacionalidad/actualizarNacionalidad/";
 const urlD = Apiurl + "nacionalidad/deleteNacionalidad/";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = styled("div")(({theme}) => ({
   modal: {
     position: "absolute",
     width: 400,
