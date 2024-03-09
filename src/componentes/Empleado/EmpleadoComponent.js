@@ -33,7 +33,7 @@ const numeroCelularExpresion =
   /^(3(?:0[0-5]|1[0-9]|2[0-7]|3[0-5]|4[0-8]|5[0-7]|6[0-5]|7[0-5]|9[0-8]))\d{7}$/;
 const correoExpresion = /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6}$/;
 const cedulaExpresion = /^[0-9]{6,10}$/;
-const useStyles = styled("div")(({theme}) => ({
+const useStyles = styled("div")(({ theme }) => ({
   modal: {
     position: "absolute",
     width: "70%",
@@ -141,18 +141,13 @@ function EmpleadoComponent() {
   };
 
   const peticionGet = async () => {
-    await axios
-      .get(url)
-      .then((response) => {
-        setData(response.data);
-      })
-      .catch((error) => {
-        if (error === 404) {
-          alert("No hay empleados registrados");
-          console.log("empleados", error);
-        }
-        console.log("empleado", error);
-      });
+    await axios.get(url).then((response) => { setData(response.data); }).catch((error) => {
+      if (error === 404) {
+        alert("No hay empleados registrados");
+        console.log("empleados", error);
+      }
+      console.log("empleado", error);
+    });
   };
 
   const peticionPost = async (e) => {
@@ -177,21 +172,21 @@ function EmpleadoComponent() {
     }
   };
   const peticionPut = async () => {
-    setErrors(validacionesFormulario(consolaSeleccionada));
-    // console.log("Editar", consolaSeleccionada);
-    if (Object.keys(errors).length === 0) {
-      console.log(consolaSeleccionada);
-      await axios
-        .request({
-          method: "put",
-          url: urlE + consolaSeleccionada.codEmpleado,
-          withCredentials: true,
-          crossdomain: true,
-          data: consolaSeleccionada,
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
-          },
-        })
+    try {
+      const response = await axios.put(urlE + consolaSeleccionada.codEmpleado, consolaSeleccionada);
+    } catch (error) {
+      
+    }
+      await axios.request({
+        method: "put",
+        url: urlE + consolaSeleccionada.codEmpleado,
+        withCredentials: true,
+        crossdomain: true,
+        data: consolaSeleccionada,
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
+        },
+      })
         .then((response) => {
           // console.log(response.status);
           // console.log(response.data);
@@ -234,7 +229,7 @@ function EmpleadoComponent() {
           alert("Error al editar empleado");
           console.log("Error editar empleado", error);
         });
-    }
+    
   };
 
   const peticionDelete = async () => {
@@ -250,12 +245,7 @@ function EmpleadoComponent() {
       })
       .then((response) => {
         if (response.status === 200) {
-          setData(
-            data.filter(
-              (consola) =>
-                consola.codEmpleado !== consolaSeleccionada.codEmpleado
-            )
-          );
+          setData(data.filter((consola) => consola.codEmpleado !== consolaSeleccionada.codEmpleado));
           abrirCerrarModalEliminar();
         }
       })
