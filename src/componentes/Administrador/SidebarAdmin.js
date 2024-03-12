@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { CiSun } from "react-icons/ci";
 import { FaMoon } from "react-icons/fa";
 import AdminDashboard from "./AdminDashboard"
@@ -8,6 +8,18 @@ import Cliente1 from '../../image/cliente1.jpg'
 function SidebarAdmin() {
 
     const [isLightTheme, setIsLightTheme] = useState(true);
+
+    const toggleRootClass = useCallback(() => {
+        setIsLightTheme((prevTheme) => !prevTheme);
+    }, []);
+
+    const toggleLocalStorage = useCallback(() => {
+        if (isLightTheme) {
+            localStorage.removeItem('light');
+        } else {
+            localStorage.setItem('light', 'set');
+        }
+    }, [isLightTheme])
 
     useEffect(() => {
         const themeToggle = document.querySelector('.theme-toggle');
@@ -23,9 +35,12 @@ function SidebarAdmin() {
             toggleLocalStorage();
             toggleRootClass();
         }
+
         if (sidebarToggle) {
             sidebarToggle.addEventListener('click', handleClick);
         }
+
+
         if (themeToggle) {
             themeToggle.addEventListener('click', pinchar);
         }
@@ -38,18 +53,9 @@ function SidebarAdmin() {
                 themeToggle.removeEventListener('click', pinchar);
             }
         };
-    }, []);
+    }, [toggleLocalStorage, toggleRootClass]);
 
-    const toggleRootClass = () => {
-        setIsLightTheme((prevTheme) => !prevTheme);
-    };
-    const toggleLocalStorage = () => {
-        if (isLightTheme) {
-            localStorage.removeItem('light');
-        } else {
-            localStorage.setItem('light', 'set');
-        }
-    };
+
 
     useEffect(() => {
         if (isLightTheme) {
@@ -63,7 +69,7 @@ function SidebarAdmin() {
         if (localStorage.getItem('light')) {
             toggleRootClass();
         }
-    }, []);
+    }, [toggleRootClass]);
 
     return (
         <div className="main">

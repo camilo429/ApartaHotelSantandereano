@@ -171,88 +171,72 @@ function EmpleadoComponent() {
       console.log("tiene errores en crear empleado", errors);
     }
   };
+
   const peticionPut = async () => {
     try {
-      const response = await axios.put(urlE + consolaSeleccionada.codEmpleado, consolaSeleccionada);
-    } catch (error) {
-      
-    }
-      await axios.request({
-        method: "put",
-        url: urlE + consolaSeleccionada.codEmpleado,
-        withCredentials: true,
-        crossdomain: true,
-        data: consolaSeleccionada,
+      const response = await axios.put(urlE + consolaSeleccionada.codEmpleado, consolaSeleccionada, {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
-        },
-      })
-        .then((response) => {
-          // console.log(response.status);
-          // console.log(response.data);
-          if (response.status === 201) {
-            var dataNueva = data;
-            dataNueva.map((consola) => {
-              if (consolaSeleccionada.codEmpleado === consola.codEmpleado) {
-                consola.nombre = consolaSeleccionada.nombre;
-                consola.apellido = consolaSeleccionada.apellido;
-                consola.tipDocumento = consolaSeleccionada.tipDocumento.codTipoDocumento;
-                consola.tipDocumento = {
-                  nomTipoDocumento: consolaSeleccionada.tipDocumento.nomTipoDocumento,
-                  codTipoDocumento: consolaSeleccionada.tipDocumento.codTipoDocumento,
-                };
-                consola.edad = consolaSeleccionada.edad;
-                consola.numTelefono = consolaSeleccionada.numTelefono;
-                consola.correo = consolaSeleccionada.correo;
-                consola.fechaNacimiento = consolaSeleccionada.fechaNacimiento;
-                consola.direccion = consolaSeleccionada.direccion;
-                consola.nomContactoEmergencia = consolaSeleccionada.nomContactoEmergencia;
-                consola.numContactoEmergencia = consolaSeleccionada.numContactoEmergencia;
-                consola.eps = consolaSeleccionada.eps;
-                consola.arl = consolaSeleccionada.arl;
-                consola.sexo.codSexo = consolaSeleccionada.sexo.codSexo;
-                consola.sexo.nomSexo = consolaSeleccionada.sexo.nomSexo;
-                consola.tipoSangre.codTipoSangre = consolaSeleccionada.tipoSangre.codTipoSangre;
-                consola.tipoSangre.nomTipoSangre = consolaSeleccionada.tipoSangre.nomTipoSangre;
-                consola.fotoEmpleado = consolaSeleccionada.fotoEmpleado;
-              }
-            });
-            setData(dataNueva);
-            peticionGet();
-            abrirCerrarModalEditar();
-            alert("El empleado ha sido actualizado");
-            setConsolaSeleccionada({});
+        }
+      });
+      if (response.status === 201) {
+        const dataNueva = data.map((consola) => {
+          if (consolaSeleccionada.codEmpleado === consola.codEmpleado) {
+            consola.nombre = consolaSeleccionada.nombre;
+            consola.apellido = consolaSeleccionada.apellido;
+            consola.tipDocumento = consolaSeleccionada.tipDocumento.codTipoDocumento;
+            consola.tipDocumento = {
+              nomTipoDocumento: consolaSeleccionada.tipDocumento.nomTipoDocumento,
+              codTipoDocumento: consolaSeleccionada.tipDocumento.nomTipoDocumento,
+            };
+            consola.edad = consolaSeleccionada.edad;
+            consola.numTelefono = consolaSeleccionada.numTelefono;
+            consola.correo = consolaSeleccionada.correo;
+            consola.fechaNacimiento = consolaSeleccionada.fechaNacimiento;
+            consola.direccion = consolaSeleccionada.direccion;
+            consola.nomContactoEmergencia = consolaSeleccionada.nomContactoEmergencia;
+            consola.numContactoEmergencia = consolaSeleccionada.numContactoEmergencia;
+            consola.eps = consolaSeleccionada.eps;
+            consola.arl = consolaSeleccionada.arl;
+            consola.sexo.codSexo = consolaSeleccionada.sexo.codSexo;
+            consola.sexo.nomSexo = consolaSeleccionada.sexo.nomSexo;
+            consola.tipoSangre.codTipoSangre = consolaSeleccionada.tipoSangre.codTipoSangre;
+            consola.tipoSangre.nomTipoSangre = consolaSeleccionada.tipoSangre.nomTipoSangre;
+            consola.fotoEmpleado = consolaSeleccionada.fotoEmpleado;
           }
-          setErrors({});
+          return consola;
         })
-        .catch((error) => {
-          alert("Error al editar empleado");
-          console.log("Error editar empleado", error);
-        });
-    
-  };
+        setData(dataNueva);
+        peticionGet();
+        abrirCerrarModalEditar();
+        alert("El empleado ha sido actualizado");
+        setConsolaSeleccionada({});
+      }
+      setErrors({});
+
+    } catch (error) {
+      alert("Error al editar empleado");
+      console.log("Error editar empleado", error.response.data);
+    }
+  }
 
   const peticionDelete = async () => {
-    axios
-      .request({
-        method: "delete",
-        url: urlD + consolaSeleccionada.codEmpleado,
-        withCredentials: true,
-        crossdomain: true,
+    try {
+      const response = await axios.delete(urlD + consolaSeleccionada.codEmpleado, {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
-        },
-      })
-      .then((response) => {
-        if (response.status === 200) {
-          setData(data.filter((consola) => consola.codEmpleado !== consolaSeleccionada.codEmpleado));
-          abrirCerrarModalEliminar();
         }
       })
-      .catch((error) => {
-        alert("Error al aliminar el Empleado");
-        console.log("error eliminar empleado", error);
-      });
+
+      if (response.status === 200) {
+        setData(data.filter((consola) => consola.codEmpleado !== consolaSeleccionada.codEmpleado));
+        abrirCerrarModalEliminar();
+      }
+    } catch (error) {
+      alert("Error al eliminar empleado");
+      console.log("Error editar empleado", error);
+    }
+
   };
 
   const abrirCerrarModalInsertar = () => {
@@ -587,14 +571,9 @@ function EmpleadoComponent() {
       options: {
         customBodyRender: (value, tableMeta, updateValue) => {
           try {
-            data.map((consola, idn) => {
-              value = [consola.tipDocumento.nomTipoDocumento];
-            });
+            value = data.map((consola) => consola.tipDocumento.nomTipoDocumento).join(", ");
           } catch (error) {
-            console.log(
-              "Error al eliminar eliminar tipo Documento en Empleado",
-              error
-            );
+            console.log("Error al obtener tipos de documento", error)
           }
           return value;
         },
@@ -638,9 +617,7 @@ function EmpleadoComponent() {
         sort: false,
         customBodyRender: (value, tableMeta, updateValue) => {
           try {
-            data.map((consola, idn) => {
-              value = [consola.sexo.nomSexo];
-            });
+            value = data.map((consola) => consola.sexo.nomSexo).join(", ");
           } catch (error) {
             console.log("Error al cargar el Genero en Empleado", error);
           }
@@ -655,14 +632,9 @@ function EmpleadoComponent() {
         sort: false,
         customBodyRender: (value, tableMeta, updateValue) => {
           try {
-            data.map((consola, idn) => {
-              value = [consola.tipoSangre.nomTipoSangre];
-            });
+            value = data.map((consola) => consola).tipoSangre.nomTipoSangre.join(", ");
           } catch (error) {
-            console.log(
-              "Error al cargar el Grupo Sanguineo en Empleado",
-              error
-            );
+            console.log("Error al obtener tipo de sangre").join(", ");
           }
           return value;
         },

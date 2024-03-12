@@ -35,42 +35,9 @@ import * as BsPersonFillGear from "react-icons/bs";
 import { FaCheck } from "react-icons/fa";
 //url
 const urlG = Apiurl + "reservaciones/crearReservacion";
-const useStyles = styled("div")(({theme}) => ({
-  modal: {
-    position: "absolute",
-    width: "60%",
-    height: "50%",
-    backgroundColor: "white",
-    padding: "1%",
-    boder: "2px solid #000",
-    top: "40%",
-    left: "50%",
-    transform: "translate(-50%,-50%)",
-    fontSize: "0.9rem",
-    borderRadius: "5px",
-    overflow: "scroll",
-  },
-}));
-
-const usoEstilos = styled("div")(({theme}) => ({
-  modal: {
-    position: "absolute",
-    width: "40%",
-    height: "15%",
-    backgroundColor: "white",
-    padding: "1%",
-    boder: "2px solid #000",
-    top: "40%",
-    left: "50%",
-    transform: "translate(-50%,-50%)",
-    fontSize: "2.25rem",
-    borderRadius: "5px",
-  },
-}));
 
 function Inicio() {
-  const styles = styled();
-  const estilos = usoEstilos();
+
   const [data, setData] = useState([]);
   const [modalInsertar, setModalInsertar] = useState(false);
   const [modalMensaje, setModalMensaje] = useState(false);
@@ -108,6 +75,45 @@ function Inicio() {
       imagenHabitacion: null
     }
   });
+  // Define los estilos para el modal
+  const modalStyles = ({ theme }) => ({
+    position: "absolute",
+    width: "60%",
+    height: "50%",
+    backgroundColor: "white",
+    padding: "1%",
+    border: "2px solid #000",
+    top: "40%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    fontSize: "0.9rem",
+    borderRadius: "5px",
+    overflow: "scroll",
+  });
+
+  // Utiliza styled para generar la versión estilizada del componente
+  const ModalContainer = styled("div")(modalStyles);
+
+  // Define los estilos para otro componente (usoEstilos)
+  const otroEstilo = ({ theme }) => ({
+    modal: {
+      position: "absolute",
+      width: "40%",
+      height: "15%",
+      backgroundColor: "white",
+      padding: "1%",
+      border: "2px solid #000",
+      top: "40%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+      fontSize: "2.25rem",
+      borderRadius: "5px",
+    },
+  });
+
+  // Utiliza styled para generar la versión estilizada del otro componente
+  const UsoEstilosContainer = styled("div")(otroEstilo);
+
 
   const handleChange = (e) => {
     setValue(e.target.name, e.target.value);
@@ -199,135 +205,137 @@ function Inicio() {
   };
 
   const popUp = (
-    <div className={estilos.modal}>
+    < div>
       <div style={{ alignContent: "center", alignItems: "center", marginLeft: "45px" }}>
         <div className="flex" style={{ alignContent: "center", alignItems: "center", margin: "auto" }}>
           <FaCheck className="me-3" color="green" /> <p>La reservación ha sido exitosa</p>
         </div>
       </div>
-
     </div>
   )
 
   const bodyInsertar = (
-    <div className={styles.modal}>
-      <h3>Agendar una Reservación</h3>
-      <Form onSubmit={handleSubmit(onSubmit)}>
-        <div className="flex" id="fomularioReservacion">
-          <FormGroup>
-            <div id="reservacion">
-              <Label for="exampleEmail">Fecha de Entrada</Label>
-              <input type="date" placeholder="fechaEntrada" className="form-control" onChange={handleChange} {...register('fechaEntrada', { required: "El campo es requerido", maxLength: 10 })} />
-              {errors.fechaEntrada && <p id="errores">{errors.fechaEntrada.message}</p>}
-            </div>
-          </FormGroup>
-          <FormGroup  >
-            <div id="reservacion">
-              <Label for="exampleEmail">Fecha de Salida</Label>
-              <input name="fechaSalida" type="date" placeholder="fechaSalida" className="form-control" onChange={handleChange} {...register('fechaSalida', {
-                required: true,
-                maxLength: 10,
-                validate: (value) => {
-                  if (value < watch('fechaEntrada')) {
-                    return "Fecha de entrada NO puede ser Posterior a la Fecha Salida";
-                  } else {
-                    return true;
-                  };
-                }
-              })} />
-              {errors.fechaSalida?.type === "required" && <p id="errores">El Campo es Requerido</p>}
-              {errors.fechaSalida?.type === 'maxLength' && <p id="errores">Fecha no valida</p>}
-              {errors.fechaSalida && <p id="errores">{errors.fechaSalida.message}</p>}
-            </div>
-          </FormGroup>
-          <FormGroup>
-            <div id="reservacion">
-              <Label for="exampleEmail">Número de Adultos</Label>
-              <input name="adultos" type="number" placeholder="# Adultos" max="5" min="1" className="form-control" onChange={handleChange} {...register('adultos', {
-                required: true,
-              })} />
-              {errors.adultos?.type === "required" && <p id="errores">Es Requerido</p>}
-            </div>
-          </FormGroup>
-          <FormGroup>
-            <div id="reservacion">
-              <Label for="exampleEmail">Número de Niños</Label>
-              <input name="ninos" type="number" placeholder="# Niños" min="0" max="4" className="form-control" onChange={handleChange} {...register('ninos', {
-                required: true
-              })} />
-              {errors.ninos?.type === 'required' && <p id="errores"> Es requerido</p>}
-            </div>
-          </FormGroup>
-          <FormGroup style={{ marginLeft: "7px" }}>
-            <div id="reservacion">
-              <Label for="exampleEmail">Tipo de Documento</Label>
-              <TipoDocumento name="tipoDocumento" handleChangeData={handleChange} />
-            </div>
-          </FormGroup>
-        </div>
-        <div className="flex" id="fomularioReservacion">
-          <FormGroup >
-            <div id="reservacion">
-              <Label for="exampleEmail"># Documento</Label>
-              <input name="numDocumento" type="number" placeholder="Número de Documento" className="form-control" onChange={handleChange} {...register('numDocumento', {
-              })} />
-            </div>
-          </FormGroup>
-          <FormGroup >
-            <div id="reservacion">
-              <Label for="exampleEmail">Nombre</Label>
-              <input name="nombre" placeholder="Nombre" className="form-control" onChange={handleChange} {...register('nombre', {
-                required: true,
-                maxLength: 30
-              })} />
-              {errors.nombre?.type === 'required' && <p id="errores">El campo es requerido</p>}
-              {errors.nombre?.type === 'maxLength' && <p id="errores">Es muy largo</p>}
-            </div>
-          </FormGroup>
-          <FormGroup >
-            <div id="reservacion">
-              <Label for="exampleEmail">Apellido</Label>
-              <input name="apellido" placeholder="Apellido" className="form-control" onChange={handleChange} {...register('apellido', {
-                required: true,
-                maxLength: 30
-              })} />
-              {errors.apellido?.type === 'required' && <p id="errores">El campo es requerido</p>}
-              {errors.apellido?.type === 'maxLength' && <p id="errores">Es muy largo</p>}
-            </div>
-          </FormGroup>
-          <FormGroup >
-            <div id="reservacion">
-              <Label for="exampleEmail">Correo Electronico</Label>
-              <input name="email" type="email" placeholder="email" className="form-control" onChange={handleChange} {...register('email', {
-                required: true,
-                pattern: /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6}$/
-              })} />
-              {errors.email?.type === "pattern" && <p id="errores">dirección no valida</p>}
-              {errors.email?.type === 'required' && <p id="errores">El campo es requerido</p>}
-            </div>
-          </FormGroup>
-          <FormGroup style={{ marginLeft: "7px" }}>
-            <div id="reservacion">
-              <Label for="exampleEmail">Tipo Habitación </Label>
-              <Habitaciones name="habitacion" handleChangeData={handleChange} />
-            </div>
-          </FormGroup>
-        </div>
-        <div id="botones">
-          {/* Indicador de carga */}
-          {isLoading && (
-            <div className="loading-container">
-              <div className="flex">
-                <Spinner color="primary" style={{ marginLeft: "200px" }} />
-                <div className="loading-spinner">Cargando</div>
+    <div>
+      <ModalContainer>
+        <h3>Agendar una Reservación</h3>
+        <Form onSubmit={handleSubmit(onSubmit)}>
+          <div className="flex" id="fomularioReservacion">
+            <FormGroup>
+              <div id="reservacion">
+                <Label for="exampleEmail">Fecha de Entrada</Label>
+                <input type="date" placeholder="fechaEntrada" className="form-control" onChange={handleChange} {...register('fechaEntrada', { required: "El campo es requerido", maxLength: 10 })} />
+                {errors.fechaEntrada && <p id="errores">{errors.fechaEntrada.message}</p>}
               </div>
-            </div>
-          )}
-          <button type="submit" className="btn btn-success">Agendar</button>
-          <button className="btn btn-danger" onClick={() => abrirCerrarModalInsertar()}> Cancelar</button>
-        </div>
-      </Form >
-      <br />
+            </FormGroup>
+            <FormGroup  >
+              <div id="reservacion">
+                <Label for="exampleEmail">Fecha de Salida</Label>
+                <input name="fechaSalida" type="date" placeholder="fechaSalida" className="form-control" onChange={handleChange} {...register('fechaSalida', {
+                  required: true,
+                  maxLength: 10,
+                  validate: (value) => {
+                    if (value < watch('fechaEntrada')) {
+                      return "Fecha de entrada NO puede ser Posterior a la Fecha Salida";
+                    } else {
+                      return true;
+                    };
+                  }
+                })} />
+                {errors.fechaSalida?.type === "required" && <p id="errores">El Campo es Requerido</p>}
+                {errors.fechaSalida?.type === 'maxLength' && <p id="errores">Fecha no valida</p>}
+                {errors.fechaSalida && <p id="errores">{errors.fechaSalida.message}</p>}
+              </div>
+            </FormGroup>
+            <FormGroup>
+              <div id="reservacion">
+                <Label for="exampleEmail">Número de Adultos</Label>
+                <input name="adultos" type="number" placeholder="# Adultos" max="5" min="1" className="form-control" onChange={handleChange} {...register('adultos', {
+                  required: true,
+                })} />
+                {errors.adultos?.type === "required" && <p id="errores">Es Requerido</p>}
+              </div>
+            </FormGroup>
+            <FormGroup>
+              <div id="reservacion">
+                <Label for="exampleEmail">Número de Niños</Label>
+                <input name="ninos" type="number" placeholder="# Niños" min="0" max="4" className="form-control" onChange={handleChange} {...register('ninos', {
+                  required: true
+                })} />
+                {errors.ninos?.type === 'required' && <p id="errores"> Es requerido</p>}
+              </div>
+            </FormGroup>
+            <FormGroup style={{ marginLeft: "7px" }}>
+              <div id="reservacion">
+                <Label for="exampleEmail">Tipo de Documento</Label>
+                <TipoDocumento name="tipoDocumento" handleChangeData={handleChange} />
+              </div>
+            </FormGroup>
+          </div>
+          <div className="flex" id="fomularioReservacion">
+            <FormGroup >
+              <div id="reservacion">
+                <Label for="exampleEmail"># Documento</Label>
+                <input name="numDocumento" type="number" placeholder="Número de Documento" className="form-control" onChange={handleChange} {...register('numDocumento', {
+                })} />
+              </div>
+            </FormGroup>
+            <FormGroup >
+              <div id="reservacion">
+                <Label for="exampleEmail">Nombre</Label>
+                <input name="nombre" placeholder="Nombre" className="form-control" onChange={handleChange} {...register('nombre', {
+                  required: true,
+                  maxLength: 30
+                })} />
+                {errors.nombre?.type === 'required' && <p id="errores">El campo es requerido</p>}
+                {errors.nombre?.type === 'maxLength' && <p id="errores">Es muy largo</p>}
+              </div>
+            </FormGroup>
+            <FormGroup >
+              <div id="reservacion">
+                <Label for="exampleEmail">Apellido</Label>
+                <input name="apellido" placeholder="Apellido" className="form-control" onChange={handleChange} {...register('apellido', {
+                  required: true,
+                  maxLength: 30
+                })} />
+                {errors.apellido?.type === 'required' && <p id="errores">El campo es requerido</p>}
+                {errors.apellido?.type === 'maxLength' && <p id="errores">Es muy largo</p>}
+              </div>
+            </FormGroup>
+            <FormGroup >
+              <div id="reservacion">
+                <Label for="exampleEmail">Correo Electronico</Label>
+                <input name="email" type="email" placeholder="email" className="form-control" onChange={handleChange} {...register('email', {
+                  required: true,
+                  pattern: /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6}$/
+                })} />
+                {errors.email?.type === "pattern" && <p id="errores">dirección no valida</p>}
+                {errors.email?.type === 'required' && <p id="errores">El campo es requerido</p>}
+              </div>
+            </FormGroup>
+            <FormGroup style={{ marginLeft: "7px" }}>
+              <div id="reservacion">
+                <Label for="exampleEmail">Tipo Habitación </Label>
+                <Habitaciones name="habitacion" handleChangeData={handleChange} />
+              </div>
+            </FormGroup>
+          </div>
+          <div id="botones">
+            {/* Indicador de carga */}
+            {isLoading && (
+              <div className="loading-container">
+                <div className="flex">
+                  <Spinner color="primary" style={{ marginLeft: "200px" }} />
+                  <div className="loading-spinner">Cargando</div>
+                </div>
+              </div>
+            )}
+            <button type="submit" className="btn btn-success">Agendar</button>
+            <button className="btn btn-danger" onClick={() => abrirCerrarModalInsertar()}> Cancelar</button>
+          </div>
+        </Form >
+        <br />
+      </ModalContainer>
+
     </div >
   );
   return (
