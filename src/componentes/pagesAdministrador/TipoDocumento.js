@@ -7,26 +7,20 @@ import { Apiurl } from "../../services/userService";
 const url = Apiurl + "tipoDocumento/listarTipoDocumentos";
 
 function TipoDocumento({ name, handleChangeData, value = null }) {
+
   const [data, setData] = useState([]);
   const getTipoDocumento = async () => {
-    axios
-      .request({
-        method: "get",
-        url: url,
-      })
-      .then((response) => {
-        if (response.status === 200) {
-          setData(response.data);
-          // console.log(response.data);
-        } else {
-          this.setState({
-            error: true,
-            errorMsg: response.data.error_description,
-          });
-        }
-        // console.log(response.data);
-      });
-  };
+    try {
+      const response = await axios.get(url);
+      if (response.status === 200) {
+        setData(response.data);
+        console.log(response.data);
+      }
+    } catch (error) {
+      alert("Error al traer los documentos");
+      console.log("Error al traer tipos documentos", error.response.data)
+    }
+  }
 
   useEffect(() => {
     getTipoDocumento();

@@ -37,8 +37,8 @@ import { FaCheck } from "react-icons/fa";
 const urlG = Apiurl + "reservaciones/crearReservacion";
 
 function Inicio() {
-
   const [data, setData] = useState([]);
+  const [mensaje,setMensaje] = useState("");
   const [modalInsertar, setModalInsertar] = useState(false);
   const [modalMensaje, setModalMensaje] = useState(false);
   const { register, handleSubmit, formState: { errors }, watch, setValue, reset } = useForm();
@@ -75,11 +75,12 @@ function Inicio() {
       imagenHabitacion: null
     }
   });
+
   // Define los estilos para el modal
   const modalStyles = ({ theme }) => ({
     position: "absolute",
-    width: "60%",
-    height: "50%",
+    width: "70%",
+    height: "60%",
     backgroundColor: "white",
     padding: "1%",
     border: "2px solid #000",
@@ -131,7 +132,7 @@ function Inicio() {
       if (response.status === 201) {
         setData(data.concat(response.data));
         abrirCerrarModalInsertar();
-        //alert("La reservación ha sido creada");
+        setMensaje("La reservación ha sido exitosa");
         abrirCerrarModalMensaje();
         setConsolaSeleccionada({
           tipoDocumento: {
@@ -157,7 +158,7 @@ function Inicio() {
       }
     } catch (error) {
       console.error("Error al realizar la reservación", error);
-      alert("Hubo un error al crear la reservación. Por favor, intenta nuevamente.");
+      alert("Hubo un error al crear la reservación. Por favor, intenta nuevamente.", error.response.data);
     }
   }
   const enviarReservacionMemoized = useCallback(enviarReservacion, [enviarReservacion]);
@@ -171,7 +172,6 @@ function Inicio() {
   const onSubmit = (info) => {
     try {
       setIsLoading(true);
-      // Actualizar el estado de consolaSeleccionada
       setConsolaSeleccionada((prevConsolaSeleccionada) => ({
         ...prevConsolaSeleccionada,
         fechaEntrada: info.fechaEntrada,
@@ -183,8 +183,6 @@ function Inicio() {
         apellido: info.apellido,
         email: info.email,
       }));
-
-      // El useEffect se encargará de enviar la petición POST
     } catch (error) {
       console.error("Error al realizar la reservación", error);
       alert("Hubo un error al crear la reservación. Por favor, intenta nuevamente.");
@@ -205,12 +203,14 @@ function Inicio() {
   };
 
   const popUp = (
-    < div>
-      <div style={{ alignContent: "center", alignItems: "center", marginLeft: "45px" }}>
-        <div className="flex" style={{ alignContent: "center", alignItems: "center", margin: "auto" }}>
-          <FaCheck className="me-3" color="green" /> <p>La reservación ha sido exitosa</p>
+    <div>
+      <UsoEstilosContainer>
+        <div style={{ alignContent: "center", alignItems: "center", marginLeft: "45px" }}>
+          <div className="flex" style={{ alignContent: "center", alignItems: "center", margin: "auto" }}>
+            <FaCheck className="me-3" color="green" /> <p>{mensaje}</p>
+          </div>
         </div>
-      </div>
+      </UsoEstilosContainer>
     </div>
   )
 
@@ -223,14 +223,14 @@ function Inicio() {
             <FormGroup>
               <div id="reservacion">
                 <Label for="exampleEmail">Fecha de Entrada</Label>
-                <input type="date" placeholder="fechaEntrada" className="form-control" onChange={handleChange} {...register('fechaEntrada', { required: "El campo es requerido", maxLength: 10 })} />
+                <input type="date" placeholder="fechaEntrada" className="form-control" id="fecha" onChange={handleChange} {...register('fechaEntrada', { required: "El campo es requerido", maxLength: 10 })} />
                 {errors.fechaEntrada && <p id="errores">{errors.fechaEntrada.message}</p>}
               </div>
             </FormGroup>
             <FormGroup  >
               <div id="reservacion">
                 <Label for="exampleEmail">Fecha de Salida</Label>
-                <input name="fechaSalida" type="date" placeholder="fechaSalida" className="form-control" onChange={handleChange} {...register('fechaSalida', {
+                <input name="fechaSalida" type="date" placeholder="fechaSalida" className="form-control" id="fecha" onChange={handleChange} {...register('fechaSalida', {
                   required: true,
                   maxLength: 10,
                   validate: (value) => {
@@ -249,7 +249,7 @@ function Inicio() {
             <FormGroup>
               <div id="reservacion">
                 <Label for="exampleEmail">Número de Adultos</Label>
-                <input name="adultos" type="number" placeholder="# Adultos" max="5" min="1" className="form-control" onChange={handleChange} {...register('adultos', {
+                <input name="adultos" type="number" placeholder="# Adultos" max="5" min="1" className="form-control" id="fecha" onChange={handleChange} {...register('adultos', {
                   required: true,
                 })} />
                 {errors.adultos?.type === "required" && <p id="errores">Es Requerido</p>}
@@ -258,7 +258,7 @@ function Inicio() {
             <FormGroup>
               <div id="reservacion">
                 <Label for="exampleEmail">Número de Niños</Label>
-                <input name="ninos" type="number" placeholder="# Niños" min="0" max="4" className="form-control" onChange={handleChange} {...register('ninos', {
+                <input name="ninos" type="number" placeholder="# Niños" min="0" max="4" className="form-control" id="fecha" onChange={handleChange} {...register('ninos', {
                   required: true
                 })} />
                 {errors.ninos?.type === 'required' && <p id="errores"> Es requerido</p>}
@@ -360,19 +360,15 @@ function Inicio() {
       <div className="testimonial_area section_gap" style={{ alignItems: "center", justifyContent: "center" }}>
         <div className="container">
           <div className="section_title text-left">
-            <h2 className="title_color"> Experimenta el Lujo y la Comodidad en Nuestras Habitaciones.</h2>
+            <h2 className="title_color">Experimenta el Lujo y la Comodidad en Nuestras Habitaciones.</h2>
             <p>
-              Bienvenido a Aparta Hotel Santandereano, donde el confort y la
-              elegancia se combinan para ofrecerte una estancia inolvidable.
-              Nuestras habitaciones han sido diseñadas pensando en tu comodidad
-              y disfrute, y cada detalle ha sido cuidadosamente seleccionado
+              Bienvenido a Aparta Hotel Santandereano, donde el confort y la elegancia se combinan para ofrecerte una estancia inolvidable.
+              Nuestras habitaciones han sido diseñadas pensando en tu comodidad y disfrute, y cada detalle ha sido cuidadosamente seleccionado
               para garantizar una experiencia única.
             </p>
           </div>
           {/* Caracteristicas de las habitaciones */}
-          <b className="title_color">
-            Caracteristicas de Nuestas Habitaciones:
-          </b>
+          <b className="title_color">Caracteristicas de Nuestas Habitaciones: </b>
           <div style={{ textAlign: "initial", margin: "10px" }} className="flex">
             <br />
             <CaracteristicaHabitacion
@@ -413,7 +409,7 @@ function Inicio() {
                 <div className="hotel_img">
                   <img src="../../assets/img/302.jpg" alt="" style={{ height: "350px" }} />
                 </div>
-                <h4 className="sec_h4"> Individual <br /> (1 Persona)</h4>
+                <h4 className="sec_h4"> Individual <br />(1 Persona)</h4>
                 <h5> $35.000<small>/Noche</small></h5>
               </div>
             </div>
@@ -456,8 +452,7 @@ function Inicio() {
       <div className="testimonial_area section_gap" style={{ marginBottom: "0px" }}>
         <div className="container">
           <div className="section_title text-center">
-            <h2 className="title_color">Lo que Nuestros Huéspedes dicen sobre su Estadía en El Santandereano:
-            </h2>
+            <h2 className="title_color">Lo que Nuestros Huéspedes dicen sobre su Estadía en El Santandereano:</h2>
             <p>
               En El Santandereano, nos enorgullece ofrecer un servicio excepcional y crear experiencias memorables
               para nuestros huéspedes. A continuación, compartimos algunos comentarios de aquellos que han tenido la

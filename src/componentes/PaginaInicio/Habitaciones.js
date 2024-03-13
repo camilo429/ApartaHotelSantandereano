@@ -10,7 +10,7 @@ function Habitaciones({ name, handleChangeData, value = null }) {
 
   const getHabitaciones = async () => {
     try {
-      const response = await axios.request({ method: "get", url: url });
+      const response = await axios.get(url);
       if (response.status === 200) {
         setData(response.data);
         console.log(response.data);
@@ -26,68 +26,68 @@ function Habitaciones({ name, handleChangeData, value = null }) {
     getHabitaciones()
   }, [])
 
-  const handleChange = ({ label, value, nombreHabitacion: { codTipoHabitacion, precioXPersona, precioXAcompanante }, descripHabitacion, numHabitacion, pisoHabitacion, maxPersonasDisponibles, imagenHabitacion, estadoHabitacion: { codEstadoHabitacion, nombre },
-  }) => {
+  const handleChange = ({ label, value, nombreHabitacion, descripHabitacion, numHabitacion, pisoHabitacion, maxPersonasDisponibles, imagenHabitacion, estadoHabitacion }) => {
+    const { codTipoHabitacion, precioXPersona, precioXAcompanante } = nombreHabitacion;
+    const { codEstadoHabitacion, nombre: nombreEstado } = estadoHabitacion;
+
     handleChangeData({
       target: {
         name,
         value: {
           codHabitacion: value,
           nombre: label,
-
           nombreHabitacion: {
-            codTipoHabitacion: codTipoHabitacion,
+            codTipoHabitacion,
             nombre: label,
-            precioXPersona: precioXPersona,
-            precioXAcompanante: precioXAcompanante
+            precioXPersona,
+            precioXAcompanante,
           },
-          descripHabitacion: descripHabitacion,
-          numHabitacion: numHabitacion,
-          pisoHabitacion: pisoHabitacion,
-          maxPersonasDisponibles: maxPersonasDisponibles,
+          descripHabitacion,
+          numHabitacion,
+          pisoHabitacion,
+          maxPersonasDisponibles,
           estadoHabitacion: {
-            codEstadoHabitacion: codEstadoHabitacion,
-            nombre: nombre
+            codEstadoHabitacion,
+            nombre: nombreEstado,
           },
-          imagenHabitacion: imagenHabitacion,
+          imagenHabitacion,
         },
       },
     });
   };
 
+  const mapDataToOptions = () => {
+    return data.map((docu) => ({
+      label: docu.nombreHabitacion.nombre ? docu.nombreHabitacion.nombre : '',
+      value: docu.codHabitacion,
+      nombreHabitacion: docu.nombreHabitacion ? {
+        codTipoHabitacion: docu.nombreHabitacion.codTipoHabitacion,
+        nombre: docu.nombreHabitacion.nombre,
+        precioXPersona: docu.nombreHabitacion.precioXPersona,
+        precioXAcompanante: docu.nombreHabitacion.precioXAcompanante
+      } : null,
+      descripHabitacion: docu.descripHabitacion,
+      numHabitacion: docu.numHabitacion,
+      pisoHabitacion: docu.pisoHabitacion,
+      maxPersonasDisponibles: docu.maxPersonasDisponibles,
+      estadoHabitacion: docu.estadoHabitacion ? {
+        codEstadoHabitacion: docu.estadoHabitacion.codEstadoHabitacion,
+        nombre: docu.estadoHabitacion.nombre
+      } : null,
+      imagenHabitacion: docu.imagenHabitacion,
+    }))
+  }
+  const options = mapDataToOptions();
+  const defaultValueOption = options.find(option => option.value === (value ? value.codHabitacion : null));
   return (
-    <div className="habitaciones" style={{ height: "25px", width: "170px" }}>
-      <Select
-        defaultValue={
-          value
-            ? {
-              label: value?.nombreHabitacion.nombre,
-              value: value.codHabitacion
-            }
-            : null
-        }
-        options={data.map((docu) => ({
-          label: docu.nombreHabitacion.nombre,
-          value: docu.codHabitacion,
-          nombreHabitacion: {
-            codTipoHabitacion: docu.nombreHabitacion.codTipoHabitacion,
-            nombre: docu.nombreHabitacion.nombre,
-            precioXPersona: docu.nombreHabitacion.precioXPersona,
-            precioXAcompanante: docu.nombreHabitacion.precioXAcompanante
-          },
-          descripHabitacion: docu.descripHabitacion,
-          numHabitacion: docu.numHabitacion,
-          pisoHabitacion: docu.pisoHabitacion,
-          maxPersonasDisponibles: docu.maxPersonasDisponibles,
-          estadoHabitacion: {
-            codEstadoHabitacion: docu.estadoHabitacion.codEstadoHabitacion,
-            nombre: docu.estadoHabitacion.nombre
-          },
-          imagenHabitacion: docu.imagenHabitacion,
-        }))}
-        onChange={handleChange}
-      />
-    </div>
+    <>
+      <div className="habitaciones" style={{ height: "25px", width: "170px" }}>
+        <Select
+          defaultValue={defaultValueOption}
+          options={options}
+          onChange={handleChange} />
+      </div>
+    </>
   );
 }
 export default Habitaciones;

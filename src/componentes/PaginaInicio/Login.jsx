@@ -9,8 +9,8 @@ import { jwtDecode } from 'jwt-decode';
 //Componentenes
 import NavbarInicio from "./Navbar/NavbarInicio";
 import Footer from "./Footer";
-import { WindowSharp } from "@mui/icons-material";
 class Login extends React.Component {
+
   state = {
     form: {
       usuario: "",
@@ -24,13 +24,15 @@ class Login extends React.Component {
     e.preventDefault();
   };
 
-  manejadorChange = async (e) => {
-    await this.setState({
+  manejadorChange = (e) => {
+    const { name, value } = e.target;
+
+    this.setState(prevState => ({
       form: {
-        ...this.state.form,
-        [e.target.name]: e.target.value,
+        ...prevState.form,
+        [name]: value,
       },
-    });
+    }));
     //console.log(this.state.form);
   };
 
@@ -43,34 +45,33 @@ class Login extends React.Component {
       };
       //  console.log("esta es la data enviada", this.state.form.usuario, this.state.form.password)
 
-      const response = await axios.post(Apiurl + "oauth/token",
-        new URLSearchParams(reqData), {
+      const response = await axios.post(Apiurl + "oauth/token", new URLSearchParams(reqData), {
         withCredentials: true,
-        crossdomain: true,
         auth: {
           username: "angularapp",
           password: "angu1234lar",
         },
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
-          "Cache-Control": "no cache"
+          "Cache-Control": "no-cache"
         },
       }
       );
+      console.log(response.status);
       if (response.status === 200) {
-        sessionStorage.setItem("acces_token", response.data.access_toke);
-        const decoded = jwtDecode(response.data.access_toke);
+        sessionStorage.setItem("access_token", response.data.access_token);
+        const decoded = jwtDecode(response.data.access_token);
         console.log("Payload:", decoded.authorities[0]);
 
         switch (decoded.authorities[0]) {
           case "ROLE_ADMINISTRADOR":
-            window.location.replace = "PanelAdministrador";
+            window.location.href = "PanelAdministrador";
             break;
           case "ROLE_RECEPCIONISTA":
-            window.location.replace = "PanelRecepcionista";
+            window.location.href = "PanelRecepcionista";
             break;
           case "ROLE_SERVICIOS":
-            WindowSharp.location.replace = "SERVICIOS";
+            window.location.href = "SERVICIOS";
             break;
           default:
             alert("No pertenece a ningun usuario dentro del sistema");
@@ -100,7 +101,7 @@ class Login extends React.Component {
               <input type="text" name="usuario" placeholder="Usuario" onChange={this.manejadorChange} />
               <input type="password" name="password" placeholder="Contraseña" onChange={this.manejadorChange} />
               <input type="submit" value="Log In" onClick={this.manejadorBoton} />
-              <a onClick={this.olvidoSuContrasena} style={{ color: "blue", height: "100%" }}>
+              <a onClick={this.olvidoSuContrasena} style={{ color: "blue", height: "100%" }} href="camilo.html">
                 ¿Olvido su contraseña?
               </a>
             </form>
