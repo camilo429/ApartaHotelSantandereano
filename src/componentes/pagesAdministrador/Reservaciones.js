@@ -7,7 +7,7 @@ import "../../App.scss";
 import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "../../../node_modules/bootstrap/scss/bootstrap.scss";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "../../css/Huesped.css";
+import "./Huespedes/Huesped.css";
 // Reactstrap
 import { Form, FormGroup, Label, Input } from "reactstrap";
 import { styled } from "@mui/system";

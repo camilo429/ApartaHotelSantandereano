@@ -14,7 +14,7 @@ function TipoDocumento({ name, handleChangeData, value = null }) {
       const response = await axios.get(url);
       if (response.status === 200) {
         setData(response.data);
-        console.log(response.data);
+        //console.log(response.data);
       }
     } catch (error) {
       alert("Error al traer los documentos");
@@ -39,7 +39,7 @@ function TipoDocumento({ name, handleChangeData, value = null }) {
   };
 
   return (
-    <div className="TipoDocumento" style={{ height: "25px", width: "170px" }}>
+    <div className="TipoDocumento" style={{ height: "25px", width: "175px", margin:"0px" }}>
       <Select
         defaultValue={
           value

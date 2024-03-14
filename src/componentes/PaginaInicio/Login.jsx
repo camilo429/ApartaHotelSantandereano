@@ -53,7 +53,6 @@ class Login extends React.Component {
         },
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
-          "Cache-Control": "no-cache"
         },
       }
       );
@@ -72,9 +71,6 @@ class Login extends React.Component {
             break;
           case "ROLE_SERVICIOS":
             window.location.href = "SERVICIOS";
-            break;
-          default:
-            alert("No pertenece a ningun usuario dentro del sistema");
             break;
         }
       } else {

@@ -22,7 +22,7 @@ function Nacionalidades({ name, handleChangeData, value = null }) {
     }).then(response => {
       if (response.status === 200) {
         setData(response.data);
-        console.log(response.data);
+       // console.log(response.data);
       }
     })
   };
@@ -43,7 +43,7 @@ function Nacionalidades({ name, handleChangeData, value = null }) {
   };
 
   return (
-    <div className="Nacionalidades">
+    <div className="Nacionalidades" style={{ height: "25px", width: "175px"}}>
       <Select
         defaultValue={
           value
@@ -59,7 +59,7 @@ function Nacionalidades({ name, handleChangeData, value = null }) {
           }))
         }
         onChange={handleChange}
-        placeholder="Seleccione Nacionalidad"
+        placeholder="Nacionalidad"
       />
     </div>
   );

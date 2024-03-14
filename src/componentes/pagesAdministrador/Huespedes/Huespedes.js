@@ -3,41 +3,31 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import MUIDataTable from "mui-datatables";
 //Estilos
-import { styled } from "@mui/system";
 import { Form, FormGroup, Label } from "reactstrap";
-import "../../App.scss";
-import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
-import "../../../node_modules/bootstrap/scss/bootstrap.scss";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "../../css/Huesped.css";
+import "./Huesped.css";
+import { styled } from "@mui/system";
+import { Link } from "react-router-dom";
 //iconos
 import { Modal, Button } from "@mui/material";
-import * as AiFillEdit from "react-icons/ai";
-import * as MdDelete from "react-icons/md";
 //import * as BsInfoLg from "react-icons/bs";
 //Componentes
-import Nacionalidades from "../../componentes/pagesAdministrador/Nacionalidades";
-import TipoDocumento from "./TipoDocumento";
+import Nacionalidades from "../Nacionalidades";
+import TipoDocumento from "../TipoDocumento";
 // url
-import { Apiurl } from "../../services/userService";
-import Region from "./Region";
-//import { wait } from "@testing-library/user-event/dist/utils";
-// import { useLoaderData } from "react-router-dom";
+import { Apiurl } from "../../../services/userService";
+import Region from "../Region";
+
 const url = Apiurl + "huespedes/listarHuespedes";
 const urlG = Apiurl + "huespedes/crearHuesped";
 const urlE = Apiurl + "huespedes/actualizarHuesped/";
 const urlD = Apiurl + "huespedes/eliminarhuesped/";
 
-
-
 function Huespedes() {
-
   const [data, setData] = useState([]);
   const [modalInsertar, setModalInsertar] = useState(false);
   const [modalEditar, setModalEditar] = useState(false);
   const [modalEliminar, setModalEliminar] = useState(false);
-
-
+  const [codNacionalidad, setCodNacionaldad] = useState();
   const [consolaSeleccionada, setConsolaSeleccionada] = useState({
     codHuesped: "",
     nombre: "",
@@ -70,34 +60,37 @@ function Huespedes() {
   });
 
   const useStyles = ({ theme }) => ({
-    modal: {
-      position: "absolute",
-      width: "60%",
-      height: "70%",
-      backgroundColor: "white",
-      padding: "1%",
-      border: "2px solid #000",
-      top: "40%",
-      left: "50%",
-      transform: "translate(-50%,-50%)",
-      fontSize: "0.9rem",
-      borderRadius: "5px",
+    position: "absolute",
+    width: "75%",
+    height: "65%",
+    backgroundColor: "white",
+    padding: "1%",
+    border: "2px solid #000",
+    top: "40%",
+    left: "50%",
+    transform: "translate(-50%,-50%)",
+    fontSize: "0.8rem",
+    borderRadius: "5px",
+    "& input": {
+      width: "175px"
     },
+    "& input::placeholder": {
+      fontSize: "0.8rem"
+    },
+
   });
   const ModalContainer = styled("div")(useStyles);
 
   const useEstilo = ({ theme }) => ({
-    modal: {
-      position: "absolute",
-      width: "30%",
-      height: "30%",
-      backgroundColor: "white",
-      padding: "5%",
-      boder: "2px solid #000",
-      top: "50%",
-      left: "50%",
-      transform: "translate(-50%,-50%)",
-    },
+    position: "absolute",
+    width: "30%",
+    height: "30%",
+    backgroundColor: "white",
+    padding: "5%",
+    boder: "2px solid #000",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%,-50%)",
   });
   const ModalContainerII = styled("div")(useEstilo);
 
@@ -133,7 +126,6 @@ function Huespedes() {
           alert("Autorización No valida");
           break;
       }
-      alert("Error al traer los huespedes");
     }
   };
 
@@ -194,6 +186,7 @@ function Huespedes() {
   }
 
   const peticionPut = async () => {
+    console.log(consolaSeleccionada)
     try {
       const response = await axios.put(urlE + consolaSeleccionada.codHuesped, consolaSeleccionada, {
         headers: {
@@ -203,8 +196,7 @@ function Huespedes() {
       // console.log(response.status);
       if (response.status === 201) {
         setData((prevData) =>
-          prevData.map((consola) => consola.codHuesped === consolaSeleccionada.codHuesped ? consolaSeleccionada : consola
-          ));
+          prevData.map((consola) => consola.codHuesped === consolaSeleccionada.codHuesped ? consolaSeleccionada : consola));
 
         peticionGet();
         abrirCerrarModalEditar();
@@ -250,7 +242,7 @@ function Huespedes() {
   };
 
   const seleccionarHuespedes = (consola, caso) => {
-    // console.log("Consola", consola);
+    console.log("Consola", consola);
     setConsolaSeleccionada({
       codHuesped: consola[0],
       nombre: consola[1],
@@ -262,14 +254,23 @@ function Huespedes() {
         nomTipoDocumento: consola[5].nomTipoDocumento,
       },
       numDocumento: consola[6],
+      fechaNacimiento: consola[7],
+      edad: consola[8],
       nacionalidad: {
-        codNacion: consola[7].codNacion,
-        nombre: consola[7].nombre,
+        codNacion: consola[9].codNacion,
+        nombre: consola[9].nombre,
       },
-      lugarOrigen: consola[8],
-      nomContactoEmergencia: consola[9],
-      numContactoEmergencia: consola[10],
-      estadoHuesped: consola[11],
+      lugarOrigen: {
+        codRegion: consola[10].codRegion,
+        nombre: consola[10].nombre,
+        nacionalidad: {
+          codNacion: consola[10].codNacion,
+          nombre: consola[10].nombre,
+        }
+      },
+      nomContactoEmergencia: consola[11],
+      numContactoEmergencia: consola[12],
+      estadoHuesped: consola[13],
     });
     // console.log("ConsolaSeleccionada", consolaSeleccionada);
     if (caso === "Editar") {
@@ -286,56 +287,56 @@ function Huespedes() {
         <h3>Agregar Huesped</h3>
         <Form>
           <div className="flex">
-            <FormGroup className="me-2">
+            <FormGroup >
               <Label for="exampleEmail">Nombre</Label>
               <input className="form-control" name="nombre" onChange={handleChange} placeholder={!consolaSeleccionada?.nombre ? "Nombres" : "Nombre"} />
             </FormGroup>
-            <FormGroup className="me-2">
+            <FormGroup >
               <Label for="Apellido">Apellido</Label>
               <input className="form-control" name="apellido" onChange={handleChange} placeholder={!consolaSeleccionada?.apellido ? "Apellido" : "Apellido"} />
             </FormGroup>
-            <FormGroup className="me-2">
+            <FormGroup >
               <Label for="exampleEmail">Número Celular</Label>
-              <input className="form-control" name="numCelular" onChange={handleChange} placeholder={!consolaSeleccionada?.numCelular ? "Número de celular Personal" : "Numero de celular"} />
+              <input className="form-control" name="numCelular" onChange={handleChange} placeholder={!consolaSeleccionada?.numCelular ? "Número de celular" : "Numero de celular"} />
             </FormGroup>
-            <FormGroup className="me-2">
+            <FormGroup >
               <Label for="exampleEmail">Fecha de Nacimiento</Label>
               <input type="date" className="form-control" name="fechaNacimiento" onChange={handleChange} placeholder={!consolaSeleccionada?.fechaNacimiento ? "fecha Nacimiento" : "Fecha Nacimiento"} />
             </FormGroup>
-          </div>
-          <div className="flex">
-            <FormGroup className="me-2">
+            <FormGroup >
               <Label for="email">Correo Electronico</Label>
               <input className="form-control" name="correo" onChange={handleChange} placeholder={!consolaSeleccionada?.correo ? "Correo Personal" : "Correo"} />
             </FormGroup>
-            <FormGroup className="me-2" style={{ width: "300px", margin: "20px" }}>
-              <Label for="exampleEmail">Tipo Documento</Label>
+          </div>
+          <div className="flex" style={{ marginLeft: "10px" }}>
+            <FormGroup style={{ width: "175px", margin: "5px" }}>
+              <Label for="exampleEmail" style={{ margin: "6px" }}>Tipo Documento</Label>
               <TipoDocumento name="tipoDocumento" handleChangeData={handleChange} />
             </FormGroup>
-            <FormGroup className="me-2">
+            <FormGroup >
               <Label for="exampleEmail">Número Documento</Label>
               <input className="form-control" name="numDocumento" onChange={handleChange} placeholder={!consolaSeleccionada?.numDocumento ? "Número Idenficación" : "Número de documento"} />
             </FormGroup>
-            <FormGroup className="me-2" style={{ width: "250px", margin: "20px" }}>
-              <Label for="exampleEmail">Nacionalidad</Label>
+            <FormGroup style={{ width: "175px", margin: "10px" }} >
+              <Label for="exampleEmail" style={{ margin: "6px" }} >Nacionalidad</Label>
               <Nacionalidades name="nacionalidad" handleChangeData={handleChange} />
             </FormGroup>
-          </div>
-          <div className="flex">
-            <FormGroup>
-              <Label for="eampleemail"> ¿ Región de dónde proviene ?</Label>
+            <FormGroup style={{ width: "175px", margin: "10px" }}>
+              <Label for="eampleemail" style={{ margin: "6px" }}> ¿Región de dónde proviene?</Label>
               <Region name="region" handleChangeData={handleChange} codNacion={2} />
             </FormGroup>
-            <FormGroup className="me-2">
+            <FormGroup >
               <Label for="exampleEmail">Nombre Emergencia</Label>
               <input className="form-control" name="nomContactoEmergencia" onChange={handleChange} placeholder={!consolaSeleccionada?.nomContactoEmergencia ? "Nombre del acompañante" : "Acompañante"} />
             </FormGroup>
-            <FormGroup className="me-2">
+          </div>
+          <div className="flex">
+            <FormGroup >
               <Label for="exampleEmail">#Contacto Emergencia</Label>
-              <input className="form-control" name="numContactoEmergencia" onChange={handleChange} placeholder={!consolaSeleccionada?.numContactoEmergencia ? "Número de contacto de Emergencia" : "NúmeroEmergencia"} />
+              <input className="form-control" name="numContactoEmergencia" onChange={handleChange} placeholder={!consolaSeleccionada?.numContactoEmergencia ? "Celular Emergencia" : "NúmeroEmergencia"} />
             </FormGroup>
-            <FormGroup styles={{ margin: "6px" }}>
-              <Label for="eampleemail"> Estado Huesped</Label>
+            <FormGroup style={{ height: "25px", width: "175px", margin: "5px" }}>
+              <Label style={{ margin: "6px" }}> Estado Huesped</Label>
               <select className="form-select" name="estadoHuesped" placeholder="estado Huesped" onChange={handleChange}>
                 <option value="1">HABILITADO</option>
                 <option value="0">DESHABILITADO</option>
@@ -344,14 +345,12 @@ function Huespedes() {
           </div>
         </Form>
         <div align="right">
-          <Button color="primary" onClick={(e) => peticionPost(e)}> Insertar</Button>
-          <Button onClick={() => abrirCerrarModalInsertar()}>Cancelar</Button>
+          <Button className="btn btn-primary" onClick={(e) => peticionPost(e)}> Insertar</Button>
+          <Button className="btn btn-secondary" onClick={() => abrirCerrarModalInsertar()}>Cancelar</Button>
         </div>
       </ModalContainer>
     </div>
   );
-
-
 
   const bodyEditar = (
     <div>
@@ -360,48 +359,52 @@ function Huespedes() {
         <Form style={{ textAlign: "center" }}>
           <div className="flex">
             <FormGroup className="me-2">
-              <Label for="exampleEmail">Nombre</Label>
-              <input required className="form-control" name="nombre" onChange={handleChange} value={consolaSeleccionada?.nombre} placeholder={!consolaSeleccionada?.nombre ? "Nombre" : "Nombre"} />
+              <Label for="exampleEmail">Nombre(s)</Label>
+              <input required className="form-control" name="nombre" onChange={handleChange} value={consolaSeleccionada?.nombre} />
             </FormGroup>
             <FormGroup className="me-2">
-              <Label for="Apellido">Apellido</Label>
-              <input required className="form-control" name="apellido" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.apellido} placeholder={!consolaSeleccionada?.apellido ? " su apellido" : "Apellido"} />
+              <Label for="Apellido">Apellido(s)</Label>
+              <input required className="form-control" name="apellido" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.apellido} />
             </FormGroup>
             <FormGroup className="me-2">
               <Label for="exampleEmail">Número Celular</Label>
-              <input required className="form-control" name="numCelular" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.numCelular} placeholder={!consolaSeleccionada?.numCelular ? "Número de Celular" : "Numero de celular"} />
+              <input required className="form-control" name="numCelular" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.numCelular} />
+            </FormGroup>
+            <FormGroup className="me-2">
+              <Label for="exampleEmail">Fecha Nacimiento</Label>
+              <input required className="form-control" type="date" name="fechaNacimiento" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.fechaNacimiento} />
             </FormGroup>
             <FormGroup className="me-2">
               <Label for="email">Correo Electronico</Label>
-              <input required className="form-control" name="correo" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.correo} placeholder={!consolaSeleccionada?.correo ? "Correo" : "Correo"} />}
+              <input required className="form-control" name="correo" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.correo} />
             </FormGroup>
           </div>
           <div className="flex">
             <FormGroup className="me-2" style={{ width: "250px", margin: "20px" }}>
               <Label for="exampleEmail">Tipo Documento</Label>
-              <TipoDocumento required name="tipoDocumento" handleChangeData={handleChange} value={!consolaSeleccionada.tipoDocumento} placeholder={consolaSeleccionada.tipoDocumento} />
+              <TipoDocumento required name="tipoDocumento" handleChangeData={handleChange} value={consolaSeleccionada && consolaSeleccionada.tipoDocumento} />
             </FormGroup>
             <FormGroup className="me-2">
               <Label for="exampleEmail">Número Documento</Label>
-              <input required className="form-control" name="numDocumento" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.numDocumento} placeholder={!consolaSeleccionada?.numDocumento ? " su número de identidad" : "Número de documento"} />
+              <input required className="form-control" name="numDocumento" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.numDocumento} />
             </FormGroup>
             <FormGroup className="me-2" style={{ width: "200px", margin: "20px" }}>
               <Label for="exampleEmail">Nacionalidad</Label>
-              <Nacionalidades required name="nacionalidad" handleChangeData={handleChange} value={consolaSeleccionada.nacionalidad} style={{ width: "15%" }} />
+              <Nacionalidades required name="nacionalidad" handleChangeData={handleChange} value={consolaSeleccionada.nacionalidad} />
             </FormGroup>
             <FormGroup className="me-2">
-              <Label for="exampleEmail">¿Lugar de dónde viene?</Label>
-              <input required className="form-control" name="lugarProviene" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.lugarOrigen} placeholder={!consolaSeleccionada?.lugarOrigen ? " el lugar de donde proviene" : "Lugar Proveniente"} />
+              <Label for="exampleEmail">¿De dónde proviene?</Label>
+              <Region required name="lugarOrigen" handleChangeData={handleChange} value={consolaSeleccionada.lugarOrigen} codNacion={codNacionalidad} />
+            </FormGroup>
+            <FormGroup className="me-2">
+              <Label for="exampleEmail">Nombre Emergencia</Label>
+              <input required className="form-control" name="nomContactoEmergencia" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.nomContactoEmergencia} />
             </FormGroup>
           </div>
           <div className="flex">
             <FormGroup className="me-2">
-              <Label for="exampleEmail">Nombre Emergencia</Label>
-              <input required className="form-control" name="nomContactoEmergencia" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.nomContactoEmergencia} placeholder={!consolaSeleccionada?.nomContactoEmergencia ? "Diligenice nombre del acompañante" : "Acompañante"} />
-            </FormGroup>
-            <FormGroup className="me-2">
               <Label for="exampleEmail">#Contacto Emergencia</Label>
-              <input required className="form-control" name="numContactoEmergencia" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.numContactoEmergencia} placeholder={!consolaSeleccionada?.numContactoEmergencia ? "Número de contacto de Emergencia" : "NumeroEmergencia"} />
+              <input required className="form-control" name="numContactoEmergencia" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.numContactoEmergencia} />
             </FormGroup>
             <FormGroup className="me-2" style={{ width: "200px", margin: "20px" }}>
               <Label for="exampleEmail">Estado Huesped</Label>
@@ -435,8 +438,12 @@ function Huespedes() {
   );
 
   useEffect(() => {
+    if (consolaSeleccionada && consolaSeleccionada.nacionalidad !== undefined) {
+      // console.log("Nacionalidad cambiada:", consolaSeleccionada.nacionalidad);
+      setCodNacionaldad(consolaSeleccionada.nacionalidad.codNacion);
+    }
     peticionGet();
-  }, []);
+  }, [consolaSeleccionada]);
 
   const columns = [
     {
@@ -445,7 +452,6 @@ function Huespedes() {
     }, {
       name: "nombre",
       label: "Nombre",
-      sort: false,
     }, {
       name: "apellido",
       label: "apellido",
@@ -455,37 +461,44 @@ function Huespedes() {
     }, {
       name: "correo",
       label: "Correo Electronico",
-    },
-    // }, {
-    //   name: "tipoDocumento",
-    //   label: "Tipo Documento",
-    //   options: {
-    //     filter: false,
-    //     sort: false,
-    //     customBodyRender: (value, tableMeta, updateValue) => {
-    //       return `${value.nomTipoDocumento}`;
-    //     },
-    //   },
-    // }, 
-    {
+    }, {
+      name: "tipoDocumento",
+      label: "Tipo Documento",
+      options: {
+        filter: false,
+        sort: false,
+        customBodyRender: (value, tableMeta) => {
+          return value.nomTipoDocumento; // Devuelve el nombre del tipo de documento
+        },
+      },
+    }, {
       name: "numDocumento",
       label: "Número Documento",
+    }, {
+      name: "fechaNacimiento",
+      label: "FechaNacimiento"
+    }, {
+      name: "edad",
+      label: "Edad"
+    }, {
+      name: "nacionalidad",
+      label: "Nacionalidad",
+      options: {
+        filter: false,
+        sort: false,
+        customBodyRender: (value, tableMeta) => {
+          return value.nombre;
+        },
+      },
+    }, {
+      name: "lugarOrigen",
+      label: "Lugar Origen",
+      options: {
+        customBodyRender: (value, tableMeta) => {
+          return value.nombre
+        }
+      }
     },
-    // {
-    //   name: "nacionalidad",
-    //   label: "Nacionalidad",
-    //   options: {
-    //     filter: false,
-    //     sort: false,
-    //     customBodyRender: (value, tableMeta, updateValue) => {
-    //       return `${value.nombre}`;
-    //     },
-    //   },
-    // }, 
-    // {
-    //   name: "lugarOrigen",
-    //   label: "Lugar De incio de viaje",
-    // }, 
     {
       name: "nomContactoEmergencia",
       label: "Nombre Contacto ",
@@ -500,22 +513,18 @@ function Huespedes() {
         sort: false,
         customBodyRender: (value) => {
           try {
-            // Suponiendo que data es la fuente de tus datos
-            data.forEach((consola, ind) => {
-              if (consola.estadoHuesped === true) {
-                value = "Habilitado";
-              } else {
-                value = "Inhabilitado";
-              }
-            });
+            if (value === true) {
+              return "Habilitado";
+            } else {
+              return "Inhabilitado";
+            }
           } catch (error) {
-            console.log("No carga el valor de Estado Huesped");
+            console.log("No se puede cargar el valor de Estado Huesped:", error);
+            return "Error";
           }
-          return value;
         },
       },
-    },
-    {
+    }, {
       name: "acciones",
       label: "Acciones",
       options: {
@@ -524,12 +533,25 @@ function Huespedes() {
         customBodyRender: (value, tableMeta, updateValue) => {
           return (
             <div>
-              <Button variant="contained" color="primary" onClick={() => seleccionarHuespedes(tableMeta.rowData, "Editar")}>
-                <AiFillEdit.AiFillEdit className="me-2" />Editar
-              </Button>
-              <Button variant="contained" color="secondary" onClick={() => seleccionarHuespedes(tableMeta.rowData, "Eliminar")}>
-                <MdDelete.MdDelete className="me-2" />Eliminar
-              </Button>
+              <li className="nav-item dropdown">
+                <Link className="nav-link dropdown-toggle" to="Informacion.html" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Información
+                </Link>
+                <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <li>
+                    <Link className="dropdown-item" onClick={() => seleccionarHuespedes(tableMeta.rowData, "Editar")}> Editar </Link>
+                  </li>
+                  <li>
+                    <Link className="dropdown-item" onClick={() => seleccionarHuespedes(tableMeta.rowData, "Eliminar")}> Eliminar </Link>
+                  </li>
+                  <li>
+                    <hr className="dropdown-divider" />
+                  </li>
+                  <li>
+                    <Link className="dropdown-item" to={`/Login`}> Factura </Link>
+                  </li>
+                </ul>
+              </li>
             </div>
           );
         },

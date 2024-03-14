@@ -2,7 +2,7 @@ import React from "react";
 // Componentes
 import SidebarAdmin from "./SidebarAdmin";
 import Home from "../pagesAdministrador/Home";
-import Huespedes from "../pagesAdministrador/Huespedes";
+import Huespedes from "../pagesAdministrador/Huespedes/Huespedes";
 import Sales from "../pagesAdministrador/Sales";
 import Reservaciones from "../pagesAdministrador/Reservaciones";
 import Graficas from "../pagesAdministrador/Graficas";
@@ -23,6 +23,8 @@ import { NavLink } from "react-router-dom";
 import * as HiIcons from "react-icons/hi";
 import { FaUsers } from "react-icons/fa";
 import { MdOutlinePendingActions } from "react-icons/md";
+import Acciones from "../pagesAdministrador/Acciones";
+import ModuloHuespued from "../pagesAdministrador/Huespedes/ModuloHuespued";
 
 function MenuLateral() {
   return (
@@ -36,7 +38,7 @@ function MenuLateral() {
             <ul className="sidebar-nav">
               <li className="sidebar-header">Elementos Administrador</li>
               <li className="sidebar-item">
-                <NavLink className="sidebar-link" to="SidebarAdmin" exact="true" activeclassname="active">
+                <NavLink className="sidebar-link" to="Acciones" exact="true" activeclassname="active">
                   <MdOutlinePendingActions className="me-2" /> Acciones
                 </NavLink>
               </li>
@@ -120,7 +122,7 @@ function MenuLateral() {
         <Routes>
           <Route path="/" exact={true} element={<Home />} />
           <Route path="/Home" exact={true} element={<Home />} />
-          <Route path="/Huespedes" exact={true} element={<Huespedes />} />
+          <Route path="/Huespedes" exact={true} element={<ModuloHuespued />} />
           <Route path="/Empleados" exact={true} element={<EmpleadoComponent />} />
           <Route path="/Sales" exact={true} element={<Sales />} />
           <Route path="/Graficas" exact={true} element={<Graficas />} />
@@ -129,7 +131,7 @@ function MenuLateral() {
           <Route path="/Recibos" exact={true} element={<Recibos />} />
           <Route path="/Tarea" exact={true} element={<Tarea />} />
           <Route path="/Comentario" exact={true} element={<Comentario />} />
-          <Route path="/SidebarAdmin" exact={true} element={<SidebarAdmin />} />
+          <Route path="/Acciones" exact={true} element={<Acciones />} />
         </Routes>
       </div>
     </div>

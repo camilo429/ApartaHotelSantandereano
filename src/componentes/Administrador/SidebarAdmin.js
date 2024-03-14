@@ -72,33 +72,25 @@ function SidebarAdmin() {
     }, [toggleRootClass]);
 
     return (
-        <div className="main">
-            <nav className="navbar navbar-expand px-3 border-bottom">
-                <button className="btn" id='sidebar-toggle' type='button'>
-                    <span className="navbar-toggler-icon"></span>
-                </button>
-                <div className='navbar-collapse navbar'>
-                    <ul className='navbar-nav'>
-                        <li className='nav-item dropdown'>
-                            <a href='#hml' data-bs-toggle="dropdown" className='nav-icon pe-md-0'>
-                                <img src={Cliente1} className='avatar img-fluid rounded' alt='monacho' />
-                            </a>
-                            <div className='dropdown-menu dropdown-menu-end'>
-                                <a href='#fe' className='dropdown-item'>Perfil</a>
-                                <a href='#fe' className='dropdown-item'>Configuracione</a>
-                                <a href='#fe' className='dropdown-item'>Salir</a>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-            <AdminDashboard />
-            <a href='#html' className='theme-toggle'>
-                <CiSun />
-                <FaMoon />
-            </a>
-            <Footer />
-        </div>
+        <nav className="navbar navbar-expand px-3 border-bottom">
+            <button className="btn" id='sidebar-toggle' type='button'>
+                <span className="navbar-toggler-icon"></span>
+            </button>
+            <div className='navbar-collapse navbar'>
+                <ul className='navbar-nav'>
+                    <li className='nav-item dropdown'>
+                        <a href='#hml' data-bs-toggle="dropdown" className='nav-icon pe-md-0'>
+                            <img src={Cliente1} className='avatar img-fluid rounded' alt='monacho' />
+                        </a>
+                        <div className='dropdown-menu dropdown-menu-end'>
+                            <a href='#fe' className='dropdown-item'>Perfil</a>
+                            <a href='#fe' className='dropdown-item'>Configuracione</a>
+                            <a href='#fe' className='dropdown-item'>Salir</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
     )
 }
 export default SidebarAdmin

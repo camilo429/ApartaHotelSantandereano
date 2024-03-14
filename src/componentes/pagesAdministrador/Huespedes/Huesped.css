@@ -3,8 +3,11 @@ input::placeholder {
 }
 
 input {
-    color: black
+    color: black;
+    width: "175px"
 }
-h3, h6 {
+
+h3,
+h6 {
     text-align: center;
 }
