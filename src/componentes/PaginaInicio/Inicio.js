@@ -38,7 +38,7 @@ const urlG = Apiurl + "reservaciones/crearReservacion";
 
 function Inicio() {
   const [data, setData] = useState([]);
-  const [mensaje,setMensaje] = useState("");
+  const [mensaje, setMensaje] = useState("");
   const [modalInsertar, setModalInsertar] = useState(false);
   const [modalMensaje, setModalMensaje] = useState(false);
   const { register, handleSubmit, formState: { errors }, watch, setValue, reset } = useForm();
@@ -92,32 +92,29 @@ function Inicio() {
     overflow: "scroll",
   });
 
-  // Utiliza styled para generar la versión estilizada del componente
-  const ModalContainer = styled("div")(modalStyles);
-
   // Define los estilos para otro componente (usoEstilos)
   const otroEstilo = ({ theme }) => ({
-    modal: {
-      position: "absolute",
-      width: "40%",
-      height: "15%",
-      backgroundColor: "white",
-      padding: "1%",
-      border: "2px solid #000",
-      top: "40%",
-      left: "50%",
-      transform: "translate(-50%, -50%)",
-      fontSize: "2.25rem",
-      borderRadius: "5px",
-    },
+    position: "absolute",
+    width: "40%",
+    height: "15%",
+    backgroundColor: "white",
+    padding: "1%",
+    border: "2px solid #000",
+    top: "40%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    fontSize: "2.25rem",
+    borderRadius: "5px",
   });
 
   // Utiliza styled para generar la versión estilizada del otro componente
   const UsoEstilosContainer = styled("div")(otroEstilo);
-
+  // Utiliza styled para generar la versión estilizada del componente
+  const ModalContainer = styled("div")(modalStyles);
 
   const handleChange = (e) => {
     setValue(e.target.name, e.target.value);
+    console.log("target", e.target.name, e.target.value)
     const { name, value } = e.target;
     setConsolaSeleccionada((prevState) => ({
       ...prevState,
@@ -127,7 +124,7 @@ function Inicio() {
 
   const enviarReservacion = async () => {
     try {
-      console.log("consola Actualizada", consolaSeleccionada)
+      console.log("Info enviada al servidor", consolaSeleccionada)
       const response = await axios.post(urlG, consolaSeleccionada);
       if (response.status === 201) {
         setData(data.concat(response.data));
@@ -141,15 +138,22 @@ function Inicio() {
           },
           habitacion: {
             codHabitacion: "",
-            nombreHabitacion: "",
+            nombreHabitacion: {
+              codTipoHabitacio: "",
+              nombre: "",
+              precioXPersona: "",
+              precioXAcompanante: ""
+            },
             descripHabitacion: "",
             numHabitacion: "",
             pisoHabitacion: "",
             maxPersonasDisponibles: "",
-            precioDia: "",
-            estadoHabitacion: "",
-            imagenHabitacion: "",
-          },
+            estadoHabitacion: {
+              codEstadoHabitacion: "",
+              nombre: ""
+            },
+            imagenHabitacion: null
+          }
         })
         reset();
         setIsLoading(false);
@@ -201,18 +205,6 @@ function Inicio() {
       setModalMensaje(false);
     }, 2000); // 2000 milisegundos = 2 segundos
   };
-
-  const popUp = (
-    <div>
-      <UsoEstilosContainer>
-        <div style={{ alignContent: "center", alignItems: "center", marginLeft: "45px" }}>
-          <div className="flex" style={{ alignContent: "center", alignItems: "center", margin: "auto" }}>
-            <FaCheck className="me-3" color="green" /> <p>{mensaje}</p>
-          </div>
-        </div>
-      </UsoEstilosContainer>
-    </div>
-  )
 
   const bodyInsertar = (
     <div>
@@ -267,7 +259,7 @@ function Inicio() {
             <FormGroup style={{ marginLeft: "7px" }}>
               <div id="reservacion">
                 <Label for="exampleEmail">Tipo de Documento</Label>
-                <TipoDocumento name="tipoDocumento" handleChangeData={handleChange} />
+                <TipoDocumento name="tipoDocumento" handleChangeData={handleChange} value={consolaSeleccionada.tipoDocumento} />
               </div>
             </FormGroup>
           </div>
@@ -308,14 +300,14 @@ function Inicio() {
                   required: true,
                   pattern: /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6}$/
                 })} />
-                {errors.email?.type === "pattern" && <p id="errores">dirección no valida</p>}
+                {errors.email?.type === "pattern" && <p id="errores">Dirección no valida</p>}
                 {errors.email?.type === 'required' && <p id="errores">El campo es requerido</p>}
               </div>
             </FormGroup>
             <FormGroup style={{ marginLeft: "7px" }}>
               <div id="reservacion">
                 <Label for="exampleEmail">Tipo Habitación </Label>
-                <Habitaciones name="habitacion" handleChangeData={handleChange} />
+                <Habitaciones name="habitacion" handleChangeData={handleChange} value={consolaSeleccionada.habitacion} />
               </div>
             </FormGroup>
           </div>
@@ -335,9 +327,20 @@ function Inicio() {
         </Form >
         <br />
       </ModalContainer>
-
     </div >
   );
+
+  const popUp = (
+    <div>
+      <UsoEstilosContainer>
+        <div>
+          <div>
+            <FaCheck className="me-3" color="green" /><p>¡Reservación Exitosa!</p>
+          </div>
+        </div>
+      </UsoEstilosContainer>
+    </div>
+  )
   return (
     <div>
       <NavbarInicio />

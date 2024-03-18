@@ -71,6 +71,7 @@ function Huespedes() {
     transform: "translate(-50%,-50%)",
     fontSize: "0.8rem",
     borderRadius: "5px",
+    overflow: "scroll",
     "& input": {
       width: "175px"
     },
@@ -289,15 +290,15 @@ function Huespedes() {
           <div className="flex">
             <FormGroup >
               <Label for="exampleEmail">Nombre</Label>
-              <input className="form-control" name="nombre" onChange={handleChange} placeholder={!consolaSeleccionada?.nombre ? "Nombres" : "Nombre"} />
+              <input className="form-control" name="nombre" onChange={handleChange} value={consolaSeleccionada.nombre} placeholder={!consolaSeleccionada?.nombre ? "Nombres" : "Nombre"} />
             </FormGroup>
             <FormGroup >
               <Label for="Apellido">Apellido</Label>
-              <input className="form-control" name="apellido" onChange={handleChange} placeholder={!consolaSeleccionada?.apellido ? "Apellido" : "Apellido"} />
+              <input className="form-control" name="apellido" onChange={handleChange} value={consolaSeleccionada.apellido} placeholder={!consolaSeleccionada?.apellido ? "Apellido" : "Apellido"} />
             </FormGroup>
             <FormGroup >
               <Label for="exampleEmail">Número Celular</Label>
-              <input className="form-control" name="numCelular" onChange={handleChange} placeholder={!consolaSeleccionada?.numCelular ? "Número de celular" : "Numero de celular"} />
+              <input className="form-control" name="numCelular" onChange={handleChange} value={consolaSeleccionada.numCelular} placeholder={!consolaSeleccionada?.numCelular ? "Número de celular" : "Numero de celular"} />
             </FormGroup>
             <FormGroup >
               <Label for="exampleEmail">Fecha de Nacimiento</Label>
@@ -319,11 +320,11 @@ function Huespedes() {
             </FormGroup>
             <FormGroup style={{ width: "175px", margin: "10px" }} >
               <Label for="exampleEmail" style={{ margin: "6px" }} >Nacionalidad</Label>
-              <Nacionalidades name="nacionalidad" handleChangeData={handleChange} />
+              <Nacionalidades required name="nacionalidad" handleChangeData={handleChange} value={consolaSeleccionada.nacionalidad}/>
             </FormGroup>
             <FormGroup style={{ width: "175px", margin: "10px" }}>
               <Label for="eampleemail" style={{ margin: "6px" }}> ¿Región de dónde proviene?</Label>
-              <Region name="region" handleChangeData={handleChange} codNacion={2} />
+              <Region name="region" handleChangeData={handleChange} codNacion={codNacionalidad} value={consolaSeleccionada.region} />
             </FormGroup>
             <FormGroup >
               <Label for="exampleEmail">Nombre Emergencia</Label>

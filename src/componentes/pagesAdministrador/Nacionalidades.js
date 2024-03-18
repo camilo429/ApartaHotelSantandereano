@@ -11,21 +11,23 @@ function Nacionalidades({ name, handleChangeData, value = null }) {
   const [data, setData] = useState([]);
 
   const getNacionalidades = async () => {
-    axios.request({
-      method: "get",
-      url: url,
-      withCredentials: true,
-      crossdomain: true,
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("access_token")}`
-      }
-    }).then(response => {
+    try {
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("access_token")}`
+        }
+      })
+
       if (response.status === 200) {
         setData(response.data);
-       // console.log(response.data);
+      } else {
+        console.log("A ocurrido un error con nacionalidades", response.error.data);
       }
-    })
-  };
+    } catch (error) {
+      console.log("Ha ocurrido un error al listar Nacionalidades", error);
+      alert("Ha ocurrido un error al listar Nacionalidades")
+    }
+  }
   useEffect(() => {
     getNacionalidades();
   }, []);
@@ -43,7 +45,7 @@ function Nacionalidades({ name, handleChangeData, value = null }) {
   };
 
   return (
-    <div className="Nacionalidades" style={{ height: "25px", width: "175px"}}>
+    <div className="Nacionalidades" style={{ height: "25px", width: "175px" }}>
       <Select
         defaultValue={
           value
@@ -59,7 +61,7 @@ function Nacionalidades({ name, handleChangeData, value = null }) {
           }))
         }
         onChange={handleChange}
-        placeholder="Nacionalidad"
+        placeholder="Seleccione una nacionalidad"
       />
     </div>
   );

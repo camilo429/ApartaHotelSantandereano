@@ -34,7 +34,7 @@ function Region({ name, handleChangeData, value = null, codNacion }) {
     }, [codNacion]);
 
     const handleChange = ({ label, value, nacionalidad: { codNacion, nombre } }) => {
-        console.log("region seleccionada", value, label, { nacionalidad: { codNacion, nombre } });
+       // console.log("region seleccionada", value, label, { nacionalidad: { codNacion, nombre } });
         handleChangeData({
             target: {
                 name,

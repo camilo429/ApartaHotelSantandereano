@@ -9,20 +9,20 @@ const url = Apiurl + "tipoDocumento/listarTipoDocumentos";
 function TipoDocumento({ name, handleChangeData, value = null }) {
 
   const [data, setData] = useState([]);
-  const getTipoDocumento = async () => {
-    try {
-      const response = await axios.get(url);
-      if (response.status === 200) {
-        setData(response.data);
-        //console.log(response.data);
-      }
-    } catch (error) {
-      alert("Error al traer los documentos");
-      console.log("Error al traer tipos documentos", error.response.data)
-    }
-  }
 
   useEffect(() => {
+    const getTipoDocumento = async () => {
+      try {
+        const response = await axios.get(url);
+        if (response.status === 200) {
+          setData(response.data);
+          //console.log(response.data);
+        }
+      } catch (error) {
+        alert("Error al traer los documentos");
+        console.log("Error al traer tipos documentos", error.message)
+      }
+    }
     getTipoDocumento();
   }, []);
 
@@ -33,28 +33,29 @@ function TipoDocumento({ name, handleChangeData, value = null }) {
         value: {
           codTipoDocumento: value,
           nomTipoDocumento: label,
-        },
+        }
       },
     });
   };
 
   return (
-    <div className="TipoDocumento" style={{ height: "25px", width: "175px", margin:"0px" }}>
+    <div className="TipoDocumento" style={{ height: "25px", width: "175px", margin: "0px" }}>
       <Select
         defaultValue={
           value
             ? {
               label: value?.nomTipoDocumento,
               value: value?.codTipoDocumento,
-            }
-            : null
+            } : null
         }
         options={data.map((docu) => ({
           label: docu.nomTipoDocumento,
           value: docu.codTipoDocumento,
         }))}
         onChange={handleChange}
-      />
+        required
+        placeholder="Seleccione Documento" />
+
     </div>
   );
 }

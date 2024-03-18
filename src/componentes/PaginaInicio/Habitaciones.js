@@ -58,7 +58,7 @@ function Habitaciones({ name, handleChangeData, value = null }) {
 
   const mapDataToOptions = () => {
     return data.map((docu) => ({
-      label: docu.nombreHabitacion.nombre ? docu.nombreHabitacion.nombre : '',
+      label: docu.nombreHabitacion.nombre,
       value: docu.codHabitacion,
       nombreHabitacion: docu.nombreHabitacion ? {
         codTipoHabitacion: docu.nombreHabitacion.codTipoHabitacion,
@@ -83,7 +83,13 @@ function Habitaciones({ name, handleChangeData, value = null }) {
     <>
       <div className="habitaciones" style={{ height: "25px", width: "170px" }}>
         <Select
-          defaultValue={defaultValueOption}
+          defaultValue={
+            value ?
+              {
+                label: value?.nombre,
+                value: value?.codHabitacion
+              } : null
+          }
           options={options}
           onChange={handleChange} />
       </div>
