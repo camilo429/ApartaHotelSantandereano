@@ -72,18 +72,26 @@ class Login extends React.Component {
           case "ROLE_SERVICIOS":
             window.location.href = "SERVICIOS";
             break;
+          default:
+            break;
         }
       } else {
-        this.setState({
-          error: true,
-          errorMsg: response.data.error_description,
-        });
+        switch (response.status) {
+          case 400:
+            alert("Credenciales incorrectas")
+            break;
+          case 401:
+            alert("La configuración del Token no deja redireccionar")
+            break;
+          case 404:
+            alert("La página no existe ")
+            break
+          default:
+            break;
+        }
       }
     } catch (error) {
-      this.setState({
-        error: true,
-        errorMsg: "Error: Usuario o Contraseña equivocados"
-      })
+      console.log("error en el login", error);
     }
   };
 

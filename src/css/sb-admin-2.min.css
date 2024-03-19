@@ -8532,7 +8532,8 @@ button.bg-dark:hover {
 
 .mb-3,
 .my-3 {
-    margin-bottom: 1rem !important
+    margin-bottom: 1rem !important;
+    margin: 5px;
 }
 
 .ml-3,

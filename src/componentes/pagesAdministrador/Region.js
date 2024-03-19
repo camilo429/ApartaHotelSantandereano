@@ -3,8 +3,9 @@ import React, { useEffect, useState } from 'react'
 import axios from "axios";
 import Select from "react-select";
 import { Apiurl } from "../../services/userService";
+import "./../estilos/style.css"
 const REGIONES_POR_NACION_URL = Apiurl + "region/regionByNacion/";
-const MENSAJE_ERROR = "Hubo un error al traer las regiones por nacionalidad"
+const MENSAJE_ERROR = "Seleccionar una Nacionalidad"
 
 function Region({ name, handleChangeData, value = null, codNacion }) {
     const [data, setData] = useState([]);
@@ -13,20 +14,24 @@ function Region({ name, handleChangeData, value = null, codNacion }) {
     useEffect(() => {
         const getRegion = async () => {
             try {
-                const response = await axios.get(REGIONES_POR_NACION_URL + codNacion, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
+                if (codNacion !== null) {
+                    const response = await axios.get(REGIONES_POR_NACION_URL + codNacion, {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
+                        }
+                    })
+                    if (response.status === 200) {
+                        setData(response.data)
+                        // console.log(response.data)
+                    } else {
+                        console.log("Hubo un error al traer las regiones por nacionaliad")
                     }
-                })
-                if (response.status === 200) {
-                    setData(response.data)
-                    // console.log(response.data)
                 } else {
-                    console.log("Hubo un error al traer las regiones por nacionaliad")
+                    setError(MENSAJE_ERROR)
                 }
             } catch (error) {
-                console.log("error al obtener las opciones:", error);
+                console.log("error al obtener las opciones Region por Nacionalidad:", error);
                 setError(MENSAJE_ERROR)
             }
         };
@@ -34,7 +39,7 @@ function Region({ name, handleChangeData, value = null, codNacion }) {
     }, [codNacion]);
 
     const handleChange = ({ label, value, nacionalidad: { codNacion, nombre } }) => {
-       // console.log("region seleccionada", value, label, { nacionalidad: { codNacion, nombre } });
+        console.log("region seleccionada", value, label, { nacionalidad: { codNacion, nombre } });
         handleChangeData({
             target: {
                 name,
@@ -52,7 +57,7 @@ function Region({ name, handleChangeData, value = null, codNacion }) {
 
     return (
         <div className='Region' style={{ height: "25px", width: "175px" }}>
-            {error && <div>{error}</div>}
+            {error && <div id='errores'>{error}</div>}
             <Select
                 defaultValue={
                     value

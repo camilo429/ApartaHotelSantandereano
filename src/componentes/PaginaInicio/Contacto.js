@@ -24,8 +24,21 @@ import { Modal } from "@mui/material";
 import { Apiurl } from "../../services/userService";
 const url = Apiurl + "comentarios/crearComentario";
 
-const usoEstilos = styled("div")(({theme}) => ({
-  modal: {
+
+function Contacto() {
+  const [data, setData] = useState([]);
+  const { register, handleSubmit, formState: { errors }, reset } = useForm();
+  const [modalMensaje, setModalMensaje] = useState(false);
+  const [setFormulario] = useState({
+    codComentario: "",
+    nombre: "",
+    email: "",
+    numTelefono: "",
+    comentario: "",
+    fechaEnviado: "",
+    horaEnviado: "",
+  });
+  const usoEstilos = {
     position: "absolute",
     width: "40%",
     height: "15%",
@@ -37,22 +50,9 @@ const usoEstilos = styled("div")(({theme}) => ({
     transform: "translate(-50%,-50%)",
     fontSize: "1.25rem",
     borderRadius: "5px",
-  },
-}));
-function Contacto() {
-  const [data, setData] = useState([]);
-  const estilos = usoEstilos();
-  const { register, handleSubmit, formState: { errors }, reset } = useForm();
-  const [modalMensaje, setModalMensaje] = useState(false);
-  const [formulario, setFormulario] = useState({
-    codComentario: "",
-    nombre: "",
-    email: "",
-    numTelefono: "",
-    comentario: "",
-    fechaEnviado: "",
-    horaEnviado: "",
-  });
+  }
+
+  const ModalContainer = styled("div")(usoEstilos);
 
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: "AIzaSyB98G8_CHNNlhya9B1iiolBxsxp4UDZc60",
@@ -111,13 +111,15 @@ function Contacto() {
     }, 3000); // 3000 milisegundos = 3 segundos
   };
   const popUp = (
-    <div className={estilos.modal}>
-      <div style={{ alignContent: "center", alignItems: "center", marginLeft: "15px" }}>
-        <div className="flex" style={{ alignContent: "center", alignItems: "center", margin: "auto" }}>
-          <FaCheck className="me-3" color="green" />
-          <p> "¡Gracias por ser parte de la familia y por compartir tus pensamientos y sugerencias con nosotros!"</p>
+    <div>
+      <ModalContainer>
+        <div style={{ alignContent: "center", alignItems: "center", marginLeft: "15px" }}>
+          <div className="flex" style={{ alignContent: "center", alignItems: "center", margin: "auto" }}>
+            <FaCheck className="me-3" color="green" />
+            <p> "¡Gracias por ser parte de la familia y por compartir tus pensamientos y sugerencias con nosotros!"</p>
+          </div>
         </div>
-      </div>
+      </ModalContainer>
     </div>
   )
 

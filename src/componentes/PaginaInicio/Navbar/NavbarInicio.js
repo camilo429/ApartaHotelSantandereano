@@ -29,7 +29,10 @@ function NavbarInicio() {
               <li className="nav-item">
                 <Link className="nav-link" to={`/SobreNosotros`}> Nosotros </Link>
               </li>
-              <li className="nav-item dropdown">
+              <li className="nav-item">
+                <Link className="nav-link" to={`/Contactanos`}> Contacto </Link>
+              </li>
+              {/* <li className="nav-item dropdown">
                 <Link className="nav-link dropdown-toggle" to="Informacion.html" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   Información
                 </Link>
@@ -47,7 +50,7 @@ function NavbarInicio() {
                     <Link className="dropdown-item" to={`/Login`}> Login </Link>
                   </li>
                 </ul>
-              </li>
+              </li> */}
               <li className="nav-item">
                 <Link className="nav-link active" aria-current="page" to={`/Login`}> Login </Link>
               </li>

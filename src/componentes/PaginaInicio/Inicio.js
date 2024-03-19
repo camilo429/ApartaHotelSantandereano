@@ -38,7 +38,7 @@ const urlG = Apiurl + "reservaciones/crearReservacion";
 
 function Inicio() {
   const [data, setData] = useState([]);
-  const [mensaje, setMensaje] = useState("");
+  const [setMensaje] = useState("");
   const [modalInsertar, setModalInsertar] = useState(false);
   const [modalMensaje, setModalMensaje] = useState(false);
   const { register, handleSubmit, formState: { errors }, watch, setValue, reset } = useForm();
@@ -175,7 +175,6 @@ function Inicio() {
 
   const onSubmit = (info) => {
     try {
-      setIsLoading(true);
       setConsolaSeleccionada((prevConsolaSeleccionada) => ({
         ...prevConsolaSeleccionada,
         fechaEntrada: info.fechaEntrada,
@@ -187,6 +186,7 @@ function Inicio() {
         apellido: info.apellido,
         email: info.email,
       }));
+      setIsLoading(true);
     } catch (error) {
       console.error("Error al realizar la reservación", error);
       alert("Hubo un error al crear la reservación. Por favor, intenta nuevamente.");
@@ -333,10 +333,8 @@ function Inicio() {
   const popUp = (
     <div>
       <UsoEstilosContainer>
-        <div>
-          <div>
-            <FaCheck className="me-3" color="green" /><p>¡Reservación Exitosa!</p>
-          </div>
+        <div className="flex" style={{ marginLeft: "50px", alignContent: "center", alignItems: "center" }}>
+          <FaCheck className="me-3" color="green" /><p>¡Reservación Exitosa!</p>
         </div>
       </UsoEstilosContainer>
     </div>

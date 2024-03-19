@@ -78,7 +78,6 @@ function Habitaciones({ name, handleChangeData, value = null }) {
     }))
   }
   const options = mapDataToOptions();
-  const defaultValueOption = options.find(option => option.value === (value ? value.codHabitacion : null));
   return (
     <>
       <div className="habitaciones" style={{ height: "25px", width: "170px" }}>

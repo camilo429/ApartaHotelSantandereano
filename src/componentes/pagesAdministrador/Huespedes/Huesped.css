@@ -4,10 +4,23 @@ input::placeholder {
 
 input {
     color: black;
-    width: "175px"
+    margin: 5px;
 }
 
 h3,
 h6 {
     text-align: center;
 }
+
+button {
+    margin: 10px;
+    width: 175px;
+}
+#insertar{
+    margin-right: 10px;
+}
+#huespedesbotonesinsertar{
+    margin-left: 100px;
+    margin-top: 35px;
+}
+
