@@ -3,7 +3,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import MUIDataTable from "mui-datatables";
 //Estilos
-import { Form, FormGroup, Label } from "reactstrap";
+import { Form } from "reactstrap";
 import "./Huesped.css";
 import { styled } from "@mui/system";
 import { Link } from "react-router-dom";
@@ -34,10 +34,9 @@ function Huespedes() {
   const [modalEliminar, setModalEliminar] = useState(false);
   const [modalMensaje, setModalMensaje] = useState(false);
   const [mensaje, setMensaje] = useState("");
-  const [codNacionalidad, setCodNacionaldad] = useState();
+  const [codNacionalidad, setCodNacionalidad] = useState();
   const { register, handleSubmit, formState: { errors }, setValue, reset } = useForm();
   const [isLoading, setIsLoading] = useState(false);
-
   const [consolaSeleccionada, setConsolaSeleccionada] = useState({
     codHuesped: "",
     nombre: "",
@@ -81,10 +80,7 @@ function Huespedes() {
     transform: "translate(-50%,-50%)",
     fontSize: "0.8rem",
     borderRadius: "5px",
-    overflow: "scroll",
-    "& input::placeholder": {
-      fontSize: "0.8rem"
-    }
+    overflow: "scroll"
   });
   const ModalContainer = styled("div")(useStyles);
   const useEstilo = ({ theme }) => ({
@@ -118,6 +114,7 @@ function Huespedes() {
   const UsoEstilosContainer = styled("div")(otroEstilo);
 
   const handleChange = (e) => {
+    console.log("handleChange called")
     setValue(e.target.name, e.target.value);
     console.log("target", e.target.name, e.target.value)
     const { name, value } = e.target;
@@ -126,13 +123,6 @@ function Huespedes() {
       [name]: value,
     }));
   };
-  // const handleChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setConsolaSeleccionada((prevState) => ({
-  //     ...prevState,
-  //     [name]: value,
-  //   }));
-  // };
 
   const peticionGet = async () => {
     try {
@@ -153,10 +143,66 @@ function Huespedes() {
     }
   };
 
-  const peticionPost = async () => {
+  // const peticionPost = async () => {
+  //   try {
+  //     console.log("peticion post", consolaSeleccionada);
+  //     const response = await axios.post(urlG, consolaSeleccionada, {
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
+  //       },
+  //     })
+  //     console.log("estado result", response.status);
+  //     if (response.status === 201) {
+  //       setData(data.concat(response.data));
+  //       abrirCerrarModalInsertar();
+  //       setMensaje("! Huesped Registrado ¡");
+  //       abrirCerrarModalMensaje();
+  //       setConsolaSeleccionada({
+  //         codHuesped: "",
+  //         nombre: "",
+  //         apellido: "",
+  //         numCelular: "",
+  //         correo: "",
+  //         tipoDocumento: {
+  //           codTipoDocumento: "",
+  //           nomTipoDocumento: ""
+  //         },
+  //         numDocumento: "",
+  //         fechaNacimiento: "",
+  //         edad: "",
+  //         nacionalidad: {
+  //           codNacion: "",
+  //           nombre: ""
+  //         },
+  //         lugarOrigen: {
+  //           codRegion: "",
+  //           nombre: "",
+  //           nacionalidad: {
+  //             codNacion: "",
+  //             nombre: ""
+  //           }
+  //         },
+  //         nomContactoEmergencia: "",
+  //         numContactoEmergencia: "",
+  //         checkin: [],
+  //         estadoHuesped: ""
+  //       })
+  //     }
+  //     reset();
+  //     setIsLoading(false);
+  //   } catch (error) {
+  //     console.error("Error en la solicitud:", error);
+  //     setIsLoading(false);
+  //     throw error;
+  //   }
+  // }
+
+  const onSubmit = async (info) => {
     try {
-      console.log("peticion post", consolaSeleccionada);
-      const response = await axios.post(urlG, consolaSeleccionada, {
+      console.log("peticion post consola", consolaSeleccionada);
+      console.log("peticion post info", info);
+      const response = await axios.post(urlG, info, {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
@@ -202,47 +248,16 @@ function Huespedes() {
       reset();
       setIsLoading(false);
     } catch (error) {
-      console.error("Error en la solicitud:", error);
-      if (error.response && error.response.status === 400) {
-        alert("Error al insertar un huésped: " + error.response.data.mensaje);
-      } else {
-        console.error("Error en la solicitud:", error);
-      }
-      setIsLoading(false);
-    }
-  }
-  const enviarReservacionMemoized = useCallback(peticionPost, [peticionPost]);
-  useEffect(() => {
-    if (isLoading) {
-      enviarReservacionMemoized();
-    }
-  }, [isLoading, consolaSeleccionada, enviarReservacionMemoized]);
-
-  const onSubmit = async (info) => {
-    try {
-      setIsLoading(true);
-      setConsolaSeleccionada((prevConsolaSeleccionada) => ({
-        ...prevConsolaSeleccionada,
-        nombre: info.nombre,
-        apellido: info.apellido,
-        numCelular: info.numCelular,
-        correo: info.correo,
-        numDocumento: info.numDocumento,
-        fechaNacimiento: info.fechaNacimiento,
-        nomContactoEmergencia: info.nomContactoEmergencia,
-        numContactoEmergencia: info.numContactoEmergencia
-      }));
-      await enviarReservacionMemoized();
-    } catch (error) {
       console.error("Error al registrar Huesped", error);
-      alert("Hubo un error al crear la huesped. Por favor, intenta nuevamente.");
+      // alert("Hubo un error al crear la huesped. Por favor, intenta nuevamente.");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const peticionPut = async () => {
-    console.log(consolaSeleccionada)
+  const peticionPut = async (info) => {
+    console.log("putavida", info);
+    console.log("codHuesped", info.nombre);
     try {
       const response = await axios.put(urlE + consolaSeleccionada.codHuesped, consolaSeleccionada, {
         headers: {
@@ -252,19 +267,30 @@ function Huespedes() {
       // console.log(response.status);
       if (response.status === 201) {
         setData((prevData) =>
-          prevData.map((consola) => consola.codHuesped === consolaSeleccionada.codHuesped ? consolaSeleccionada : consola));
+          prevData.map((consola) => consola[0] === consolaSeleccionada.codHuesped ? consolaSeleccionada : consola));
         peticionGet();
         abrirCerrarModalEditar();
         // alert("El huesped ha sido actualizado");
         setMensaje("Huesped Actualizado");
         abrirCerrarModalMensaje();
+        reset();
+        setIsLoading(false);
       } else {
         console.error("La solicitud PUT no fue exitosa");
+        reset();
       }
     } catch (error) {
       console.error("Error al realizar la solicitud PUT:", error);
+      reset();
     }
   }
+
+  const modificarHuespedMemoized = useCallback(peticionPut, [peticionPut]);
+  useEffect(() => {
+    if (isLoading) {
+      modificarHuespedMemoized();
+    }
+  }, [isLoading, consolaSeleccionada, modificarHuespedMemoized]);
 
   const peticionDelete = async () => {
     axios
@@ -336,7 +362,7 @@ function Huespedes() {
       estadoHuesped: consola[13],
       checkin: consola[14]
     });
-    // console.log("ConsolaSeleccionada", consolaSeleccionada);
+    console.log("ConsolaSeleccionada", consolaSeleccionada);
     if (caso === "Editar") {
       abrirCerrarModalEditar();
     }
@@ -348,114 +374,88 @@ function Huespedes() {
   const bodyInsertar = (
     <ModalContainer>
       <h3>Agregar Huesped</h3>
-      <Form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex">
-          <FormGroup >
-            <Label for="exampleEmail">Nombre</Label>
-            <input className="form-control" name="nombre" placeholder="Nombre (s)" onChange={handleChange} {...register('nombre', {
-              required: true,
-              maxLength: 30,
-              pattern: EXPRESION_REGULAR_NOMBRE_APELLIDO
-            })} />
+          <div >
+            <label>Nombre</label>
+            <input className="form-control" name="nombre" placeholder="Nombre (s)"  {...register('nombre', { required: true, maxLength: 30, pattern: EXPRESION_REGULAR_NOMBRE_APELLIDO })} />
             {errors.nombre?.type === 'required' && <p id="errores">El campo es requerido</p>}
             {errors.nombre?.type === 'maxLength' && <p id="errores">Es muy largo</p>}
             {errors.nombre?.type === 'pattern' && <p id="errores">Nombre no valido</p>}
-          </FormGroup>
-          <FormGroup >
-            <Label for="Apellido">Apellido</Label>
-            <input className="form-control" name="apellido" onChange={handleChange} placeholder={!consolaSeleccionada?.apellido ? "Apellido" : "Apellido"} {...register('apellido', {
-              required: true,
-              maxLength: 30,
-              pattern: EXPRESION_REGULAR_NOMBRE_APELLIDO,
-            })} />
+          </div>
+          <div >
+            <label>Apellido</label>
+            <input className="form-control" name="apellido" placeholder="Apellido" {...register('apellido', { required: true, maxLength: 30, pattern: EXPRESION_REGULAR_NOMBRE_APELLIDO, })} />
             {errors.apellido?.type === 'required' && <p id="errores">El campo es requerido</p>}
             {errors.apellido?.type === 'maxLength' && <p id="errores">Muy largo</p>}
             {errors.apellido?.type === 'pattern' && <p id="errores">Nombre no valido</p>}
-          </FormGroup>
-          <FormGroup >
-            <Label for="exampleEmail">Número Celular</Label>
-            <input className="form-control" name="numCelular" onChange={handleChange} placeholder={!consolaSeleccionada?.numCelular ? "Número de celular" : "Numero de celular"} {...register('numCelular', {
-              required: true,
-              pattern: EXPRESION_REGULAR_CELULAR,
-            })} />
+          </div>
+          <div >
+            <label>Número Celular</label>
+            <input className="form-control" name="numCelular" placeholder="Celular" {...register('numCelular', { required: true, pattern: EXPRESION_REGULAR_CELULAR, })} />
             {errors.numCelular?.type === 'required' && <p id="errores">El campo es requerido</p>}
             {errors.numCelular?.type === 'pattern' && <p id="errores">Número NO valido</p>}
-          </FormGroup>
-          <FormGroup >
-            <Label for="exampleEmail">Fecha de Nacimiento</Label>
-            <input type="date" className="form-control" name="fechaNacimiento" onChange={handleChange} placeholder={!consolaSeleccionada?.fechaNacimiento ? "fecha Nacimiento" : "Fecha Nacimiento"} {...register('fechaNacimiento', {
-              required: true,
-              maxLength: 10
-            })} />
+          </div>
+          <div>
+            <label>Fecha de Nacimiento</label>
+            <input type="date" className="form-control" name="fechaNacimiento" placeholder="Nacimiento" {...register('fechaNacimiento', { required: true, maxLength: 10 })} />
             {errors.fechaNacimiento?.error === 'required' && <p id="errores">El campo es requerido</p>}
             {errors.fechaNacimiento?.type === 'maxLength' && <p id="errores">Fecha no valida</p>}
-          </FormGroup>
-          <FormGroup >
-            <Label for="email">Correo Electronico</Label>
-            <input className="form-control" name="correo" onChange={handleChange} placeholder={!consolaSeleccionada?.correo ? "Correo Personal" : "Correo"} {...register('correo', {
-              required: true,
-              pattern: EXPRESION_REGULAR_EMAIL,
-            })} />
+          </div>
+          <div >
+            <label>Correo Electronico</label>
+            <input className="form-control" name="correo" placeholder={!consolaSeleccionada?.correo ? "Correo Personal" : "Correo"} {...register('correo', { required: true, pattern: EXPRESION_REGULAR_EMAIL, })} />
             {errors.correo?.type === "pattern" && <p id="errores">Dirección no valida</p>}
             {errors.correo?.type === 'required' && <p id="errores">El campo es requerido</p>}
-          </FormGroup>
+          </div>
         </div>
         <div className="flex" style={{ marginLeft: "10px" }}>
-          <FormGroup style={{ width: "175px", margin: "5px" }}>
-            <Label for="exampleEmail" style={{ margin: "6px" }}>Tipo Documento</Label>
-            <TipoDocumento name="tipoDocumento" handleChangeData={handleChange} value={consolaSeleccionada.tipoDocumento} />
-          </FormGroup>
-          <FormGroup >
-            <Label for="exampleEmail">Número Documento</Label>
-            <input className="form-control" name="numDocumento" type="number" onChange={handleChange} placeholder={!consolaSeleccionada?.numDocumento ? "Número Idenficación" : "Número de documento"} {...register('numDocumento', {
-              required: true,
-              pattern: EXPRESION_REGULAR_IDENTIFICACION
-            })} />
+          <div style={{ width: "175px", margin: "5px" }}>
+            <label style={{ margin: "6px" }}>Tipo Documento</label>
+            <TipoDocumento name="tipoDocumento" value={consolaSeleccionada.tipoDocumento} handleChangeData={handleChange} />
+          </div>
+          <div >
+            <label>Número Documento</label>
+            <input className="form-control" name="numDocumento" type="number" placeholder="# Documento" {...register('numDocumento', { required: true, pattern: EXPRESION_REGULAR_IDENTIFICACION })} />
             {errors.numDocumento?.type === 'required' && <p id="errores">El campo es requerido</p>}
             {errors.numDocumento?.type === 'pattern' && <p id="errores">El campo no es valido</p>}
-          </FormGroup>
-          <FormGroup style={{ width: "175px", margin: "10px" }} >
-            <Label for="exampleEmail" style={{ margin: "6px" }} >Nacionalidad</Label>
-            <Nacionalidades required name="nacionalidad" handleChangeData={handleChange} value={consolaSeleccionada.nacionalidad} />
-          </FormGroup>
-          <FormGroup style={{ width: "175px", margin: "10px" }}>
-            <Label for="eampleemail" style={{ margin: "6px" }}> ¿Región de dónde proviene?</Label>
-            <Region name="lugarOrigen" handleChangeData={handleChange} codNacion={codNacionalidad} value={consolaSeleccionada.lugarOrigen} />
-          </FormGroup>
-          <FormGroup >
-            <Label for="exampleEmail">Nombre Emergencia</Label>
-            <input className="form-control" name="nomContactoEmergencia" onChange={handleChange} placeholder={!consolaSeleccionada?.nomContactoEmergencia ? "Nombre del acompañante" : "Acompañante"} {...register('nomContactoEmergencia', {
-              required: true,
-              pattern: EXPRESION_REGULAR_NOMBRE_APELLIDO
-            })} />
+          </div>
+          <div style={{ width: "175px", margin: "10px" }} >
+            <label style={{ margin: "6px" }} >Nacionalidad</label>
+            <Nacionalidades name="nacionalidad" value={consolaSeleccionada.nacionalidad} handleChangeData={handleChange} />
+          </div>
+          <div style={{ width: "175px", margin: "10px" }}>
+            <label style={{ margin: "6px" }}> ¿Región de dónde proviene?</label>
+            <Region name="lugarOrigen" codNacion={codNacionalidad} value={consolaSeleccionada.lugarOrigen} handleChangeData={handleChange} />
+          </div>
+          <div >
+            <label>Nombre Emergencia</label>
+            <input className="form-control" name="nomContactoEmergencia" placeholder="Nombre Contacto" {...register('nomContactoEmergencia', { required: true, pattern: EXPRESION_REGULAR_NOMBRE_APELLIDO })} />
             {errors.nomContactoEmergencia?.type === 'required' && <p id="errores">El Campo es Requerido</p>}
             {errors.nomContactoEmergencia?.type === 'pattern' && <p id="errores">El Campo No es valido</p>}
-          </FormGroup>
+          </div>
         </div>
         <div className="flex">
-          <FormGroup >
-            <Label for="exampleEmail">#Contacto Emergencia</Label>
-            <input className="form-control" type="number" name="numContactoEmergencia" onChange={handleChange} placeholder={!consolaSeleccionada?.numContactoEmergencia ? "Celular Emergencia" : "NúmeroEmergencia"} {...register('numContactoEmergencia', {
-              required: true,
-              pattern: EXPRESION_REGULAR_CELULAR
-            })} />
+          <div >
+            <label>#Contacto Emergencia</label>
+            <input className="form-control" type="number" name="numContactoEmergencia" onChange={handleChange} placeholder="# Contacto" {...register('numContactoEmergencia', { required: true, pattern: EXPRESION_REGULAR_CELULAR })} />
             {errors.numContactoEmergencia?.type === 'required' && <p id="errores">El campo es requerido</p>}
             {errors.numContactoEmergencia?.type === 'patter' && <p id="errores">Número NO valido</p>}
-          </FormGroup>
-          <FormGroup>
+          </div>
+          <div>
             {isLoading && (
               <div className="loading-container">
                 <div className="flex"> <Spinner color="primary" style={{ marginLeft: "200px" }} /><div className="loading-spinner">Cargando</div>
                 </div>
               </div>
             )}
-            <div id="huespedesbotonesinsertar" className="flex">
-              <button className="btn btn-primary" id="insertar"> Insertar </button>
-              <button className="btn btn-secondary" onClick={() => abrirCerrarModalInsertar()}>Cancelar</button>
-            </div>
-          </FormGroup>
+          </div>
         </div>
-      </Form>
+        <div id="huespedesbotonesinsertar" className="flex">
+          <button className="btn btn-primary" id="insertar"> Insertar </button>
+          <button className="btn btn-secondary" onClick={() => abrirCerrarModalInsertar()}>Cancelar</button>
+        </div>
+      </form>
     </ModalContainer>
   );
 
@@ -463,113 +463,87 @@ function Huespedes() {
     <div>
       <ModalContainer>
         <h3>Editar Huesped</h3>
-        <Form style={{ textAlign: "center" }}>
+        <form onSubmit={handleSubmit(peticionPut)}>
           <div className="flex">
-            <FormGroup className="me-2">
-              <Label for="exampleEmail">Nombre(s)</Label>
-              <input required className="form-control" name="nombre" onChange={handleChange} value={consolaSeleccionada?.nombre} {...register('nombre', {
-                required: true,
-                maxLength: 30,
-                pattern: EXPRESION_REGULAR_NOMBRE_APELLIDO
-              })} />
+            <div className="me-2">
+              <label>Nombre(s)</label>
+              <input className="form-control" name="nombre" onChange={handleChange}  {...register('nombre', { required: true, maxLength: 30, pattern: EXPRESION_REGULAR_NOMBRE_APELLIDO })} />
               {errors.nombre?.type === 'required' && <p id="errores">El campo es requerido</p>}
-              {errors.nombre?.type === 'maxLength' && <p id="errores">Es muy largo</p>}
+              {errors.nombre?.type === 'maxLength' && <p id="errores">Muy largo</p>}
               {errors.nombre?.type === 'pattern' && <p id="errores">Nombre no valido</p>}
-            </FormGroup>
-            <FormGroup className="me-2">
-              <Label for="Apellido">Apellido(s)</Label>
-              <input required className="form-control" name="apellido" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.apellido} {...register('apellido', {
-                required: true,
-                maxLength: 30,
-                pattern: EXPRESION_REGULAR_NOMBRE_APELLIDO,
-              })} />
+            </div>
+            <div className="me-2">
+              <label>Apellido(s)</label>
+              <input className="form-control" name="apellido" {...register('apellido', { required: true, maxLength: 30, pattern: EXPRESION_REGULAR_NOMBRE_APELLIDO })} />
               {errors.apellido?.type === 'required' && <p id="errores">El campo es requerido</p>}
               {errors.apellido?.type === 'maxLength' && <p id="errores">Muy largo</p>}
               {errors.apellido?.type === 'pattern' && <p id="errores">Nombre no valido</p>}
-            </FormGroup>
-            <FormGroup className="me-2">
-              <Label for="exampleEmail">Número Celular</Label>
-              <input required className="form-control" name="numCelular" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.numCelular} {...register('numCelular', {
-                required: true,
-                pattern: EXPRESION_REGULAR_CELULAR,
-              })} />
+            </div>
+            <div className="me-2">
+              <label>Número Celular</label>
+              <input className="form-control" name="numCelular"  {...register('numCelular', { required: true, pattern: EXPRESION_REGULAR_CELULAR, })} />
               {errors.numCelular?.type === 'required' && <p id="errores">El campo es requerido</p>}
               {errors.numCelular?.type === 'pattern' && <p id="errores">Número NO valido</p>}
-            </FormGroup>
-            <FormGroup className="me-2">
-              <Label for="exampleEmail">Fecha Nacimiento</Label>
-              <input required className="form-control" type="date" name="fechaNacimiento" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.fechaNacimiento} {...register('fechaNacimiento', {
-                required: true,
-                maxLength: 10
-              })} />
+            </div>
+            <div className="me-2">
+              <label>Fecha Nacimiento</label>
+              <input className="form-control" type="date" name="fechaNacimiento" {...register('fechaNacimiento', { required: true, maxLength: 10 })} />
               {errors.fechaNacimiento?.error === 'required' && <p id="errores">El campo es requerido</p>}
               {errors.fechaNacimiento?.type === 'maxLength' && <p id="errores">Fecha no valida</p>}
-            </FormGroup>
-            <FormGroup className="me-2">
-              <Label for="email">Correo Electronico</Label>
-              <input required className="form-control" name="correo" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.correo} {...register('correo', {
-                required: true,
-                pattern: EXPRESION_REGULAR_EMAIL,
-              })} />
+            </div>
+            <div className="me-2">
+              <label>Correo Electronico</label>
+              <input className="form-control" name="correo" {...register('correo', { required: true, pattern: EXPRESION_REGULAR_EMAIL })} />
               {errors.correo?.type === "pattern" && <p id="errores">Dirección no valida</p>}
               {errors.correo?.type === 'required' && <p id="errores">El campo es requerido</p>}
-            </FormGroup>
+            </div>
           </div>
           <div className="flex">
-            <FormGroup className="me-2" style={{ width: "250px", margin: "20px" }}>
-              <Label for="exampleEmail">Tipo Documento</Label>
-              <TipoDocumento required name="tipoDocumento" handleChangeData={handleChange} value={consolaSeleccionada && consolaSeleccionada.tipoDocumento} />
-            </FormGroup>
-            <FormGroup className="me-2">
-              <Label for="exampleEmail">Número Documento</Label>
-              <input required className="form-control" name="numDocumento" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.numDocumento} {...register('numDocumento', {
-                required: true,
-                pattern: EXPRESION_REGULAR_IDENTIFICACION
-              })} />
+            <div className="me-2" style={{ width: "250px", margin: "20px" }}>
+              <label>Tipo Documento</label>
+              <TipoDocumento name="tipoDocumento" value={consolaSeleccionada.tipoDocumento} handleChangeData={handleChange} />
+            </div>
+            <div className="me-2">
+              <label>Número Documento</label>
+              <input className="form-control" name="numDocumento" value={consolaSeleccionada && consolaSeleccionada.numDocumento} {...register('numDocumento', { required: true, pattern: EXPRESION_REGULAR_IDENTIFICACION })} />
               {errors.numDocumento?.type === 'required' && <p id="errores">El campo es requerido</p>}
               {errors.numDocumento?.type === 'pattern' && <p id="errores">El campo no es valido</p>}
-            </FormGroup>
-            <FormGroup className="me-2" style={{ width: "200px", margin: "20px" }}>
-              <Label for="exampleEmail">Nacionalidad</Label>
-              <Nacionalidades required name="nacionalidad" handleChangeData={handleChange} value={consolaSeleccionada && consolaSeleccionada.nacionalidad} />
-            </FormGroup>
-            <FormGroup className="me-2">
-              <Label for="exampleEmail">¿De dónde proviene?</Label>
-              <Region required name="lugarOrigen" handleChangeData={handleChange} value={consolaSeleccionada && consolaSeleccionada.lugarOrigen} codNacion={codNacionalidad} />
-            </FormGroup>
-            <FormGroup className="me-2">
-              <Label for="exampleEmail">Nombre Emergencia</Label>
-              <input required className="form-control" name="nomContactoEmergencia" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.nomContactoEmergencia}  {...register('nomContactoEmergencia', {
-                required: true,
-                pattern: EXPRESION_REGULAR_NOMBRE_APELLIDO
-              })} />
+            </div>
+            <div className="me-2" style={{ width: "200px", margin: "20px" }}>
+              <label>Nacionalidad</label>
+              <Nacionalidades name="nacionalidad" value={consolaSeleccionada.nacionalidad} handleChangeData={handleChange} />
+            </div>
+            <div className="me-2">
+              <label>¿De dónde proviene?</label>
+              <Region name="lugarOrigen" value={consolaSeleccionada.lugarOrigen} codNacion={codNacionalidad} handleChangeData={handleChange} />
+            </div>
+            <div className="me-2">
+              <label for="nomContactoEmergencia">Nombre Emergencia</label>
+              <input required className="form-control" name="nomContactoEmergencia" value={consolaSeleccionada && consolaSeleccionada.nomContactoEmergencia}  {...register('nomContactoEmergencia', { required: true, pattern: EXPRESION_REGULAR_NOMBRE_APELLIDO })} />
               {errors.nomContactoEmergencia?.type === 'required' && <p id="errores">El Campo es Requerido</p>}
               {errors.nomContactoEmergencia?.type === 'pattern' && <p id="errores">El Campo No es valido</p>}
-            </FormGroup>
+            </div>
           </div>
           <div className="flex">
-            <FormGroup className="me-2">
-              <Label for="exampleEmail">#Contacto Emergencia</Label>
-              <input required className="form-control" name="numContactoEmergencia" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.numContactoEmergencia} {...register('numContactoEmergencia', {
-                required: true,
-                pattern: EXPRESION_REGULAR_CELULAR
-              })} />
+            <div className="me-2">
+              <label>#Contacto Emergencia</label>
+              <input className="form-control" name="numContactoEmergencia" value={consolaSeleccionada && consolaSeleccionada.numContactoEmergencia} {...register('numContactoEmergencia', { required: true, pattern: EXPRESION_REGULAR_CELULAR })} />
               {errors.numContactoEmergencia?.type === 'required' && <p id="errores">El campo es requerido</p>}
               {errors.numContactoEmergencia?.type === 'patter' && <p id="errores">Número NO valido</p>}
-            </FormGroup>
-            <FormGroup className="me-2" style={{ width: "200px", margin: "20px" }}>
-              <Label for="exampleEmail">Estado Huesped</Label>
-              <select required className="form-select" aria-label="Default select example" name="estadoHuesped" onChange={handleChange} defaultValue={"Habilitado"} value={consolaSeleccionada && consolaSeleccionada.estadoHuesped === true ? "HABILITADO" : "INHABILITADO"}>
+            </div>
+            <div className="me-2" style={{ width: "200px", margin: "20px" }}>
+              <label>Estado Huesped</label>
+              <select required className="form-select" aria-label="Default select example" name="estadoHuesped" defaultValue={consolaSeleccionada.estadoHuesped === true ? "TRUE" : "FALSE"}>
                 <option value="TRUE">TRUE</option>
                 <option value="FALSE">FALSE</option>
               </select>
-            </FormGroup>
+            </div>
           </div>
-        </Form>
-        <div align="right">
-          <Button color="primary" onClick={() => peticionPut()}> Actualizar </Button>
-          <Button onClick={() => abrirCerrarModalEditar()}>Cancelar</Button>
-        </div>
+          <div align="right">
+            <button className="btn btn-primary" type="submit"> Actualizar </button>
+            <button className="btn btn-secondary" onClick={() => abrirCerrarModalEditar()}>Cancelar</button>
+          </div>
+        </form>
       </ModalContainer>
     </div>
   );
@@ -599,7 +573,7 @@ function Huespedes() {
   useEffect(() => {
     if (consolaSeleccionada.nacionalidad !== undefined) {
       // console.log("Nacionalidad cambiada:", consolaSeleccionada.nacionalidad);
-      setCodNacionaldad(consolaSeleccionada.nacionalidad.codNacion);
+      setCodNacionalidad(consolaSeleccionada.nacionalidad.codNacion);
     }
     peticionGet();
   }, [consolaSeleccionada.nacionalidad]);

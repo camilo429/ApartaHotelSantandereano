@@ -41,7 +41,7 @@ function TipoDocumento({ name, handleChangeData, value = null }) {
   return (
     <div className="TipoDocumento" style={{ height: "25px", width: "175px", margin: "0px" }}>
       <Select
-        defaultValue={
+        value={
           value
             ? {
               label: value?.nomTipoDocumento,

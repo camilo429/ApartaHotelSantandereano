@@ -7,14 +7,15 @@ import "./../estilos/style.css"
 const REGIONES_POR_NACION_URL = Apiurl + "region/regionByNacion/";
 const MENSAJE_ERROR = "Seleccionar una Nacionalidad"
 
-function Region({ name, handleChangeData, value = null, codNacion }) {
+function Region({ name, handleChangeData, value = null, codNacion = null }) {
     const [data, setData] = useState([]);
     const [error, setError] = useState(null);
 
     useEffect(() => {
         const getRegion = async () => {
             try {
-                if (codNacion !== null) {
+                //console.log("codigo de nacion:", codNacion);
+                if (codNacion !== null || codNacion !== "") {
                     const response = await axios.get(REGIONES_POR_NACION_URL + codNacion, {
                         headers: {
                             'Content-Type': 'application/json',
@@ -25,13 +26,14 @@ function Region({ name, handleChangeData, value = null, codNacion }) {
                         setData(response.data)
                         // console.log(response.data)
                     } else {
-                        console.log("Hubo un error al traer las regiones por nacionaliad")
+                        //console.log("Hubo un error al traer las regiones por nacionalidad");
+                        setError(MENSAJE_ERROR);
                     }
                 } else {
-                    setError(MENSAJE_ERROR)
+                    setError(MENSAJE_ERROR);
                 }
             } catch (error) {
-                console.log("error al obtener las opciones Region por Nacionalidad:", error);
+                ///console.log("error al obtener las opciones Region por Nacionalidad:", error);
                 setError(MENSAJE_ERROR)
             }
         };
@@ -59,7 +61,7 @@ function Region({ name, handleChangeData, value = null, codNacion }) {
         <div className='Region' style={{ height: "25px", width: "175px" }}>
             {error && <div id='errores'>{error}</div>}
             <Select
-                defaultValue={
+                value={
                     value
                         ? {
                             label: value?.nombre,

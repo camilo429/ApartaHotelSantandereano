@@ -47,7 +47,7 @@ function Nacionalidades({ name, handleChangeData, value = null }) {
   return (
     <div className="Nacionalidades" style={{ height: "25px", width: "175px" }}>
       <Select
-        defaultValue={
+        value={
           value
             ? {
               label: value?.nombre,
