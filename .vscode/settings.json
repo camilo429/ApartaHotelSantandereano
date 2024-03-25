@@ -1,1 +1,23 @@
-{}
+{
+    "editor.cursorStyle": "line",
+    "editor.bracketPairColorization.enabled": false,
+    "editor.codeActionWidget.showHeaders": false,
+    "editor.codeLens": false,
+    "editor.colorDecorators": false,
+    "editor.comments.ignoreEmptyLines": false,
+    "editor.comments.insertSpace": false,
+    "editor.copyWithSyntaxHighlighting": false,
+    "editor.find.addExtraSpaceOnTop": false,
+    "editor.find.cursorMoveOnType": false,
+    "editor.find.loop": false,
+    "diffEditor.experimental.showEmptyDecorations": false,
+    "multiDiffEditor.experimental.enabled": false,
+    "editor.minimap.renderCharacters": false,
+    "editor.cursorBlinking": "smooth",
+    "editor.cursorSmoothCaretAnimation": "on",
+    "editor.smartSelect.selectSubwords": false,
+    "editor.smartSelect.selectLeadingAndTrailingWhitespace": false,
+    "editor.showUnused": false,
+    "editor.selectionHighlight": false,
+    "editor.scrollPredominantAxis": true
+}

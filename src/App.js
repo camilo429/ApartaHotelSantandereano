@@ -11,6 +11,8 @@ import About from "./componentes/PaginaInicio/About";
 import Lugares from "./componentes/PaginaInicio/Lugares";
 import Contacto from "./componentes/PaginaInicio/Contacto";
 import Login from "./componentes/PaginaInicio/Login";
+import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
   return (

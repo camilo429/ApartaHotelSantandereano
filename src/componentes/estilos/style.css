@@ -105,11 +105,13 @@ a:focus {
   width: 100%;
   margin-top: 0px
 }
-#fecha{
+
+#fecha {
   width: 170px;
   height: 40px;
   margin: 1px;
 }
+
 .row.m0 {
   margin: 0px;
 }
@@ -504,7 +506,7 @@ input {
   margin-top: 0px;
 }
 
-.navbar .menu_nav .nav-item + li {
+.navbar .menu_nav .nav-item+li {
   margin-left: 30px;
 }
 
@@ -751,7 +753,7 @@ input {
   color: #fff;
 }
 
-.breadcrumb li + li:before {
+.breadcrumb li+li:before {
   content: "\e87a";
   font-family: 'Linearicons-Free';
   font-size: 14px;
@@ -1077,7 +1079,7 @@ input {
   background: #f3c300;
 }
 
-.tags .tag_btn + .tag_btn {
+.tags .tag_btn+.tag_btn {
   margin-left: 2px;
 }
 
@@ -1320,7 +1322,7 @@ input {
   transition: all 0.2s linear;
 }
 
-.blog_right_sidebar .author_widget .social_icon a + a {
+.blog_right_sidebar .author_widget .social_icon a+a {
   margin-left: 20px;
 }
 
@@ -1357,7 +1359,7 @@ input {
   margin-bottom: 0px;
 }
 
-.blog_right_sidebar .popular_post_widget .post_item + .post_item {
+.blog_right_sidebar .popular_post_widget .post_item+.post_item {
   margin-top: 20px;
 }
 
@@ -1379,7 +1381,7 @@ input {
   margin-bottom: 0px;
 }
 
-.blog_right_sidebar .post_category_widget .cat-list li + li {
+.blog_right_sidebar .post_category_widget .cat-list li+li {
   padding-top: 15px;
 }
 
@@ -1984,7 +1986,7 @@ input {
   -ms-transform: translateX(-50%) translateY(-50%) !important;
   transform: translateX(-50%) translateY(-50%) !important;
   margin: 0px;
-  max-width: 500px;
+  max-width: 800px;
   width: 100%;
 }
 
@@ -2992,7 +2994,7 @@ h6 {
   cursor: pointer;
 }
 
-.default-switch input + label {
+.default-switch input+label {
   position: absolute;
   top: 1px;
   left: 1px;
@@ -3009,7 +3011,7 @@ h6 {
   cursor: pointer;
 }
 
-.default-switch input:checked + label {
+.default-switch input:checked+label {
   left: 19px;
 }
 
@@ -3037,7 +3039,7 @@ h6 {
   opacity: 0;
 }
 
-.primary-switch input + label {
+.primary-switch input+label {
   position: absolute;
   left: 0;
   top: 0;
@@ -3047,7 +3049,7 @@ h6 {
   height: 100%;
 }
 
-.primary-switch input + label:before {
+.primary-switch input+label:before {
   content: "";
   position: absolute;
   left: 0;
@@ -3065,7 +3067,7 @@ h6 {
   transition: all 0.2s;
 }
 
-.primary-switch input + label:after {
+.primary-switch input+label:after {
   content: "";
   position: absolute;
   top: 1px;
@@ -3083,11 +3085,11 @@ h6 {
   cursor: pointer;
 }
 
-.primary-switch input:checked + label:after {
+.primary-switch input:checked+label:after {
   left: 19px;
 }
 
-.primary-switch input:checked + label:before {
+.primary-switch input:checked+label:before {
   background: #f8b600;
 }
 
@@ -3111,7 +3113,7 @@ h6 {
   opacity: 0;
 }
 
-.confirm-switch input + label {
+.confirm-switch input+label {
   position: absolute;
   left: 0;
   top: 0;
@@ -3121,7 +3123,7 @@ h6 {
   height: 100%;
 }
 
-.confirm-switch input + label:before {
+.confirm-switch input+label:before {
   content: "";
   position: absolute;
   left: 0;
@@ -3139,7 +3141,7 @@ h6 {
   cursor: pointer;
 }
 
-.confirm-switch input + label:after {
+.confirm-switch input+label:after {
   content: "";
   position: absolute;
   top: 1px;
@@ -3157,11 +3159,11 @@ h6 {
   cursor: pointer;
 }
 
-.confirm-switch input:checked + label:after {
+.confirm-switch input:checked+label:after {
   left: 19px;
 }
 
-.confirm-switch input:checked + label:before {
+.confirm-switch input:checked+label:before {
   background: #4cd3e3;
 }
 
@@ -3185,7 +3187,7 @@ h6 {
   opacity: 0;
 }
 
-.primary-checkbox input + label {
+.primary-checkbox input+label {
   position: absolute;
   left: 0;
   top: 0;
@@ -3218,7 +3220,7 @@ h6 {
   opacity: 0;
 }
 
-.confirm-checkbox input + label {
+.confirm-checkbox input+label {
   position: absolute;
   left: 0;
   top: 0;
@@ -3252,7 +3254,7 @@ h6 {
   opacity: 0;
 }
 
-.disabled-checkbox input + label {
+.disabled-checkbox input+label {
   position: absolute;
   left: 0;
   top: 0;
@@ -3290,7 +3292,7 @@ h6 {
   opacity: 0;
 }
 
-.primary-radio input + label {
+.primary-radio input+label {
   position: absolute;
   left: 0;
   top: 0;
@@ -3325,7 +3327,7 @@ h6 {
   opacity: 0;
 }
 
-.confirm-radio input + label {
+.confirm-radio input+label {
   position: absolute;
   left: 0;
   top: 0;
@@ -3360,7 +3362,7 @@ h6 {
   opacity: 0;
 }
 
-.disabled-radio input + label {
+.disabled-radio input+label {
   position: absolute;
   left: 0;
   top: 0;
