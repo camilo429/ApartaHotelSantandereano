@@ -5,12 +5,11 @@ import axios from "axios";
 import MUIDataTable from "mui-datatables";
 //Estilos
 //import { Form } from "reactstrap";
-import { styled } from "@mui/system";
 import { Link } from "react-router-dom";
 //import "./../../estilos/style.css";
 //iconos
 //import * as BsInfoLg from "react-icons/bs";
-import { FaCheck } from "react-icons/fa";
+//import { FaCheck } from "react-icons/fa"; chulitos 
 //Componentes
 import Nacionalidades from "../Nacionalidades";
 import TipoDocumento from "../TipoDocumento";
@@ -43,13 +42,17 @@ function Huespedes() {
   const handleEditarClose = () => setShowEditar(false);
   const handleEditarShow = () => setShowEditar(true);
 
-  const [modalEditar, setModalEditar] = useState(false);
-  const [modalEliminar, setModalEliminar] = useState(false);
+  const [showEliminar, setShowEliminar] = useState(false);
+  const handleEliminarClose = () => setShowEliminar(false);
+  const handleEliminarShow = () => setShowEliminar(true);
 
   const [mensaje, setMensaje] = useState("");
   const [codNacionalidad, setCodNacionalidad] = useState();
 
-  const { register, handleSubmit, formState: { errors }, setValue, reset } = useForm();
+  const { handleSubmit, formState: { errors }, setValue, reset } = useForm();
+  const { register } = useForm({
+    shouldUnregister: false
+  });
 
   const [isLoading, setIsLoading] = useState(false);
   const [consolaSeleccionada, setConsolaSeleccionada] = useState({
@@ -174,10 +177,9 @@ function Huespedes() {
       setIsLoading(false);
     }
   };
-  //
   const peticionPut = async (info) => {
-    console.log("putavida", info);
-    console.log("codHuesped", info.nombre);
+    console.log("consola", info);
+    console.log("consolaSeleccionada", consolaSeleccionada.codHuesped);
     try {
       const response = await axios.put(urlE + consolaSeleccionada.codHuesped, consolaSeleccionada, {
         headers: {
@@ -186,15 +188,46 @@ function Huespedes() {
       });
       // console.log(response.status);
       if (response.status === 201) {
-        setData((prevData) =>
-          prevData.map((consola) => consola[0] === consolaSeleccionada.codHuesped ? consolaSeleccionada : consola));
+        const dataNueva = data.map((consola) => {
+          if (consolaSeleccionada.codHuesped === consola.codHuesped) {
+            consola.codHuesped = consolaSeleccionada.codHuesped;
+            consola.nombre = consolaSeleccionada.nombre;
+            consola.apellido = consolaSeleccionada.apellido;
+            consola.numCelular = consolaSeleccionada.numCelular;
+            consola.correo = consolaSeleccionada.correo;
+            consola.tipoDocumento = {
+              codTipoDocumento: consolaSeleccionada.tipoDocumento.codTipoDocumento,
+              nomTipoDocumento: consolaSeleccionada.tipoDocumento.nomTipoDocumento
+            };
+            consola.numDocumento = consolaSeleccionada.numDocumento;
+            consola.fechaNacimiento = consolaSeleccionada.fechaNacimiento;
+            consola.edad = consolaSeleccionada.edad;
+            consola.nacionalidad = {
+              codNacion: consolaSeleccionada.nacionalidad.codNacion,
+              nombre: consolaSeleccionada.nacionalidad.nombre
+            };
+            consola.lugarOrigen = {
+              codRegion: consolaSeleccionada.lugarOrigen.codRegion,
+              nombre: consolaSeleccionada.lugarOrigen.nombre,
+              nacionalidad: {
+                codNacion: consolaSeleccionada.lugarOrigen.nacionalidad.codNacion,
+                nombre: consolaSeleccionada.lugarOrigen.nacionalidad.nombre
+              }
+            };
+            consola.nomContactoEmergencia = consolaSeleccionada.nomContactoEmergencia;
+            consola.numContactoEmergencia = consolaSeleccionada.numContactoEmergencia;
+            consola.checkin = consolaSeleccionada.checkin;
+            consola.estadoHuesped = consolaSeleccionada.estadoHuesped;
+          }
+          return consola;
+        })
+        setData(dataNueva);
         peticionGet();
         handleEditarClose();
-        // alert("El huesped ha sido actualizado");
         setMensaje("Huesped Actualizado");
-        handleShowMensaje
-          ();
+        handleShowMensaje();
         reset();
+        setConsolaSeleccionada({});
         setIsLoading(false);
       } else {
         console.error("La solicitud PUT no fue exitosa");
@@ -206,9 +239,28 @@ function Huespedes() {
     }
   }
 
-  //  const abrirCerrarModalEliminar = () => {
-  //    setModalEliminar(!modalEliminar);
-  //  };
+  const peticionDelete = async () => {
+    try {
+      const response = await axios.delete(urlD + consolaSeleccionada.codHuesped, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
+        }
+      })
+
+      if (response.status === 200) {
+        setData(data.filter((consola) => consola.codEmpleado !== consolaSeleccionada.codEmpleado));
+        //abrirCerrarModalEliminar();
+        setMensaje("Huesped Eliminado");
+        handleEliminarClose();
+        handleShowMensaje();
+        peticionGet();
+      }
+    } catch (error) {
+      alert("Error al eliminar Huesped");
+      handleShowMensaje();
+      console.log("Error editar empleado", error);
+    }
+  }
 
   const abrirCerrarModalMensaje = () => {
     handleShowMensaje();
@@ -250,28 +302,25 @@ function Huespedes() {
     });
     console.log("ConsolaSeleccionada", consolaSeleccionada);
     if (caso === "Editar") {
-      //abrirCerrarModalEditar();
       handleEditarShow();
     }
     if (caso === "Eliminar") {
-      //abrirCerrarModalEliminar();
+      handleEliminarShow();
     }
   };
 
-  //  const bodyEliminar = (
-  //    <div>
-  //      <ModalContainerII>
-  //        <p>
-  //          Esta seguro de Eliminar Empleado <b>{consolaSeleccionada && consolaSeleccionada.nombre}</b> ? <br />
-  //          <b>{consolaSeleccionada && consolaSeleccionada.numDocumento}</b>
-  //        </p>
-  //        <div align="right">
-  //          <Button color="secondary" onClick={() => peticionDelete()}> Si </Button>
-  //          <Button onClick={() => abrirCerrarModalEliminar()}>No</Button>
-  //        </div>
-  //      </ModalContainerII>
-  //    </div>
-  //  );
+  const bodyEliminar = (
+    <div className="bodyEliminar">
+      <p>
+        Esta seguro de Eliminar Huesped <b>{consolaSeleccionada && consolaSeleccionada.nombre} {consolaSeleccionada.apellido} C.C: {consolaSeleccionada && consolaSeleccionada.numDocumento}</b> ? <br />
+      </p>
+      <div align="right">
+        <button className="btn btn-primary" onClick={() => peticionDelete()}> Si </button>
+        <button className="btn btn-secondary" onClick={handleEliminarClose}>No</button>
+      </div>
+    </div>
+  );
+
   const popUp = (
     <div>
       <Modal size="sm" show={smShow} onHide={() => setSmShow(false)} aria-labelledby="example-modal-sizes-title-sm">
@@ -532,30 +581,32 @@ function Huespedes() {
             <div className="flex">
               <div className="me-2">
                 <label>Nombre(s)</label>
-                <input className="form-control" name="nombre" defaultValue={consolaSeleccionada.nombre} {...register('nombre', { required: true, maxLength: 30 })} />
+                <input className="form-control" name="nombre" defaultValue={consolaSeleccionada?.nombre} onChange={handleChange} />
+                {errors.nombre?.type === 'required' && <p id="errores">El campo es requerido</p>}
+                {errors.nombre?.type === 'pattern' && <p id="errores">El campo no es valido</p>}
               </div>
               <div className="me-2">
                 <label>Apellido(s)</label>
-                <input className="form-control" name="apellido" onChange={handleChange} value={consolaSeleccionada.apellido} {...register('apellido', { required: true, maxLength: 30, pattern: EXPRESION_REGULAR_NOMBRE_APELLIDO })} />
+                <input className="form-control" name="apellido" defaultValue={consolaSeleccionada?.apellido} onChange={handleChange} />
                 {errors.apellido?.type === 'required' && <p id="errores">El campo es requerido</p>}
                 {errors.apellido?.type === 'maxLength' && <p id="errores">Muy largo</p>}
                 {errors.apellido?.type === 'pattern' && <p id="errores">Nombre no valido</p>}
               </div>
               <div className="me-2">
                 <label>Número Celular</label>
-                <input className="form-control" name="numCelular" onChange={handleChange} value={consolaSeleccionada.numCelular}  {...register('numCelular', { required: true, pattern: EXPRESION_REGULAR_CELULAR, })} />
+                <input className="form-control" name="numCelular" defaultValue={consolaSeleccionada?.numCelular} onChange={handleChange} />
                 {errors.numCelular?.type === 'required' && <p id="errores">El campo es requerido</p>}
                 {errors.numCelular?.type === 'pattern' && <p id="errores">Número NO valido</p>}
               </div>
               <div className="me-2">
                 <label>Fecha Nacimiento</label>
-                <input className="form-control" name="fechaNacimiento" type="date" onChange={handleChange} value={consolaSeleccionada.fechaNacimiento} {...register('fechaNacimiento', { required: true, maxLength: 10 })} />
+                <input className="form-control" name="fechaNacimiento" type="date" onChange={handleChange} value={consolaSeleccionada?.fechaNacimiento} />
                 {errors.fechaNacimiento?.error === 'required' && <p id="errores">El campo es requerido</p>}
                 {errors.fechaNacimiento?.type === 'maxLength' && <p id="errores">Fecha no valida</p>}
               </div>
               <div className="me-2">
                 <label>Correo Electronico</label>
-                <input className="form-control" name="correo" onChange={handleChange} value={consolaSeleccionada.correo} {...register('correo', { required: true, pattern: EXPRESION_REGULAR_EMAIL })} />
+                <input className="form-control" name="correo" onChange={handleChange} defaultValue={consolaSeleccionada?.correo} />
                 {errors.correo?.type === "pattern" && <p id="errores">Dirección no valida</p>}
                 {errors.correo?.type === 'required' && <p id="errores">El campo es requerido</p>}
               </div>
@@ -563,25 +614,27 @@ function Huespedes() {
             <div className="flex">
               <div className="me-2" style={{ width: "250px", margin: "20px" }}>
                 <label>Tipo Documento</label>
-                <TipoDocumento name="tipoDocumento" value={consolaSeleccionada.tipoDocumento} handleChangeData={handleChange} />
+                <TipoDocumento name="tipoDocumento" value={consolaSeleccionada?.tipoDocumento} handleChangeData={handleChange} />
+                {errors.tipoDocumento?.type === 'required' && <p id="errores">El campo es requerido</p>}
+                {errors.tipoDocumento?.type === 'pattern' && <p id="errores">El campo no es valido</p>}
               </div>
               <div className="me-2">
                 <label>Número Documento</label>
-                <input className="form-control" name="numDocumento" onChange={handleChange} value={consolaSeleccionada.numDocumento} {...register('numDocumento', { required: true, pattern: EXPRESION_REGULAR_IDENTIFICACION })} />
+                <input className="form-control" name="numDocumento" onChange={handleChange} defaultValue={consolaSeleccionada?.numDocumento} />
                 {errors.numDocumento?.type === 'required' && <p id="errores">El campo es requerido</p>}
                 {errors.numDocumento?.type === 'pattern' && <p id="errores">El campo no es valido</p>}
               </div>
               <div className="me-2" style={{ width: "200px", margin: "20px" }}>
                 <label>Nacionalidad</label>
-                <Nacionalidades name="nacionalidad" value={consolaSeleccionada.nacionalidad} handleChangeData={handleChange} />
+                <Nacionalidades name="nacionalidad" value={consolaSeleccionada?.nacionalidad} handleChangeData={handleChange} />
               </div>
               <div className="me-2">
                 <label>¿De dónde proviene?</label>
-                <Region name="lugarOrigen" value={consolaSeleccionada.lugarOrigen} codNacion={codNacionalidad || 1} handleChangeData={handleChange} />
+                <Region name="lugarOrigen" value={consolaSeleccionada?.lugarOrigen} codNacion={codNacionalidad || 1} handleChangeData={handleChange} />
               </div>
               <div className="me-2">
                 <label>Nombre Emergencia</label>
-                <input className="form-control" name="nomContactoEmergencia" onChange={handleChange} value={consolaSeleccionada.nomContactoEmergencia}  {...register('nomContactoEmergencia', { required: true, pattern: EXPRESION_REGULAR_NOMBRE_APELLIDO })} />
+                <input className="form-control" name="nomContactoEmergencia" onChange={handleChange} defaultValue={consolaSeleccionada?.nomContactoEmergencia} />
                 {errors.nomContactoEmergencia?.type === 'required' && <p id="errores">El Campo es Requerido</p>}
                 {errors.nomContactoEmergencia?.type === 'pattern' && <p id="errores">El Campo No es valido</p>}
               </div>
@@ -589,13 +642,13 @@ function Huespedes() {
             <div className="flex">
               <div className="me-2">
                 <label>#Contacto Emergencia</label>
-                <input className="form-control" name="numContactoEmergencia" onChange={handleChange} value={consolaSeleccionada.numContactoEmergencia} {...register('numContactoEmergencia', { required: true, pattern: EXPRESION_REGULAR_CELULAR })} />
+                <input className="form-control" name="numContactoEmergencia" onChange={handleChange} defaultValue={consolaSeleccionada?.numContactoEmergencia} />
                 {errors.numContactoEmergencia?.type === 'required' && <p id="errores">El campo es requerido</p>}
                 {errors.numContactoEmergencia?.type === 'patter' && <p id="errores">Número NO valido</p>}
               </div>
               <div className="me-2" style={{ width: "200px", margin: "20px" }}>
                 <label>Estado Huesped</label>
-                <select required className="form-select" aria-label="Default select example" name="estadoHuesped" value={consolaSeleccionada.estadoHuesped === true ? "TRUE" : "FALSE"} onChange={handleChange}>
+                <select required className="form-select" aria-label="Default select example" name="estadoHuesped" defaultValue={consolaSeleccionada?.estadoHuesped === true ? "TRUE" : "FALSE"} onChange={handleChange}>
                   <option value="TRUE">TRUE</option>
                   <option value="FALSE">FALSE</option>
                 </select>
@@ -608,7 +661,7 @@ function Huespedes() {
           </form>
         </Modal.Body>
       </Modal>
-      {/*<Modal open={modalEliminar} onClose={abrirCerrarModalEliminar}> {bodyEliminar} </Modal>*/}
+      <Modal show={showEliminar} onHide={handleEliminarClose} size="lg"> {bodyEliminar} </Modal>
       <Modal show={smShow} onHide={handleMensajeClose} animation={false}> {popUp}</Modal>
     </div>
   );

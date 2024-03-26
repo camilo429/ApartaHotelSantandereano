@@ -50,3 +50,14 @@ button {
     margin: 5px;
     width: 200px;
 }
+
+.bodyEliminar {
+    margin: 5px;
+    font-size: large;
+    text-align: center;
+
+}
+
+.bodyEliminar>p>b {
+    color: red;
+}
