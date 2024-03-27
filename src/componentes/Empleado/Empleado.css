@@ -1,5 +1,28 @@
-
-.DocumentoEmpleado{
+.DocumentoEmpleado {
     size: "50px";
     margin: "5px";
+}
+
+.customModal {
+    max-width: 1000px !important;
+    /* Establece el ancho máximo del modal */
+}
+
+input::placeholder {
+    color: black;
+    font-size: small;
+}
+
+input {
+    color: black;
+    margin: 10px;
+    width: 175px;
+}
+
+form {
+    margin: 15px;
+}
+
+form>.flex>.inputInsertar>input {
+    width: 170px;
 }

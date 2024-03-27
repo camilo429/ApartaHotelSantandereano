@@ -1,0 +1,45 @@
+{
+    "codEmpleado": 1,
+    "nombre": "Diego",
+    "apellido": "Maurico",
+    "tipDocumento": {
+        "codTipoDocumento": 3,
+        "nomTipoDocumento": "CEDULA DE CIUDADANIA"
+    },
+    "numDocumento": 1283920034,
+    "edad": 24,
+    "numTelefono": 324537489,
+    "correo": "die@unbosque.edu.co",
+    "fechaNacimiento": "1999-06-14",
+    "direccion": "calle100",
+    "nomContactoEmergencia": "Juan Mauricio",
+    "numContactoEmergencia": 3145678399,
+    "eps": "Compensar",
+    "arl": "SURA",
+    "sexo": {
+        "codSexo": 1,
+        "nomSexo": "MASCULINO"
+    },
+    "tipoSangre": {
+        "codTipoSangre": 3,
+        "nomTipoSangre": "A+"
+    },
+    "fotoEmpleado": null,
+    "actividad": [],
+    "fechaIngreso": null,
+    "fechaSalida": null,
+    "userEmpleado": {
+        "codUserEmpleado": 1,
+        "userName": "cahumadag",
+        "contrasena": "$2a$10$z6E7IBBb9zdRWM.9jm8a3.Hj4BOSPWVAMoMaaDa3K5y0Lf0zp2oky",
+        "confirContrasena": "$2a$10$9EoTRLBT246SzG/Gp4Fpfe1Posvm7k5H5Jl6KVVCaRedObqp9yhlq",
+        "enabled": true,
+        "createUser": "08-03-2024",
+        "rol": [
+            {
+                "codRole": 1,
+                "nombre": "ROLE_ADMINISTRADOR"
+            }
+        ]
+    }
+}

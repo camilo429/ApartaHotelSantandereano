@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
-import "../../../node_modules/bootstrap/scss/bootstrap.scss";
 import axios from "axios";
 import "./Empleado.css";
 import Select from "react-select";
@@ -41,14 +39,14 @@ function TipoSangre({ name, handleChangeData, value = null }) {
   };
 
   return (
-    <div className="TipoSangre">
+    <div className="TipoSangre" style={{ width: "170px", margin: "0px" }}>
       <Select
         defaultValue={
           value
             ? {
-                label: value?.nomTipoSangre,
-                value: value?.codTipoSangre,
-              }
+              label: value?.nomTipoSangre,
+              value: value?.codTipoSangre,
+            }
             : null
         }
         options={data.map((docu) => ({

@@ -39,7 +39,7 @@ function TipoDocumento({ name, handleChangeData, value = null }) {
   };
 
   return (
-    <div className="TipoDocumento" style={{ height: "25px", width: "175px", margin: "0px" }}>
+    <div className="TipoDocumento" style={{ width: "170px", margin: "0px" }}>
       <Select
         value={
           value
@@ -55,7 +55,6 @@ function TipoDocumento({ name, handleChangeData, value = null }) {
         onChange={handleChange}
         required
         placeholder="Seleccione Documento" />
-
     </div>
   );
 }

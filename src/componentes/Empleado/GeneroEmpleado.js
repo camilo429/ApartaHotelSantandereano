@@ -41,14 +41,14 @@ function GeneroEmpleado({ name, handleChangeData, value = null }) {
   };
 
   return (
-    <div className="GeneroEmpleado">
+    <div className="GeneroEmpleado" style={{ width: "170px", margin: "0px", marginRight: "30px" }}>
       <Select
         defaultValue={
           value
             ? {
-                label: value?.nomSexo,
-                value: value?.codSexo,
-              }
+              label: value?.nomSexo,
+              value: value?.codSexo,
+            }
             : null
         }
         options={data.map((docu) => ({

@@ -6,7 +6,6 @@ import MUIDataTable from "mui-datatables";
 //Estilos
 //import { Form } from "reactstrap";
 import { Link } from "react-router-dom";
-//import "./../../estilos/style.css";
 //iconos
 //import * as BsInfoLg from "react-icons/bs";
 //import { FaCheck } from "react-icons/fa"; chulitos 
@@ -19,8 +18,7 @@ import { Apiurl } from "../../../services/userService";
 import { EXPRESION_REGULAR_NOMBRE_APELLIDO, EXPRESION_REGULAR_EMAIL, EXPRESION_REGULAR_CELULAR, EXPRESION_REGULAR_IDENTIFICACION } from "../../../services/ExpresionsRegular"
 import Region from "../Region";
 import Spinner from 'react-bootstrap/Spinner';
-import { Modal, Button } from 'react-bootstrap';
-
+import { Modal } from 'react-bootstrap';
 
 const url = Apiurl + "huespedes/listarHuespedes";
 const urlG = Apiurl + "huespedes/crearHuesped";
@@ -88,7 +86,7 @@ function Huespedes() {
 
 
   const handleChange = (e) => {
-    console.log("handleChange called")
+    //console.log("handleChange called")
     setValue(e.target.name, e.target.value);
     console.log("target", e.target.name, e.target.value)
     const { name, value } = e.target;
@@ -249,7 +247,6 @@ function Huespedes() {
 
       if (response.status === 200) {
         setData(data.filter((consola) => consola.codEmpleado !== consolaSeleccionada.codEmpleado));
-        //abrirCerrarModalEliminar();
         setMensaje("Huesped Eliminado");
         handleEliminarClose();
         handleShowMensaje();
@@ -423,7 +420,7 @@ function Huespedes() {
             if (value === true) {
               return "Habilitado";
             } else {
-              return "Inhabilitado";
+              return "INABILITADO";
             }
           } catch (error) {
             console.log("No se puede cargar el valor de Estado Huesped:", error);
@@ -490,33 +487,33 @@ function Huespedes() {
             <div className="flex">
               <div className="formHuesped">
                 <label>Nombre</label>
-                <input className="form-control" name="nombre" placeholder="Nombre (s)"  {...register('nombre', { required: true, maxLength: 30, pattern: EXPRESION_REGULAR_NOMBRE_APELLIDO })} />
+                <input className="form-control" name="nombre" placeholder="Nombre (s)" defaultValue={consolaSeleccionada.nombre} onChange={handleChange} />
                 {errors.nombre?.type === 'required' && <p id="errores">El campo es requerido</p>}
                 {errors.nombre?.type === 'maxLength' && <p id="errores">Es muy largo</p>}
                 {errors.nombre?.type === 'pattern' && <p id="errores">Nombre no valido</p>}
               </div>
               <div className="formHuesped">
                 <label>Apellido</label>
-                <input className="form-control" name="apellido" placeholder="Apellido" {...register('apellido', { required: true, maxLength: 30, pattern: EXPRESION_REGULAR_NOMBRE_APELLIDO, })} />
+                <input className="form-control" name="apellido" placeholder="Apellido" onChange={handleChange} />
                 {errors.apellido?.type === 'required' && <p id="errores">El campo es requerido</p>}
                 {errors.apellido?.type === 'maxLength' && <p id="errores">Muy largo</p>}
                 {errors.apellido?.type === 'pattern' && <p id="errores">Nombre no valido</p>}
               </div>
               <div className="formHuesped">
                 <label>Número Celular</label>
-                <input className="form-control" name="numCelular" placeholder="Celular" {...register('numCelular', { required: true, pattern: EXPRESION_REGULAR_CELULAR, })} />
+                <input className="form-control" name="numCelular" placeholder="Celular" onChange={handleChange} />
                 {errors.numCelular?.type === 'required' && <p id="errores">El campo es requerido</p>}
                 {errors.numCelular?.type === 'pattern' && <p id="errores">Número NO valido</p>}
               </div>
               <div className="formHuesped">
                 <label>Fecha de Nacimiento</label>
-                <input type="date" className="form-control" name="fechaNacimiento" placeholder="Nacimiento" {...register('fechaNacimiento', { required: true, maxLength: 10 })} />
+                <input type="date" className="form-control" name="fechaNacimiento" placeholder="Nacimiento" onChange={handleChange} />
                 {errors.fechaNacimiento?.type === 'required' && <p id="errores">El campo es requerido</p>}
                 {errors.fechaNacimiento?.type === 'maxLength' && <p id="errores">Fecha no valida</p>}
               </div>
               <div className="formHuesped">
                 <label>Correo Electronico</label>
-                <input className="form-control" name="correo" placeholder="correo electronico" {...register('correo', { required: true, pattern: EXPRESION_REGULAR_EMAIL, })} />
+                <input className="form-control" name="correo" placeholder="correo electronico" onChange={handleChange} />
                 {errors.correo?.type === 'required' && <p id="errores">El campo es requerido</p>}
                 {errors.correo?.type === "pattern" && <p id="errores">Dirección no valida</p>}
               </div>
@@ -528,7 +525,7 @@ function Huespedes() {
               </div>
               <div className="formHuesped" >
                 <label>Número Documento</label>
-                <input className="form-control" name="numDocumento" type="number" placeholder="# Documento" {...register('numDocumento', { required: true, pattern: EXPRESION_REGULAR_IDENTIFICACION })} />
+                <input className="form-control" name="numDocumento" type="number" placeholder="# Documento" onChange={handleChange} />
                 {errors.numDocumento?.type === 'required' && <p id="errores">El campo es requerido</p>}
                 {errors.numDocumento?.type === 'pattern' && <p id="errores">El campo no es valido</p>}
               </div>
@@ -542,7 +539,7 @@ function Huespedes() {
               </div>
               <div className="formHuesped">
                 <label>Nombre Emergencia</label>
-                <input className="form-control" name="nomContactoEmergencia" placeholder="Nombre Contacto" {...register('nomContactoEmergencia', { required: true, pattern: EXPRESION_REGULAR_NOMBRE_APELLIDO })} />
+                <input className="form-control" name="nomContactoEmergencia" placeholder="Nombre Contacto" onChange={handleChange} />
                 {errors.nomContactoEmergencia?.type === 'required' && <p id="errores">El Campo es Requerido</p>}
                 {errors.nomContactoEmergencia?.type === 'pattern' && <p id="errores">El Campo No es valido</p>}
               </div>
@@ -550,7 +547,7 @@ function Huespedes() {
             <div className="flex">
               <div className="formHuesped">
                 <label>#Contacto Emergencia</label>
-                <input className="form-control" type="number" name="numContactoEmergencia" onChange={handleChange} placeholder="# Contacto" {...register('numContactoEmergencia', { required: true, pattern: EXPRESION_REGULAR_CELULAR })} />
+                <input className="form-control" type="number" name="numContactoEmergencia" onChange={handleChange} placeholder="# Contacto" />
                 {errors.numContactoEmergencia?.type === 'required' && <p id="errores">El campo es requerido</p>}
                 {errors.numContactoEmergencia?.type === 'patter' && <p id="errores">Número NO valido</p>}
               </div>
