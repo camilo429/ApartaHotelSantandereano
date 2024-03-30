@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 //librerias
 import axios from "axios";
-//css
-
 // Iconos
 import * as AiFillEdit from "react-icons/ai";
 import * as MdDelete from "react-icons/md";
@@ -19,6 +17,7 @@ import { Link } from "react-router-dom";
 import { Modal } from 'react-bootstrap';
 import { EXPRESION_REGULAR_NOMBRE_APELLIDO, EXPRESION_REGULAR_EMAIL, EXPRESION_REGULAR_CELULAR, EXPRESION_REGULAR_IDENTIFICACION } from "../../services/ExpresionsRegular"
 import { useForm } from 'react-hook-form';
+//css
 import "./Empleado.css"
 const url = Apiurl + "empleados/listarEmpleados";
 const urlG = Apiurl + "empleados/crearEmpleado";
@@ -33,16 +32,22 @@ function EmpleadoComponent() {
   const handleCloseInsertar = () => setShowInsertar(false);
   const handleShowInsertar = () => setShowInsertar(true);
 
+  const [smShow, setSmShow] = useState(false);
+  const handleMensajeClose = () => setSmShow(false);
+  const handleShowMensaje = () => setSmShow(true);
+
+  const [showEditar, setShowEditar] = useState(false);
+  const handleEditarClose = () => setShowEditar(false);
+  const handleEditarShow = () => setShowEditar(true);
+
+
+  const [mensaje, setMensaje] = useState("");
+
   const { handleSubmit, formState: { errors }, setValue, reset } = useForm();
   const { register } = useForm({
     shouldUnregister: false
   });
 
-  //const [modalInsertar, setModalInsertar] = useState(false);
-  //const [modalEditar, setModalEditar] = useState(false);
-  //const [modalEliminar, setModalEliminar] = useState(false);
-  //const [modalVer, setModalVer] = useState(false);
-  //const [errors, setErrors] = useState([]);
 
   const [consolaSeleccionada, setConsolaSeleccionada] = useState({
     codEmpleado: "",
@@ -76,53 +81,8 @@ function EmpleadoComponent() {
     fechaSalida: "",
   });
 
-  //const validacionesFormulario = (consolaSeleccionada) => {
-  //  let errors = {};
-  //  if (!nameRegex.test(consolaSeleccionada.nombre)) {
-  //    errors.nombre = "Nombre NO válido";
-  //  }
-  //  if (
-  //    consolaSeleccionada.nombre.length < 4 ||
-  //    consolaSeleccionada.nombre.length > 30
-  //  ) {
-  //    errors.nombre = "El nombre es corto o muy largo";
-  //  }
-  //  if (!nameRegex.test(consolaSeleccionada.apellido)) {
-  //    errors.apelldio = "Apellido NO válido";
-  //  }
-  //  if (
-  //    consolaSeleccionada.apellido.length < 4 ||
-  //    consolaSeleccionada.apellido.length > 30
-  //  ) {
-  //    errors.apellido = "Apellido es corto o muy largo";
-  //  }
-  //  if (!numeroCelularExpresion.test(consolaSeleccionada.numTelefono)) {
-  //    errors.numTelefono = "Número No válido";
-  //  }
-  //  if (!correoExpresion.test(consolaSeleccionada.correo)) {
-  //    errors.correo = "Correo No válido";
-  //  }
-  //  if (!cedulaExpresion.test(consolaSeleccionada.numDocumento)) {
-  //    errors.numDocumento = "Número de documento no valido";
-  //  }
-  //  if (!nameRegex.test(consolaSeleccionada.lugarOrigen)) {
-  //    errors.lugarOrigen = "Lugar Origen No valido";
-  //  }
-  //  if (!nameRegex.test(consolaSeleccionada.nomContactoEmergencia)) {
-  //    errors.nomContactoEmergencia = "Lugar Origen No valido";
-  //  }
-  //  if (
-  //    !numeroCelularExpresion.test(consolaSeleccionada.numContactoEmergencia)
-  //  ) {
-  //    errors.numContactoEmergencia = "Número No válido";
-  //  }
-  //  return errors;
-  //};
-
   const handleChange = (e) => {
-    //console.log("handleChange called")
     setValue(e.target.name, e.target.value);
-    console.log("target", e.target.name, e.target.value)
     const { name, value } = e.target;
     setConsolaSeleccionada((prevState) => ({
       ...prevState,
@@ -161,8 +121,10 @@ function EmpleadoComponent() {
       console.log("estado post empleado", response.status);
       if (response.status === 201) {
         setData(data.concat(response.data));
+        setMensaje("Empleado Creado");
         handleCloseInsertar();
-        alert("agregado");
+        handleShowMensaje();
+        peticionGet();
         setConsolaSeleccionada({
           codEmpleado: "",
           nombre: "",
@@ -195,59 +157,70 @@ function EmpleadoComponent() {
         console.log("Error al registrar empleado", response.status);
       }
     } catch (error) {
-
+      console.log("Error post Empleado", error);
     } finally {
       //setIsLoading(false);
     }
   };
 
-  //  const peticionPut = async () => {
-  //    try {
-  //      const response = await axios.put(urlE + consolaSeleccionada.codEmpleado, consolaSeleccionada, {
-  //        headers: {
-  //          Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
-  //        }
-  //      });
-  //      if (response.status === 201) {
-  //        const dataNueva = data.map((consola) => {
-  //          if (consolaSeleccionada.codEmpleado === consola.codEmpleado) {
-  //            consola.nombre = consolaSeleccionada.nombre;
-  //            consola.apellido = consolaSeleccionada.apellido;
-  //            consola.tipDocumento = consolaSeleccionada.tipDocumento.codTipoDocumento;
-  //            consola.tipDocumento = {
-  //              nomTipoDocumento: consolaSeleccionada.tipDocumento.nomTipoDocumento,
-  //              codTipoDocumento: consolaSeleccionada.tipDocumento.nomTipoDocumento,
-  //            };
-  //            consola.edad = consolaSeleccionada.edad;
-  //            consola.numTelefono = consolaSeleccionada.numTelefono;
-  //            consola.correo = consolaSeleccionada.correo;
-  //            consola.fechaNacimiento = consolaSeleccionada.fechaNacimiento;
-  //            consola.direccion = consolaSeleccionada.direccion;
-  //            consola.nomContactoEmergencia = consolaSeleccionada.nomContactoEmergencia;
-  //            consola.numContactoEmergencia = consolaSeleccionada.numContactoEmergencia;
-  //            consola.eps = consolaSeleccionada.eps;
-  //            consola.arl = consolaSeleccionada.arl;
-  //            consola.sexo.codSexo = consolaSeleccionada.sexo.codSexo;
-  //            consola.sexo.nomSexo = consolaSeleccionada.sexo.nomSexo;
-  //            consola.tipoSangre.codTipoSangre = consolaSeleccionada.tipoSangre.codTipoSangre;
-  //            consola.tipoSangre.nomTipoSangre = consolaSeleccionada.tipoSangre.nomTipoSangre;
-  //            consola.fotoEmpleado = consolaSeleccionada.fotoEmpleado;
-  //          }
-  //          return consola;
-  //        })
-  //        setData(dataNueva);
-  //        peticionGet();
-  //        abrirCerrarModalEditar();
-  //        alert("El empleado ha sido actualizado");
-  //        setConsolaSeleccionada({});
-  //      }
-  //      setErrors({});
-  //
-  //    } catch (error) {
-  //      alert("Error al editar empleado");
-  //      console.log("Error editar empleado", error.response.data);
-  //    }
-  //  }
+  const peticionPut = async () => {
+    try {
+      const response = await axios.put(urlE + consolaSeleccionada.codEmpleado, consolaSeleccionada, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
+        }
+      });
+      if (response.status === 201) {
+        const dataNueva = data.map((consola) => {
+          if (consolaSeleccionada.codEmpleado === consola.codEmpleado) {
+            consola.nombre = consolaSeleccionada.nombre;
+            consola.apellido = consolaSeleccionada.apellido;
+            consola.tipDocumento = {
+              codTipoDocumento: consolaSeleccionada.tipDocumento.codTipoDocumento,
+              nomTipoDocumento: consolaSeleccionada.tipDocumento.nomTipoDocumento,
+            };
+            consola.numDocumento = consolaSeleccionada.numDocumento;
+            consola.edad = consolaSeleccionada.edad;
+            consola.numTelefono = consolaSeleccionada.numTelefono;
+            consola.correo = consolaSeleccionada.correo;
+            consola.fechaNacimiento = consolaSeleccionada.fechaNacimiento;
+            consola.direccion = consolaSeleccionada.direccion;
+            consola.nomContactoEmergencia = consolaSeleccionada.nomContactoEmergencia;
+            consola.numContactoEmergencia = consolaSeleccionada.numContactoEmergencia;
+            consola.eps = consolaSeleccionada.eps;
+            consola.arl = consolaSeleccionada.eps;
+            consola.sexo = {
+              codSexo: consolaSeleccionada.sexo.codSexo,
+              nomSexo: consolaSeleccionada.sexo.nomSexo,
+            };
+            consola.tipoSangre = {
+              codTipoSangre: consolaSeleccionada.tipoSangre.codTipoSangre,
+              nomTipoSangre: consolaSeleccionada.tipoSangre.nomTipoSangre,
+            };
+            consola.fotoEmpleado = consolaSeleccionada.fotoEmpleado;
+            consola.actividad = consolaSeleccionada.actividad;
+            consola.fechaIngreso = consolaSeleccionada.fechaIngreso;
+            consola.fechaSalida = consolaSeleccionada.fechaSalida;
+          }
+          return consola;
+        })
+        setData(dataNueva);
+        peticionGet();
+        setMensaje("Empleado Actualizado");
+        handleEditarClose();
+        handleShowMensaje();
+        reset();
+        setConsolaSeleccionada({});
+      } else {
+        console.log("Error la solicitud put empleado", response.status);
+      }
+    } catch (error) {
+      alert("Error al editar empleado");
+      console.log("Error editar empleado", error.response.data);
+      reset();
+    }
+  }
 
   //  const peticionDelete = async () => {
   //    try {
@@ -267,21 +240,8 @@ function EmpleadoComponent() {
   //    }
   //
   //  };
-  //
-  //const abrirCerrarModalInsertar = () => {
-  //  setModalInsertar(!modalInsertar);
-  //};
-  //const abrirCerrarModalEditar = () => {
-  //  setModalEditar(!modalEditar);
-  //};
-  //const abrirCerrarModalEliminar = () => {
-  //  setModalEliminar(!modalEliminar);
-  //};
-  //const abrirCerrarModalVer = () => {
-  //  setModalVer(!modalVer);
-  //};
   const seleccionarEmpleado = (consola, caso) => {
-    // console.log(consola);
+    console.log(consola);
     setConsolaSeleccionada({
       codEmpleado: consola[0],
       nombre: consola[1],
@@ -309,10 +269,13 @@ function EmpleadoComponent() {
         nomTipoSangre: consola[15].nomTipoSangre,
       },
       fotoEmpleado: consola[16],
+      fechaIngreso: consola[17],
+      fechaSalida: consola[18]
     });
     console.log("seleccionada", consolaSeleccionada);
     if (caso === "EDITAR") {
       //abrirCerrarModalEditar();
+      handleEditarShow();
     }
     if (caso === "ELIMINAR") {
       //abrirCerrarModalEliminar();
@@ -322,177 +285,94 @@ function EmpleadoComponent() {
     }
   };
 
-  const bodyInsertar = (
-    <div >
-      <h3>Agregar Empleado</h3>
-
-      <br />
-    </div>
+  const bodyEditar = (
+    <form onSubmit={handleSubmit(peticionPut)}>
+      <div className="flex">
+        <div className="me-2">
+          <label>Nombre</label>
+          <input className="form-control" name="nombre" onChange={handleChange} value={consolaSeleccionada?.nombre} placeholder={!consolaSeleccionada?.nombre ? "Nombre" : "Nombre"} />
+        </div>
+        <div className="me-2">
+          <label>Apellido</label>
+          <input name="apellido" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.apellido} placeholder="Apellido" className="form-control" />
+        </div>
+        <div className="me-2" style={{ width: "250px", margin: "20px" }}>
+          <label>Tipo Documento</label>
+          <TipoDocumento name="tipDocumento" handleChangeData={handleChange} value={consolaSeleccionada.tipDocumento} />
+        </div>
+        <div className="me-2">
+          <label>Número Documento Indentidad</label>
+          <input name="numDocumento" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.numDocumento} placeholder="Numero Identidad" className="form-control" />
+        </div>
+        <div className="me-2">
+          <label>Edad</label>
+          <input name="edad" disabled onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.edad} placeholder="Numero Identidad" className="form-control" />
+        </div>
+      </div>
+      <div className="flex">
+        <div className="me-2">
+          <label >Número de Celular</label>
+          <input name="numTelefono" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.numTelefono} placeholder="Número Celular" className="form-control" />
+        </div>
+        <div className="me-2">
+          <label>Correo Electronico</label>
+          <input name="correo" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.correo} placeholder="Correo Electronico" className="form-control" />
+        </div>
+        <div className="me-2">
+          <label>Fecha de Nacimiento</label>
+          <input name="fechaNacimiento" type="date" required pattern="\d{4}-\d{2}-\d{2}" className="form-control" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.fechaNacimiento} />
+        </div>
+        <div className="me-2">
+          <label>Dirección</label>
+          <input name="direccion" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.direccion} placeholder="Dirección" className="form-control" />
+        </div>
+        <div className="me-2">
+          <label>Nombre Contacto Emergencia</label>
+          <input name="nomContactoEmergencia" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.nomContactoEmergencia} placeholder="Nombre Familiar" className="form-control" />
+        </div>
+      </div>
+      <div className="flex">
+        <div className="me-2">
+          <label>#Número Emergencia</label>
+          <input name="numContactoEmergencia" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.numContactoEmergencia} placeholder="# Contacto Emergencia" className="form-control" />
+        </div>
+        <div className="me-2">
+          <label>EPS</label>
+          <input name="eps" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.eps} placeholder="EPS" className="form-control" />
+        </div>
+        <div className="me-2">
+          <label>ARL</label>
+          <input name="arl" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.arl} placeholder="ARL" className="form-control" />
+        </div>
+        <div className="me-2">
+          <label>Foto</label>
+          <input name="fotoEmpleado" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.fotoEmpleado} placeholder="foto" className="form-control" />
+        </div>
+        <div className="me-2" style={{ width: "300px", margin: "20px" }}>
+          <label>Genero</label>
+          <GeneroEmpleado name="sexo" handleChangeData={handleChange} value={consolaSeleccionada.sexo} />
+        </div>
+      </div>
+      <div className="flex">
+        <div className="me-2" style={{ width: "300px", margin: "20px" }}>
+          <label >Tipo de Sangre</label>
+          <TipoSangre name="tipoSangre" handleChangeData={handleChange} value={consolaSeleccionada.tipoSangre} />
+        </div>
+        <div className="me-2">
+          <label>Fecha de Ingreso</label>
+          <input name="fechaIngreso" type="date" required pattern="\d{4}-\d{2}-\d{2}" className="form-control" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.fechaIngreso} />
+        </div>
+        <div className="me-2">
+          <label>Fecha de Salida</label>
+          <input name="fechaSalida" type="date" required pattern="\d{4}-\d{2}-\d{2}" className="form-control" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.fechaSalida} />
+        </div>
+      </div>
+      <div align="right">
+        <button className="btn btn-primary" type="submit" onClick={() => peticionPut()}> Actualizar </button>
+        <button className="btn btn-secondary" type="submit" onClick={handleEditarClose}>Cancelar</button>
+      </div>
+    </form>
   );
-
-  //const bodyVer = (
-  //  <div className={styles.modal}>
-  //    <h3>Datos del Empleado</h3>
-  //    <Form>
-  //      <div className="flex">
-  //        <FormGroup className="me-2">
-  //          <Label for="exampleEmail">Nombre</Label>
-  //          <Input name="nombre" onChange={handleChange} value={consolaSeleccionada?.nombre} placeholder={!consolaSeleccionada?.nombre ? "Diligencia su nombre" : "Nombre"} disabled />
-  //        </FormGroup>
-  //        <FormGroup className="me-2">
-  //          <Label for="exampleEmail">Apellido</Label>
-  //          <Input name="apellido" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.apellido} placeholder="Apellido" disabled />
-  //        </FormGroup>
-  //        <FormGroup className="me-2">
-  //          <Label for="exampleEmail">Número Documento Indentidad</Label>
-  //          <Input name="numDocumento" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.numDocumento} disabled placeholder="Numero Identidad" />
-  //        </FormGroup>
-  //        <FormGroup className="me-2">
-  //          <Label for="exampleEmail">Número de Celular</Label>
-  //          <Input name="numTelefono" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.numTelefono} placeholder="Número Celular" disabled />
-  //        </FormGroup>
-  //      </div>
-  //      <div className="flex">
-  //        <FormGroup className="me-2">
-  //          <Label for="exampleEmail">Correo Electronico</Label>
-  //          <Input name="correo" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.correo} placeholder="Correo Electronico" disabled />
-  //        </FormGroup>
-  //        <FormGroup className="me-2">
-  //          <Label for="exampleEmail">Fecha de Nacimiento</Label>
-  //          <Input name="fechaNacimiento" onChange={handleChange} value={consolaSeleccionada?.fechaNacimiento} type="date" disabled />
-  //        </FormGroup>
-  //        <FormGroup className="me-2">
-  //          <Label for="exampleEmail">Dirección</Label>
-  //          <Input name="direccion" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.direccion} placeholder="Dirección" disabled />
-  //        </FormGroup>
-  //        <FormGroup className="me-2">
-  //          <Label for="exampleEmail">Contacto Emergencia</Label>
-  //          <Input name="nomContactoEmergencia" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.nomContactoEmergencia} placeholder="Nombre Familiar" disabled />
-  //        </FormGroup>
-  //      </div>
-  //      <div className="flex">
-  //        <FormGroup className="me-2">
-  //          <Label className="w-100" for="exampleEmail"> #Contacto Emergencia </Label>
-  //          <Input name="numContactoEmergencia" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.numContactoEmergencia} placeholder="# Contacto Emergencia" className="w-100" disabled />
-  //        </FormGroup>
-  //        <FormGroup className="me-2">
-  //          <Label for="exampleEmail">EPS</Label>
-  //          <Input name="eps" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.eps} placeholder="EPS" disabled />
-  //        </FormGroup>
-  //        <FormGroup className="me-2">
-  //          <Label for="exampleEmail">ARL</Label>
-  //          <Input name="arl" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.arl} placeholder="ARL" disabled />
-  //        </FormGroup>
-  //      </div>
-  //      <div className="flex">
-  //        <FormGroup className="me-2 w-100">
-  //          <Label for="exampleEmail">Genero</Label>
-  //          <GeneroEmpleado name="idSexoBio" handleChangeData={handleChange} value={consolaSeleccionada.idSexoBio} disabled />
-  //        </FormGroup>
-  //        <FormGroup className="me-2 w-100">
-  //          <Label for="exampleEmail">Tipo de Documento de Indentidad</Label>
-  //          <DocumentoEmpleado name="idTipoDocumento" handleChangeData={handleChange} value={consolaSeleccionada.idTipoDocumento} disabled />
-  //        </FormGroup>
-  //        <FormGroup className="me-2 w-100">
-  //          <Label for="exampleEmail">Tipo de Sangre</Label>
-  //          <TipoSangre name="idTipoSangre" handleChangeData={handleChange} value={consolaSeleccionada.idTipoSangre} disabled />
-  //        </FormGroup>
-  //      </div>
-  //    </Form>
-  //    <div align="right">
-  //      <Button onClick={() => abrirCerrarModalVer()}>Volver</Button>
-  //    </div>
-  //  </div>
-  //);
-  //
-  //  const bodyEditar = (
-  //    <div className={styles.modal}>
-  //      <h3>Editar Empleado</h3>
-  //      <Form>
-  //        <div className="flex">
-  //          <FormGroup className="me-2">
-  //            <Label for="exampleEmail">Nombre</Label>
-  //            <input className="form-control" name="nombre" onChange={handleChange} value={consolaSeleccionada?.nombre} placeholder={!consolaSeleccionada?.nombre ? "Nombre" : "Nombre"} />
-  //            {errors.nombre && (<div style={estilos}> <p>{errors.nombre}</p> </div>)}
-  //          </FormGroup>
-  //          <FormGroup className="me-2">
-  //            <Label for="exampleEmail">Apellido</Label>
-  //            <input name="apellido" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.apellido} placeholder="Apellido" className="form-control" />
-  //            {errors.apellido && (<div style={estilos}>  <p>{errors.apellido}</p></div>)}
-  //          </FormGroup>
-  //          <FormGroup className="me-2" style={{ width: "250px", margin: "20px" }}>
-  //            <Label for="exampleEmail">Tipo Documento</Label>
-  //            <TipoDocumento name="tipDocumento" handleChangeData={handleChange} value={consolaSeleccionada.tipDocumento} />
-  //          </FormGroup>
-  //          <FormGroup className="me-2">
-  //            <Label for="exampleEmail">Número Documento Indentidad</Label>
-  //            <input name="numDocumento" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.numDocumento} placeholder="Numero Identidad" className="form-control" />
-  //            {errors.numDocumento && (<div style={estilos}> <p>{errors.numDocumento}</p> </div>)}
-  //          </FormGroup>
-  //        </div>
-  //        <div className="flex">
-  //          <FormGroup className="me-2">
-  //            <Label for="exampleEmail">Edad</Label>
-  //            <input name="edad" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.edad} placeholder="Numero Identidad" className="form-control" />
-  //          </FormGroup>
-  //          <FormGroup className="me-2">
-  //            <Label for="exampleEmail">Número de Celular</Label>
-  //            <input name="numTelefono" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.numTelefono} placeholder="Número Celular" className="form-control" />
-  //            {errors.numTelefono && (<div style={estilos}><p>{errors.numTelefono}</p></div>)}
-  //          </FormGroup>
-  //          <FormGroup className="me-2">
-  //            <Label for="exampleEmail">Correo Electronico</Label>
-  //            <input name="correo" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.correo} placeholder="Correo Electronico" className="form-control" />
-  //            {errors.correo && (<div style={estilos}><p>{errors.correo}</p></div>)}
-  //          </FormGroup>
-  //          <FormGroup className="me-2">
-  //            <Label for="exampleEmail">Fecha de Nacimiento</Label>
-  //            <input name="fechaNacimiento" type="date" required pattern="\d{4}-\d{2}-\d{2}" className="form-control" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.fechaNacimiento} />
-  //          </FormGroup>
-  //        </div>
-  //        <div className="flex">
-  //          <FormGroup className="me-2">
-  //            <Label for="exampleEmail">Dirección</Label>
-  //            <input name="direccion" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.direccion} placeholder="Dirección" className="form-control" />
-  //          </FormGroup>
-  //          <FormGroup className="me-2">
-  //            <Label for="exampleEmail">Nombre Contacto Emergencia</Label>
-  //            <input name="nomContactoEmergencia" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.nomContactoEmergencia} placeholder="Nombre Familiar" className="form-control" />
-  //          </FormGroup>
-  //          <FormGroup className="me-2">
-  //            <Label for="exampleEmail">#Número Emergencia</Label>
-  //            <input name="numContactoEmergencia" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.numContactoEmergencia} placeholder="# Contacto Emergencia" className="form-control" />
-  //          </FormGroup>
-  //          <FormGroup className="me-2">
-  //            <Label for="exampleEmail">EPS</Label>
-  //            <input name="eps" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.eps} placeholder="EPS" className="form-control" />
-  //          </FormGroup>
-  //        </div>
-  //        <div className="flex">
-  //          <FormGroup className="me-2">
-  //            <Label for="exampleEmail">ARL</Label>
-  //            <input name="arl" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.arl} placeholder="ARL" className="form-control" />
-  //          </FormGroup>
-  //          <FormGroup className="me-2">
-  //            <Label for="exampleEmail">Foto</Label>
-  //            <input name="fotoEmpleado" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.fotoEmpleado} placeholder="foto" className="form-control" />
-  //          </FormGroup>
-  //          <FormGroup className="me-2" style={{ width: "300px", margin: "20px" }}>
-  //            <Label for="exampleEmail">Genero</Label>
-  //            <GeneroEmpleado name="sexo" handleChangeData={handleChange} value={consolaSeleccionada.sexo} />
-  //          </FormGroup>
-  //          <FormGroup className="me-2" style={{ width: "300px", margin: "20px" }}>
-  //            <Label for="exampleEmail">Tipo de Sangre</Label>
-  //            <TipoSangre name="tipoSangre" handleChangeData={handleChange} value={consolaSeleccionada.tipoSangre} />
-  //          </FormGroup>
-  //        </div>
-  //      </Form>
-  //      <div align="right">
-  //        <Button color="primary" onClick={() => peticionPut()}> Actualizar </Button>
-  //        <Button onClick={() => abrirCerrarModalEditar()}>Cancelar</Button>
-  //      </div>
-  //    </div>
-  //  );
 
   //const bodyEliminar = (
   //  <div className={styles.modal}>
@@ -504,6 +384,18 @@ function EmpleadoComponent() {
   //  </div>
   //);
 
+
+  const popUp = (
+    <div>
+      <Modal size="sm" show={smShow} onHide={() => setSmShow(false)} aria-labelledby="example-modal-sizes-title-sm">
+        <Modal.Header closeButton>
+          <Modal.Title id="example-modal-sizes-title-sm">
+            {mensaje}
+          </Modal.Title>
+        </Modal.Header>
+      </Modal>
+    </div>
+  )
   useEffect(() => {
     peticionGet();
   }, []);
@@ -610,6 +502,12 @@ function EmpleadoComponent() {
       name: "fotoEmpleado",
       label: "No foto",
     }, {
+      name: "fechaIngreso",
+      label: "Fecha Ingreo",
+    }, {
+      name: "fechaSalida",
+      label: "Fecha Salida",
+    }, {
       name: "acciones",
       label: "Acciones",
       options: {
@@ -657,7 +555,7 @@ function EmpleadoComponent() {
           </div>
         </div>
       </div>
-      <Modal show={showInsertar} onHide={handleCloseInsertar} animation={false} dialogClassName="customModal">
+      <Modal show={showInsertar} onHide={handleCloseInsertar} animation={false} dialogClassName="CustomEmpleado">
         <Modal.Header closeButton>
           <Modal.Title>Insertar Empleado</Modal.Title>
         </Modal.Header>
@@ -702,7 +600,7 @@ function EmpleadoComponent() {
               </div>
               <div className="inputInsertar">
                 <label>Dirección</label>
-                <input name="direccion" placeholder="Dirección" className="form-control" />
+                <input name="direccion" placeholder="Dirección" className="form-control" onChange={handleChange} />
               </div>
               <div className="inputInsertar w-80">
                 <label>Nombre Emergencia</label>
@@ -744,10 +642,14 @@ function EmpleadoComponent() {
           </form>
         </Modal.Body>
       </Modal>
-      {/*<Modal open={modalEditar} onClose={abrirCerrarModalEditar}>
-        {bodyEditar}
+      <Modal show={smShow} onHide={handleMensajeClose} animation={false}> {popUp}</Modal>
+      <Modal show={showEditar} onClose={handleEditarClose} animation={false} dialogClassName="CustomEmpleado">
+        <Modal.Header closeButton>
+          <Modal.Title>Actualizar Empleado</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>{bodyEditar}</Modal.Body>
       </Modal>
-      <Modal open={modalEliminar} onClose={abrirCerrarModalEliminar}>
+      {/*<Modal open={modalEliminar} onClose={abrirCerrarModalEliminar}>
         {bodyEliminar}
       </Modal>
       <Modal open={modalVer} onClose={abrirCerrarModalVer}>

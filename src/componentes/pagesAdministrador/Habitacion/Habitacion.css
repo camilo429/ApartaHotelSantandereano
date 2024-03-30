@@ -1,0 +1,12 @@
+button {
+    margin: 5px;
+}
+
+.customModal {
+    max-width: 700px !important;
+    /* Establece el ancho máximo del modal */
+}
+
+.bodyEliminar>p>b {
+    color: red;
+}

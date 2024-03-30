@@ -88,7 +88,6 @@ function Huespedes() {
   const handleChange = (e) => {
     //console.log("handleChange called")
     setValue(e.target.name, e.target.value);
-    console.log("target", e.target.name, e.target.value)
     const { name, value } = e.target;
     setConsolaSeleccionada((prevState) => ({
       ...prevState,

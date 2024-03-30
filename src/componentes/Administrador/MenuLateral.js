@@ -7,7 +7,6 @@ import Sales from "../pagesAdministrador/Sales";
 import Reservaciones from "../pagesAdministrador/Reservaciones";
 import Graficas from "../pagesAdministrador/Graficas";
 import EmpleadoComponent from "../Empleado/EmpleadoComponent";
-import Habitacion from "../pagesAdministrador/Habitacion";
 import Recibos from "../pagesAdministrador/Recibos";
 import Tarea from "../pagesAdministrador/Tarea";
 import Comentario from "../pagesAdministrador/Comentario";
@@ -23,8 +22,12 @@ import { NavLink } from "react-router-dom";
 import * as HiIcons from "react-icons/hi";
 import { FaUsers } from "react-icons/fa";
 import { MdOutlinePendingActions } from "react-icons/md";
+import { MdOutlineBedroomParent } from "react-icons/md";
 import Acciones from "../pagesAdministrador/Acciones";
+import { MdBedroomParent } from "react-icons/md";
 import ModuloHuespued from "../pagesAdministrador/Huespedes/ModuloHuespued";
+import ModuloHabitacion from "../pagesAdministrador/Habitacion/ModuloHabitacion";
+import ModuloEmpleado from "../Empleado/ModuloEmpleado";
 
 function MenuLateral() {
   return (
@@ -57,6 +60,30 @@ function MenuLateral() {
                     <NavLink className="sidebar-link" to="Empleados" exact="true" activeclassname="active">
                       <FaUsers className="me-2" />Empleados
                     </NavLink>
+                  </li>
+                </ul>
+              </li>
+              {/*<li className="sidebar-item">
+                <NavLink className="sidebar-link" to="Habitaciones" exact="true" activeclassname="active">
+                  <MdBedroomParent className="me-2" /> Habitaciones
+                </NavLink>
+              </li>*/}
+
+              <li className="sidebar-item">
+                <a href="pages.html" className="sidebar-link collapsed" data-bs-target="#posts" data-bs-toggle="collapse" aria-expanded="false">
+                  <MdBedroomParent style={{ margin: "3px" }} />Habitación
+                </a>
+                <ul id="posts" className="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                  <li className="sidebar-item">
+                    <NavLink className="sidebar-link" to="Habitaciones" exact="true" activeclassname="active">
+                      <MdOutlineBedroomParent className="me-2" /> Habitaciones
+                    </NavLink>
+                  </li>
+                  <li className="sidebar-item">
+                    <a href="#clas" className="sidebar-link">Tipo Habitación</a>
+                  </li>
+                  <li className="sidebar-item">
+                    <a href="#clas" className="sidebar-link"> Otra opcion </a>
                   </li>
                 </ul>
               </li>
@@ -123,15 +150,15 @@ function MenuLateral() {
           <Route path="/" exact={true} element={<Home />} />
           <Route path="/Home" exact={true} element={<Home />} />
           <Route path="/Huespedes" exact={true} element={<ModuloHuespued />} />
-          <Route path="/Empleados" exact={true} element={<EmpleadoComponent />} />
+          <Route path="/Empleados" exact={true} element={<ModuloEmpleado />} />
           <Route path="/Sales" exact={true} element={<Sales />} />
           <Route path="/Graficas" exact={true} element={<Graficas />} />
           <Route path="/Reservaciones" exact={true} element={<Reservaciones />} />
-          <Route path="/Habitacion" exact={true} element={<Habitacion />} />
           <Route path="/Recibos" exact={true} element={<Recibos />} />
           <Route path="/Tarea" exact={true} element={<Tarea />} />
           <Route path="/Comentario" exact={true} element={<Comentario />} />
           <Route path="/Acciones" exact={true} element={<Acciones />} />
+          <Route path="/Habitaciones" exact={true} element={<ModuloHabitacion />} />
         </Routes>
       </div>
     </div>

@@ -4,29 +4,28 @@ import axios from "axios";
 // css
 import Select from "react-select";
 // url
-import { Apiurl } from "../../services/userService";
-const url = Apiurl + "estadoHabitacion/listarEstadoHabitacion";
+import { Apiurl } from "../../../services/userService";
+const LISTAR_ESTADOS_HABITACION = Apiurl + "estadoHabitacion/listarEstadoHabitacion";
 
-function EstadoHabitacion({ name, handleChangeData, value = null }) {
+function SelectEstadoHabitacion({ name, handleChangeData, value = null }) {
   const [data, setData] = useState([]);
 
   const getEstadoHabitacion = async () => {
-    axios
-      .request({
-        method: "get",
-        url: url,
-        withCredentials: true,
-        crossdomain: true,
+    try {
+      const response = await axios.get(LISTAR_ESTADOS_HABITACION, {
         headers: {
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
-        },
-      })
-      .then((response) => {
-        if (response.status === 200) {
-          setData(response.data);
-          //console.log(response.data);
         }
-      });
+      })
+      if (response.status === 200) {
+        setData(response.data);
+      } else {
+        console.log("error cargar estados habitaciòn", response.status);
+      }
+    } catch (error) {
+      console.log("Error al cargar Estados Habitaciòn", error);
+    }
   };
   useEffect(() => {
     getEstadoHabitacion();
@@ -39,14 +38,14 @@ function EstadoHabitacion({ name, handleChangeData, value = null }) {
   };
 
   return (
-    <div className="estadoHabitacion">
+    <div className="estadoHabitacion" style={{ width: "170px", margin: "0px" }}>
       <Select
         defaultValue={
           value
             ? {
-                label: value?.nombre,
-                value: value?.codEstadoHabitacion,
-              }
+              label: value?.nombre,
+              value: value?.codEstadoHabitacion,
+            }
             : null
         }
         options={data.map((nacio) => ({
@@ -60,4 +59,4 @@ function EstadoHabitacion({ name, handleChangeData, value = null }) {
   );
 }
 
-export default EstadoHabitacion;
+export default SelectEstadoHabitacion;
