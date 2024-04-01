@@ -23,11 +23,14 @@ import * as HiIcons from "react-icons/hi";
 import { FaUsers } from "react-icons/fa";
 import { MdOutlinePendingActions } from "react-icons/md";
 import { MdOutlineBedroomParent } from "react-icons/md";
+import { MdFamilyRestroom } from "react-icons/md";
+
 import Acciones from "../pagesAdministrador/Acciones";
 import { MdBedroomParent } from "react-icons/md";
 import ModuloHuespued from "../pagesAdministrador/Huespedes/ModuloHuespued";
 import ModuloHabitacion from "../pagesAdministrador/Habitacion/ModuloHabitacion";
 import ModuloEmpleado from "../Empleado/ModuloEmpleado";
+import ModuloTipoHabitacion from "../pagesAdministrador/TipoHabitacion/ModuloTipoHabitacion";
 
 function MenuLateral() {
   return (
@@ -80,7 +83,9 @@ function MenuLateral() {
                     </NavLink>
                   </li>
                   <li className="sidebar-item">
-                    <a href="#clas" className="sidebar-link">Tipo Habitación</a>
+                    <NavLink className="sidebar-link" to="TipoHabitacion" exact="true" activeclassname="active">
+                      <MdFamilyRestroom /> Tipo Habitación
+                    </NavLink>
                   </li>
                   <li className="sidebar-item">
                     <a href="#clas" className="sidebar-link"> Otra opcion </a>
@@ -151,6 +156,7 @@ function MenuLateral() {
           <Route path="/Home" exact={true} element={<Home />} />
           <Route path="/Huespedes" exact={true} element={<ModuloHuespued />} />
           <Route path="/Empleados" exact={true} element={<ModuloEmpleado />} />
+          <Route path="TipoHabitacion" exact={true} element={<ModuloTipoHabitacion />} />
           <Route path="/Sales" exact={true} element={<Sales />} />
           <Route path="/Graficas" exact={true} element={<Graficas />} />
           <Route path="/Reservaciones" exact={true} element={<Reservaciones />} />

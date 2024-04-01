@@ -149,6 +149,7 @@ function Habitacion() {
       if (response.status === 201) {
         setData(data.concat(response.data));
         setMensaje("Habitación Registrada");
+        peticionGet();
         handleHabitacionClose();
         handleShowMensaje();
         setConsolaSeleccionada({

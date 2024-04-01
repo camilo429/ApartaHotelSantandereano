@@ -40,6 +40,9 @@ function EmpleadoComponent() {
   const handleEditarClose = () => setShowEditar(false);
   const handleEditarShow = () => setShowEditar(true);
 
+  const [showEliminar, setShowEliminar] = useState(false);
+  const handleEliminarClose = () => setShowEliminar(false);
+  const handleEliminarShow = () => setShowEliminar(true);
 
   const [mensaje, setMensaje] = useState("");
 
@@ -222,24 +225,31 @@ function EmpleadoComponent() {
     }
   }
 
-  //  const peticionDelete = async () => {
-  //    try {
-  //      const response = await axios.delete(urlD + consolaSeleccionada.codEmpleado, {
-  //        headers: {
-  //          Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
-  //        }
-  //      })
-  //
-  //      if (response.status === 200) {
-  //        setData(data.filter((consola) => consola.codEmpleado !== consolaSeleccionada.codEmpleado));
-  //        abrirCerrarModalEliminar();
-  //      }
-  //    } catch (error) {
-  //      alert("Error al eliminar empleado");
-  //      console.log("Error editar empleado", error);
-  //    }
-  //
-  //  };
+  const peticionDelete = async () => {
+    try {
+      const response = await axios.delete(urlD + consolaSeleccionada.codEmpleado, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
+        }
+      })
+
+      if (response.status === 200) {
+        setData(data.filter((consola) => consola.codEmpleado !== consolaSeleccionada.codEmpleado));
+        setMensaje("Empleado Eliminado");
+        handleEliminarClose();
+        handleShowMensaje();
+        peticionGet();
+      } else {
+        console.log("Se generado un error", response.status);
+      }
+    } catch (error) {
+      alert("Error al eliminar empleado");
+      console.log("Error editar empleado", error);
+    }
+
+  };
+
   const seleccionarEmpleado = (consola, caso) => {
     console.log(consola);
     setConsolaSeleccionada({
@@ -274,14 +284,10 @@ function EmpleadoComponent() {
     });
     console.log("seleccionada", consolaSeleccionada);
     if (caso === "EDITAR") {
-      //abrirCerrarModalEditar();
       handleEditarShow();
     }
     if (caso === "ELIMINAR") {
-      //abrirCerrarModalEliminar();
-    }
-    if (caso === "Ver") {
-      //abrirCerrarModalVer();
+      handleEliminarShow();
     }
   };
 
@@ -294,7 +300,7 @@ function EmpleadoComponent() {
         </div>
         <div className="me-2">
           <label>Apellido</label>
-          <input name="apellido" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.apellido} placeholder="Apellido" className="form-control" />
+          <input className="form-control" name="apellido" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.apellido} placeholder="Apellido" />
         </div>
         <div className="me-2" style={{ width: "250px", margin: "20px" }}>
           <label>Tipo Documento</label>
@@ -374,15 +380,15 @@ function EmpleadoComponent() {
     </form>
   );
 
-  //const bodyEliminar = (
-  //  <div className={styles.modal}>
-  //    <p>Esta seguro de Eliminar Empleado{" "}<b>{consolaSeleccionada && consolaSeleccionada.nombre}</b> ?</p>
-  //    <div align="right">
-  //      <Button color="secondary" onClick={() => peticionDelete()}> Si </Button>
-  //      <Button onClick={() => abrirCerrarModalEliminar()}>No</Button>
-  //    </div>
-  //  </div>
-  //);
+  const bodyEliminar = (
+    <div>
+      <p>Esta seguro de Eliminar Empleado{" "}<b>{consolaSeleccionada && consolaSeleccionada.nombre}</b> ?</p>
+      <div align="right">
+        <button className="btn btn-primary" type="submit" onClick={() => peticionDelete()}> Si </button>
+        <button className="btn btn-secondary" type="submit" onClick={handleEditarClose}>No</button>
+      </div>
+    </div>
+  );
 
 
   const popUp = (
@@ -649,12 +655,12 @@ function EmpleadoComponent() {
         </Modal.Header>
         <Modal.Body>{bodyEditar}</Modal.Body>
       </Modal>
-      {/*<Modal open={modalEliminar} onClose={abrirCerrarModalEliminar}>
-        {bodyEliminar}
+      <Modal show={showEliminar} onHide={handleEliminarClose} animation={false} >
+        <Modal.Header closeButton>
+          <Modal.Title>Actualizar Empleado</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>{bodyEliminar}</Modal.Body>
       </Modal>
-      <Modal open={modalVer} onClose={abrirCerrarModalVer}>
-        {bodyVer}
-      </Modal>*/}
     </div>
   );
 }

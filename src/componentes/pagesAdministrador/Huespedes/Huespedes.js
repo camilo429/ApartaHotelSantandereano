@@ -106,7 +106,7 @@ function Huespedes() {
 
       if (response.status === 200) {
         setData(response.data);
-        console.log(response.data);
+        //console.log(response.data);
       } else {
         console.log("error en el metodo get", response.status);
       }

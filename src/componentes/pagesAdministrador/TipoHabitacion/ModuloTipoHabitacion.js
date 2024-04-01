@@ -1,15 +1,15 @@
 import React from 'react';
-import SidebarAdmin from "../../Administrador/SidebarAdmin";
-import Footer from '../../Administrador/Footer';
-import Huespedes from './Huespedes';
+import SidebarAdmin from '../../Administrador/SidebarAdmin';
+import Footer from "../../Administrador/Footer";
+import TipoHabitacion from './TipoHabitacion';
 import { CiSun } from "react-icons/ci";
 import { FaMoon } from "react-icons/fa";
 
-const ModuloHuespued = () => {
+const ModuloTipoHabitacion = () => {
     return (
         <div className='main'>
             <SidebarAdmin />
-            <Huespedes />
+            <TipoHabitacion />
             <a href='#html' className='theme-toggle'>
                 <CiSun />
                 <FaMoon />
@@ -19,4 +19,4 @@ const ModuloHuespued = () => {
     );
 }
 
-export default ModuloHuespued;
+export default ModuloTipoHabitacion;
