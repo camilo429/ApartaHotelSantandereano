@@ -562,7 +562,7 @@ function Habitacion() {
         </Modal.Header>
         <Modal.Body>{bodyEditar}</Modal.Body>
       </Modal>
-      <Modal show={showEliminar} onClose={handleEliminarClose}>
+      <Modal show={showEliminar} onHide={handleEliminarClose}>
         {bodyEliminar}
       </Modal>
       {/*<Modal open={modalCheckIn} onClose={abrirCerrarModalCheckIn}>

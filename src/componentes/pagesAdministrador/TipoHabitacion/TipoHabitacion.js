@@ -140,7 +140,7 @@ const TipoHabitacion = () => {
             })
 
             if (response.status === 200) {
-                setData(data.filter((consola) => consola.codTipoHabitacion !== consolaSeleccionada));
+                setData(data.filter((consola) => consola[0] !== consolaSeleccionada.codTipoHabitacion));
                 setMensaje("Tipo Habitación Eliminada");
                 handleEliminarClose();
                 handleShowMensaje();

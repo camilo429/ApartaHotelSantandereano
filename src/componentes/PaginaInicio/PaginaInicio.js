@@ -9,26 +9,11 @@ import "../../vendor/owl-carousel/owl.carousel.min.css";
 const PaginaInicio = () => {
   return (
     <div>
-      <nav
-        className="navbar navbar-expand-lg navbar-light bg-light"
-        id="mainNav"
-      >
+      <nav className="navbar navbar-expand-lg navbar-light bg-light" id="mainNav">
         <div className="container px-4 px-lg-5">
-          <a className="navbar-brand" href="index.html">
-            Aparta Hotel Santandereano
-          </a>
-          <img
-            src="/assets/img/facebook.png"
-            alt="Es la imagen de facebook"
-            style={{
-              width: "25px",
-              height: "25px",
-              marginLeft: "35px",
-            }}
-          ></img>
-          <img
-            src="/assets/img/whatsapp.png"
-            alt="Es la imagen de Whatsapp"
+          <a className="navbar-brand" href="index.html">  Aparta Hotel Santandereano</a>
+          <img src="/assets/img/facebook.png" alt="Es la imagen de facebook" style={{ width: "25px", height: "25px", marginLeft: "35px", }}></img>
+          <img src="/assets/img/whatsapp.png" alt="Es la imagen de Whatsapp"
             style={{
               width: "55px",
               height: "55px",
@@ -104,41 +89,15 @@ const PaginaInicio = () => {
 
           <div>
             <div align="center">
-              <img
-                src="/assets/img/abastos1.jpg"
-                alt="Es la imagen de abastos"
-                style={{
-                  width: "350px",
-                  height: "250px",
-                  float: "left",
-                  marginLeft: "35px",
-                }}
-              />
+              <img src="/assets/img/abastos1.jpg" alt="Es la imagen de abastos" style={{ width: "350px", height: "250px", float: "left", marginLeft: "35px", }} />
             </div>
 
             <div>
-              <img
-                src="/assets/img/cañizares.png"
-                alt="Es la imagen de calletano canizarez"
-                style={{
-                  width: "350px",
-                  height: "250px",
-                  float: "left",
-                  marginLeft: "10px",
-                }}
-              />
+              <img src="/assets/img/cañizares.png" alt="Es la imagen de calletano canizarez" style={{ width: "350px", height: "250px", float: "left", marginLeft: "10px", }} />
             </div>
 
             <div>
-              <img
-                src="/assets/img/banderas.jpg"
-                alt="Es la imagen de la estación banderas"
-                style={{
-                  width: "350px",
-                  height: "250px",
-                  marginLeft: "10px",
-                }}
-              />
+              <img src="/assets/img/banderas.jpg" alt="Es la imagen de la estación banderas" style={{ width: "350px", height: "250px", marginLeft: "10px", }} />
             </div>
           </div>
 
@@ -164,15 +123,12 @@ const PaginaInicio = () => {
               y un automóvil sencillo.
               <br></br>
             </p>
-            <img
-              src="/assets/img/101.jpg"
-              alt="Es la imagen de habitaición 101"
-              style={{
-                width: "300px",
-                height: "250px",
-                float: "left",
-                marginLeft: "25px",
-              }}
+            <img src="/assets/img/101.jpg" alt="Es la imagen de habitaición 101" style={{
+              width: "300px",
+              height: "250px",
+              float: "left",
+              marginLeft: "25px",
+            }}
             />
             <img
               src="/assets/img/2022.jpg"

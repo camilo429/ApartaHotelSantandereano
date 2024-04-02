@@ -24,6 +24,7 @@ import { FaUsers } from "react-icons/fa";
 import { MdOutlinePendingActions } from "react-icons/md";
 import { MdOutlineBedroomParent } from "react-icons/md";
 import { MdFamilyRestroom } from "react-icons/md";
+import { FaPeopleCarry } from "react-icons/fa";
 
 import Acciones from "../pagesAdministrador/Acciones";
 import { MdBedroomParent } from "react-icons/md";
@@ -31,6 +32,9 @@ import ModuloHuespued from "../pagesAdministrador/Huespedes/ModuloHuespued";
 import ModuloHabitacion from "../pagesAdministrador/Habitacion/ModuloHabitacion";
 import ModuloEmpleado from "../Empleado/ModuloEmpleado";
 import ModuloTipoHabitacion from "../pagesAdministrador/TipoHabitacion/ModuloTipoHabitacion";
+import ModuloProducto from "../pagesAdministrador/Producto.js/ModuloProducto";
+import Reservacion from "../pagesAdministrador/Reservacion/Reservacion";
+import ModuloReservacion from "../pagesAdministrador/Reservacion/ModuloReservacion";
 
 function MenuLateral() {
   return (
@@ -48,10 +52,10 @@ function MenuLateral() {
                   <MdOutlinePendingActions className="me-2" /> Acciones
                 </NavLink>
               </li>
+
               <li className="sidebar-item">
                 <a href="pages.html" className="sidebar-link collapsed" data-bs-target="#pages" data-bs-toggle="collapse" aria-expanded="false">
-                  <MdOutlineRestorePage style={{ margin: "3px" }} />
-                  Usuario
+                  <MdOutlineRestorePage style={{ margin: "3px" }} />Usuario
                 </a>
                 <ul id="pages" className="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                   <li className="sidebar-item">
@@ -66,15 +70,10 @@ function MenuLateral() {
                   </li>
                 </ul>
               </li>
-              {/*<li className="sidebar-item">
-                <NavLink className="sidebar-link" to="Habitaciones" exact="true" activeclassname="active">
-                  <MdBedroomParent className="me-2" /> Habitaciones
-                </NavLink>
-              </li>*/}
 
               <li className="sidebar-item">
                 <a href="pages.html" className="sidebar-link collapsed" data-bs-target="#posts" data-bs-toggle="collapse" aria-expanded="false">
-                  <MdBedroomParent style={{ margin: "3px" }} />Habitación
+                  <MdBedroomParent style={{ margin: "3px" }} /> Habitación
                 </a>
                 <ul id="posts" className="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                   <li className="sidebar-item">
@@ -87,25 +86,43 @@ function MenuLateral() {
                       <MdFamilyRestroom /> Tipo Habitación
                     </NavLink>
                   </li>
-                  <li className="sidebar-item">
-                    <a href="#clas" className="sidebar-link"> Otra opcion </a>
-                  </li>
                 </ul>
               </li>
 
               <li className="sidebar-item">
-                <a href="pages.html" className="sidebar-link collapsed" data-bs-target="#posts" data-bs-toggle="collapse" aria-expanded="false">
-                  <FaSliders style={{ margin: "3px" }} />Gastos
+                <a href="pages.html" className="sidebar-link collapsed" data-bs-target="#products" data-bs-toggle="collapse" aria-expanded="false">
+                  <FaSliders style={{ margin: "3px" }} /> Producto
                 </a>
-                <ul id="posts" className="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                <ul id="products" className="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                   <li className="sidebar-item">
-                    <a href="#clas" className="sidebar-link">Gastos Fijos</a>
+                    <NavLink className="sidebar-link" to="Productos" exact="true" activeclassname="active">
+                      <FaPeopleCarry className="me-2" /> Productos
+                    </NavLink>
                   </li>
                   <li className="sidebar-item">
                     <a href="#clas" className="sidebar-link">Gastos Variables</a>
                   </li>
                   <li className="sidebar-item">
                     <a href="#clas" className="sidebar-link">Gastos indirectos </a>
+                  </li>
+                </ul>
+              </li>
+
+              <li className="sidebar-item">
+                <a href="pages.html" className="sidebar-link collapsed" data-bs-target="#reservation" data-bs-toggle="collapse" aria-expanded="false">
+                  <FaSliders style={{ margin: "3px" }} /> Reservación
+                </a>
+                <ul id="reservation" className="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                  <li className="sidebar-item">
+                    <NavLink className="sidebar-link" to="Reservacion" exact="true" activeclassname="active">
+                      <FaPeopleCarry className="me-2" /> Reservaciones
+                    </NavLink>
+                  </li>
+                  <li className="sidebar-item">
+                    <a href="#clas" className="sidebar-link">Reservaciones 1</a>
+                  </li>
+                  <li className="sidebar-item">
+                    <a href="#clas" className="sidebar-link">Reservaciones 2 </a>
                   </li>
                 </ul>
               </li>
@@ -157,6 +174,8 @@ function MenuLateral() {
           <Route path="/Huespedes" exact={true} element={<ModuloHuespued />} />
           <Route path="/Empleados" exact={true} element={<ModuloEmpleado />} />
           <Route path="TipoHabitacion" exact={true} element={<ModuloTipoHabitacion />} />
+          <Route path="Productos" exact={true} element={<ModuloProducto />} />
+          <Route path="Reservacion" exact={true} element={<ModuloReservacion />} />
           <Route path="/Sales" exact={true} element={<Sales />} />
           <Route path="/Graficas" exact={true} element={<Graficas />} />
           <Route path="/Reservaciones" exact={true} element={<Reservaciones />} />
