@@ -31,7 +31,6 @@ function Habitacion() {
   const handleHabitacionClose = () => setShowHabitacion(false);
   const handleHabitacionShow = () => setShowHabitacion(true);
 
-
   const [smShow, setSmShow] = useState(false);
   const handleMensajeClose = () => setSmShow(false);
   const handleShowMensaje = () => setSmShow(true);

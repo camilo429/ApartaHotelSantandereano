@@ -19,7 +19,7 @@ import Footer from "./Footer";
 //Reactrap
 import { FaCheck } from "react-icons/fa";
 import { styled } from "@mui/system";
-import { Modal } from "@mui/material";
+import { Modal } from 'react-bootstrap';
 //url
 import { Apiurl } from "../../services/userService";
 const url = Apiurl + "comentarios/crearComentario";
@@ -28,8 +28,13 @@ const url = Apiurl + "comentarios/crearComentario";
 function Contacto() {
   const [data, setData] = useState([]);
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
-  const [modalMensaje, setModalMensaje] = useState(false);
-  const [setFormulario] = useState({
+  const [mensaje, setMensaje] = useState("");
+
+  const [smShow, setSmShow] = useState(false);
+  const handleMensajeClose = () => setSmShow(false);
+  const handleShowMensaje = () => setSmShow(true);
+
+  const [formulario, setFormulario] = useState({
     codComentario: "",
     nombre: "",
     email: "",
@@ -38,21 +43,6 @@ function Contacto() {
     fechaEnviado: "",
     horaEnviado: "",
   });
-  const usoEstilos = {
-    position: "absolute",
-    width: "40%",
-    height: "15%",
-    backgroundColor: "white",
-    padding: "1%",
-    boder: "2px solid #000",
-    top: "40%",
-    left: "50%",
-    transform: "translate(-50%,-50%)",
-    fontSize: "1.25rem",
-    borderRadius: "5px",
-  }
-
-  const ModalContainer = styled("div")(usoEstilos);
 
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: "AIzaSyB98G8_CHNNlhya9B1iiolBxsxp4UDZc60",
@@ -84,18 +74,21 @@ function Contacto() {
     console.log(info);
     try {
       const response = await axios.post(url, info);
-      setData(data.concat(response.data));
-      setFormulario({
-        codComentario: "",
-        nombre: "",
-        email: "",
-        numTelefono: "",
-        comentario: "",
-        fechaEnviado: "",
-        horaEnviado: "",
-      });
-      abrirCerrarModalMensaje();
-      reset();
+      console.log(response.status);
+      if (response.status === 201) {
+        setData(data.concat(response.data));
+        handleShowMensaje();
+        setFormulario({
+          codComentario: "",
+          nombre: "",
+          email: "",
+          numTelefono: "",
+          comentario: "",
+          fechaEnviado: "",
+          horaEnviado: "",
+        });
+        reset();
+      }
     }
     catch (error) {
       console.log("error mensaje", error);
@@ -104,22 +97,14 @@ function Contacto() {
   const resetFormulario = () => {
     reset();
   }
-  const abrirCerrarModalMensaje = () => {
-    setModalMensaje(!modalMensaje);
-    setTimeout(() => {
-      setModalMensaje(false);
-    }, 3000); // 3000 milisegundos = 3 segundos
-  };
   const popUp = (
     <div>
-      <ModalContainer>
-        <div style={{ alignContent: "center", alignItems: "center", marginLeft: "15px" }}>
-          <div className="flex" style={{ alignContent: "center", alignItems: "center", margin: "auto" }}>
-            <FaCheck className="me-3" color="green" />
-            <p> "¡Gracias por ser parte de la familia y por compartir tus pensamientos y sugerencias con nosotros!"</p>
-          </div>
+      <div style={{ alignContent: "center", alignItems: "center", marginLeft: "15px" }}>
+        <div className="flex" style={{ alignContent: "center", alignItems: "center", margin: "auto" }}>
+          <FaCheck className="me-3" color="green" />
+          <p> "¡Gracias por ser parte de la familia y por compartir tus pensamientos y sugerencias con nosotros!"</p>
         </div>
-      </ModalContainer>
+      </div>
     </div>
   )
 
@@ -190,7 +175,7 @@ function Contacto() {
                 </div>
               </div>
               <div className="" style={{ width: "45%" }}>
-                <label for="comentarios"> Comentario</label>
+                <label> Comentario</label>
                 <textarea className="form-control" name="comentario" rows="3" type="texarea" placeholder="Ingrese Comentario o Sugerencia" onChange={handleChange} style={{ height: "70%" }}  {...register('comentario', {
                   required: "El campo es requerido"
                 })} />
@@ -204,10 +189,9 @@ function Contacto() {
           </Form>
         </div>
       </section>
+      <Modal show={smShow} onHide={handleMensajeClose} animation={false}> {popUp}</Modal>
       <Footer />
-      <Modal open={modalMensaje} onClose={abrirCerrarModalMensaje}>
-        {popUp}
-      </Modal>
+
     </div>
   );
 }

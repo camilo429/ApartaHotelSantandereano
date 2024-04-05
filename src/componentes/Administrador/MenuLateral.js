@@ -9,7 +9,6 @@ import Graficas from "../pagesAdministrador/Graficas";
 import EmpleadoComponent from "../Empleado/EmpleadoComponent";
 import Recibos from "../pagesAdministrador/Recibos";
 import Tarea from "../pagesAdministrador/Tarea";
-import Comentario from "../pagesAdministrador/Comentario";
 
 //iconos
 import { Routes, Route } from "react-router-dom";
@@ -35,6 +34,8 @@ import ModuloTipoHabitacion from "../pagesAdministrador/TipoHabitacion/ModuloTip
 import ModuloProducto from "../pagesAdministrador/Producto.js/ModuloProducto";
 import Reservacion from "../pagesAdministrador/Reservacion/Reservacion";
 import ModuloReservacion from "../pagesAdministrador/Reservacion/ModuloReservacion";
+import Comentarios from "../pagesAdministrador/Comentarios/Comentarios";
+import ModuloComentario from "../pagesAdministrador/Comentarios/ModuloComentario";
 
 function MenuLateral() {
   return (
@@ -132,9 +133,9 @@ function MenuLateral() {
                   <FaUser style={{ margin: "3px" }} /> Actividades
                 </a>
                 <ul id="auth" className="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                  <li className="sidebar-item">
-                    <a href="#clas" className="sidebar-link">Tareas</a>
-                  </li>
+                  <NavLink className="sidebar-link" to="Comentarios" exact="true" activeclassname="active">
+                    <FaPeopleCarry className="me-2" /> Comentarios
+                  </NavLink>
                   <li className="sidebar-item">
                     <a href="#clas" className="sidebar-link"> Graficas</a>
                   </li>
@@ -152,7 +153,7 @@ function MenuLateral() {
                 <ul id="multi" className="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                   <li className="sidebar-item">
                     <a href="pages.html" className="sidebar-link collapsed" data-bs-target="#level-1" data-bs-toggle="collapse" aria-expanded="false">
-                      Mensuales
+                      Comentarios
                     </a>
                     <ul id="level-1" className="sidebar-dropdown list-unstyled collapse">
                       <li className="sidebar-item">
@@ -176,12 +177,12 @@ function MenuLateral() {
           <Route path="TipoHabitacion" exact={true} element={<ModuloTipoHabitacion />} />
           <Route path="Productos" exact={true} element={<ModuloProducto />} />
           <Route path="Reservacion" exact={true} element={<ModuloReservacion />} />
+          <Route path="Comentarios" exact={true} element={<ModuloComentario />} />
           <Route path="/Sales" exact={true} element={<Sales />} />
           <Route path="/Graficas" exact={true} element={<Graficas />} />
           <Route path="/Reservaciones" exact={true} element={<Reservaciones />} />
           <Route path="/Recibos" exact={true} element={<Recibos />} />
           <Route path="/Tarea" exact={true} element={<Tarea />} />
-          <Route path="/Comentario" exact={true} element={<Comentario />} />
           <Route path="/Acciones" exact={true} element={<Acciones />} />
           <Route path="/Habitaciones" exact={true} element={<ModuloHabitacion />} />
         </Routes>

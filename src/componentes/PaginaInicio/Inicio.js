@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useState } from "react";
 //librerias
 import axios from "axios";
 //Estilos
@@ -92,12 +92,13 @@ function Inicio() {
 
   const peticionPost = async () => {
     try {
+      setIsLoading(true);
       console.log("ConsolaSeleccionada", consolaSeleccionada)
       const response = await axios.post(urlG, consolaSeleccionada);
       if (response.status === 201) {
         setData(data.concat(response.data));
         handleReservacionClose();
-        setMensaje("La reservación ha sido Exitosa")
+        setMensaje("Reservación Exitosa");
         handleShowMensaje();
         setConsolaSeleccionada({
           tipoDocumento: {
@@ -130,6 +131,8 @@ function Inicio() {
     } catch (error) {
       console.error("Error al realizar la reservación", error);
       alert("Hubo un error al crear la reservación. Por favor, intenta nuevamente.", error.response.data);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -147,7 +150,7 @@ function Inicio() {
           <FormGroup>
             <div id="reservacion">
               <Label for="exampleEmail">Fecha de Entrada</Label>
-              <input name="fechaEntrada" type="date" placeholder="fechaEntrada" className="form-control" onChange={handleChange} />
+              <input required name="fechaEntrada" type="date" placeholder="fechaEntrada" className="form-control" onChange={handleChange} />
               {errors.fechaEntrada && <p id="errores">{errors.fechaEntrada.message}</p>}
             </div>
           </FormGroup>
@@ -163,14 +166,14 @@ function Inicio() {
           <FormGroup>
             <div id="reservacion">
               <Label for="exampleEmail">Número de Adultos</Label>
-              <input name="adultos" type="number" placeholder="# Adultos" max="5" min="1" className="form-control" id="fecha" onChange={handleChange} />
+              <input required name="adultos" type="number" placeholder="# Adultos" max="5" min="1" className="form-control" onChange={handleChange} />
               {errors.adultos?.type === "required" && <p id="errores">Es Requerido</p>}
             </div>
           </FormGroup>
           <FormGroup>
             <div id="reservacion">
               <Label for="exampleEmail">Número de Niños</Label>
-              <input name="ninos" type="number" placeholder="# Niños" min="0" max="4" className="form-control" id="fecha" onChange={handleChange} />
+              <input required name="ninos" type="number" placeholder="# Niños" min="0" max="4" className="form-control" onChange={handleChange} defaultValue="0" />
               {errors.ninos?.type === 'required' && <p id="errores"> Es requerido</p>}
             </div>
           </FormGroup>
@@ -221,14 +224,14 @@ function Inicio() {
         </div>
         <div className="flex">
           {/* Indicador de carga */}
-          {/*{isLoading && (
-              <div className="loading-container">
-                <div className="flex">
-                  <Spinner color="primary" style={{ marginLeft: "200px" }} />
-                  <div className="loading-spinner">Cargando</div>
-                </div>
+          {isLoading && (
+            <div className="loading-container">
+              <div className="flex">
+                <Spinner color="primary" style={{ marginLeft: "200px" }} />
+                <div className="loading-spinner">Cargando</div>
               </div>
-            )}*/}
+            </div>
+          )}
           <button type="submit" className="btn btn-success">Agendar</button>
           <button type="submit" className="btn btn-danger" onClick={handleReservacionClose}> Cancelar</button>
         </div>
@@ -239,8 +242,8 @@ function Inicio() {
 
   const popUp = (
     <div>
-      <div className="flex" style={{ marginLeft: "50px", alignContent: "center", alignItems: "center" }}>
-        <FaCheck className="me-3" color="green" /><p>¡Reservación Exitosa!</p>
+      <div className="flex" id="mensaje">
+        <FaCheck className="me-3" /><p>{mensaje}</p>
       </div>
     </div>
   );
@@ -402,8 +405,7 @@ function Inicio() {
         </Modal.Header>
         <Modal.Body className="body">{bodyInsertar}</Modal.Body>
       </Modal>
-      <Modal show={smShow} onHide={handleMensajeClose} animation={false}>{popUp}</Modal>
-
+      <Modal show={smShow} onHide={handleMensajeClose} animation={false} size="sm">{popUp}</Modal>
       {/*<Modal show={modalMensaje} onHide={handleMsShow}>
         {popUp}
       </Modal>*/}

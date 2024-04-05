@@ -1,24 +1,28 @@
 import React, { useEffect, useState } from "react";
-import "./Huesped.css";
 //Librerias
 import axios from "axios";
+
+import { Apiurl } from "../../../services/userService";
 import MUIDataTable from "mui-datatables";
+import { useForm } from 'react-hook-form';
+
+import TipoDocumento from "../TipoDocumento";
+import Nacionalidades from "../Nacionalidades";
+import Habitaciones from "../../PaginaInicio/Habitaciones";
+
+import { Modal } from 'react-bootstrap';
 //Estilos
-//import { Form } from "reactstrap";
+import "./Huesped.css";
 import { Link } from "react-router-dom";
 //iconos
 //import * as BsInfoLg from "react-icons/bs";
 //import { FaCheck } from "react-icons/fa"; chulitos 
 //Componentes
-import Nacionalidades from "../Nacionalidades";
-import TipoDocumento from "../TipoDocumento";
-import { useForm } from 'react-hook-form';
 // url
-import { Apiurl } from "../../../services/userService";
 import { EXPRESION_REGULAR_NOMBRE_APELLIDO, EXPRESION_REGULAR_EMAIL, EXPRESION_REGULAR_CELULAR, EXPRESION_REGULAR_IDENTIFICACION } from "../../../services/ExpresionsRegular"
 import Region from "../Region";
 import Spinner from 'react-bootstrap/Spinner';
-import { Modal } from 'react-bootstrap';
+
 
 const url = Apiurl + "huespedes/listarHuespedes";
 const urlG = Apiurl + "huespedes/crearHuesped";
@@ -174,6 +178,7 @@ function Huespedes() {
       setIsLoading(false);
     }
   };
+
   const peticionPut = async (info) => {
     console.log("consola", info);
     console.log("consolaSeleccionada", consolaSeleccionada.codHuesped);
@@ -417,7 +422,7 @@ function Huespedes() {
         customBodyRender: (value) => {
           try {
             if (value === true) {
-              return "Habilitado";
+              return "HABILITADO";
             } else {
               return "INABILITADO";
             }
@@ -650,7 +655,7 @@ function Huespedes() {
                 </select>
               </div>
             </div>
-            <div align="right">
+            <div align="right flex">
               <button className="btn btn-primary" type="submit"> Actualizar </button>
               <button className="btn btn-secondary" onClick={() => handleEditarClose}>Cancelar</button>
             </div>

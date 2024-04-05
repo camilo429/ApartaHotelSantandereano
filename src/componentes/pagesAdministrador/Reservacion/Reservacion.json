@@ -1,0 +1,36 @@
+{
+    "codReservacion": 1,
+    "fechaEntrada": "2024-03-19",
+    "fechaSalida": "2024-03-20",
+    "totalDias": 1,
+    "adultos": 1,
+    "ninos": 0,
+    "tipoDocumento": {
+        "codTipoDocumento": 3,
+        "nomTipoDocumento": "CEDULA DE CIUDADANIA"
+    },
+    "numDocumento": 1007788675,
+    "nombre": "CAMILO",
+    "apellido": "AHUMADA",
+    "email": "camiloalejandroahumadagomez@gmail.com",
+    "habitacion": {
+        "codHabitacion": 1,
+        "nombreHabitacion": {
+            "codTipoHabitacion": 2,
+            "nombre": "MATRIMONIAL",
+            "precioXPersona": 35000.0,
+            "precioXAcompanante": 15000.0
+        },
+        "descripHabitacion": "televisor, baño compartido y cama doble",
+        "numHabitacion": 204,
+        "pisoHabitacion": 3,
+        "maxPersonasDisponibles": 2,
+        "estadoHabitacion": {
+            "codEstadoHabitacion": 2,
+            "nombre": "OCUPADA"
+        },
+        "imagenHabitacion": "URL"
+    },
+    "totalHuespedes": 1,
+    "totalPersona": 35000.0
+}
