@@ -3,11 +3,9 @@ import React from "react";
 import SidebarAdmin from "./SidebarAdmin";
 import Home from "../pagesAdministrador/Home";
 import Huespedes from "../pagesAdministrador/Huespedes/Huespedes";
-import Sales from "../pagesAdministrador/Sales";
-import Reservaciones from "../pagesAdministrador/Reservaciones";
 import Graficas from "../pagesAdministrador/Graficas";
 import EmpleadoComponent from "../Empleado/EmpleadoComponent";
-import Recibos from "../pagesAdministrador/Recibos";
+import Recibos from "../pagesAdministrador/Factura/Recibos";
 import Tarea from "../pagesAdministrador/Tarea";
 
 //iconos
@@ -36,6 +34,7 @@ import Reservacion from "../pagesAdministrador/Reservacion/Reservacion";
 import ModuloReservacion from "../pagesAdministrador/Reservacion/ModuloReservacion";
 import Comentarios from "../pagesAdministrador/Comentarios/Comentarios";
 import ModuloComentario from "../pagesAdministrador/Comentarios/ModuloComentario";
+import ModuloFactura from "../pagesAdministrador/Factura/ModuloFactura";
 
 function MenuLateral() {
   return (
@@ -136,6 +135,9 @@ function MenuLateral() {
                   <NavLink className="sidebar-link" to="Comentarios" exact="true" activeclassname="active">
                     <FaPeopleCarry className="me-2" /> Comentarios
                   </NavLink>
+                  <NavLink className="sidebar-link" to="Facturas" exact="true" activeclassname="active">
+                    <FaPeopleCarry className="me-2" /> Facturas
+                  </NavLink>
                   <li className="sidebar-item">
                     <a href="#clas" className="sidebar-link"> Graficas</a>
                   </li>
@@ -178,9 +180,8 @@ function MenuLateral() {
           <Route path="Productos" exact={true} element={<ModuloProducto />} />
           <Route path="Reservacion" exact={true} element={<ModuloReservacion />} />
           <Route path="Comentarios" exact={true} element={<ModuloComentario />} />
-          <Route path="/Sales" exact={true} element={<Sales />} />
+          <Route path="Facturas" exact={true} element={<ModuloFactura />} />
           <Route path="/Graficas" exact={true} element={<Graficas />} />
-          <Route path="/Reservaciones" exact={true} element={<Reservaciones />} />
           <Route path="/Recibos" exact={true} element={<Recibos />} />
           <Route path="/Tarea" exact={true} element={<Tarea />} />
           <Route path="/Acciones" exact={true} element={<Acciones />} />

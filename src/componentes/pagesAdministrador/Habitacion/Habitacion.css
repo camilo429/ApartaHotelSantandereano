@@ -10,3 +10,7 @@ button {
 .bodyEliminar>p>b {
     color: red;
 }
+
+.checkIn {
+    max-width: 900px !important;
+}

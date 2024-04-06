@@ -4,7 +4,7 @@ import * as FaRegLightbulb from "react-icons/fa";
 import * as FaGasPump from "react-icons/fa";
 import * as LuSatelliteDish from "react-icons/lu";
 import { NavLink } from "react-router-dom";
-import TablaRecibos from "./Home/TablaRecibos";
+import TablaRecibos from "../Home/TablaRecibos";
 
 function Recibos() {
   return (

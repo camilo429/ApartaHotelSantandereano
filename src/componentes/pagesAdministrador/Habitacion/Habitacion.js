@@ -45,6 +45,10 @@ function Habitacion() {
   const handleEliminarClose = () => setShowEliminar(false);
   const handleEliminarShow = () => setShowEliminar(true);
 
+  const [showCheckIn, setShowCheckIn] = useState(false);
+  const handleCheckInClose = () => setShowCheckIn(false);
+  const handleCheckInShow = () => setShowCheckIn(true);
+
   const { handleSubmit, formState: { errors }, setValue, reset } = useForm();
   const { register } = useForm({
     shouldUnregister: false
@@ -68,41 +72,59 @@ function Habitacion() {
     },
     imagenHabitacion: ""
   });
-  //const [consolaCheckIn, setConsolaCheckIn] = useState({
-  //  fechaIngreso: "",
-  //  fechaSalida: "",
-  //  huesped: {
-  //    codHuesped: "",
-  //    nombre: "",
-  //    apellido: "",
-  //    numCelular: "",
-  //    correo: "",
-  //    tipoDocumento: {
-  //      codTipoDocumento: "",
-  //      nomTipoDocumento: "",
-  //    },
-  //    numDocumento: "",
-  //    nacionalidad: {
-  //      codNacion: "",
-  //      nombre: "",
-  //    },
-  //    lugarOrigen: "",
-  //    nomContactoEmergencia: "",
-  //    numContactoEmergencia: "",
-  //    estadoHuesped: true,
-  //  },
-  //  habitacion: {
-  //    codHabitacion: "",
-  //    nombreHabitacion: "",
-  //    descripHabitacion: "",
-  //    numHabitacion: "",
-  //    pisoHabitacion: "",
-  //    maxPersonasDisponibles: "",
-  //    precioDia: "",
-  //    estadoHabitacion: "",
-  //    imagenHabitacion: "",
-  //  },
-  //});
+  const [consolaCheckIn, setConsolaCheckIn] = useState({
+    fechaEntrada: "",
+    fechaSalida: "",
+    codHuesped: {
+      codHuesped: "",
+      nombre: "",
+      apellido: "",
+      numCelular: "",
+      correo: "",
+      tipoDocumento: {
+        codTipoDocumento: "",
+        nomTipoDocumento: ""
+      },
+      numDocumento: "",
+      fechaNacimiento: "",
+      edad: "",
+      nacionalidad: {
+        codNacion: "",
+        nombre: ""
+      },
+      lugarOrigen: {
+        codRegion: "",
+        nacionalidad: {
+          codNacion: "",
+          nombre: "",
+        },
+        nombre: "",
+      },
+      nomContactoEmergencia: "",
+      numContactoEmergencia: "",
+      estadoHuesped: ""
+    },
+    codHabitacion: {
+      codHabitacion: "",
+      nombreHabitacion: {
+        codTipoHabitacion: "",
+        nombre: "",
+        precioXPersona: "",
+        precioXAcompanante: ""
+      },
+      descripHabitacion: "",
+      numHabitacion: "",
+      pisoHabitacion: "",
+      maxPersonasDisponibles: "",
+      estadoHabitacion: {
+        codEstadoHabitacion: "",
+        nombre: ""
+      },
+      imagenHabitacion: ""
+    },
+    numAdultos: "",
+    numNinos: ""
+  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -111,13 +133,13 @@ function Habitacion() {
       [name]: value,
     }));
   };
-  //const manejarCambio = (e) => {
-  //  const { name, value } = e.target;
-  //  setConsolaCheckIn((prevState) => ({
-  //    ...prevState,
-  //    [name]: value,
-  //  }));
-  //};
+  const manejarCambio = (e) => {
+    const { name, value } = e.target;
+    setConsolaCheckIn((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
 
   const peticionGet = async () => {
     try {
@@ -245,39 +267,27 @@ function Habitacion() {
     }
   };
 
-  //const peticionCheckIn = async (e) => {
-  //  e.preventDefault();
-  //  console.log("esta es la data seleccionada", consolaCheckIn);
-  //  const response = await axios.post(urlCheckIn, consolaCheckIn, {
-  //    headers: {
-  //      Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
-  //    },
-  //  });
-  //  setData(data.concat(response.data));
-  //  peticionGet();
-  //  abrirCerrarModalCheckIn();
-  //  alert("La habitación número", consolaCheckIn.habitacion, "ha sido ocupada");
-  //};
+  const peticionCheckIn = async () => {
+    try {
+      console.log("esta es la data seleccionada", consolaCheckIn);
+      const response = await axios.post(urlCheckIn, consolaCheckIn, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
+        },
+      });
+      if (response.status === 201) {
+        setData(data.concat(response.data));
+        peticionGet();
+        handleCheckInClose()
+        alert("Habitación Reservada");
+      } else {
+        alert("La habitación número", response.data.mensaje);
+      }
 
-  //const seleccionarHabitacion = (consola, caso) => {
-  //  setConsolaSeleccionada({
-  //    codHabitacion: consola[0],
-  //    nombreHabitacion: consola[1],
-  //    descripHabitacion: consola[2],
-  //    numHabitacion: consola[3],
-  //    pisoHabitacion: consola[4],
-  //    estadoHabitacion: consola[5],
-  //    maxPersonasDisponibles: consola[6],
-  //    precioDia: consola[7],
-  //    imagenHabitacion: consola[8],
-  //  });
-  //  if (caso === "Editar") {
-  //    abrirCerrarModalEditar();
-  //  }
-  //  if (caso === "Eliminar") {
-  //    abrirCerrarModalEliminar();
-  //  }
-  //};
+    } catch (error) {
+      console.log("checkIn", error);
+    }
+  };
 
   const seleccionarHabitacion = (consola, caso) => {
     console.log("consola", consola);
@@ -305,6 +315,9 @@ function Habitacion() {
     }
     if (caso === "Eliminar") {
       handleEliminarShow();
+    }
+    if (caso === "CheckIn") {
+      handleCheckInShow();
     }
   }
 
@@ -425,35 +438,45 @@ function Habitacion() {
       </div>
     </div>
   );
-  //const bodyCheckIn = (
-  //  <div className={styles.modal}>
-  //    <p>Realizar Ingreso Huesped</p>
-  //    <Form>
-  //      <div className="flex">
-  //        <FormGroup className="me-2" style={{ width: "30%" }}>
-  //          <Label for="exampleEmail">Fecha de Ingreso</Label>
-  //          <input name="fechaIngreso" type="date" placeholder="fechaIngreso" className="form-control" onChange={manejarCambio} />
-  //        </FormGroup>
-  //        <FormGroup className="me-2" style={{ width: "70%", height: "100%" }}>
-  //          <Label for="exampleEmail">Fecha de Salida </Label>
-  //          <input name="fechaSalida" type="date" placeholder="fechaSalida" className="form-control" onChange={manejarCambio} />
-  //        </FormGroup>
-  //        <FormGroup className="me-2" style={{ width: "70%", height: "100%" }}>
-  //          <Label for="exampleEmail">Habitación </Label>
-  //          <Habitaciones name="habitacion" handleChangeData={manejarCambio} url={urlhabitacionesDisponibles} />
-  //        </FormGroup>
-  //        <FormGroup className="me-2" style={{ width: "70%", height: "100%" }}>
-  //          <Label for="exampleEmail">Huesped Registrado </Label>
-  //          <SelectHuespedes name="huesped" handleChangeData={manejarCambio} url={urlHuespedes} />
-  //        </FormGroup>
-  //      </div>
-  //    </Form>
-  //    <div align="right">
-  //      <Button color="primary" onClick={(e) => peticionCheckIn(e)}> Insertar </Button>
-  //      <Button onClick={() => abrirCerrarModalCheckIn()}>Cancelar</Button>
-  //    </div>
-  //  </div>
-  //);
+  const bodyCheckIn = (
+    <div>
+      <p>Realizar Ingreso Huesped</p>
+      <form onSubmit={handleSubmit(peticionCheckIn)}>
+        <div className="flex">
+          <div>
+            <Label for="exampleEmail">Fecha de Ingreso</Label>
+            <input name="fechaEntrada" type="date" placeholder="fechaEntrada" className="form-control" onChange={manejarCambio} />
+          </div>
+          <div>
+            <Label for="exampleEmail">Fecha de Salida </Label>
+            <input name="fechaSalida" type="date" placeholder="fechaSalida" className="form-control" onChange={manejarCambio} />
+          </div>
+          <div>
+            <Label for="exampleEmail">Habitación </Label>
+            <Habitaciones name="codHabitacion" handleChangeData={manejarCambio} url={urlhabitacionesDisponibles} />
+          </div>
+        </div>
+        <div className="flex">
+          <div>
+            <Label for="exampleEmail"># Adultos</Label>
+            <input name="numAdultos" type="number" placeholder="numAdultos" className="form-control" onChange={manejarCambio} />
+          </div>
+          <div>
+            <Label for="exampleEmail"># Niños</Label>
+            <input name="numNinos" type="number" placeholder="numNinos" className="form-control" onChange={manejarCambio} />
+          </div>
+          <div>
+            <Label for="exampleEmail">Huesped Registrado </Label>
+            <SelectHuespedes name="codHuesped" handleChangeData={manejarCambio} url={urlHuespedes} />
+          </div>
+        </div>
+        <div align="right">
+          <button className="btn btn-primary" type="submit"> Insertar </button>
+          <button className="btn btn-secondary" onClick={handleCheckInClose}>Cancelar</button>
+        </div>
+      </form>
+    </div>
+  );
 
   const columns = [
     {
@@ -522,6 +545,12 @@ function Habitacion() {
                   <li>
                     <Link className="dropdown-item" onClick={() => seleccionarHabitacion(tableMeta.rowData, "Eliminar")}> Eliminar </Link>
                   </li>
+                  <li>
+                    <hr className="dropdown-divider" />
+                  </li>
+                  <li>
+                    <Link className="dropdown-item" onClick={() => seleccionarHabitacion(tableMeta.rowData, "CheckIn")}> Check-In </Link>
+                  </li>
                 </ul>
               </li>
             </div>
@@ -561,12 +590,13 @@ function Habitacion() {
         </Modal.Header>
         <Modal.Body>{bodyEditar}</Modal.Body>
       </Modal>
-      <Modal show={showEliminar} onHide={handleEliminarClose}>
-        {bodyEliminar}
-      </Modal>
-      {/*<Modal open={modalCheckIn} onClose={abrirCerrarModalCheckIn}>
+      <Modal show={showEliminar} onHide={handleEliminarClose}> {bodyEliminar} </Modal>
+      <Modal show={showCheckIn} onHide={handleCheckInClose} animation={false} dialogClassName="checkIn">
+        <Modal.Header>
+          <Modal.Title>Registrar Habitación `&gt;` Huesped</Modal.Title>
+        </Modal.Header>
         {bodyCheckIn}
-      </Modal>*/}
+      </Modal>
     </div>
   );
 }

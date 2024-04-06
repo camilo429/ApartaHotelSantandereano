@@ -28,21 +28,8 @@ function SelectHuespedes({ name, handleChangeData, value = null, url }) {
     getHuespedes();
   }, [url]);
 
-  const handleChange = ({
-    label,
-    value,
-    apellido,
-    numCelular,
-    correo,
-    codTipoDocumento,
-    nomTipoDocumento,
-    numDocumento,
-    codNacion,
-    nombre,
-    lugarOrigen,
-    nomContactoEmergencia,
-    numContactoEmergencia,
-    estadoHuesped,
+  const handleChange = ({ label, value, apellido, numCelular, correo, tipoDocumento: { codTipoDocumento, nomTipoDocumento },
+    numDocumento, nacionalidad: { codNacion, nombre }, lugarOrigen, nomContactoEmergencia, numContactoEmergencia, estadoHuesped,
   }) => {
     handleChangeData({
       target: {
@@ -80,11 +67,15 @@ function SelectHuespedes({ name, handleChangeData, value = null, url }) {
           apellido: docu.apellido,
           numCelular: docu.numCelular,
           correo: docu.correo,
-          codTipoDocumento: docu.tipoDocumento.codTipoDocumento,
-          nomTipoDocumento: docu.nomTipoDocumento,
+          tipoDocumento: {
+            codTipoDocumento: docu.tipoDocumento.codTipoDocumento,
+            nomTipoDocumento: docu.tipoDocumento.nomTipoDocumento,
+          },
           numDocumento: docu.numDocumento,
-          codNacion: docu.nacionalidad.codNacion,
-          nombre: docu.nacionalidad.nombre,
+          nacionalidad: {
+            codNacion: docu.nacionalidad.codNacion,
+            nombre: docu.nacionalidad.nombre,
+          },
           lugarOrigen: docu.lugarOrigen,
           nomContactoEmergencia: docu.nomContactoEmergencia,
           numContactoEmergencia: docu.numContactoEmergencia,
