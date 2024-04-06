@@ -4,7 +4,7 @@ function TableElements() {
     return (
         <div className='card border-0'>
             <div className='card-header'>
-                <h5 className='card-title'> Tabla de Usuarios</h5>
+                <h5 className='card-title'> Tabla Huespedes</h5>
                 <h6 className='card-subtitle'> Mejores Huespedes
                 </h6>
             </div>
@@ -12,28 +12,29 @@ function TableElements() {
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">First</th>
-                        <th scope="col">Last</th>
-                        <th scope="col">Handle</th>
+                        <th scope="col">NOMBRE</th>
+                        <th scope="col">APELLIOD</th>
+                        <th scope="col">CORREO</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <th scope="row">1</th>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>@mdo</td>
+                        <td>EDGAR CAMILO</td>
+                        <td>MUÑOZ ALONZO</td>
+                        <td>edgar123_dg@gmail.com</td>
                     </tr>
                     <tr>
                         <th scope="row">2</th>
-                        <td>Jacob</td>
-                        <td>Thornton</td>
-                        <td>@fat</td>
+                        <td>CRISTOFER </td>
+                        <td>BENITEZ</td>
+                        <td>cristo_fer9087@gmail.com</td>
                     </tr>
                     <tr>
                         <th scope="row">3</th>
-                        <td colSpan="2">Larry the Bird</td>
-                        <td>@twitter</td>
+                        <td>Larry</td>
+                        <td>Vazquez Araujo</td>
+                        <td>la12-9097@hotmail.com</td>
                     </tr>
                 </tbody>
             </table>

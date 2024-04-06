@@ -188,14 +188,14 @@ const Producto = () => {
                         <label>Precio (Unidad)</label>
                         <input name='precio' className='form-control' required onChange={handleChange} />
                     </div>
-                    <div>
+                    {/*<div>
                         <label>Fecha Registro</label>
                         <input type='date' required className='form-control' onChange={handleChange} />
                     </div>
                     <div>
                         <label>Hora Registro</label>
                         <input type='time' required className='form-control' onChange={handleChange} />
-                    </div>
+                    </div>*/}
                 </div>
                 <div className='flex botones'>
                     <button className='btn btn-primary' type='submit'>Agregar</button>
@@ -227,14 +227,14 @@ const Producto = () => {
                         <label>Precio (Unidad)</label>
                         <input name='precio' className='form-control' required onChange={handleChange} value={consolaSeleccionada.precio} />
                     </div>
-                    <div>
+                    {/*<div>
                         <label>Fecha Registro</label>
                         <input name='fechaRegistro' type='date' required className='form-control' onChange={handleChange} value={consolaSeleccionada.fechaRegistro} />
                     </div>
                     <div>
                         <label>Hora Registro</label>
                         <input name='horaRegistro' type='time' required className='form-control' onChange={handleChange} value={consolaSeleccionada.horaRegistro} />
-                    </div>
+                    </div>*/}
                 </div>
                 <div className='flex botones'>
                     <button className='btn btn-primary' type='submit'>Agregar</button>

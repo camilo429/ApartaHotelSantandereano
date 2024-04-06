@@ -440,7 +440,6 @@ function Habitacion() {
   );
   const bodyCheckIn = (
     <div>
-      <p>Realizar Ingreso Huesped</p>
       <form onSubmit={handleSubmit(peticionCheckIn)}>
         <div className="flex">
           <div>
@@ -593,7 +592,7 @@ function Habitacion() {
       <Modal show={showEliminar} onHide={handleEliminarClose}> {bodyEliminar} </Modal>
       <Modal show={showCheckIn} onHide={handleCheckInClose} animation={false} dialogClassName="checkIn">
         <Modal.Header>
-          <Modal.Title>Registrar Habitación `&gt;` Huesped</Modal.Title>
+          <Modal.Title>Check - In</Modal.Title>
         </Modal.Header>
         {bodyCheckIn}
       </Modal>

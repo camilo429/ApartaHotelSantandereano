@@ -3,6 +3,10 @@ input::placeholder {
     font-size: small;
 }
 
+.crearHuesped {
+    max-width: 1100px !important;
+    /* Establece el ancho máximo del modal */
+}
 
 input {
     color: black;
@@ -41,10 +45,6 @@ button {
     transform: translate(-50%, -50%);
 }
 
-.customModal {
-    max-width: 900px !important;
-    /* Establece el ancho máximo del modal */
-}
 
 .formHuesped {
     margin: 5px;

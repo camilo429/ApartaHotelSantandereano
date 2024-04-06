@@ -35,6 +35,7 @@ import ModuloReservacion from "../pagesAdministrador/Reservacion/ModuloReservaci
 import Comentarios from "../pagesAdministrador/Comentarios/Comentarios";
 import ModuloComentario from "../pagesAdministrador/Comentarios/ModuloComentario";
 import ModuloFactura from "../pagesAdministrador/Factura/ModuloFactura";
+import ModuloCheckIn from "../pagesAdministrador/CheckIn/ModuloCheckIn";
 
 function MenuLateral() {
   return (
@@ -84,6 +85,11 @@ function MenuLateral() {
                   <li className="sidebar-item">
                     <NavLink className="sidebar-link" to="TipoHabitacion" exact="true" activeclassname="active">
                       <MdFamilyRestroom /> Tipo Habitación
+                    </NavLink>
+                  </li>
+                  <li className="sidebar-item">
+                    <NavLink className="sidebar-link" to="CheckIn" exact="true" activeclassname="active">
+                      <MdFamilyRestroom /> CheckIn
                     </NavLink>
                   </li>
                 </ul>
@@ -172,8 +178,8 @@ function MenuLateral() {
           </div>
         </aside>
         <Routes>
-          <Route path="/" exact={true} element={<Home />} />
-          <Route path="/Home" exact={true} element={<Home />} />
+          <Route path="/" exact={true} element={<Acciones />} />
+          <Route path="/Acciones" exact={true} element={<Acciones />} />
           <Route path="/Huespedes" exact={true} element={<ModuloHuespued />} />
           <Route path="/Empleados" exact={true} element={<ModuloEmpleado />} />
           <Route path="TipoHabitacion" exact={true} element={<ModuloTipoHabitacion />} />
@@ -181,6 +187,7 @@ function MenuLateral() {
           <Route path="Reservacion" exact={true} element={<ModuloReservacion />} />
           <Route path="Comentarios" exact={true} element={<ModuloComentario />} />
           <Route path="Facturas" exact={true} element={<ModuloFactura />} />
+          <Route path="CheckIn" exact={true} element={<ModuloCheckIn />} />
           <Route path="/Graficas" exact={true} element={<Graficas />} />
           <Route path="/Recibos" exact={true} element={<Recibos />} />
           <Route path="/Tarea" exact={true} element={<Tarea />} />

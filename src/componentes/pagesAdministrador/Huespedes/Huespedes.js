@@ -12,7 +12,7 @@ import Habitaciones from "../../PaginaInicio/Habitaciones";
 
 import { Modal } from 'react-bootstrap';
 //Estilos
-import "./Huesped.css";
+
 import { Link } from "react-router-dom";
 //iconos
 //import * as BsInfoLg from "react-icons/bs";
@@ -23,7 +23,7 @@ import { EXPRESION_REGULAR_NOMBRE_APELLIDO, EXPRESION_REGULAR_EMAIL, EXPRESION_R
 import Region from "../Region";
 import Spinner from 'react-bootstrap/Spinner';
 
-
+import "./Huesped.css";
 const url = Apiurl + "huespedes/listarHuespedes";
 const urlG = Apiurl + "huespedes/crearHuesped";
 const urlE = Apiurl + "huespedes/actualizarHuesped/";
@@ -482,7 +482,7 @@ function Huespedes() {
           />
         </div>
       </div>
-      <Modal show={show} onHide={handleClose} animation={false} dialogClassName="customModal">
+      <Modal show={show} onHide={handleClose} animation={false} dialogClassName="crearHuesped">
         <Modal.Header closeButton>
           <Modal.Title>Insertar Huesped</Modal.Title>
         </Modal.Header>
@@ -573,7 +573,7 @@ function Huespedes() {
             </div>
           </form></Modal.Body>
       </Modal>
-      <Modal show={showEditar} onHide={handleEditarClose} animation={false} dialogClassName="customModal">
+      <Modal show={showEditar} onHide={handleEditarClose} animation={false} dialogClassName="crearHuesped">
         <Modal.Header closeButton>
           <Modal.Title>Editar Huesped</Modal.Title>
         </Modal.Header>

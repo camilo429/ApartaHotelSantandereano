@@ -304,7 +304,7 @@ function EmpleadoComponent() {
         </div>
         <div className="me-2" style={{ width: "250px", margin: "20px" }}>
           <label>Tipo Documento</label>
-          <TipoDocumento name="tipDocumento" handleChangeData={handleChange} value={consolaSeleccionada.tipDocumento} />
+          <TipoDocumento name="tipDocumento" handleChangeData={handleChange} value={consolaSeleccionada && consolaSeleccionada.tipDocumento} />
         </div>
         <div className="me-2">
           <label>Número Documento Indentidad</label>
@@ -370,7 +370,7 @@ function EmpleadoComponent() {
         </div>
         <div className="me-2">
           <label>Fecha de Salida</label>
-          <input name="fechaSalida" type="date" required pattern="\d{4}-\d{2}-\d{2}" className="form-control" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.fechaSalida} />
+          <input name="fechaSalida" type="date" pattern="\d{4}-\d{2}-\d{2}" className="form-control" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.fechaSalida} />
         </div>
       </div>
       <div align="right">

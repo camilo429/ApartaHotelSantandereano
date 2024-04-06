@@ -7,7 +7,7 @@ function AdminDashboard() {
         <main className='content px-3 py-2'>
             <div className='container-fluid'>
                 <div className='mb-3'>
-                    <h4> Admin Dashboard</h4>
+                    <h4> Panel Administrador</h4>
                 </div>
                 <div className='row'>
                     <div className='col-12 col-md-6 d-flex'>
@@ -16,8 +16,8 @@ function AdminDashboard() {
                                 <div className='row g-0 w-100'>
                                     <div className='col-6'>
                                         <div className='p-3 m-1'>
-                                            <h4>Bienvenido de Regreso, Administrador</h4>
-                                            <p className='mb-0'> Admininistrador, Geovanny  Ahumada</p>
+                                            <h4>Bienvenido</h4>
+                                            <p className='mb-0'> Geovanny  Ahumada </p>
                                         </div>
                                     </div>
                                     <div className='col-6 align-self-end text-end'>
@@ -35,7 +35,7 @@ function AdminDashboard() {
                                         <h4 className='mb-2'> $ 2.00.000.oo </h4>
                                         <p className='mb-2'> Ingresos Totales </p>
                                         <div className='mb-0'>
-                                            <span className='badge text-success me-2'> + 9.0% </span>
+                                            <span className='badge text-success me-2'> + 2.0% </span>
                                             <span className='text-muted'> Subio Al mes pasado</span>
                                         </div>
                                     </div>
