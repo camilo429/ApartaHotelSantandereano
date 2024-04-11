@@ -18,5 +18,4 @@ const Acciones = () => {
         </div>
     );
 }
-
 export default Acciones;

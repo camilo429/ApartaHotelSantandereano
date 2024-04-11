@@ -32,8 +32,8 @@ function TableElements() {
                     </tr>
                     <tr>
                         <th scope="row">3</th>
-                        <td>Larry</td>
-                        <td>Vazquez Araujo</td>
+                        <td>LARRY</td>
+                        <td>VAZQUEZ ROMERO</td>
                         <td>la12-9097@hotmail.com</td>
                     </tr>
                 </tbody>
@@ -41,5 +41,4 @@ function TableElements() {
         </div>
     )
 }
-
 export default TableElements

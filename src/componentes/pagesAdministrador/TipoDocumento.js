@@ -7,7 +7,6 @@ import { Apiurl } from "../../services/userService";
 const url = Apiurl + "tipoDocumento/listarTipoDocumentos";
 
 function TipoDocumento({ name, handleChangeData, value = null }) {
-
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -39,7 +38,7 @@ function TipoDocumento({ name, handleChangeData, value = null }) {
   };
 
   return (
-    <div className="TipoDocumento" style={{ width: "230px", margin: "0px" }}>
+    <div className="TipoDocumento" style={{ width: "200px", margin: "0px" }}>
       <Select
         options={data.map((docu) => ({
           label: docu.nomTipoDocumento,

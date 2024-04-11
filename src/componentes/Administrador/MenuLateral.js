@@ -1,16 +1,10 @@
 import React from "react";
 // Componentes
-import SidebarAdmin from "./SidebarAdmin";
-import Home from "../pagesAdministrador/Home";
-import Huespedes from "../pagesAdministrador/Huespedes/Huespedes";
 import Graficas from "../pagesAdministrador/Graficas";
-import EmpleadoComponent from "../Empleado/EmpleadoComponent";
 import Recibos from "../pagesAdministrador/Factura/Recibos";
 import Tarea from "../pagesAdministrador/Tarea";
-
 //iconos
 import { Routes, Route } from "react-router-dom";
-// import { FaListUl } from "react-icons/fa";
 import { MdOutlineRestorePage } from "react-icons/md";
 import { FaSliders } from "react-icons/fa6";
 import { FaUser } from "react-icons/fa";
@@ -22,17 +16,15 @@ import { MdOutlinePendingActions } from "react-icons/md";
 import { MdOutlineBedroomParent } from "react-icons/md";
 import { MdFamilyRestroom } from "react-icons/md";
 import { FaPeopleCarry } from "react-icons/fa";
+import { MdBedroomParent } from "react-icons/md";
 
 import Acciones from "../pagesAdministrador/Acciones";
-import { MdBedroomParent } from "react-icons/md";
 import ModuloHuespued from "../pagesAdministrador/Huespedes/ModuloHuespued";
 import ModuloHabitacion from "../pagesAdministrador/Habitacion/ModuloHabitacion";
 import ModuloEmpleado from "../Empleado/ModuloEmpleado";
 import ModuloTipoHabitacion from "../pagesAdministrador/TipoHabitacion/ModuloTipoHabitacion";
 import ModuloProducto from "../pagesAdministrador/Producto.js/ModuloProducto";
-import Reservacion from "../pagesAdministrador/Reservacion/Reservacion";
 import ModuloReservacion from "../pagesAdministrador/Reservacion/ModuloReservacion";
-import Comentarios from "../pagesAdministrador/Comentarios/Comentarios";
 import ModuloComentario from "../pagesAdministrador/Comentarios/ModuloComentario";
 import ModuloFactura from "../pagesAdministrador/Factura/ModuloFactura";
 import ModuloCheckIn from "../pagesAdministrador/CheckIn/ModuloCheckIn";
@@ -106,10 +98,14 @@ function MenuLateral() {
                     </NavLink>
                   </li>
                   <li className="sidebar-item">
-                    <a href="#clas" className="sidebar-link">Gastos Variables</a>
+                    <NavLink className="sidebar-link" to="Productos" exact="true" activeclassname="active">
+                      <FaPeopleCarry className="me-2" /> Analisis Productos
+                    </NavLink>
                   </li>
                   <li className="sidebar-item">
-                    <a href="#clas" className="sidebar-link">Gastos indirectos </a>
+                    <NavLink className="sidebar-link" to="Productos" exact="true" activeclassname="active">
+                      <FaPeopleCarry className="me-2" /> Gastos
+                    </NavLink>
                   </li>
                 </ul>
               </li>
@@ -125,10 +121,9 @@ function MenuLateral() {
                     </NavLink>
                   </li>
                   <li className="sidebar-item">
-                    <a href="#clas" className="sidebar-link">Reservaciones 1</a>
-                  </li>
-                  <li className="sidebar-item">
-                    <a href="#clas" className="sidebar-link">Reservaciones 2 </a>
+                    <NavLink className="sidebar-link" to="Reservacion" exact="true" activeclassname="active">
+                      <FaPeopleCarry className="me-2" />Analisis Reservaciones
+                    </NavLink>
                   </li>
                 </ul>
               </li>
@@ -144,12 +139,12 @@ function MenuLateral() {
                   <NavLink className="sidebar-link" to="Facturas" exact="true" activeclassname="active">
                     <FaPeopleCarry className="me-2" /> Facturas
                   </NavLink>
-                  <li className="sidebar-item">
-                    <a href="#clas" className="sidebar-link"> Graficas</a>
-                  </li>
-                  <li className="sidebar-item">
-                    <a href="#clas" className="sidebar-link"> Comentarios</a>
-                  </li>
+                  <NavLink className="sidebar-link" to="Facturas" exact="true" activeclassname="active">
+                    <FaPeopleCarry className="me-2" /> Analisis de Comentarios
+                  </NavLink>
+                  <NavLink className="sidebar-link" to="Facturas" exact="true" activeclassname="active">
+                    <FaPeopleCarry className="me-2" /> Analisis de Comentarios
+                  </NavLink>
                 </ul>
               </li>
 

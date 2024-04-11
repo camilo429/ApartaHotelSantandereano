@@ -8,7 +8,6 @@ import DocumentoEmpleado from "./componentes/Empleado/DocumentoEmpleado";
 import PanelAdministrador from "./componentes/Administrador/PanelAdministrador";
 import Inicio from "./componentes/PaginaInicio/Inicio";
 import About from "./componentes/PaginaInicio/About";
-import Lugares from "./componentes/PaginaInicio/Lugares";
 import Contacto from "./componentes/PaginaInicio/Contacto";
 import Login from "./componentes/PaginaInicio/Login";
 import "bootstrap/dist/css/bootstrap.css";
@@ -24,7 +23,6 @@ function App() {
             <Route path="/" exament element={<Inicio />} />
             <Route path="/Inicio" element={<Inicio />} />
             <Route path="/SobreNosotros" element={<About />} />
-            <Route path="/Lugares" element={<Lugares />} />
             <Route path="/Contactanos" element={<Contacto />} />
             <Route path="/Login" element={<Login />} />
             {/* url para navegar en empleado */}

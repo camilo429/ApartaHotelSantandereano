@@ -1,10 +1,8 @@
 //importaciones de biblioteas o módulos externos
 import React, { useState } from 'react'
-import { EXPRESION_REGULAR_NOMBRE_APELLIDO, EXPRESION_REGULAR_EMAIL, EXPRESION_REGULAR_CELULAR, EXPRESION_REGULAR_IDENTIFICACION } from "../../services/ExpresionsRegular";
+import { EXPRESION_REGULAR_NOMBRE_APELLIDO, EXPRESION_REGULAR_EMAIL, EXPRESION_REGULAR_COMENTARIO } from "../../services/ExpresionsRegular";
 import axios from "axios";
 import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
-import { Form } from "reactstrap";
-import { useForm } from 'react-hook-form';
 //Estilos
 import "../../vendors/bootstrap-datepicker/bootstrap-datetimepicker.min.css";
 import "../../vendors/nice-select/css/nice-select.css";
@@ -19,7 +17,6 @@ import NavbarInicio from "./Navbar/NavbarInicio";
 import Footer from "./Footer";
 //Reactrap
 import { FaCheck } from "react-icons/fa";
-import { styled } from "@mui/system";
 import { Modal } from 'react-bootstrap';
 //url
 import { Apiurl } from "../../services/userService";
@@ -28,7 +25,6 @@ const url = Apiurl + "comentarios/crearComentario";
 
 function Contacto() {
   const [data, setData] = useState([]);
-  const [mensaje, setMensaje] = useState("");
   const [errors, setErrors] = useState({});
 
   const [smShow, setSmShow] = useState(false);
@@ -88,21 +84,19 @@ function Contacto() {
     } else if (!EXPRESION_REGULAR_NOMBRE_APELLIDO.test(form.nombre.trim())) {
       errors.nombre = "El campo 'Nombre' no es valido";
     }
-
     if (!form.email.trim()) {
       errors.email = "El campo 'Correo' es requerido";
     } else if (!EXPRESION_REGULAR_EMAIL.test(form.email.trim())) {
       errors.email = "El campo 'Correo' no es valido";
     }
-
     if (!form.comentario.trim()) {
       errors.comentario = "El campo 'Comentario'es requerido";
+    } else if (!EXPRESION_REGULAR_COMENTARIO.test(form.comments.trim())) {
+      errors.comentario = "No puede superar los 255 caracteres";
     }
-
     if (!form.numTelefono.trim()) {
       errors.numTelefono = "El campo '# Celular'es requerido";
     }
-
     return errors;
   }
   const onSubmit = async (e) => {

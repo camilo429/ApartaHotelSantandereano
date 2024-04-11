@@ -1,14 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { CiSun } from "react-icons/ci";
-import { FaMoon } from "react-icons/fa";
-import AdminDashboard from "./AdminDashboard"
-import Footer from './Footer';
 import Cliente1 from '../../image/cliente1.jpg'
 
 function SidebarAdmin() {
-
     const [isLightTheme, setIsLightTheme] = useState(true);
-
     const toggleRootClass = useCallback(() => {
         setIsLightTheme((prevTheme) => !prevTheme);
     }, []);
@@ -39,8 +33,6 @@ function SidebarAdmin() {
         if (sidebarToggle) {
             sidebarToggle.addEventListener('click', handleClick);
         }
-
-
         if (themeToggle) {
             themeToggle.addEventListener('click', pinchar);
         }
@@ -54,8 +46,6 @@ function SidebarAdmin() {
             }
         };
     }, [toggleLocalStorage, toggleRootClass]);
-
-
 
     useEffect(() => {
         if (isLightTheme) {

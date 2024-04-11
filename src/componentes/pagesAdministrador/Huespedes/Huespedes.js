@@ -1,18 +1,12 @@
 import React, { useEffect, useState } from "react";
 //Librerias
 import axios from "axios";
-
 import { Apiurl } from "../../../services/userService";
 import MUIDataTable from "mui-datatables";
-import { useForm } from 'react-hook-form';
-
+//Componentes
 import TipoDocumento from "../TipoDocumento";
 import Nacionalidades from "../Nacionalidades";
-import Habitaciones from "../../PaginaInicio/SelectHabitacionesDisponibles";
-
 import { Modal } from 'react-bootstrap';
-//Estilos
-
 import { Link } from "react-router-dom";
 //iconos
 //import * as BsInfoLg from "react-icons/bs";
@@ -22,7 +16,7 @@ import { Link } from "react-router-dom";
 import { EXPRESION_REGULAR_NOMBRE_APELLIDO, EXPRESION_REGULAR_EMAIL, EXPRESION_REGULAR_CELULAR, EXPRESION_REGULAR_IDENTIFICACION } from "../../../services/ExpresionsRegular"
 import Region from "../Region";
 import Spinner from 'react-bootstrap/Spinner';
-
+//Estilos
 import "./Huesped.css";
 const url = Apiurl + "huespedes/listarHuespedes";
 const urlG = Apiurl + "huespedes/crearHuesped";
@@ -31,6 +25,7 @@ const urlD = Apiurl + "huespedes/eliminarhuesped/";
 
 function Huespedes() {
   const [data, setData] = useState([]);
+  const [errors, setErrors] = useState({});
 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -50,11 +45,6 @@ function Huespedes() {
 
   const [mensaje, setMensaje] = useState("");
   const [codNacionalidad, setCodNacionalidad] = useState();
-
-  const { handleSubmit, formState: { errors }, setValue, reset } = useForm();
-  const { register } = useForm({
-    shouldUnregister: false
-  });
 
   const [isLoading, setIsLoading] = useState(false);
   const [consolaSeleccionada, setConsolaSeleccionada] = useState({
@@ -88,10 +78,7 @@ function Huespedes() {
     estadoHuesped: ""
   });
 
-
   const handleChange = (e) => {
-    //console.log("handleChange called")
-    setValue(e.target.name, e.target.value);
     const { name, value } = e.target;
     setConsolaSeleccionada((prevState) => ({
       ...prevState,
@@ -167,7 +154,6 @@ function Huespedes() {
           estadoHuesped: ""
         })
       }
-      reset();
       setIsLoading(false);
     } catch (error) {
       console.error("Error al registrar Huesped", error);
@@ -228,16 +214,13 @@ function Huespedes() {
         handleEditarClose();
         setMensaje("Huesped Actualizado");
         handleShowMensaje();
-        reset();
         setConsolaSeleccionada({});
         setIsLoading(false);
       } else {
         console.error("La solicitud PUT no fue exitosa");
-        reset();
       }
     } catch (error) {
       console.error("Error al realizar la solicitud PUT:", error);
-      reset();
     }
   }
 
@@ -261,6 +244,53 @@ function Huespedes() {
       handleShowMensaje();
       console.log("Error editar empleado", error);
     }
+  }
+  const validationsForm = () => {
+    let errors = {};
+    if (!consolaSeleccionada.nombre.trim()) {
+      errors.nombre = "El campo 'Nombre' es requerido";
+    } else if (!EXPRESION_REGULAR_NOMBRE_APELLIDO.test(consolaSeleccionada.nombre.trim())) {
+      errors.nombre = "El campo 'Nombre' no es valido";
+    }
+    if (!consolaSeleccionada.apellido.trim()) {
+      errors.apellido = "El campo 'Apellido' es requerido";
+    } else if (!EXPRESION_REGULAR_NOMBRE_APELLIDO.test(consolaSeleccionada.apellido.trim())) {
+      errors.apellido = "El campo 'Apellido' no es valido";
+    }
+    if (!consolaSeleccionada.correo.trim()) {
+      errors.correo = "El campo 'Correo' es requerido";
+    } else if (!EXPRESION_REGULAR_EMAIL.test(consolaSeleccionada.correo.trim())) {
+      errors.email = "El campo 'Correo' no es valido";
+    }
+    if (!consolaSeleccionada.numCelular.trim()) {
+      errors.numCelular = "El '# Celular' es requerido";
+    }
+    if (!consolaSeleccionada.fechaNacimiento.trim()) {
+      errors.fechaNacimiento = "El 'Fecha Nacimiento' es requerido";
+    }
+    if (!consolaSeleccionada.tipoDocumento) {
+      errors.tipoDocumento = "El 'Tipo Documento' es requerido";
+    }
+    if (!consolaSeleccionada.numDocumento.trim()) {
+      errors.numDocumento = "El 'Número Documento' es requerido";
+    }
+    if (!consolaSeleccionada.nacionalidad) {
+      errors.nacionalidad = "La 'Nacionalidad'es requerida";
+    }
+    if (!consolaSeleccionada.lugarOrigen) {
+      errors.lugarOrigen = "El 'lugar Origen' es requerido";
+    }
+    if (!consolaSeleccionada.nomContactoEmergencia.trim()) {
+      errors.nomContactoEmergencia = "El 'Nombre Emergencia' es requerido";
+    }
+    if (!consolaSeleccionada.numContactoEmergencia.trim()) {
+      errors.numContactoEmergencia = "El 'Número Emergencia' es requerido";
+    }
+    return errors;
+  }
+  const handleBlur = (e) => {
+    handleChange(e);
+    setErrors(validationsForm(consolaSeleccionada));
   }
 
   const abrirCerrarModalMensaje = () => {
@@ -321,7 +351,166 @@ function Huespedes() {
       </div>
     </div>
   );
-
+  const bodyInsertar = (
+    <form onSubmit={onSubmit} >
+      <div className="flex">
+        <div className="formHuesped">
+          <label>Nombre</label>
+          <input className="form-control" name="nombre" placeholder="Nombre (s)" onBlur={handleBlur} value={consolaSeleccionada.nombre} onChange={handleChange} />
+          {errors.nombre && <p id="errores">{errors.nombre}</p>}
+        </div>
+        <div className="formHuesped">
+          <label>Apellido</label>
+          <input className="form-control" name="apellido" placeholder="Apellido" onBlur={handleBlur} value={consolaSeleccionada.apellido} onChange={handleChange} />
+          {errors.apellido && <p id="errores">{errors.apellido}</p>}
+        </div>
+        <div className="formHuesped">
+          <label>Número Celular</label>
+          <input className="form-control" name="numCelular" placeholder="Celular" onBlur={handleBlur} value={consolaSeleccionada.numCelular} onChange={handleChange} />
+          {errors.numCelular && <p id="errores">{errors.numCelular}</p>}
+        </div>
+        <div className="formHuesped">
+          <label>Fecha de Nacimiento</label>
+          <input type="date" className="form-control" name="fechaNacimiento" placeholder="Nacimiento" onBlur={handleBlur} value={consolaSeleccionada.fechaNacimiento} onChange={handleChange} />
+          {errors.fechaNacimiento && <p id="errores">{errors.fechaNacimiento}</p>}
+        </div>
+        <div className="formHuesped">
+          <label>Correo Electronico</label>
+          <input className="form-control" name="correo" placeholder="correo electronico" onBlur={handleBlur} value={consolaSeleccionada.correo} onChange={handleChange} />
+          {errors.correo && <p id="errores">{errors.correo}</p>}
+        </div>
+      </div>
+      <div className="flex" style={{ marginLeft: "10px" }}>
+        <div className="formHuesped">
+          <label>Tipo Documento</label>
+          <TipoDocumento name="tipoDocumento" value={consolaSeleccionada.tipoDocumento} handleChangeData={handleChange} />
+        </div>
+        <div className="formHuesped" >
+          <label>Número Documento</label>
+          <input className="form-control" name="numDocumento" type="number" placeholder="# Documento" onBlur={handleBlur} value={consolaSeleccionada.numDocumento} onChange={handleChange} />
+          {errors.numDocumento && <p id="errores">{errors.numDocumento}</p>}
+        </div>
+        <div className="formHuesped">
+          <label>Nacionalidad</label>
+          <Nacionalidades name="nacionalidad" value={consolaSeleccionada.nacionalidad} handleChangeData={handleChange} />
+        </div>
+        <div className="formHuesped">
+          <label > ¿Región de dónde proviene?</label>
+          <Region name="lugarOrigen" codNacion={codNacionalidad || 1} value={consolaSeleccionada.lugarOrigen} handleChangeData={handleChange} />
+        </div>
+        <div className="formHuesped">
+          <label>Nombre Emergencia</label>
+          <input className="form-control" name="nomContactoEmergencia" placeholder="Nombre Contacto" onBlur={handleBlur} value={consolaSeleccionada.nomContactoEmergencia} onChange={handleChange} />
+          {errors.nomContactoEmergencia && <p id="errores">{errors.nomContactoEmergencia}</p>}
+        </div>
+      </div>
+      <div className="flex">
+        <div className="formHuesped">
+          <label>#Contacto Emergencia</label>
+          <input className="form-control" type="number" name="numContactoEmergencia" onBlur={handleBlur} value={consolaSeleccionada.numContactoEmergencia} onChange={handleChange} placeholder="# Contacto" />
+          {errors.numContactoEmergencia && <p id="errores">{errors.numContactoEmergencia}</p>}
+        </div>
+        <div className="formHuesped">
+          {isLoading && (
+            <div className="loading-container">
+              <div className="flex">
+                <Spinner animation="border" role="status">
+                  <span className="visually-hidden">Cargando...</span>
+                </Spinner>
+              </div>
+            </div>
+          )}
+        </div>
+        <div id="huespedesbotonesinsertar" className="flex">
+          <button className="btn btn-primary" id="insertar" type="submit"> Insertar </button>
+          <button className="btn btn-secondary" type="submit" onClick={handleClose}>Cancelar</button>
+        </div>
+      </div>
+    </form>
+  );
+  const bodyEditar = (<form onSubmit={peticionPut}>
+    <div className="flex">
+      <div className="me-2">
+        <label>Nombre(s)</label>
+        <input className="form-control" name="nombre" defaultValue={consolaSeleccionada?.nombre} onChange={handleChange} />
+        {errors.nombre?.type === 'required' && <p id="errores">El campo es requerido</p>}
+        {errors.nombre?.type === 'pattern' && <p id="errores">El campo no es valido</p>}
+      </div>
+      <div className="me-2">
+        <label>Apellido(s)</label>
+        <input className="form-control" name="apellido" defaultValue={consolaSeleccionada?.apellido} onChange={handleChange} />
+        {errors.apellido?.type === 'required' && <p id="errores">El campo es requerido</p>}
+        {errors.apellido?.type === 'maxLength' && <p id="errores">Muy largo</p>}
+        {errors.apellido?.type === 'pattern' && <p id="errores">Nombre no valido</p>}
+      </div>
+      <div className="me-2">
+        <label>Número Celular</label>
+        <input className="form-control" name="numCelular" defaultValue={consolaSeleccionada?.numCelular} onChange={handleChange} />
+        {errors.numCelular?.type === 'required' && <p id="errores">El campo es requerido</p>}
+        {errors.numCelular?.type === 'pattern' && <p id="errores">Número NO valido</p>}
+      </div>
+      <div className="me-2">
+        <label>Fecha Nacimiento</label>
+        <input className="form-control" name="fechaNacimiento" type="date" onChange={handleChange} value={consolaSeleccionada?.fechaNacimiento} />
+        {errors.fechaNacimiento?.error === 'required' && <p id="errores">El campo es requerido</p>}
+        {errors.fechaNacimiento?.type === 'maxLength' && <p id="errores">Fecha no valida</p>}
+      </div>
+      <div className="me-2">
+        <label>Correo Electronico</label>
+        <input className="form-control" name="correo" onChange={handleChange} defaultValue={consolaSeleccionada?.correo} />
+        {errors.correo?.type === "pattern" && <p id="errores">Dirección no valida</p>}
+        {errors.correo?.type === 'required' && <p id="errores">El campo es requerido</p>}
+      </div>
+    </div>
+    <div className="flex">
+      <div className="me-2" style={{ width: "250px", margin: "20px" }}>
+        <label>Tipo Documento</label>
+        <TipoDocumento name="tipoDocumento" value={consolaSeleccionada?.tipoDocumento} handleChangeData={handleChange} />
+        {errors.tipoDocumento?.type === 'required' && <p id="errores">El campo es requerido</p>}
+        {errors.tipoDocumento?.type === 'pattern' && <p id="errores">El campo no es valido</p>}
+      </div>
+      <div className="me-2">
+        <label>Número Documento</label>
+        <input className="form-control" name="numDocumento" onChange={handleChange} defaultValue={consolaSeleccionada?.numDocumento} />
+        {errors.numDocumento?.type === 'required' && <p id="errores">El campo es requerido</p>}
+        {errors.numDocumento?.type === 'pattern' && <p id="errores">El campo no es valido</p>}
+      </div>
+      <div className="me-2" style={{ width: "200px", margin: "20px" }}>
+        <label>Nacionalidad</label>
+        <Nacionalidades name="nacionalidad" value={consolaSeleccionada?.nacionalidad} handleChangeData={handleChange} />
+      </div>
+      <div className="me-2">
+        <label>¿De dónde proviene?</label>
+        <Region name="lugarOrigen" value={consolaSeleccionada?.lugarOrigen} codNacion={codNacionalidad || 1} handleChangeData={handleChange} />
+      </div>
+      <div className="me-2">
+        <label>Nombre Emergencia</label>
+        <input className="form-control" name="nomContactoEmergencia" onChange={handleChange} defaultValue={consolaSeleccionada?.nomContactoEmergencia} />
+        {errors.nomContactoEmergencia?.type === 'required' && <p id="errores">El Campo es Requerido</p>}
+        {errors.nomContactoEmergencia?.type === 'pattern' && <p id="errores">El Campo No es valido</p>}
+      </div>
+    </div>
+    <div className="flex">
+      <div className="me-2">
+        <label>#Contacto Emergencia</label>
+        <input className="form-control" name="numContactoEmergencia" onChange={handleChange} defaultValue={consolaSeleccionada?.numContactoEmergencia} />
+        {errors.numContactoEmergencia?.type === 'required' && <p id="errores">El campo es requerido</p>}
+        {errors.numContactoEmergencia?.type === 'patter' && <p id="errores">Número NO valido</p>}
+      </div>
+      <div className="me-2" style={{ width: "200px", margin: "20px" }}>
+        <label>Estado Huesped</label>
+        <select required className="form-select" aria-label="Default select example" name="estadoHuesped" defaultValue={consolaSeleccionada?.estadoHuesped === true ? "TRUE" : "FALSE"} onChange={handleChange}>
+          <option value="TRUE">TRUE</option>
+          <option value="FALSE">FALSE</option>
+        </select>
+      </div>
+    </div>
+    <div align="right flex">
+      <button className="btn btn-primary" type="submit"> Actualizar </button>
+      <button className="btn btn-secondary" onClick={() => handleEditarClose}>Cancelar</button>
+    </div>
+  </form>
+  );
   const popUp = (
     <div>
       <Modal size="sm" show={smShow} onHide={() => setSmShow(false)} aria-labelledby="example-modal-sizes-title-sm">
@@ -486,181 +675,13 @@ function Huespedes() {
         <Modal.Header closeButton>
           <Modal.Title>Insertar Huesped</Modal.Title>
         </Modal.Header>
-        <Modal.Body className="body">
-          <form onSubmit={handleSubmit(onSubmit)} >
-            <div className="flex">
-              <div className="formHuesped">
-                <label>Nombre</label>
-                <input className="form-control" name="nombre" placeholder="Nombre (s)" defaultValue={consolaSeleccionada.nombre} onChange={handleChange} />
-                {errors.nombre?.type === 'required' && <p id="errores">El campo es requerido</p>}
-                {errors.nombre?.type === 'maxLength' && <p id="errores">Es muy largo</p>}
-                {errors.nombre?.type === 'pattern' && <p id="errores">Nombre no valido</p>}
-              </div>
-              <div className="formHuesped">
-                <label>Apellido</label>
-                <input className="form-control" name="apellido" placeholder="Apellido" onChange={handleChange} />
-                {errors.apellido?.type === 'required' && <p id="errores">El campo es requerido</p>}
-                {errors.apellido?.type === 'maxLength' && <p id="errores">Muy largo</p>}
-                {errors.apellido?.type === 'pattern' && <p id="errores">Nombre no valido</p>}
-              </div>
-              <div className="formHuesped">
-                <label>Número Celular</label>
-                <input className="form-control" name="numCelular" placeholder="Celular" onChange={handleChange} />
-                {errors.numCelular?.type === 'required' && <p id="errores">El campo es requerido</p>}
-                {errors.numCelular?.type === 'pattern' && <p id="errores">Número NO valido</p>}
-              </div>
-              <div className="formHuesped">
-                <label>Fecha de Nacimiento</label>
-                <input type="date" className="form-control" name="fechaNacimiento" placeholder="Nacimiento" onChange={handleChange} />
-                {errors.fechaNacimiento?.type === 'required' && <p id="errores">El campo es requerido</p>}
-                {errors.fechaNacimiento?.type === 'maxLength' && <p id="errores">Fecha no valida</p>}
-              </div>
-              <div className="formHuesped">
-                <label>Correo Electronico</label>
-                <input className="form-control" name="correo" placeholder="correo electronico" onChange={handleChange} />
-                {errors.correo?.type === 'required' && <p id="errores">El campo es requerido</p>}
-                {errors.correo?.type === "pattern" && <p id="errores">Dirección no valida</p>}
-              </div>
-            </div>
-            <div className="flex" style={{ marginLeft: "10px" }}>
-              <div style={{ width: "175px", margin: "5px" }}>
-                <label style={{ margin: "6px" }}>Tipo Documento</label>
-                <TipoDocumento name="tipoDocumento" value={consolaSeleccionada.tipoDocumento} handleChangeData={handleChange} />
-              </div>
-              <div className="formHuesped" >
-                <label>Número Documento</label>
-                <input className="form-control" name="numDocumento" type="number" placeholder="# Documento" onChange={handleChange} />
-                {errors.numDocumento?.type === 'required' && <p id="errores">El campo es requerido</p>}
-                {errors.numDocumento?.type === 'pattern' && <p id="errores">El campo no es valido</p>}
-              </div>
-              <div style={{ width: "175px", margin: "10px" }} >
-                <label style={{ margin: "6px" }} >Nacionalidad</label>
-                <Nacionalidades name="nacionalidad" value={consolaSeleccionada.nacionalidad} handleChangeData={handleChange} />
-              </div>
-              <div style={{ width: "175px", margin: "10px" }}>
-                <label style={{ margin: "6px" }}> ¿Región de dónde proviene?</label>
-                <Region name="lugarOrigen" codNacion={codNacionalidad || 1} value={consolaSeleccionada.lugarOrigen} handleChangeData={handleChange} />
-              </div>
-              <div className="formHuesped">
-                <label>Nombre Emergencia</label>
-                <input className="form-control" name="nomContactoEmergencia" placeholder="Nombre Contacto" onChange={handleChange} />
-                {errors.nomContactoEmergencia?.type === 'required' && <p id="errores">El Campo es Requerido</p>}
-                {errors.nomContactoEmergencia?.type === 'pattern' && <p id="errores">El Campo No es valido</p>}
-              </div>
-            </div>
-            <div className="flex">
-              <div className="formHuesped">
-                <label>#Contacto Emergencia</label>
-                <input className="form-control" type="number" name="numContactoEmergencia" onChange={handleChange} placeholder="# Contacto" />
-                {errors.numContactoEmergencia?.type === 'required' && <p id="errores">El campo es requerido</p>}
-                {errors.numContactoEmergencia?.type === 'patter' && <p id="errores">Número NO valido</p>}
-              </div>
-              <div className="formHuesped">
-                {isLoading && (
-                  <div className="loading-container">
-                    <div className="flex">
-                      <Spinner animation="border" role="status">
-                        <span className="visually-hidden">Cargando...</span>
-                      </Spinner>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-            <div id="huespedesbotonesinsertar" className="flex">
-              <button className="btn btn-primary" id="insertar" type="submit"> Insertar </button>
-              <button className="btn btn-secondary" type="submit" onClick={handleClose}>Cancelar</button>
-            </div>
-          </form></Modal.Body>
+        <Modal.Body className="body">{bodyInsertar}</Modal.Body>
       </Modal>
       <Modal show={showEditar} onHide={handleEditarClose} animation={false} dialogClassName="crearHuesped">
         <Modal.Header closeButton>
           <Modal.Title>Editar Huesped</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          <form onSubmit={handleSubmit(peticionPut)}>
-            <div className="flex">
-              <div className="me-2">
-                <label>Nombre(s)</label>
-                <input className="form-control" name="nombre" defaultValue={consolaSeleccionada?.nombre} onChange={handleChange} />
-                {errors.nombre?.type === 'required' && <p id="errores">El campo es requerido</p>}
-                {errors.nombre?.type === 'pattern' && <p id="errores">El campo no es valido</p>}
-              </div>
-              <div className="me-2">
-                <label>Apellido(s)</label>
-                <input className="form-control" name="apellido" defaultValue={consolaSeleccionada?.apellido} onChange={handleChange} />
-                {errors.apellido?.type === 'required' && <p id="errores">El campo es requerido</p>}
-                {errors.apellido?.type === 'maxLength' && <p id="errores">Muy largo</p>}
-                {errors.apellido?.type === 'pattern' && <p id="errores">Nombre no valido</p>}
-              </div>
-              <div className="me-2">
-                <label>Número Celular</label>
-                <input className="form-control" name="numCelular" defaultValue={consolaSeleccionada?.numCelular} onChange={handleChange} />
-                {errors.numCelular?.type === 'required' && <p id="errores">El campo es requerido</p>}
-                {errors.numCelular?.type === 'pattern' && <p id="errores">Número NO valido</p>}
-              </div>
-              <div className="me-2">
-                <label>Fecha Nacimiento</label>
-                <input className="form-control" name="fechaNacimiento" type="date" onChange={handleChange} value={consolaSeleccionada?.fechaNacimiento} />
-                {errors.fechaNacimiento?.error === 'required' && <p id="errores">El campo es requerido</p>}
-                {errors.fechaNacimiento?.type === 'maxLength' && <p id="errores">Fecha no valida</p>}
-              </div>
-              <div className="me-2">
-                <label>Correo Electronico</label>
-                <input className="form-control" name="correo" onChange={handleChange} defaultValue={consolaSeleccionada?.correo} />
-                {errors.correo?.type === "pattern" && <p id="errores">Dirección no valida</p>}
-                {errors.correo?.type === 'required' && <p id="errores">El campo es requerido</p>}
-              </div>
-            </div>
-            <div className="flex">
-              <div className="me-2" style={{ width: "250px", margin: "20px" }}>
-                <label>Tipo Documento</label>
-                <TipoDocumento name="tipoDocumento" value={consolaSeleccionada?.tipoDocumento} handleChangeData={handleChange} />
-                {errors.tipoDocumento?.type === 'required' && <p id="errores">El campo es requerido</p>}
-                {errors.tipoDocumento?.type === 'pattern' && <p id="errores">El campo no es valido</p>}
-              </div>
-              <div className="me-2">
-                <label>Número Documento</label>
-                <input className="form-control" name="numDocumento" onChange={handleChange} defaultValue={consolaSeleccionada?.numDocumento} />
-                {errors.numDocumento?.type === 'required' && <p id="errores">El campo es requerido</p>}
-                {errors.numDocumento?.type === 'pattern' && <p id="errores">El campo no es valido</p>}
-              </div>
-              <div className="me-2" style={{ width: "200px", margin: "20px" }}>
-                <label>Nacionalidad</label>
-                <Nacionalidades name="nacionalidad" value={consolaSeleccionada?.nacionalidad} handleChangeData={handleChange} />
-              </div>
-              <div className="me-2">
-                <label>¿De dónde proviene?</label>
-                <Region name="lugarOrigen" value={consolaSeleccionada?.lugarOrigen} codNacion={codNacionalidad || 1} handleChangeData={handleChange} />
-              </div>
-              <div className="me-2">
-                <label>Nombre Emergencia</label>
-                <input className="form-control" name="nomContactoEmergencia" onChange={handleChange} defaultValue={consolaSeleccionada?.nomContactoEmergencia} />
-                {errors.nomContactoEmergencia?.type === 'required' && <p id="errores">El Campo es Requerido</p>}
-                {errors.nomContactoEmergencia?.type === 'pattern' && <p id="errores">El Campo No es valido</p>}
-              </div>
-            </div>
-            <div className="flex">
-              <div className="me-2">
-                <label>#Contacto Emergencia</label>
-                <input className="form-control" name="numContactoEmergencia" onChange={handleChange} defaultValue={consolaSeleccionada?.numContactoEmergencia} />
-                {errors.numContactoEmergencia?.type === 'required' && <p id="errores">El campo es requerido</p>}
-                {errors.numContactoEmergencia?.type === 'patter' && <p id="errores">Número NO valido</p>}
-              </div>
-              <div className="me-2" style={{ width: "200px", margin: "20px" }}>
-                <label>Estado Huesped</label>
-                <select required className="form-select" aria-label="Default select example" name="estadoHuesped" defaultValue={consolaSeleccionada?.estadoHuesped === true ? "TRUE" : "FALSE"} onChange={handleChange}>
-                  <option value="TRUE">TRUE</option>
-                  <option value="FALSE">FALSE</option>
-                </select>
-              </div>
-            </div>
-            <div align="right flex">
-              <button className="btn btn-primary" type="submit"> Actualizar </button>
-              <button className="btn btn-secondary" onClick={() => handleEditarClose}>Cancelar</button>
-            </div>
-          </form>
-        </Modal.Body>
+        <Modal.Body>{bodyEditar}</Modal.Body>
       </Modal>
       <Modal show={showEliminar} onHide={handleEliminarClose} size="lg"> {bodyEliminar} </Modal>
       <Modal show={smShow} onHide={handleMensajeClose} animation={false}> {popUp}</Modal>

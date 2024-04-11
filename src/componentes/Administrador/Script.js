@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-
 document.querySelector(".theme-toggle").addEventListener("click", () => {
     toggleLacalStorage();
     toggleRootClass();

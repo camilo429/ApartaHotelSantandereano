@@ -27,14 +27,14 @@ function Region({ name, handleChangeData, value = null, codNacion = null }) {
                         // console.log(response.data)
                     } else {
                         //console.log("Hubo un error al traer las regiones por nacionalidad");
-                        setError(MENSAJE_ERROR);
+                        setError("Hubo un error al traer las regiones por nacionalidad");
                     }
                 } else {
                     setError(MENSAJE_ERROR);
                 }
             } catch (error) {
                 ///console.log("error al obtener las opciones Region por Nacionalidad:", error);
-                setError(MENSAJE_ERROR)
+                setError("error al obtener las opciones Region por Nacionalidad")
             }
         };
         getRegion();
@@ -58,7 +58,7 @@ function Region({ name, handleChangeData, value = null, codNacion = null }) {
     }
 
     return (
-        <div className='Region' style={{ height: "25px", width: "175px" }}>
+        <div className='Region'>
             {error && <div id='errores'>{error}</div>}
             <Select
                 value={

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { EXPRESION_REGULAR_NOMBRE_APELLIDO, EXPRESION_REGULAR_EMAIL, EXPRESION_REGULAR_CELULAR, EXPRESION_REGULAR_IDENTIFICACION } from "../../services/ExpresionsRegular";
+import { EXPRESION_REGULAR_NOMBRE_APELLIDO, EXPRESION_REGULAR_EMAIL } from "../../services/ExpresionsRegular";
 import { useNavigate } from 'react-router-dom';
 //librerias
 import axios from "axios";
@@ -18,9 +18,8 @@ import Footer from "./Footer";
 import { Apiurl } from "../../services/userService";
 import TipoDocumento from "../pagesAdministrador/TipoDocumento";
 import CaracteristicaHabitacion from "./CaracteristicaHabitacion"
-import { useForm } from 'react-hook-form';
 //Reactrap
-import { Form, FormGroup, Label } from "reactstrap";
+import { FormGroup, Label } from "reactstrap";
 import { Modal } from 'react-bootstrap';
 import SelectHabitacionesDisponibles from "./SelectHabitacionesDisponibles";
 import TestimonioHuesped from "./TestimonioHuesped/TestimonioHuesped";
@@ -34,12 +33,10 @@ import * as MdRoomService from "react-icons/md";
 import * as GrClearOption from "react-icons/gr";
 import * as BsPersonFillGear from "react-icons/bs";
 import { FaCheck } from "react-icons/fa";
-import Reservacion from "./Reservation/Reservacion";
 //url
 const urlG = Apiurl + "reservaciones/crearReservacion";
 
 function Inicio() {
-  const [data, setData] = useState([]);
   const [mensaje, setMensaje] = useState("");
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
@@ -154,14 +151,14 @@ function Inicio() {
   const peticionPost = async (e) => {
     try {
       e.preventDefault();
+      setErrors(validationsForm(consolaSeleccionada));
       if (Object.keys(errors).length === 0) {
         setLoading(true);
-        console.log("ConsolaSeleccionada", consolaSeleccionada)
+        //console.log("ConsolaSeleccionada", consolaSeleccionada)
         const response = await axios.post(urlG, consolaSeleccionada);
         if (response.status === 201) {
           handleReservacionClose();
           setMensaje("Reservación Exitosa");
-          //handleShowMensaje();
           abrirCerrarModalMensaje();
           setConsolaSeleccionada({
             tipoDocumento: {
@@ -194,7 +191,7 @@ function Inicio() {
       }
     } catch (error) {
       console.error("Error al realizar la reservación", error);
-      alert("Hubo un error al crear la reservación. Por favor, intenta nuevamente.", error.response.data);
+      // alert("Hubo un error al crear la reservación. Por favor, intenta nuevamente.", error.response.data);
     } finally {
       navigate('/');
     }
@@ -417,9 +414,8 @@ function Inicio() {
           <div className="section_title text-center">
             <h2 className="title_color">Lo que Nuestros Huéspedes dicen sobre su Estadía en El Santandereano:</h2>
             <p>
-              En El Santandereano, nos enorgullece ofrecer un servicio excepcional y crear experiencias memorables
-              para nuestros huéspedes. A continuación, compartimos algunos comentarios de aquellos que han tenido la
-              oportunidad de alojarse con nosotros.
+              En El Santandereano, nos enorgullece ofrecer un servicio excepcional y crear experiencias memorables para nuestros huéspedes. A continuación,
+              compartimos algunos comentarios de aquellos que han tenido la oportunidad de alojarse con nosotros.
             </p>
           </div>
         </div>

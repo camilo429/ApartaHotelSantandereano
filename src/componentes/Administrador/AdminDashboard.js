@@ -17,7 +17,7 @@ function AdminDashboard() {
                                     <div className='col-6'>
                                         <div className='p-3 m-1'>
                                             <h4>Bienvenido</h4>
-                                            <p className='mb-0'> Geovanny  Ahumada </p>
+                                            <p className='mb-0'> Directora Giovanna </p>
                                         </div>
                                     </div>
                                     <div className='col-6 align-self-end text-end'>
@@ -32,7 +32,7 @@ function AdminDashboard() {
                             <div className='car-body py-4 px-3'>
                                 <div className='d-flex align-items-start'>
                                     <div className='flex-grow-1'>
-                                        <h4 className='mb-2'> $ 2.00.000.oo </h4>
+                                        <h4 className='mb-2'> $ 4.00.000.oo </h4>
                                         <p className='mb-2'> Ingresos Totales </p>
                                         <div className='mb-0'>
                                             <span className='badge text-success me-2'> + 2.0% </span>
