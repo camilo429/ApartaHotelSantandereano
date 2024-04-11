@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { Form, FormGroup, Label } from "reactstrap";
 import { Modal } from 'react-bootstrap';
 import TipoDocumento from '../../pagesAdministrador/TipoDocumento';
-import Habitaciones from '../../PaginaInicio/Habitaciones';
+import Habitaciones from '../../PaginaInicio/SelectHabitacionesDisponibles';
 
 import MUIDataTable from 'mui-datatables';
 import Spinner from 'react-bootstrap/Spinner';

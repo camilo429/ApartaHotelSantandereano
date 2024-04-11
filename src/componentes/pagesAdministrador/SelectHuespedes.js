@@ -19,7 +19,7 @@ function SelectHuespedes({ name, handleChangeData, value = null, url }) {
           })
           .then((response) => {
             setData(response.data);
-            console.log(response.data);
+            //console.log(response.data);
           });
       } catch (error) {
         console.log("error al obtener las opciones:", error);

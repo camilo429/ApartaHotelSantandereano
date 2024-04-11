@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form';
 
 import TipoDocumento from "../TipoDocumento";
 import Nacionalidades from "../Nacionalidades";
-import Habitaciones from "../../PaginaInicio/Habitaciones";
+import Habitaciones from "../../PaginaInicio/SelectHabitacionesDisponibles";
 
 import { Modal } from 'react-bootstrap';
 //Estilos

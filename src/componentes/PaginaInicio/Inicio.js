@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { EXPRESION_REGULAR_NOMBRE_APELLIDO, EXPRESION_REGULAR_EMAIL, EXPRESION_REGULAR_CELULAR, EXPRESION_REGULAR_IDENTIFICACION } from "../../services/ExpresionsRegular";
+import { useNavigate } from 'react-router-dom';
 //librerias
 import axios from "axios";
 //Estilos
@@ -20,7 +22,7 @@ import { useForm } from 'react-hook-form';
 //Reactrap
 import { Form, FormGroup, Label } from "reactstrap";
 import { Modal } from 'react-bootstrap';
-import Habitaciones from "./Habitaciones";
+import SelectHabitacionesDisponibles from "./SelectHabitacionesDisponibles";
 import TestimonioHuesped from "./TestimonioHuesped/TestimonioHuesped";
 import { Spinner } from 'reactstrap';
 //Iconos
@@ -32,12 +34,15 @@ import * as MdRoomService from "react-icons/md";
 import * as GrClearOption from "react-icons/gr";
 import * as BsPersonFillGear from "react-icons/bs";
 import { FaCheck } from "react-icons/fa";
+import Reservacion from "./Reservation/Reservacion";
 //url
 const urlG = Apiurl + "reservaciones/crearReservacion";
 
 function Inicio() {
   const [data, setData] = useState([]);
   const [mensaje, setMensaje] = useState("");
+  const [errors, setErrors] = useState({});
+  const navigate = useNavigate();
 
   const [showReservacion, setReservacion] = useState(false);
   const handleReservacionClose = () => setReservacion(false);
@@ -47,8 +52,7 @@ function Inicio() {
   const handleMensajeClose = () => setSmShow(false);
   const handleShowMensaje = () => setSmShow(true);
 
-  const { register, handleSubmit, formState: { errors }, watch, setValue, reset } = useForm();
-  const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [consolaSeleccionada, setConsolaSeleccionada] = useState({
     fechaEntrada: "",
     fechaSalida: "",
@@ -81,7 +85,6 @@ function Inicio() {
       imagenHabitacion: null
     }
   });
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setConsolaSeleccionada((prevState) => ({
@@ -90,91 +93,150 @@ function Inicio() {
     }));
   };
 
-  const peticionPost = async () => {
+  const handleBlur = (e) => {
+    handleChange(e);
+    setErrors(validationsForm(consolaSeleccionada));
+  }
+
+  function getCurrentDate() {
+    const today = new Date();
+    let dd = today.getDate();
+    let mm = today.getMonth() + 1; // January is 0!
+    const yyyy = today.getFullYear();
+
+    if (dd < 10) {
+      dd = '0' + dd;
+    }
+
+    if (mm < 10) {
+      mm = '0' + mm;
+    }
+
+    return yyyy + '-' + mm + '-' + dd;
+  }
+
+  const validationsForm = (form) => {
+    let errors = {};
+
+    if (!form.fechaEntrada.trim()) {
+      errors.fechaEntrada = "El campo 'Fecha de Entrada'es requerido";
+    }
+    if (!form.fechaSalida.trim()) {
+      errors.fechaSalida = "El campo 'Fecha de Entrada'es requerido";
+    }
+    if (form.fechaSalida < form.fechaEntrada) {
+      errors.fechaSalida = "El campo 'Fecha Salida' No es valida"
+    }
+    if (form.adultos <= 0) {
+      errors.adultos = "El campo 'Número Adultos' no puede ser cero o negativo";
+    }
+    if (form.ninos < 0) {
+      errors.ninos = "El campo 'Número Niños' no puede ser negativo";
+    }
+    if (!form.nombre.trim()) {
+      errors.nombre = "El campo 'Nombre' es requerido";
+    } else if (!EXPRESION_REGULAR_NOMBRE_APELLIDO.test(form.nombre.trim())) {
+      errors.nombre = "El campo 'Nombre' no es valido";
+    }
+    if (!form.apellido.trim()) {
+      errors.apellido = "El campo 'Apellido' es requerido";
+    } else if (!EXPRESION_REGULAR_NOMBRE_APELLIDO.test(form.apellido.trim())) {
+      errors.apellido = "El campo 'Apellido' no es valido";
+    }
+    if (!form.email.trim()) {
+      errors.email = "El campo 'Correo' es requerido";
+    } else if (!EXPRESION_REGULAR_EMAIL.test(form.email.trim())) {
+      errors.email = "El campo 'Correo' no es valido";
+    }
+
+    return errors;
+  }
+  const peticionPost = async (e) => {
     try {
-      setIsLoading(true);
-      console.log("ConsolaSeleccionada", consolaSeleccionada)
-      const response = await axios.post(urlG, consolaSeleccionada);
-      if (response.status === 201) {
-        setData(data.concat(response.data));
-        handleReservacionClose();
-        setMensaje("Reservación Exitosa");
-        handleShowMensaje();
-        setConsolaSeleccionada({
-          tipoDocumento: {
-            codTipoDocumento: "",
-            nomTipoDocument: "",
-          },
-          habitacion: {
-            codHabitacion: "",
-            nombreHabitacion: {
-              codTipoHabitacio: "",
-              nombre: "",
-              precioXPersona: "",
-              precioXAcompanante: ""
+      e.preventDefault();
+      if (Object.keys(errors).length === 0) {
+        setLoading(true);
+        console.log("ConsolaSeleccionada", consolaSeleccionada)
+        const response = await axios.post(urlG, consolaSeleccionada);
+        if (response.status === 201) {
+          handleReservacionClose();
+          setMensaje("Reservación Exitosa");
+          //handleShowMensaje();
+          abrirCerrarModalMensaje();
+          setConsolaSeleccionada({
+            tipoDocumento: {
+              codTipoDocumento: "",
+              nomTipoDocument: "",
             },
-            descripHabitacion: "",
-            numHabitacion: "",
-            pisoHabitacion: "",
-            maxPersonasDisponibles: "",
-            estadoHabitacion: {
-              codEstadoHabitacion: "",
-              nombre: ""
-            },
-            imagenHabitacion: null
-          }
-        })
-        reset();
+            habitacion: {
+              codHabitacion: "",
+              nombreHabitacion: {
+                codTipoHabitacio: "",
+                nombre: "",
+                precioXPersona: "",
+                precioXAcompanante: ""
+              },
+              descripHabitacion: "",
+              numHabitacion: "",
+              pisoHabitacion: "",
+              maxPersonasDisponibles: "",
+              estadoHabitacion: {
+                codEstadoHabitacion: "",
+                nombre: ""
+              },
+              imagenHabitacion: null
+            }
+          })
+        }
       } else {
-        alert('Error', response.status);
+        setMensaje("Error al realizar reservación");
+        abrirCerrarModalMensaje();
       }
     } catch (error) {
       console.error("Error al realizar la reservación", error);
       alert("Hubo un error al crear la reservación. Por favor, intenta nuevamente.", error.response.data);
     } finally {
-      setIsLoading(false);
+      navigate('/');
     }
   }
 
-  //const abrirCerrarModalMensaje = () => {
-  //  setModalMensaje(!modalMensaje);
-  //  setTimeout(() => {
-  //    setModalMensaje(false);
-  //  }, 2000); // 2000 milisegundos = 2 segundos
-  //};
+  const abrirCerrarModalMensaje = () => {
+    handleShowMensaje();
+    setTimeout(() => {
+      handleMensajeClose();
+    }, 2000); // 2000 milisegundos = 2 segundos
+  };
 
   const bodyInsertar = (
     <div>
-      <Form onSubmit={handleSubmit(peticionPost)}>
+      <form onSubmit={peticionPost}>
         <div className="flex" id="fomularioReservacion">
           <FormGroup>
             <div id="reservacion">
               <Label for="exampleEmail">Fecha de Entrada</Label>
-              <input required name="fechaEntrada" type="date" placeholder="fechaEntrada" className="form-control" onChange={handleChange} />
-              {errors.fechaEntrada && <p id="errores">{errors.fechaEntrada.message}</p>}
+              <input required name="fechaEntrada" type="date" placeholder="fechaEntrada" className="form-control" onBlur={handleBlur} value={consolaSeleccionada.fechaEntrada} onChange={handleChange} min={getCurrentDate()} />
+              {errors.fechaEntrada && <p id="errores">{errors.fechaEntrada}</p>}
             </div>
           </FormGroup>
           <FormGroup  >
             <div id="reservacion">
               <Label for="exampleEmail">Fecha de Salida</Label>
-              <input name="fechaSalida" type="date" placeholder="fechaSalida" className="form-control" onChange={handleChange} />
-              {errors.fechaSalida?.type === "required" && <p id="errores">El Campo es Requerido</p>}
-              {errors.fechaSalida?.type === 'maxLength' && <p id="errores">Fecha no valida</p>}
-              {errors.fechaSalida && <p id="errores">{errors.fechaSalida.message}</p>}
+              <input required name="fechaSalida" type="date" placeholder="fechaSalida" className="form-control" onBlur={handleBlur} value={consolaSeleccionada.fechaSalida} onChange={handleChange} min={getCurrentDate()} />
+              {errors.fechaSalida && <p id="errores">{errors.fechaSalida}</p>}
             </div>
           </FormGroup>
           <FormGroup>
             <div id="reservacion">
               <Label for="exampleEmail">Número de Adultos</Label>
-              <input required name="adultos" type="number" placeholder="# Adultos" max="5" min="1" className="form-control" onChange={handleChange} />
-              {errors.adultos?.type === "required" && <p id="errores">Es Requerido</p>}
+              <input required name="adultos" type="number" placeholder="# Adultos" max="5" min="1" className="form-control" onBlur={handleBlur} value={consolaSeleccionada.adultos} onChange={handleChange} />
+              {errors.adultos && <p id="errores">{errors.adultos}</p>}
             </div>
           </FormGroup>
           <FormGroup>
             <div id="reservacion">
               <Label for="exampleEmail">Número de Niños</Label>
-              <input required name="ninos" type="number" placeholder="# Niños" min="0" max="4" className="form-control" onChange={handleChange} defaultValue="0" />
-              {errors.ninos?.type === 'required' && <p id="errores"> Es requerido</p>}
+              <input required name="ninos" type="number" placeholder="# Niños" min="0" max="4" className="form-control" onBlur={handleBlur} value={consolaSeleccionada.ninos || 0} onChange={handleChange} />
+              {errors.ninos && <p id="errores"> {errors.ninos}</p>}
             </div>
           </FormGroup>
           <FormGroup style={{ marginLeft: "7px" }}>
@@ -188,43 +250,41 @@ function Inicio() {
           <FormGroup >
             <div id="reservacion">
               <Label for="exampleEmail"># Documento</Label>
-              <input name="numDocumento" type="number" placeholder="Número de Documento" className="form-control" onChange={handleChange} />
+              <input name="numDocumento" type="number" placeholder="Número de Documento" className="form-control" onBlur={handleBlur} value={consolaSeleccionada.numDocumento} onChange={handleChange} />
+              {errors.numDocumento && <p id="errores">{errors.numDocumento}</p>}
             </div>
           </FormGroup>
           <FormGroup >
             <div id="reservacion">
               <Label for="exampleEmail">Nombre</Label>
-              <input name="nombre" placeholder="Nombre" className="form-control" onChange={handleChange} />
-              {errors.nombre?.type === 'required' && <p id="errores">El campo es requerido</p>}
-              {errors.nombre?.type === 'maxLength' && <p id="errores">Es muy largo</p>}
+              <input required name="nombre" placeholder="Nombre" className="form-control" onBlur={handleBlur} value={consolaSeleccionada.nombre} onChange={handleChange} />
+              {errors.nombre && <p id="errores">{errors.nombre}</p>}
             </div>
           </FormGroup>
           <FormGroup >
             <div id="reservacion">
               <Label for="exampleEmail">Apellido</Label>
-              <input name="apellido" placeholder="Apellido" className="form-control" onChange={handleChange} />
-              {errors.apellido?.type === 'required' && <p id="errores">El campo es requerido</p>}
-              {errors.apellido?.type === 'maxLength' && <p id="errores">Es muy largo</p>}
+              <input name="apellido" placeholder="Apellido" className="form-control" onBlur={handleBlur} value={consolaSeleccionada.apellido} onChange={handleChange} />
+              {errors.apellido && <p id="errores">{errors.apellido}</p>}
             </div>
           </FormGroup>
           <FormGroup >
             <div id="reservacion">
               <Label for="exampleEmail">Correo Electronico</Label>
-              <input name="email" type="email" placeholder="email" className="form-control" onChange={handleChange} />
-              {errors.email?.type === "pattern" && <p id="errores">Dirección no valida</p>}
-              {errors.email?.type === 'required' && <p id="errores">El campo es requerido</p>}
+              <input name="email" type="email" placeholder="email" className="form-control" onBlur={handleBlur} value={consolaSeleccionada.email} onChange={handleChange} />
+              {errors.email && <p id="errores">{errors.email}</p>}
             </div>
           </FormGroup>
           <FormGroup style={{ marginLeft: "7px" }}>
             <div id="reservacion">
               <Label for="exampleEmail">Tipo Habitación </Label>
-              <Habitaciones name="habitacion" handleChangeData={handleChange} value={consolaSeleccionada.habitacion} />
+              <SelectHabitacionesDisponibles name="habitacion" handleChangeData={handleChange} value={consolaSeleccionada.habitacion} />
             </div>
           </FormGroup>
         </div>
         <div className="flex">
           {/* Indicador de carga */}
-          {isLoading && (
+          {loading && (
             <div className="loading-container">
               <div className="flex">
                 <Spinner color="primary" style={{ marginLeft: "200px" }} />
@@ -233,9 +293,8 @@ function Inicio() {
             </div>
           )}
           <button type="submit" className="btn btn-success">Agendar</button>
-          <button type="submit" className="btn btn-danger" onClick={handleReservacionClose}> Cancelar</button>
         </div>
-      </Form >
+      </form >
       <br />
     </div >
   );
@@ -257,11 +316,6 @@ function Inicio() {
           <div className="container">
             <div className="banner_content text-center">
               <h2>Tiempo de Descanso</h2>
-              <p>
-                ¡Tanto si viajas por negocios como por placer, nuestras habitaciones están diseñadas para
-                ofrecerte el refugio perfecto! Reserva tu habitación hoy mismo y descubre por qué somos la
-                elección preferida de viajeros exigentes. ¡Estamos emocionados por darte la bienvenida pronto!
-              </p>
             </div>
           </div>
         </div>
@@ -406,9 +460,6 @@ function Inicio() {
         <Modal.Body className="body">{bodyInsertar}</Modal.Body>
       </Modal>
       <Modal show={smShow} onHide={handleMensajeClose} animation={false} size="sm">{popUp}</Modal>
-      {/*<Modal show={modalMensaje} onHide={handleMsShow}>
-        {popUp}
-      </Modal>*/}
     </div >
   );
 }

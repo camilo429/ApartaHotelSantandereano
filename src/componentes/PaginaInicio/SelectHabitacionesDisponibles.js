@@ -5,7 +5,7 @@ import Select from "react-select";
 import { Apiurl } from "../../services/userService";
 const url = Apiurl + "habitacion/listarHabitaciones/estado/1";
 
-function Habitaciones({ name, handleChangeData, value = null }) {
+function SelectHabitacionesDisponibles({ name, handleChangeData, value = null }) {
   const [data, setData] = useState([]);
 
   const getHabitaciones = async () => {
@@ -56,28 +56,6 @@ function Habitaciones({ name, handleChangeData, value = null }) {
     });
   };
 
-  const mapDataToOptions = () => {
-    return data.map((docu) => ({
-      label: docu.nombreHabitacion.nombre,
-      value: docu.codHabitacion,
-      nombreHabitacion: docu.nombreHabitacion ? {
-        codTipoHabitacion: docu.nombreHabitacion.codTipoHabitacion,
-        nombre: docu.nombreHabitacion.nombre,
-        precioXPersona: docu.nombreHabitacion.precioXPersona,
-        precioXAcompanante: docu.nombreHabitacion.precioXAcompanante
-      } : null,
-      descripHabitacion: docu.descripHabitacion,
-      numHabitacion: docu.numHabitacion,
-      pisoHabitacion: docu.pisoHabitacion,
-      maxPersonasDisponibles: docu.maxPersonasDisponibles,
-      estadoHabitacion: docu.estadoHabitacion ? {
-        codEstadoHabitacion: docu.estadoHabitacion.codEstadoHabitacion,
-        nombre: docu.estadoHabitacion.nombre
-      } : null,
-      imagenHabitacion: docu.imagenHabitacion,
-    }))
-  }
-  const options = mapDataToOptions();
   return (
     <>
       <div className="habitaciones" style={{ height: "25px", width: "170px" }}>
@@ -89,10 +67,30 @@ function Habitaciones({ name, handleChangeData, value = null }) {
                 value: value?.codHabitacion
               } : null
           }
-          options={options}
+          options={data.map((docu) => ({
+            value: docu.codHabitacion,
+            label: docu.nombreHabitacion.nombre,
+            nombreHabitacion: {
+              codTipoHabitacion: docu.nombreHabitacion.codTipoHabitacion,
+              nombre: docu.nombreHabitacion.nombre,
+              precioXPersona: docu.nombreHabitacion.precioXPersona,
+              precioXAcompanante: docu.nombreHabitacion.precioXAcompanante
+            },
+            descripHabitacion: docu.descripHabitacion,
+            numHabitacion: docu.numHabitacion,
+            pisoHabitacion: docu.pisoHabitacion,
+            maxPersonasDisponibles: docu.maxPersonasDisponibles,
+            estadoHabitacion: {
+              codEstadoHabitacion: docu.estadoHabitacion.codEstadoHabitacion,
+              nombre: docu.estadoHabitacion.nombre
+            },
+            imagenHabitacion: docu.imagenHabitacion,
+          }))
+
+          }
           onChange={handleChange} />
       </div>
     </>
   );
 }
-export default Habitaciones;
+export default SelectHabitacionesDisponibles;

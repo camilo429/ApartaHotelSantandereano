@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 //css
 import "../../css/Login.css";
 //servicios
@@ -9,15 +9,13 @@ import { jwtDecode } from 'jwt-decode';
 //Componentenes
 import NavbarInicio from "./Navbar/NavbarInicio";
 import Footer from "./Footer";
-class Login extends React.Component {
+class LoginViejo extends React.Component {
 
   state = {
     form: {
       usuario: "",
       password: "",
     },
-    error: false,
-    errorMsg: "",
   };
 
   manejadorSubmit = (e) => {
@@ -26,14 +24,12 @@ class Login extends React.Component {
 
   manejadorChange = (e) => {
     const { name, value } = e.target;
-
     this.setState(prevState => ({
       form: {
         ...prevState.form,
         [name]: value,
       },
     }));
-    //console.log(this.state.form);
   };
 
   manejadorBoton = async () => {
@@ -43,7 +39,6 @@ class Login extends React.Component {
         password: this.state.form.password,
         grant_type: "password",
       };
-      //  console.log("esta es la data enviada", this.state.form.usuario, this.state.form.password)
 
       const response = await axios.post(Apiurl + "oauth/token", new URLSearchParams(reqData), {
         withCredentials: true,
@@ -54,8 +49,8 @@ class Login extends React.Component {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
-      }
-      );
+      });
+
       console.log(response.status);
       if (response.status === 200) {
         sessionStorage.setItem("access_token", response.data.access_token);
@@ -76,19 +71,8 @@ class Login extends React.Component {
             break;
         }
       } else {
-        switch (response.status) {
-          case 400:
-            alert("Credenciales incorrectas")
-            break;
-          case 401:
-            alert("La configuración del Token no deja redireccionar")
-            break;
-          case 404:
-            alert("La página no existe ")
-            break
-          default:
-            break;
-        }
+
+
       }
     } catch (error) {
       console.log("error en el login", error);
@@ -116,5 +100,4 @@ class Login extends React.Component {
     );
   }
 }
-
-export default Login;
+export default LoginViejo;

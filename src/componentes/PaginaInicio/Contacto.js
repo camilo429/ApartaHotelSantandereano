@@ -1,5 +1,6 @@
 //importaciones de biblioteas o módulos externos
 import React, { useState } from 'react'
+import { EXPRESION_REGULAR_NOMBRE_APELLIDO, EXPRESION_REGULAR_EMAIL, EXPRESION_REGULAR_CELULAR, EXPRESION_REGULAR_IDENTIFICACION } from "../../services/ExpresionsRegular";
 import axios from "axios";
 import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
 import { Form } from "reactstrap";
@@ -27,8 +28,8 @@ const url = Apiurl + "comentarios/crearComentario";
 
 function Contacto() {
   const [data, setData] = useState([]);
-  const { register, handleSubmit, formState: { errors }, reset } = useForm();
   const [mensaje, setMensaje] = useState("");
+  const [errors, setErrors] = useState({});
 
   const [smShow, setSmShow] = useState(false);
   const handleMensajeClose = () => setSmShow(false);
@@ -44,23 +45,29 @@ function Contacto() {
     horaEnviado: "",
   });
 
-  const { isLoaded } = useLoadScript({
-    googleMapsApiKey: "AIzaSyB98G8_CHNNlhya9B1iiolBxsxp4UDZc60",
+  const { isLoaded, loadError } = useLoadScript({
+    googleMapsApiKey: 'AIzaSyB98G8_CHNNlhya9B1iiolBxsxp4UDZc60',
+    // Otros parámetros opcionales
   });
+  //const { isLoaded } = useLoadScript({
+  //  googleMapsApiKey: "AIzaSyB98G8_CHNNlhya9B1iiolBxsxp4UDZc60",
+  //});
 
   const mapCenter = {
     lat: 4.632369452800604,
     lng: -74.15449512172077,
   };
 
-  if (!isLoaded) {
-    return (
-      <div className="container">
-        {" "}
-        <p>Está cargando el mapa</p>
-      </div>
-    );
-  }
+  //if (!isLoaded) {
+  //  return (
+  //    <div className="container">
+  //      {" "}
+  //      <p>Está cargando el mapa</p>
+  //    </div>
+  //  );
+  //}
+  if (loadError) return <div>Error al cargar la API de Google Maps</div>;
+  if (!isLoaded) return <div>Cargando la API de Google Maps...</div>;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -69,25 +76,54 @@ function Contacto() {
       [name]: value,
     }));
   };
+  const handleBlur = (e) => {
+    handleChange(e);
+    setErrors(validationsForm(formulario));
+  }
+  const validationsForm = (form) => {
+    let errors = {};
 
-  const onSubmit = async (info) => {
-    console.log(info);
+    if (!form.nombre.trim()) {
+      errors.nombre = "El campo 'Nombre' es requerido";
+    } else if (!EXPRESION_REGULAR_NOMBRE_APELLIDO.test(form.nombre.trim())) {
+      errors.nombre = "El campo 'Nombre' no es valido";
+    }
+
+    if (!form.email.trim()) {
+      errors.email = "El campo 'Correo' es requerido";
+    } else if (!EXPRESION_REGULAR_EMAIL.test(form.email.trim())) {
+      errors.email = "El campo 'Correo' no es valido";
+    }
+
+    if (!form.comentario.trim()) {
+      errors.comentario = "El campo 'Comentario'es requerido";
+    }
+
+    if (!form.numTelefono.trim()) {
+      errors.numTelefono = "El campo '# Celular'es requerido";
+    }
+
+    return errors;
+  }
+  const onSubmit = async (e) => {
+    e.preventDefault();
     try {
-      const response = await axios.post(url, info);
-      console.log(response.status);
-      if (response.status === 201) {
-        setData(data.concat(response.data));
-        handleShowMensaje();
-        setFormulario({
-          codComentario: "",
-          nombre: "",
-          email: "",
-          numTelefono: "",
-          comentario: "",
-          fechaEnviado: "",
-          horaEnviado: "",
-        });
-        reset();
+      if (Object.keys(errors).length === 0) {
+        const response = await axios.post(url, formulario);
+        console.log(response.status);
+        if (response.status === 201) {
+          setData(data.concat(response.data));
+          abrirCerrarModalMensaje();
+          setFormulario({
+            codComentario: "",
+            nombre: "",
+            email: "",
+            numTelefono: "",
+            comentario: "",
+            fechaEnviado: "",
+            horaEnviado: "",
+          });
+        }
       }
     }
     catch (error) {
@@ -95,7 +131,15 @@ function Contacto() {
     };
   }
   const resetFormulario = () => {
-    reset();
+    setFormulario({
+      codComentario: "",
+      nombre: "",
+      email: "",
+      numTelefono: "",
+      comentario: "",
+      fechaEnviado: "",
+      horaEnviado: "",
+    });
   }
   const popUp = (
     <div>
@@ -107,6 +151,13 @@ function Contacto() {
       </div>
     </div>
   )
+
+  const abrirCerrarModalMensaje = () => {
+    handleShowMensaje();
+    setTimeout(() => {
+      handleMensajeClose();
+    }, 2000); // 2000 milisegundos = 2 segundos
+  };
 
   return (
     <div className="Contacto">
@@ -143,55 +194,40 @@ function Contacto() {
         </div>
         <div className="Formulario" style={{ width: "900px", alignItems: "center", margin: "auto" }}>
           <h2 className="title_color" style={{ marginLeft: "14%" }}>Caja de Comentarios y Sugerencias</h2>
-          <Form onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={onSubmit}>
             <div className="form-row">
               <div className="form-group col-md-6">
                 <div>
                   <label>Nombre y Apellido</label>
-                  <input type="text" className="form-control" placeholder="Ingrese su nombre y apellido" onChange={handleChange} {...register('nombre', {
-                    required: "El campo es requerido",
-                    pattern: /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/u
-                  })} />
-                  {errors.nombre?.type === 'pattern' && <p id='errores'>Nombres y Apellidos No validos</p>}
-                  {errors.nombre && <p id="errores">{errors.nombre.message}</p>}
+                  <input type="text" name='nombre' className="form-control" onBlur={handleBlur} value={formulario.nombre} onChange={handleChange} placeholder="Ingrese su nombre y apellido" />
+                  {errors.nombre && <p id='errores'>{errors.nombre}</p>}
                 </div>
                 <div>
                   <label>Email ó correo Electronico</label>
-                  <input type="text" className="form-control" placeholder="Ingrese su correo o email" onChange={handleChange}  {...register('email', {
-                    required: "El campo es requerido",
-                    pattern: /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6}$/
-                  })} />
-                  {errors.email?.type === "pattern" && <p id='errores'>Correo No valido</p>}
-                  {errors.email && <p id="errores">{errors.email.message}</p>}
+                  <input type="text" name='email' className="form-control" onBlur={handleBlur} value={formulario.email} onChange={handleChange} placeholder="Ingrese su correo o email" />
+                  {errors.email && <p id='errores'>{errors.email}</p>}
                 </div>
                 <div style={{ width: "85%", height: "35px" }}>
                   <label>Número Celular</label>
-                  <input type="number" className="form-control" name="numTelefono" placeholder="Ingrese su número de telefono" onChange={handleChange}  {...register('numTelefono', {
-                    required: "El campo es requerido",
-                    pattern: /^[3]\d{9}$/
-                  })} />
-                  {errors.numTelefono?.type === "pattern" && <p id='errores'>Número de Colombia NO valido</p>}
-                  {errors.numTelefono && <p id="errores">{errors.numTelefono.message}</p>}
+                  <input type="number" name="numTelefono" className="form-control" onBlur={handleBlur} value={formulario.numTelefono} onChange={handleChange} placeholder="Ingrese su número de telefono" />
+                  {errors.numTelefono && <p id='errores'>{errors.numTelefono}</p>}
                 </div>
               </div>
               <div className="" style={{ width: "45%" }}>
                 <label> Comentario</label>
-                <textarea className="form-control" name="comentario" rows="3" type="texarea" placeholder="Ingrese Comentario o Sugerencia" onChange={handleChange} style={{ height: "70%" }}  {...register('comentario', {
-                  required: "El campo es requerido"
-                })} />
-                {errors.comentario && <p id="errores">{errors.comentario.message}</p>}
+                <textarea type="texarea" name="comentario" className="form-control" onBlur={handleBlur} value={formulario.comentario} onChange={handleChange} rows="3" placeholder="Ingrese Comentario o Sugerencia" style={{ height: "70%" }} />
+                {errors.comentario && <p id="errores">{errors.comentario}</p>}
               </div>
             </div>
-            <div id="botones">
+            <div className='flex' id="botones">
               <button type="submit" className="btn btn-success">Enviar</button>
               <button className="btn btn-danger" onClick={() => resetFormulario()}>Cancelar</button>
             </div >
-          </Form>
+          </form>
         </div>
       </section>
       <Modal show={smShow} onHide={handleMensajeClose} animation={false}> {popUp}</Modal>
       <Footer />
-
     </div>
   );
 }

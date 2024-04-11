@@ -9,7 +9,7 @@ import "./Habitacion.css";
 import { Link } from "react-router-dom";
 // Iconos
 //Componentes
-import Habitaciones from "../../PaginaInicio/Habitaciones";
+import Habitaciones from "../../PaginaInicio/SelectHabitacionesDisponibles";
 import SelectHuespedes from "../SelectHuespedes";
 // url
 import { Apiurl } from "../../../services/userService";
