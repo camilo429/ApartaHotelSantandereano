@@ -8,12 +8,9 @@ import TipoDocumento from "../TipoDocumento";
 import Nacionalidades from "../Nacionalidades";
 import { Modal } from 'react-bootstrap';
 import { Link } from "react-router-dom";
-//iconos
-//import * as BsInfoLg from "react-icons/bs";
-//import { FaCheck } from "react-icons/fa"; chulitos 
 //Componentes
 // url
-import { EXPRESION_REGULAR_NOMBRE_APELLIDO, EXPRESION_REGULAR_EMAIL, EXPRESION_REGULAR_CELULAR, EXPRESION_REGULAR_IDENTIFICACION } from "../../../services/ExpresionsRegular"
+import { EXPRESION_REGULAR_NOMBRE_APELLIDO, EXPRESION_REGULAR_EMAIL, EXPRESION_REGULAR_IDENTIFICACION } from "../../../services/ExpresionsRegular"
 import Region from "../Region";
 import Spinner from 'react-bootstrap/Spinner';
 //Estilos
@@ -106,121 +103,126 @@ function Huespedes() {
     }
   };
 
-  const onSubmit = async (info) => {
+  const onSubmit = async (e) => {
     try {
-      console.log("peticion post consola", consolaSeleccionada);
-      console.log("peticion post info", info);
-      setIsLoading(true);
-      const response = await axios.post(urlG, info, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
-        },
-      })
-      console.log("estado result", response.status);
-      if (response.status === 201) {
-        setData(data.concat(response.data));
-        setMensaje("Huesped Registrado");
-        handleClose();
-        handleShowMensaje();
-        setConsolaSeleccionada({
-          codHuesped: "",
-          nombre: "",
-          apellido: "",
-          numCelular: "",
-          correo: "",
-          tipoDocumento: {
-            codTipoDocumento: "",
-            nomTipoDocumento: ""
+      e.preventDefault();
+      if (Object.keys(errors).length === 0) {
+        console.log("peticion post consola", consolaSeleccionada);
+        setIsLoading(true);
+        const response = await axios.post(urlG, consolaSeleccionada, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
           },
-          numDocumento: "",
-          fechaNacimiento: "",
-          edad: "",
-          nacionalidad: {
-            codNacion: "",
-            nombre: ""
-          },
-          lugarOrigen: {
-            codRegion: "",
+        })
+        console.log("estado result", response.status);
+        if (response.status === 201) {
+          setData(data.concat(response.data));
+          setMensaje("Huesped Registrado");
+          handleClose();
+          abrirCerrarModalMensaje();
+          setConsolaSeleccionada({
+            codHuesped: "",
             nombre: "",
+            apellido: "",
+            numCelular: "",
+            correo: "",
+            tipoDocumento: {
+              codTipoDocumento: "",
+              nomTipoDocumento: ""
+            },
+            numDocumento: "",
+            fechaNacimiento: "",
+            edad: "",
             nacionalidad: {
               codNacion: "",
               nombre: ""
-            }
-          },
-          nomContactoEmergencia: "",
-          numContactoEmergencia: "",
-          checkin: [],
-          estadoHuesped: ""
-        })
+            },
+            lugarOrigen: {
+              codRegion: "",
+              nombre: "",
+              nacionalidad: {
+                codNacion: "",
+                nombre: ""
+              }
+            },
+            nomContactoEmergencia: "",
+            numContactoEmergencia: "",
+            checkin: [],
+            estadoHuesped: ""
+          })
+        }
+        setIsLoading(false);
       }
-      setIsLoading(false);
     } catch (error) {
       console.error("Error al registrar Huesped", error);
-      setMensaje("Error al insertar Huesped", error);
+      const mensajeError = error.response && error.response.data && error.response.data.mensaje ? error.response.data.mensaje : "Hubo un error al insertar el Huésped. Por favor, intenta nuevamente.";
+      setMensaje(mensajeError);
       abrirCerrarModalMensaje();
-      // alert("Hubo un error al crear la huesped. Por favor, intenta nuevamente.");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const peticionPut = async (info) => {
-    console.log("consola", info);
-    console.log("consolaSeleccionada", consolaSeleccionada.codHuesped);
+  const peticionPut = async (e) => {
+    e.preventDefault();
     try {
-      const response = await axios.put(urlE + consolaSeleccionada.codHuesped, consolaSeleccionada, {
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
-        }
-      });
-      // console.log(response.status);
-      if (response.status === 201) {
-        const dataNueva = data.map((consola) => {
-          if (consolaSeleccionada.codHuesped === consola.codHuesped) {
-            consola.codHuesped = consolaSeleccionada.codHuesped;
-            consola.nombre = consolaSeleccionada.nombre;
-            consola.apellido = consolaSeleccionada.apellido;
-            consola.numCelular = consolaSeleccionada.numCelular;
-            consola.correo = consolaSeleccionada.correo;
-            consola.tipoDocumento = {
-              codTipoDocumento: consolaSeleccionada.tipoDocumento.codTipoDocumento,
-              nomTipoDocumento: consolaSeleccionada.tipoDocumento.nomTipoDocumento
-            };
-            consola.numDocumento = consolaSeleccionada.numDocumento;
-            consola.fechaNacimiento = consolaSeleccionada.fechaNacimiento;
-            consola.edad = consolaSeleccionada.edad;
-            consola.nacionalidad = {
-              codNacion: consolaSeleccionada.nacionalidad.codNacion,
-              nombre: consolaSeleccionada.nacionalidad.nombre
-            };
-            consola.lugarOrigen = {
-              codRegion: consolaSeleccionada.lugarOrigen.codRegion,
-              nombre: consolaSeleccionada.lugarOrigen.nombre,
-              nacionalidad: {
-                codNacion: consolaSeleccionada.lugarOrigen.nacionalidad.codNacion,
-                nombre: consolaSeleccionada.lugarOrigen.nacionalidad.nombre
-              }
-            };
-            consola.nomContactoEmergencia = consolaSeleccionada.nomContactoEmergencia;
-            consola.numContactoEmergencia = consolaSeleccionada.numContactoEmergencia;
-            consola.checkin = consolaSeleccionada.checkin;
-            consola.estadoHuesped = consolaSeleccionada.estadoHuesped;
+      if (Object.keys(errors).length === 0) {
+        const response = await axios.put(urlE + consolaSeleccionada.codHuesped, consolaSeleccionada, {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
           }
-          return consola;
-        })
-        setData(dataNueva);
-        peticionGet();
-        handleEditarClose();
-        setMensaje("Huesped Actualizado");
-        handleShowMensaje();
-        setConsolaSeleccionada({});
-        setIsLoading(false);
-      } else {
-        console.error("La solicitud PUT no fue exitosa");
+        });
+        if (response.status === 201) {
+          const dataNueva = data.map((consola) => {
+            if (consolaSeleccionada.codHuesped === consola.codHuesped) {
+              consola.codHuesped = consolaSeleccionada.codHuesped;
+              consola.nombre = consolaSeleccionada.nombre;
+              consola.apellido = consolaSeleccionada.apellido;
+              consola.numCelular = consolaSeleccionada.numCelular;
+              consola.correo = consolaSeleccionada.correo;
+              consola.tipoDocumento = {
+                codTipoDocumento: consolaSeleccionada.tipoDocumento.codTipoDocumento,
+                nomTipoDocumento: consolaSeleccionada.tipoDocumento.nomTipoDocumento
+              };
+              consola.numDocumento = consolaSeleccionada.numDocumento;
+              consola.fechaNacimiento = consolaSeleccionada.fechaNacimiento;
+              consola.edad = consolaSeleccionada.edad;
+              consola.nacionalidad = {
+                codNacion: consolaSeleccionada.nacionalidad.codNacion,
+                nombre: consolaSeleccionada.nacionalidad.nombre
+              };
+              consola.lugarOrigen = {
+                codRegion: consolaSeleccionada.lugarOrigen.codRegion,
+                nombre: consolaSeleccionada.lugarOrigen.nombre,
+                nacionalidad: {
+                  codNacion: consolaSeleccionada.lugarOrigen.nacionalidad.codNacion,
+                  nombre: consolaSeleccionada.lugarOrigen.nacionalidad.nombre
+                }
+              };
+              consola.nomContactoEmergencia = consolaSeleccionada.nomContactoEmergencia;
+              consola.numContactoEmergencia = consolaSeleccionada.numContactoEmergencia;
+              consola.checkin = consolaSeleccionada.checkin;
+              consola.estadoHuesped = consolaSeleccionada.estadoHuesped;
+            }
+            return consola;
+          })
+          setData(dataNueva);
+          peticionGet();
+          handleEditarClose();
+          setMensaje("Huesped Actualizado");
+          handleShowMensaje();
+          setConsolaSeleccionada({});
+          setIsLoading(false);
+        } else {
+          console.error("La solicitud PUT no fue exitosa");
+        }
       }
     } catch (error) {
       console.error("Error al realizar la solicitud PUT:", error);
+      const mensajeError = error.response && error.response.data && error.response.data.mensaje ? error.response.data.mensaje : "Hubo un error al Editar el Huésped. Por favor, intenta nuevamente.";
+      setMensaje(mensajeError);
+      abrirCerrarModalMensaje();
     }
   }
 
@@ -262,32 +264,39 @@ function Huespedes() {
     } else if (!EXPRESION_REGULAR_EMAIL.test(consolaSeleccionada.correo.trim())) {
       errors.email = "El campo 'Correo' no es valido";
     }
-    if (!consolaSeleccionada.numCelular.trim()) {
+    if (!consolaSeleccionada.numCelular === "") {
       errors.numCelular = "El '# Celular' es requerido";
     }
     if (!consolaSeleccionada.fechaNacimiento.trim()) {
       errors.fechaNacimiento = "El 'Fecha Nacimiento' es requerido";
     }
-    if (!consolaSeleccionada.tipoDocumento) {
+    if (!consolaSeleccionada.tipoDocumento || consolaSeleccionada.tipoDocumento.nomTipoDocumento === "") {
       errors.tipoDocumento = "El 'Tipo Documento' es requerido";
     }
-    if (!consolaSeleccionada.numDocumento.trim()) {
+    if (!consolaSeleccionada.numDocumento === "") {
       errors.numDocumento = "El 'Número Documento' es requerido";
+    } else if (!EXPRESION_REGULAR_IDENTIFICACION.test(consolaSeleccionada.numDocumento)) {
+      errors.numDocumento = "El 'Número Documento' no es valido";
     }
-    if (!consolaSeleccionada.nacionalidad) {
+    if (!consolaSeleccionada.nacionalidad || consolaSeleccionada.nacionalidad.nombre === "") {
       errors.nacionalidad = "La 'Nacionalidad'es requerida";
     }
-    if (!consolaSeleccionada.lugarOrigen) {
+    if (!consolaSeleccionada.lugarOrigen || consolaSeleccionada.lugarOrigen.nombre === "") {
       errors.lugarOrigen = "El 'lugar Origen' es requerido";
     }
     if (!consolaSeleccionada.nomContactoEmergencia.trim()) {
       errors.nomContactoEmergencia = "El 'Nombre Emergencia' es requerido";
     }
-    if (!consolaSeleccionada.numContactoEmergencia.trim()) {
+    if (!consolaSeleccionada.numContactoEmergencia === "") {
       errors.numContactoEmergencia = "El 'Número Emergencia' es requerido";
     }
     return errors;
   }
+  const calcularFechaMaxima = () => {
+    const hoy = new Date();
+    const fechaMaxima = new Date(hoy.getFullYear() - 18, hoy.getMonth(), hoy.getDate());
+    return fechaMaxima.toISOString().split('T')[0]; // Formateamos la fecha como string en formato 'YYYY-MM-DD'
+  };
   const handleBlur = (e) => {
     handleChange(e);
     setErrors(validationsForm(consolaSeleccionada));
@@ -371,7 +380,7 @@ function Huespedes() {
         </div>
         <div className="formHuesped">
           <label>Fecha de Nacimiento</label>
-          <input type="date" className="form-control" name="fechaNacimiento" placeholder="Nacimiento" onBlur={handleBlur} value={consolaSeleccionada.fechaNacimiento} onChange={handleChange} />
+          <input type="date" className="form-control" name="fechaNacimiento" placeholder="Nacimiento" onBlur={handleBlur} value={consolaSeleccionada.fechaNacimiento} onChange={handleChange} max={calcularFechaMaxima()} />
           {errors.fechaNacimiento && <p id="errores">{errors.fechaNacimiento}</p>}
         </div>
         <div className="formHuesped">
@@ -384,6 +393,7 @@ function Huespedes() {
         <div className="formHuesped">
           <label>Tipo Documento</label>
           <TipoDocumento name="tipoDocumento" value={consolaSeleccionada.tipoDocumento} handleChangeData={handleChange} />
+          {errors.tipoDocumento && <p id="errores">{errors.tipoDocumento}</p>}
         </div>
         <div className="formHuesped" >
           <label>Número Documento</label>
@@ -393,10 +403,12 @@ function Huespedes() {
         <div className="formHuesped">
           <label>Nacionalidad</label>
           <Nacionalidades name="nacionalidad" value={consolaSeleccionada.nacionalidad} handleChangeData={handleChange} />
+          {errors.nacionalidad && <p id="errores">{errors.nacionalidad}</p>}
         </div>
         <div className="formHuesped">
           <label > ¿Región de dónde proviene?</label>
           <Region name="lugarOrigen" codNacion={codNacionalidad || 1} value={consolaSeleccionada.lugarOrigen} handleChangeData={handleChange} />
+          {errors.lugarOrigen && <p id="errores">{errors.lugarOrigen}</p>}
         </div>
         <div className="formHuesped">
           <label>Nombre Emergencia</label>
@@ -428,88 +440,81 @@ function Huespedes() {
       </div>
     </form>
   );
-  const bodyEditar = (<form onSubmit={peticionPut}>
-    <div className="flex">
-      <div className="me-2">
-        <label>Nombre(s)</label>
-        <input className="form-control" name="nombre" defaultValue={consolaSeleccionada?.nombre} onChange={handleChange} />
-        {errors.nombre?.type === 'required' && <p id="errores">El campo es requerido</p>}
-        {errors.nombre?.type === 'pattern' && <p id="errores">El campo no es valido</p>}
+  const bodyEditar = (
+    <form onSubmit={peticionPut}>
+      <div className="flex">
+        <div className="me-2">
+          <label>Nombre(s)</label>
+          <input className="form-control" name="nombre" onBlur={handleBlur} value={consolaSeleccionada?.nombre} onChange={handleChange} />
+          {errors.nombre && <p id="errores">{errors.nombre}</p>}
+        </div>
+        <div className="me-2">
+          <label>Apellido(s)</label>
+          <input className="form-control" name="apellido" onBlur={handleBlur} value={consolaSeleccionada?.apellido} onChange={handleChange} />
+          {errors.apellido && <p id="errores">{errors.apellido}</p>}
+        </div>
+        <div className="me-2">
+          <label>Número Celular</label>
+          <input className="form-control" name="numCelular" onBlur={handleBlur} value={consolaSeleccionada?.numCelular} onChange={handleChange} />
+          {errors.numCelular && <p id="errores">{errors.numCelular}</p>}
+        </div>
+        <div className="me-2">
+          <label>Fecha Nacimiento</label>
+          <input className="form-control" name="fechaNacimiento" type="date" onBlur={handleBlur} onChange={handleChange} value={consolaSeleccionada?.fechaNacimiento} max={calcularFechaMaxima()} />
+          {errors.fechaNacimiento && <p id="errores">{errors.fechaNacimiento}</p>}
+        </div>
+        <div className="me-2">
+          <label>Correo Electronico</label>
+          <input className="form-control" name="correo" onBlur={handleBlur} onChange={handleChange} value={consolaSeleccionada?.correo} />
+          {errors.correo && <p id="errores">Dirección no valida</p>}
+        </div>
       </div>
-      <div className="me-2">
-        <label>Apellido(s)</label>
-        <input className="form-control" name="apellido" defaultValue={consolaSeleccionada?.apellido} onChange={handleChange} />
-        {errors.apellido?.type === 'required' && <p id="errores">El campo es requerido</p>}
-        {errors.apellido?.type === 'maxLength' && <p id="errores">Muy largo</p>}
-        {errors.apellido?.type === 'pattern' && <p id="errores">Nombre no valido</p>}
+      <div className="flex">
+        <div className="me-2" >
+          <label>Tipo Documento</label>
+          <TipoDocumento name="tipoDocumento" value={consolaSeleccionada?.tipoDocumento} handleChangeData={handleChange} />
+          {errors.tipoDocumento && <p id="errores">{errors.tipoDocumento}</p>}
+        </div>
+        <div className="me-2">
+          <label>Número Documento</label>
+          <input className="form-control" name="numDocumento" onBlur={handleBlur} onChange={handleChange} value={consolaSeleccionada?.numDocumento} />
+          {errors.numDocumento && <p id="errores">{errors.numDocumento}</p>}
+        </div>
+        <div className="me-2" style={{ width: "200px", margin: "20px" }}>
+          <label>Nacionalidad</label>
+          <Nacionalidades name="nacionalidad" value={consolaSeleccionada?.nacionalidad} handleChangeData={handleChange} />
+          {errors.nacionalidad && <p id="errores">{errors.nacionalidad}</p>}
+        </div>
+        <div className="me-2">
+          <label>¿De dónde proviene?</label>
+          <Region name="lugarOrigen" value={consolaSeleccionada?.lugarOrigen} codNacion={codNacionalidad || 1} handleChangeData={handleChange} />
+          {errors.lugarOrigen && <p id="errores">{errors.lugarOrigen}</p>}
+        </div>
+        <div className="me-2">
+          <label>Nombre Emergencia</label>
+          <input className="form-control" name="nomContactoEmergencia" onBlur={handleBlur} onChange={handleChange} value={consolaSeleccionada?.nomContactoEmergencia} />
+          {errors.nomContactoEmergencia && <p id="errores">{errors.nomContactoEmergencia}</p>}
+        </div>
       </div>
-      <div className="me-2">
-        <label>Número Celular</label>
-        <input className="form-control" name="numCelular" defaultValue={consolaSeleccionada?.numCelular} onChange={handleChange} />
-        {errors.numCelular?.type === 'required' && <p id="errores">El campo es requerido</p>}
-        {errors.numCelular?.type === 'pattern' && <p id="errores">Número NO valido</p>}
+      <div className="flex">
+        <div className="me-2">
+          <label>#Contacto Emergencia</label>
+          <input className="form-control" name="numContactoEmergencia" onBlur={handleBlur} onChange={handleChange} value={consolaSeleccionada?.numContactoEmergencia} />
+          {errors.numContactoEmergencia && <p id="errores">{errors.numContactoEmergencia}</p>}
+        </div>
+        <div className="me-2" style={{ width: "200px", margin: "20px" }}>
+          <label>Estado Huesped</label>
+          <select required className="form-select" aria-label="Default select example" name="estadoHuesped" value={consolaSeleccionada?.estadoHuesped === true ? "TRUE" : "FALSE"} onChange={handleChange}>
+            <option value="TRUE">TRUE</option>
+            <option value="FALSE">FALSE</option>
+          </select>
+        </div>
+        <div align="flex" id="huespedesbotonesinsertar">
+          <button className="btn btn-primary" type="submit"> Actualizar </button>
+          <button className="btn btn-secondary" onClick={handleEditarClose}>Cancelar</button>
+        </div>
       </div>
-      <div className="me-2">
-        <label>Fecha Nacimiento</label>
-        <input className="form-control" name="fechaNacimiento" type="date" onChange={handleChange} value={consolaSeleccionada?.fechaNacimiento} />
-        {errors.fechaNacimiento?.error === 'required' && <p id="errores">El campo es requerido</p>}
-        {errors.fechaNacimiento?.type === 'maxLength' && <p id="errores">Fecha no valida</p>}
-      </div>
-      <div className="me-2">
-        <label>Correo Electronico</label>
-        <input className="form-control" name="correo" onChange={handleChange} defaultValue={consolaSeleccionada?.correo} />
-        {errors.correo?.type === "pattern" && <p id="errores">Dirección no valida</p>}
-        {errors.correo?.type === 'required' && <p id="errores">El campo es requerido</p>}
-      </div>
-    </div>
-    <div className="flex">
-      <div className="me-2" style={{ width: "250px", margin: "20px" }}>
-        <label>Tipo Documento</label>
-        <TipoDocumento name="tipoDocumento" value={consolaSeleccionada?.tipoDocumento} handleChangeData={handleChange} />
-        {errors.tipoDocumento?.type === 'required' && <p id="errores">El campo es requerido</p>}
-        {errors.tipoDocumento?.type === 'pattern' && <p id="errores">El campo no es valido</p>}
-      </div>
-      <div className="me-2">
-        <label>Número Documento</label>
-        <input className="form-control" name="numDocumento" onChange={handleChange} defaultValue={consolaSeleccionada?.numDocumento} />
-        {errors.numDocumento?.type === 'required' && <p id="errores">El campo es requerido</p>}
-        {errors.numDocumento?.type === 'pattern' && <p id="errores">El campo no es valido</p>}
-      </div>
-      <div className="me-2" style={{ width: "200px", margin: "20px" }}>
-        <label>Nacionalidad</label>
-        <Nacionalidades name="nacionalidad" value={consolaSeleccionada?.nacionalidad} handleChangeData={handleChange} />
-      </div>
-      <div className="me-2">
-        <label>¿De dónde proviene?</label>
-        <Region name="lugarOrigen" value={consolaSeleccionada?.lugarOrigen} codNacion={codNacionalidad || 1} handleChangeData={handleChange} />
-      </div>
-      <div className="me-2">
-        <label>Nombre Emergencia</label>
-        <input className="form-control" name="nomContactoEmergencia" onChange={handleChange} defaultValue={consolaSeleccionada?.nomContactoEmergencia} />
-        {errors.nomContactoEmergencia?.type === 'required' && <p id="errores">El Campo es Requerido</p>}
-        {errors.nomContactoEmergencia?.type === 'pattern' && <p id="errores">El Campo No es valido</p>}
-      </div>
-    </div>
-    <div className="flex">
-      <div className="me-2">
-        <label>#Contacto Emergencia</label>
-        <input className="form-control" name="numContactoEmergencia" onChange={handleChange} defaultValue={consolaSeleccionada?.numContactoEmergencia} />
-        {errors.numContactoEmergencia?.type === 'required' && <p id="errores">El campo es requerido</p>}
-        {errors.numContactoEmergencia?.type === 'patter' && <p id="errores">Número NO valido</p>}
-      </div>
-      <div className="me-2" style={{ width: "200px", margin: "20px" }}>
-        <label>Estado Huesped</label>
-        <select required className="form-select" aria-label="Default select example" name="estadoHuesped" defaultValue={consolaSeleccionada?.estadoHuesped === true ? "TRUE" : "FALSE"} onChange={handleChange}>
-          <option value="TRUE">TRUE</option>
-          <option value="FALSE">FALSE</option>
-        </select>
-      </div>
-    </div>
-    <div align="right flex">
-      <button className="btn btn-primary" type="submit"> Actualizar </button>
-      <button className="btn btn-secondary" onClick={() => handleEditarClose}>Cancelar</button>
-    </div>
-  </form>
+    </form>
   );
   const popUp = (
     <div>

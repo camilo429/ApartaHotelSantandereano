@@ -28,7 +28,7 @@ function SelectHuespedes({ name, handleChangeData, value = null, url }) {
     getHuespedes();
   }, [url]);
 
-  const handleChange = ({ label, value, apellido, numCelular, correo, tipoDocumento: { codTipoDocumento, nomTipoDocumento },
+  const handleChange = ({ label, value, nombrep, apellido, numCelular, correo, tipoDocumento: { codTipoDocumento, nomTipoDocumento },
     numDocumento, nacionalidad: { codNacion, nombre }, lugarOrigen, nomContactoEmergencia, numContactoEmergencia, estadoHuesped,
   }) => {
     handleChangeData({
@@ -36,7 +36,7 @@ function SelectHuespedes({ name, handleChangeData, value = null, url }) {
         name,
         value: {
           codHuesped: value,
-          nombre: label,
+          nombre: nombrep,
           apellido: apellido,
           numCelular: numCelular,
           correo: correo,
@@ -44,7 +44,7 @@ function SelectHuespedes({ name, handleChangeData, value = null, url }) {
             codTipoDocumento: codTipoDocumento,
             nomTipoDocumento: nomTipoDocumento,
           },
-          numDocumento: numDocumento,
+          numDocumento: label,
           nacionalidad: {
             codNacion: codNacion,
             nombre: nombre,
@@ -59,11 +59,12 @@ function SelectHuespedes({ name, handleChangeData, value = null, url }) {
   };
 
   return (
-    <div className="huesped">
+    <div className="huesped" style={{ width: "170px" }}>
       <Select
         options={data.map((docu) => ({
           value: docu.codHuesped,
-          label: docu.nombre,
+          label: docu.numDocumento,
+          nombrep: docu.nombre,
           apellido: docu.apellido,
           numCelular: docu.numCelular,
           correo: docu.correo,

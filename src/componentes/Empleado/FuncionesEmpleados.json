@@ -1,0 +1,42 @@
+{
+    "empleado": {
+        "codEmpleado": 2,
+        "nombre": "Camilo",
+        "apellido": "Ahumada",
+        "tipDocumento": {
+            "codTipoDocumento": 3,
+            "nomTipoDocumento": "CEDULA DE CIUDADANIA"
+        },
+        "numDocumento": 1003728399,
+        "edad": 19,
+        "numTelefono": 324537489,
+        "correo": "die@unbosque.edu.co",
+        "fechaNacimiento": "1999-06-14",
+        "direccion": "calle100",
+        "nomContactoEmergencia": "Juan Mauricio",
+        "numContactoEmergencia": 3145678399,
+        "eps": "Compensar",
+        "arl": "SURA",
+        "sexo": {
+            "codSexo": 1,
+            "nomSexo": "MASCULINO"
+        },
+        "tipoSangre": {
+            "codTipoSangre": 3,
+            "nomTipoSangre": "A+"
+        },
+        "fotoEmpleado": null,
+        "actividad": [],
+        "fechaIngreso": "2024-04-07",
+        "fechaSalida": null
+    },
+    "userName": "dief",
+    "contrasena": "Admin2",
+    "confirContrasena": "Admin2",
+    "rol": [
+        {
+            "codRole": 1,
+            "nombre": "ROLE_ADMINISTRADOR"
+        }
+    ]
+}

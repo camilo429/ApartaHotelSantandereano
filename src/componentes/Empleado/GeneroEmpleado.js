@@ -16,7 +16,7 @@ function GeneroEmpleado({ name, handleChangeData, value = null }) {
           Authorization: `Bearer ${sessionStorage.getItem("access_token")}`
         }
       })
-      console.log("generoEmpleado", response.status);
+      // console.log("generoEmpleado", response.status);
       if (response.status === 200) {
         setData(response.data);
       } else {

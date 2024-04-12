@@ -9,11 +9,9 @@ import "./Habitacion.css";
 import { Link } from "react-router-dom";
 // Iconos
 //Componentes
-import Habitaciones from "../../PaginaInicio/SelectHabitacionesDisponibles";
 import SelectHuespedes from "../SelectHuespedes";
 // url
 import { Apiurl } from "../../../services/userService";
-import { useForm } from 'react-hook-form';
 import SelectTipoHabitacion from "./SelectTipoHabitacion";
 import SelectEstadoHabitacion from "./SelectEstadoHabitacion";
 const url = Apiurl + "habitacion/listarHabitaciones";
@@ -21,11 +19,12 @@ const urlG = Apiurl + "habitacion/crearHabitacion";
 const urlE = Apiurl + "habitacion/actualizarHabitacion/";
 const urlD = Apiurl + "habitacion/eliminarHabitacion/";
 const urlCheckIn = Apiurl + "checkin/crearCheckin";
-const urlhabitacionesDisponibles = Apiurl + "habitacion/listarHabitaciones/estado/Disponible";
 const urlHuespedes = Apiurl + "huespedes/listarHuespedes";
 
 function Habitacion() {
   const [data, setData] = useState([]);
+  const [errors, setErrors] = useState({});
+  const [errorsChecIn, setErrorsChecIn] = useState({});
 
   const [showHabitacion, setShowHabitacion] = useState(false);
   const handleHabitacionClose = () => setShowHabitacion(false);
@@ -48,11 +47,6 @@ function Habitacion() {
   const [showCheckIn, setShowCheckIn] = useState(false);
   const handleCheckInClose = () => setShowCheckIn(false);
   const handleCheckInShow = () => setShowCheckIn(true);
-
-  const { handleSubmit, formState: { errors }, setValue, reset } = useForm();
-  const { register } = useForm({
-    shouldUnregister: false
-  });
 
   const [consolaSeleccionada, setConsolaSeleccionada] = useState({
     codHabitacion: "",
@@ -140,6 +134,64 @@ function Habitacion() {
       [name]: value,
     }));
   };
+  const handleBlur = (e) => {
+    handleChange(e);
+    setErrors(validationsForm(consolaSeleccionada));
+  }
+  const handleBlurCheckIn = (e) => {
+    manejarCambio(e);
+    setErrorsChecIn(validationFormCheckIn(consolaCheckIn));
+  }
+  const validationsForm = () => {
+    let errors = {}
+    if (!consolaSeleccionada || !consolaSeleccionada.nombreHabitacion || consolaSeleccionada.nombreHabitacion.nombre === "") {
+      errors.nombreHabitacion = "El 'Tipo Habitación' es requerido";
+    }
+    if (!consolaSeleccionada || consolaSeleccionada.numHabitacion === "") {
+      errors.numHabitacion = "El 'Número Habitación' es requerido";
+    } else if (!consolaSeleccionada || consolaSeleccionada.numHabitacion > 999) {
+      errors.numHabitacion = "El 'Número Habitación' NO puede ser mayor a 999";
+    }
+    if (!consolaSeleccionada || consolaSeleccionada.pisoHabitacion === "") {
+      errors.pisoHabitacion = "El 'Número Habitación' es requerido";
+    } else if (!consolaSeleccionada || consolaSeleccionada.pisoHabitacion > 4) {
+      errors.pisoHabitacion = "El 'Número Piso' no puede ser mayor a 4";
+    }
+    if (!consolaSeleccionada || consolaSeleccionada.maxPersonasDisponibles === "") {
+      errors.maxPersonasDisponibles = "El 'Maximas Personas' es requerido";
+    }
+    if (!consolaSeleccionada || !consolaSeleccionada.estadoHabitacion || consolaSeleccionada.estadoHabitacion.nombre === "") {
+      errors.estadoHabitacion = "El 'Tipo Habitación' es requerido";
+    }
+    if (!consolaSeleccionada || consolaSeleccionada.descripHabitacion === "") {
+      errors.descripHabitacion = "El 'Descripción' es requerido";
+    }
+    return errors;
+  }
+
+  const validationFormCheckIn = (form) => {
+    let errorsChecIn = {};
+
+    if (!form || !form.fechaEntrada) {
+      errorsChecIn.fechaEntrada = "El campo 'Fecha de Entrada' es requerido";
+    }
+    if (!form || !form.fechaSalida) {
+      errorsChecIn.fechaSalida = "El campo 'Fecha de Salida' es requerido";
+    }
+    if (form.fechaSalida < form.fechaEntrada) {
+      errorsChecIn.fechaSalida = "La fecha de salida debe ser posterior a la fecha de entrada";
+    }
+    if (!form || form.numAdultos === "" || form.numAdultos <= 0) {
+      errorsChecIn.numAdultos = "El campo 'Número Adultos' es requerido y debe ser mayor que cero";
+    }
+    if (!form || form.numNinos < 0) {
+      errorsChecIn.numNinos = "El campo 'Número Niños' no puede ser negativo";
+    }
+    if (!form || ((form.numAdultos + form.numNinos) > form.maxPersonasDisponibles)) {
+      errorsChecIn.numAdultos = "El número total de personas supera la capacidad de la habitación";
+    }
+    return errorsChecIn;
+  }
 
   const peticionGet = async () => {
     try {
@@ -151,6 +203,7 @@ function Habitacion() {
       console.log(response.status);
       if (response.status === 200) {
         setData(response.data);
+        // console.log(response.data);
       } else {
         console.log("Ha ocurrido un error get Habitación", response.status);
       }
@@ -160,48 +213,55 @@ function Habitacion() {
   }
   const peticionPost = async (e) => {
     try {
-      console.log("habitacion", consolaSeleccionada);
-      const response = await axios.post(urlG, consolaSeleccionada, {
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
+      e.preventDefault();
+      setErrors(validationsForm(consolaSeleccionada));
+      if (Object.keys(errors).length === 0) {
+        console.log("habitacion", consolaSeleccionada);
+        const response = await axios.post(urlG, consolaSeleccionada, {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
+          }
+        });
+        // console.log("post", response.status);
+        if (response.status === 201) {
+          setData(data.concat(response.data));
+          setMensaje("Habitación Registrada");
+          peticionGet();
+          handleHabitacionClose();
+          abrirCerrarModalMensaje();
+          setConsolaSeleccionada({
+            codHabitacion: "",
+            nombreHabitacion: {
+              codTipoHabitacion: "",
+              nombre: "",
+              precioXPersona: "",
+              precioXAcompanante: ""
+            },
+            descripHabitacion: "",
+            numHabitacion: "",
+            pisoHabitacion: "",
+            maxPersonasDisponibles: "",
+            estadoHabitacion: {
+              codEstadoHabitacion: "",
+              nombre: ""
+            },
+            imagenHabitacion: ""
+          })
         }
-      });
-      console.log("post", response.status);
-      if (response.status === 201) {
-        setData(data.concat(response.data));
-        setMensaje("Habitación Registrada");
-        peticionGet();
-        handleHabitacionClose();
-        handleShowMensaje();
-        setConsolaSeleccionada({
-          codHabitacion: "",
-          nombreHabitacion: {
-            codTipoHabitacion: "",
-            nombre: "",
-            precioXPersona: "",
-            precioXAcompanante: ""
-          },
-          descripHabitacion: "",
-          numHabitacion: "",
-          pisoHabitacion: "",
-          maxPersonasDisponibles: "",
-          estadoHabitacion: {
-            codEstadoHabitacion: "",
-            nombre: ""
-          },
-          imagenHabitacion: ""
-        })
-        reset();
-      } else {
-        console.log("error post habitacion");
       }
     } catch (error) {
-      console.log(error);
+      const mensajeError = error.response && error.response.data && error.response.data.mensaje ? error.response.data.mensaje : "Hubo un error al Editar el Empleado. Por favor, intenta nuevamente.";
+      setMensaje(mensajeError);
+      abrirCerrarModalMensaje();
+      setErrors({});
     }
   };
 
-  const peticionPut = async () => {
+  const peticionPut = async (e) => {
     try {
+      e.preventDefault();
+      setErrors(validationsForm(consolaSeleccionada));
+      console.log("put", consolaSeleccionada);
       const response = await axios.put(urlE + consolaSeleccionada.codHabitacion, consolaSeleccionada, {
         headers: {
           'Content-Type': 'application/json',
@@ -234,17 +294,20 @@ function Habitacion() {
         peticionGet();
         handleEditarClose();
         setMensaje("Habitación Actualizada");
-        handleShowMensaje();
-        reset();
+        abrirCerrarModalMensaje();
       } else {
         console.log("Error Actualizar Habitación", response.status);
       }
     } catch (error) {
-      console.log("error put", error);
+      const mensajeError = error.response && error.response.data && error.response.data.mensaje ? error.response.data.mensaje : "Hubo un error al Editar el Empleado. Por favor, intenta nuevamente.";
+      setMensaje(mensajeError);
+      abrirCerrarModalMensaje();
+      setErrors({});
     }
   };
 
-  const peticionDelete = async () => {
+  const peticionDelete = async (e) => {
+    e.preventDefault();
     try {
       console.log("codigo", consolaSeleccionada.codHabitacion);
       const response = await axios.delete(urlD + consolaSeleccionada.codHabitacion, {
@@ -263,29 +326,37 @@ function Habitacion() {
         console.log("Error al eliminar Habitación", response.status);
       }
     } catch (error) {
-      console.log("Error al Eliminar habitación", error);
+      const mensajeError = error.response && error.response.data && error.response.data.mensaje ? error.response.data.mensaje : "Hubo un error al Editar el Empleado. Por favor, intenta nuevamente.";
+      setMensaje(mensajeError);
+      abrirCerrarModalMensaje();
+      setErrors({});
     }
   };
 
-  const peticionCheckIn = async () => {
+  const peticionCheckIn = async (e) => {
     try {
-      console.log("esta es la data seleccionada", consolaCheckIn);
-      const response = await axios.post(urlCheckIn, consolaCheckIn, {
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
-        },
-      });
-      if (response.status === 201) {
-        setData(data.concat(response.data));
-        peticionGet();
-        handleCheckInClose()
-        alert("Habitación Reservada");
-      } else {
-        alert("La habitación número", response.data.mensaje);
+      e.preventDefault();
+      setErrors(validationFormCheckIn(consolaCheckIn));
+      if (Object.keys(errors).length === 0) {
+        console.log("CheckIn", consolaCheckIn);
+        const response = await axios.post(urlCheckIn, consolaCheckIn, {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
+          },
+        });
+        if (response.status === 201) {
+          setData(data.concat(response.data));
+          peticionGet();
+          handleCheckInClose()
+          setMensaje("Habitación Reservada");
+          abrirCerrarModalMensaje();
+        }
       }
-
     } catch (error) {
-      console.log("checkIn", error);
+      const mensajeError = error.response && error.response.data && error.response.data.mensaje ? error.response.data.mensaje : "Hubo un error al dar ingreso al Huesped. Por favor, intenta nuevamente.";
+      setMensaje(mensajeError);
+      abrirCerrarModalMensaje();
+      setErrors({});
     }
   };
 
@@ -309,7 +380,26 @@ function Habitacion() {
       },
       imagenHabitacion: consola[7]
     })
-    console.log("consolaSeleccionada", consolaSeleccionada);
+    setConsolaCheckIn({
+      codHabitacion: {
+        codHabitacion: consola[0],
+        nombreHabitacion: {
+          codTipoHabitacion: consola[1].codTipoHabitacion,
+          nombre: consola[1].nombre,
+          precioXPersona: consola[1].precioXPersona,
+          precioXAcompanante: consola[1].precioXAcompanante
+        },
+        numHabitacion: consola[2],
+        pisoHabitacion: consola[3],
+        descripHabitacion: consola[4],
+        maxPersonasDisponibles: consola[5],
+        estadoHabitacion: {
+          codEstadoHabitacion: consola[6].codEstadoHabitacion,
+          nombre: consola[6].nombre
+        },
+        imagenHabitacion: consola[7]
+      },
+    })
     if (caso === "Editar") {
       handleEditarShow();
     }
@@ -320,11 +410,29 @@ function Habitacion() {
       handleCheckInShow();
     }
   }
+  const cerrtarInsertar = () => {
+    handleHabitacionClose();
+    setConsolaCheckIn({});
+  }
+  const cerrrarEidtar = () => {
+    handleEditarClose();
+    setConsolaSeleccionada({});
+  }
+  const cerrarCheckIn = () => {
+    handleCheckInClose();
+    setConsolaCheckIn();
+  }
 
   useEffect(() => {
     peticionGet();
   }, []);
 
+  const abrirCerrarModalMensaje = () => {
+    handleShowMensaje();
+    setTimeout(() => {
+      handleMensajeClose();
+    }, 2000); // 2000 milisegundos = 2 segundos
+  };
   const popUp = (
     <div>
       <Modal size="sm" show={smShow} onHide={() => setSmShow(false)} aria-labelledby="example-modal-sizes-title-sm">
@@ -339,52 +447,57 @@ function Habitacion() {
   const bodyInsertar = (
     <div>
       <h3>Agregar Habitacion</h3>
-      <Form onSubmit={handleSubmit(peticionPost)}>
+      <form onSubmit={peticionPost}>
         <div className="flex">
           <FormGroup className="me-2">
-            <Label for="exampleEmail">Tipo Habitacion Select</Label>
+            <label>Tipo Habitacion Select</label>
             <SelectTipoHabitacion name="nombreHabitacion" value={consolaSeleccionada?.nombreHabitacion} handleChangeData={handleChange} />
+            {errors.nombreHabitacion && <p id="errores">{errors.nombreHabitacion}</p>}
           </FormGroup>
           <FormGroup className="me-2" style={{ marginLeft: "4%" }}>
-            <Label for="exampleEmail">Número Habitación</Label>
-            <input name="numHabitacion" placeholder="Número Habitación" type="number" className="form-control" onChange={handleChange} />
+            <label>Número Habitación</label>
+            <input name="numHabitacion" placeholder="Número Habitación" type="number" className="form-control" onBlur={handleBlur} value={consolaSeleccionada.numHabitacion} onChange={handleChange} />
+            {errors.numHabitacion && <p id="errores">{errors.numHabitacion}</p>}
           </FormGroup>
           <FormGroup className="me-2">
-            <Label for="exampleEmail">Piso Habitación</Label>
-            <Input name="pisoHabitacion" placeholder="Piso" type="number" className="form-control" onChange={handleChange} />
+            <label>Piso Habitación</label>
+            <Input name="pisoHabitacion" placeholder="Piso" type="number" className="form-control" onBlur={handleBlur} value={consolaSeleccionada.pisoHabitacion} onChange={handleChange} />
+            {errors.pisoHabitacion && <p id="errores">{errors.pisoHabitacion}</p>}
           </FormGroup>
           <FormGroup className="me-2">
-            <Label for="exampleEmail">Maximas Personas</Label>
-            <Input name="maxPersonasDisponibles" placeholder="Capacidad(Personas)" type="number" className="form-control" onChange={handleChange} />
+            <label>Maximas Personas</label>
+            <Input name="maxPersonasDisponibles" placeholder="Capacidad(Personas)" type="number" className="form-control" onBlur={handleBlur} value={consolaSeleccionada.maxPersonasDisponibles} onChange={handleChange} />
+            {errors.maxPersonasDisponibles && <p id="errores">{errors.maxPersonasDisponibles}</p>}
           </FormGroup>
         </div>
         <div className="flex">
           <FormGroup className="me-2">
-            <Label for="exampleEmail">Imagen</Label>
-            <input className="form-control" name="imagenHabitacion" placeholder="url Imagen" onChange={handleChange} />
+            <label>Imagen</label>
+            <input className="form-control" name="imagenHabitacion" placeholder="url Imagen" onBlur={handleBlur} value={consolaSeleccionada.imagenHabitacion} onChange={handleChange} />
+            {errors.imagenHabitacion && <p id="errores">{errors.imagenHabitacion}</p>}
           </FormGroup>
           <FormGroup className="me-2" style={{ width: "30%" }}>
-            <Label for="exampleEmail">Estado Habitación Select</Label>
+            <label >Estado Habitación Select</label>
             <SelectEstadoHabitacion name="estadoHabitacion" value={consolaSeleccionada?.estadoHabitacion} handleChangeData={handleChange} />
+            {errors.estadoHabitacion && <p id="errores">{errors.estadoHabitacion}</p>}
           </FormGroup>
           <FormGroup className="me-2" style={{ width: "70%", height: "100%" }}>
-            <Label for="exampleEmail">Descripción </Label>
-            <textarea className="form-control" name="descripHabitacion" placeholder="Descripción Habitación" type="text" onChange={handleChange} style={{ width: "100%", height: "100%" }} />
+            <label >Descripción </label>
+            <textarea className="form-control" name="descripHabitacion" type="textare" onBlur={handleBlur} value={consolaSeleccionada.descripHabitacion} onChange={handleChange} placeholder="Descripción Habitación" style={{ width: "100%", height: "100%" }} />
+            {errors.descripHabitacion && <p id="errores">{errors.descripHabitacion}</p>}
           </FormGroup>
-        </div>
-        <div className="flex">
         </div>
         <div align="right">
           <button className="btn btn-primary" color="primary" type="submit">Insertar</button>
-          <button className="btn btn-secondary" onClick={handleHabitacionClose} type="submit">Cancelar</button>
+          <button className="btn btn-secondary" onClick={cerrtarInsertar} type="submit">Cancelar</button>
         </div>
-      </Form>
+      </form>
       <br />
     </div>
   );
   const bodyEditar = (
     <div>
-      <Form onSubmit={handleSubmit(peticionPut)}>
+      <Form onSubmit={peticionPut}>
         <div className="flex">
           <FormGroup className="me-2">
             <Label for="exampleEmail">Tipo Habitación</Label>
@@ -392,37 +505,42 @@ function Habitacion() {
           </FormGroup>
           <FormGroup className="me-2">
             <Label for="exampleEmail">Numero Habitación</Label>
-            <input className="form-control" name="numHabitacion" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.numHabitacion} placeholder="Número Habitación" type="number" />
+            <input className="form-control" name="numHabitacion" onBlur={handleBlur} onChange={handleChange} value={(consolaSeleccionada && consolaSeleccionada.numHabitacion) || ""} placeholder="Número Habitación" type="number" />
+            {errors.numHabitacion && <p id="errores">{errors.numHabitacion}</p>}
           </FormGroup>
           <FormGroup className="me-2" >
             <Label for="exampleEmail">Piso Habitación</Label>
-            <input className="form-control" name="pisoHabitacion" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.pisoHabitacion} placeholder="Piso Habitación" type="number" />
+            <input className="form-control" name="pisoHabitacion" onChange={handleChange} onBlur={handleBlur} value={(consolaSeleccionada && consolaSeleccionada.pisoHabitacion) || ""} placeholder="Piso Habitación" type="number" />
+            {errors.pisoHabitacion && <p id="errores">{errors.pisoHabitacion}</p>}
           </FormGroup>
           <FormGroup className="me-2">
             <Label for="exampleEmail">Capacidad (#Personas)</Label>
-            <input className="form-control" name="maxPersonasDisponibles" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.maxPersonasDisponibles} placeholder="# Personas" type="number" />
+            <input className="form-control" name="maxPersonasDisponibles" onChange={handleChange} onBlur={handleBlur} value={(consolaSeleccionada && consolaSeleccionada.maxPersonasDisponibles) || ""} placeholder="# Personas" type="number" />
+            {errors.maxPersonasDisponibles && <p id="errores">{errors.maxPersonasDisponibles}</p>}
           </FormGroup>
         </div>
         <div className="flex">
           <FormGroup className="me-2" style={{ marginLeft: "4%" }}>
             <Label for="exampleEmail">Imagen Habitacion</Label>
-            <input className="form-control" name="imagenHabitacion" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.imagenHabitacion} placeholder="imagenHabitacion" />
+            <input className="form-control" name="imagenHabitacion" onChange={handleChange} onBlur={handleBlur} value={(consolaSeleccionada && consolaSeleccionada.imagenHabitacion) || ""} placeholder="imagenHabitacion" />
+            {errors.imagenHabitacion && <p id="errores">{errors.imagenHabitacion}</p>}
           </FormGroup>
           <FormGroup className="me-2">
             <Label for="exampleEmail">Estado Habitación </Label>
             <SelectEstadoHabitacion name="estadoHabitacion" value={consolaSeleccionada.estadoHabitacion} handleChangeData={handleChange} />
+            {errors.estadoHabitacion && <p id="errores">{errors.estadoHabitacion}</p>}
           </FormGroup>
           <FormGroup className="me-2" style={{ width: "100%", height: "100%" }}>
             <Label for="exampleEmail">Descripción Habitación</Label>
-            <textarea className="form-control" name="descripHabitacion" onChange={handleChange} value={consolaSeleccionada && consolaSeleccionada.descripHabitacion} placeholder="Descripción Habitación" style={{ width: "100%", height: "100%" }} />
+            <textarea className="form-control" name="descripHabitacion" type="textare" onBlur={handleBlur} value={(consolaSeleccionada && consolaSeleccionada.descripHabitacion) || ""} onChange={handleChange} placeholder="Descripción Habitación" style={{ width: "100%", height: "100%" }} />
+            {errors.descripHabitacion && <p id="errores">{errors.descripHabitacion}</p>}
           </FormGroup>
         </div>
         <div align="right">
           <button className="btn btn-primary" type="submit" > Actualizar </button>
-          <button className="btn btn-secondary" type="submit" onClick={handleEditarClose}>Cancelar</button>
+          <button className="btn btn-secondary" type="submit" onClick={cerrrarEidtar}>Cancelar</button>
         </div>
       </Form>
-
     </div>
   );
   const bodyEliminar = (
@@ -430,7 +548,7 @@ function Habitacion() {
       <p>
         Esta seguro de Eliminar la Habitación
         <br />
-        <b> {consolaSeleccionada && consolaSeleccionada.nombreHabitacion.nombre + " " + consolaSeleccionada.numHabitacion} </b> ?
+        <b> {(!consolaSeleccionada && !consolaSeleccionada.nombreHabitacion.nombre + " " + consolaSeleccionada.numHabitacion) || ""} </b> ?
       </p>
       <div align="right">
         <button className="btn btn-primary" type="submit" onClick={() => peticionDelete()} style={{ margin: "5px" }}> Eliminar </button>
@@ -440,38 +558,39 @@ function Habitacion() {
   );
   const bodyCheckIn = (
     <div>
-      <form onSubmit={handleSubmit(peticionCheckIn)}>
+      <form onSubmit={peticionCheckIn}>
         <div className="flex">
           <div>
-            <Label for="exampleEmail">Fecha de Ingreso</Label>
-            <input name="fechaEntrada" type="date" placeholder="fechaEntrada" className="form-control" onChange={manejarCambio} />
+            <label >Fecha de Ingreso</label>
+            <input name="fechaEntrada" type="date" className="form-control" onBlur={handleBlurCheckIn} value={consolaCheckIn?.fechaEntrada || ""} onChange={manejarCambio} />
+            {errorsChecIn.fechaEntrada && <p id="errores">{errorsChecIn.fechaEntrada}</p>}
           </div>
           <div>
-            <Label for="exampleEmail">Fecha de Salida </Label>
-            <input name="fechaSalida" type="date" placeholder="fechaSalida" className="form-control" onChange={manejarCambio} />
+            <label>Fecha de Salida </label>
+            <input name="fechaSalida" type="date" className="form-control" onBlur={handleBlurCheckIn} value={consolaCheckIn?.fechaSalida || ""} onChange={manejarCambio} />
+            {errorsChecIn.fechaSalida && <p id="errores">{errorsChecIn.fechaSalida}</p>}
           </div>
           <div>
-            <Label for="exampleEmail">Habitación </Label>
-            <Habitaciones name="codHabitacion" handleChangeData={manejarCambio} url={urlhabitacionesDisponibles} />
+            <label># Adultos</label>
+            <input name="numAdultos" type="number" className="form-control" onBlur={handleBlurCheckIn} value={consolaCheckIn?.numAdultos || ""} onChange={manejarCambio} placeholder="numAdultos" />
+            {errorsChecIn.numAdultos && <p id="errores">{errorsChecIn.numAdultos}</p>}
           </div>
         </div>
         <div className="flex">
           <div>
-            <Label for="exampleEmail"># Adultos</Label>
-            <input name="numAdultos" type="number" placeholder="numAdultos" className="form-control" onChange={manejarCambio} />
-          </div>
-          <div>
-            <Label for="exampleEmail"># Niños</Label>
-            <input name="numNinos" type="number" placeholder="numNinos" className="form-control" onChange={manejarCambio} />
+            <label># Niños</label>
+            <input name="numNinos" type="number" className="form-control" onBlur={handleBlurCheckIn} value={consolaCheckIn?.numNinos || ""} onChange={manejarCambio} placeholder="numNinos" />
+            {errorsChecIn.numNinos && <p id="errores">{errorsChecIn.numNinos}</p>}
           </div>
           <div>
             <Label for="exampleEmail">Huesped Registrado </Label>
             <SelectHuespedes name="codHuesped" handleChangeData={manejarCambio} url={urlHuespedes} />
+            {errorsChecIn.codHuesped && <p id="errores">{errorsChecIn.codHuesped}</p>}
           </div>
-        </div>
-        <div align="right">
-          <button className="btn btn-primary" type="submit"> Insertar </button>
-          <button className="btn btn-secondary" onClick={handleCheckInClose}>Cancelar</button>
+          <div align="right" style={{ marginTop: "30px" }}>
+            <button className="btn btn-primary" type="submit"> Insertar </button>
+            <button className="btn btn-secondary" onClick={cerrarCheckIn}>Cancelar</button>
+          </div>
         </div>
       </form>
     </div>

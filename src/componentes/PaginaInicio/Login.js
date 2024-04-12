@@ -45,6 +45,7 @@ const Login = () => {
                 grant_type: "password",
             };
 
+            console.log("datalogin", reqData);
             const response = await axios.post(Apiurl + "oauth/token", new URLSearchParams(reqData), {
                 withCredentials: true,
                 auth: {

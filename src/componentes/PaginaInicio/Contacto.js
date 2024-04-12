@@ -91,7 +91,7 @@ function Contacto() {
     }
     if (!form.comentario.trim()) {
       errors.comentario = "El campo 'Comentario'es requerido";
-    } else if (!EXPRESION_REGULAR_COMENTARIO.test(form.comments.trim())) {
+    } else if (EXPRESION_REGULAR_COMENTARIO.test(form.comentario.trim())) {
       errors.comentario = "No puede superar los 255 caracteres";
     }
     if (!form.numTelefono.trim()) {
