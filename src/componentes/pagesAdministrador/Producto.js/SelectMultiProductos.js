@@ -5,9 +5,9 @@ import Select from "react-select";
 import { Apiurl } from '../../../services/userService';
 const url = Apiurl + "producto/listarProductos";
 
-const SelectMultiProductos = ({ name, handleChangeData, value = null }) => {
+const SelectMultiProductos = ({ name, handleChangeData, value = [] }) => {
     const [data, setData] = useState([]);
-    const [selectedValues, setSelectedValues] = useState(value || []);
+    const [selectedProducts, setSelectedProducts] = useState(value);
 
     const getHuespedes = async () => {
         try {
@@ -32,7 +32,7 @@ const SelectMultiProductos = ({ name, handleChangeData, value = null }) => {
 
 
     const handleChange = (selectedOptions) => {
-        setSelectedValues(selectedOptions)
+        setSelectedProducts(selectedOptions);
         handleChangeData({
             target: {
                 name,
@@ -43,28 +43,52 @@ const SelectMultiProductos = ({ name, handleChangeData, value = null }) => {
                     cantidad: option.cantidad,
                     precio: option.precio,
                     fechaRegistro: option.fechaRegistro,
-                    horaRegistro: option.horaRegistro
+                    horaRegistro: option.horaRegistro,
                 }))
             }
         })
     }
+
+    const handleQuantityChange = (index, event) => {
+        const newSelectedProducts = [...selectedProducts];
+        newSelectedProducts[index].cantidad = event.target.value;
+        setSelectedProducts(newSelectedProducts);
+        handleChangeData({
+            target: {
+                name,
+                value: newSelectedProducts
+            }
+        });
+    };
+
     return (
         <div className='SelectProductos' style={{ width: "100%" }}>
             <Select
-                value={selectedValues}
-                options={data.map((produ) => ({
-                    value: produ.codProducto,
-                    label: produ.nombreProducto,
-                    marca: produ.marca,
-                    cantidad: produ.cantidad,
-                    precio: produ.precio,
-                    fechaRegistro: produ.fechaRegistro,
-                    horaRegistro: produ.horaRegistro
+                value={selectedProducts}
+                options={data.map((producto) => ({
+                    value: producto.codProducto,
+                    label: producto.nombreProducto,
+                    marca: producto.marca,
+                    cantidad: producto.cantidad,
+                    precio: producto.precio,
+                    fechaRegistro: producto.fechaRegistro,
+                    horaRegistro: producto.horaRegistro
                 }))}
                 onChange={handleChange}
                 isMulti
                 placeholder="Seleccione los Productos"
             />
+            {selectedProducts.map((selectedProduct, index) => (
+                <div key={index}>
+                    <span>{selectedProduct.producto?.label}</span>
+                    <input
+                        type="number"
+                        value={selectedProduct.cantidad}
+                        onChange={(event) => handleQuantityChange(index, event)}
+                        placeholder="Cantidad"
+                    />
+                </div>
+            ))}
         </div>
     );
 }

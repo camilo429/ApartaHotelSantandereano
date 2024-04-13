@@ -13,6 +13,7 @@ const CheckIn = () => {
     const [mensaje, setMensaje] = useState("");
     const [errors, setErrors] = useState({});
 
+
     const [smShow, setSmShow] = useState(false);
     const handleMensajeClose = () => setSmShow(false);
     const handleShowMensaje = () => setSmShow(true);
@@ -24,7 +25,18 @@ const CheckIn = () => {
     const [consolaFactura, setConsolaFactura] = useState({
         codFactura: "",
         descripcion: "",
-        itemFactura: [],
+        itemFactura: [{
+            cantidad: "",
+            producto: {
+                codProducto: "",
+                nombreProducto: "",
+                marca: "",
+                cantidad: "",
+                precio: "",
+                fechaRegistro: "",
+                horaRegistro: ""
+            }
+        }],
         fechaCreacion: "",
         horaCreacion: "",
         estado: "",
@@ -212,7 +224,7 @@ const CheckIn = () => {
                 <div className='flex' style={{ width: "100%" }}>
                     <div>
                         <label>Productos</label>
-                        <SelectMultiProductos name="itemFactura" value={consolaFactura?.itemFactura || ""} handleChangeData={handleChange} />
+                        <SelectMultiProductos name="producto" value={consolaFactura?.itemFactura || []} handleChangeData={handleChange} />
                     </div>
                 </div>
                 <div className='flex'>

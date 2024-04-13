@@ -25,6 +25,7 @@ function Habitacion() {
   const [data, setData] = useState([]);
   const [errors, setErrors] = useState({});
   const [errorsChecIn, setErrorsChecIn] = useState({});
+  const [mensaje, setMensaje] = useState("");
 
   const [showHabitacion, setShowHabitacion] = useState(false);
   const handleHabitacionClose = () => setShowHabitacion(false);
@@ -33,8 +34,6 @@ function Habitacion() {
   const [smShow, setSmShow] = useState(false);
   const handleMensajeClose = () => setSmShow(false);
   const handleShowMensaje = () => setSmShow(true);
-
-  const [mensaje, setMensaje] = useState("");
 
   const [showEditar, setShowEditar] = useState(false);
   const handleEditarClose = () => setShowEditar(false);
