@@ -268,7 +268,7 @@ function EmpleadoComponent() {
           peticionGet();
           setMensaje("Empleado Actualizado");
           handleEditarClose();
-          handleShowMensaje();
+          abrirCerrarModalMensaje();
           setConsolaSeleccionada({});
         }
       }
@@ -295,7 +295,7 @@ function EmpleadoComponent() {
         setData(data.filter((consola) => consola.codEmpleado !== consolaSeleccionada.codEmpleado));
         setMensaje("Empleado Eliminado");
         handleEliminarClose();
-        handleShowMensaje();
+        abrirCerrarModalMensaje();
         peticionGet();
       } else {
         console.log("Se generado un error", response.status);

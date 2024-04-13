@@ -187,9 +187,13 @@ function Habitacion() {
     if (!form || form.numNinos < 0) {
       errorsChecIn.numNinos = "El campo 'Número Niños' no puede ser negativo";
     }
+    if (!form || !form.codHuesped || form.codHuesped.numDocumento === "") {
+      errorsChecIn.codHuesped = "El Documento Huesped Es requerido";
+    }
     if (!form || ((form.numAdultos + form.numNinos) > form.maxPersonasDisponibles)) {
       errorsChecIn.numAdultos = "El número total de personas supera la capacidad de la habitación";
     }
+
     return errorsChecIn;
   }
 
@@ -337,7 +341,7 @@ function Habitacion() {
     try {
       e.preventDefault();
       setErrors(validationFormCheckIn(consolaCheckIn));
-      if (Object.keys(errors).length === 0) {
+      if (Object.keys(errorsChecIn).length === 0) {
         console.log("CheckIn", consolaCheckIn);
         const response = await axios.post(urlCheckIn, consolaCheckIn, {
           headers: {
@@ -433,6 +437,22 @@ function Habitacion() {
       handleMensajeClose();
     }, 2000); // 2000 milisegundos = 2 segundos
   };
+  function fechaMinima() {
+    const today = new Date();
+    let dd = today.getDate();
+    let mm = today.getMonth() + 1; // January is 0!
+    const yyyy = today.getFullYear();
+
+    if (dd < 10) {
+      dd = '0' + dd;
+    }
+
+    if (mm < 10) {
+      mm = '0' + mm;
+    }
+
+    return yyyy + '-' + mm + '-' + dd;
+  }
   const popUp = (
     <div>
       <Modal size="sm" show={smShow} onHide={() => setSmShow(false)} aria-labelledby="example-modal-sizes-title-sm">
@@ -560,31 +580,31 @@ function Habitacion() {
     <div>
       <form onSubmit={peticionCheckIn}>
         <div className="flex">
-          <div>
+          <div className="cajasCheckIn">
             <label >Fecha de Ingreso</label>
-            <input name="fechaEntrada" type="date" className="form-control" onBlur={handleBlurCheckIn} value={consolaCheckIn?.fechaEntrada || ""} onChange={manejarCambio} />
+            <input name="fechaEntrada" type="date" className="form-control" onBlur={handleBlurCheckIn} value={consolaCheckIn?.fechaEntrada || ""} onChange={manejarCambio} min={fechaMinima()} />
             {errorsChecIn.fechaEntrada && <p id="errores">{errorsChecIn.fechaEntrada}</p>}
           </div>
-          <div>
+          <div className="cajasCheckIn">
             <label>Fecha de Salida </label>
-            <input name="fechaSalida" type="date" className="form-control" onBlur={handleBlurCheckIn} value={consolaCheckIn?.fechaSalida || ""} onChange={manejarCambio} />
+            <input name="fechaSalida" type="date" className="form-control" onBlur={handleBlurCheckIn} value={consolaCheckIn?.fechaSalida || ""} onChange={manejarCambio} min={fechaMinima()} />
             {errorsChecIn.fechaSalida && <p id="errores">{errorsChecIn.fechaSalida}</p>}
           </div>
-          <div>
+          <div className="cajasCheckIn">
             <label># Adultos</label>
             <input name="numAdultos" type="number" className="form-control" onBlur={handleBlurCheckIn} value={consolaCheckIn?.numAdultos || ""} onChange={manejarCambio} placeholder="numAdultos" />
             {errorsChecIn.numAdultos && <p id="errores">{errorsChecIn.numAdultos}</p>}
           </div>
-        </div>
-        <div className="flex">
-          <div>
+          <div className="cajasCheckIn">
             <label># Niños</label>
-            <input name="numNinos" type="number" className="form-control" onBlur={handleBlurCheckIn} value={consolaCheckIn?.numNinos || ""} onChange={manejarCambio} placeholder="numNinos" />
+            <input name="numNinos" type="number" className="form-control" onBlur={handleBlurCheckIn} value={consolaCheckIn?.numNinos || "0"} onChange={manejarCambio} placeholder="numNinos" />
             {errorsChecIn.numNinos && <p id="errores">{errorsChecIn.numNinos}</p>}
           </div>
-          <div>
+        </div>
+        <div className="flex">
+          <div className="cajasCheckIn">
             <Label for="exampleEmail">Huesped Registrado </Label>
-            <SelectHuespedes name="codHuesped" handleChangeData={manejarCambio} url={urlHuespedes} />
+            <SelectHuespedes name="codHuesped" value={consolaCheckIn?.codHuesped || "1"} handleChangeData={manejarCambio} url={urlHuespedes} />
             {errorsChecIn.codHuesped && <p id="errores">{errorsChecIn.codHuesped}</p>}
           </div>
           <div align="right" style={{ marginTop: "30px" }}>

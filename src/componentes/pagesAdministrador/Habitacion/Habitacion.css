@@ -14,3 +14,15 @@ button {
 .checkIn {
     max-width: 900px !important;
 }
+
+.cajasCheckIn {
+    margin-right: 20px;
+}
+
+.cajasCheckIn>input {
+    width: 170px;
+}
+
+.button {
+    margin-right: 10px;
+}

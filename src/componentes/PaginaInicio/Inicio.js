@@ -190,8 +190,10 @@ function Inicio() {
         abrirCerrarModalMensaje();
       }
     } catch (error) {
-      console.error("Error al realizar la reservación", error);
-      // alert("Hubo un error al crear la reservación. Por favor, intenta nuevamente.", error.response.data);
+      const mensajeError = error.response && error.response.data && error.response.data.mensaje ? error.response.data.mensaje : "Hubo un error al Realizar Reservación. Por favor, intenta nuevamente.";
+      setMensaje(mensajeError);
+      abrirCerrarModalMensaje();
+      setErrors({});
     } finally {
       navigate('/');
     }

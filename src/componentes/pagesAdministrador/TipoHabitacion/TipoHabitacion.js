@@ -5,14 +5,15 @@ import MUIDataTable from "mui-datatables";
 import { Link } from "react-router-dom";
 import { Apiurl } from "../../../services/userService";
 import { Modal } from 'react-bootstrap';
-import { useForm } from 'react-hook-form';
-
+import { EXPRESION_REGULAR_NOMBRE_APELLIDO } from "../../../services/ExpresionsRegular";
 const url = Apiurl + "tipoHabiatcion/listarTipoHabitacion";
 const urlG = Apiurl + "tipoHabiatcion/crearTipoHabitacion";
 const urlE = Apiurl + "tipoHabiatcion/actualizarTipoHabitacion/";
 const urlD = Apiurl + "tipoHabiatcion/"
 const TipoHabitacion = () => {
     const [data, setData] = useState([]);
+    const [mensaje, setMensaje] = useState("");
+    const [errors, setErrors] = useState({});
 
     const [showTipoHabitacion, setShowTipoHabitacion] = useState(false);
     const handleTipoHabitacionClose = () => setShowTipoHabitacion(false);
@@ -22,8 +23,6 @@ const TipoHabitacion = () => {
     const handleMensajeClose = () => setSmShow(false);
     const handleShowMensaje = () => setSmShow(true);
 
-    const [mensaje, setMensaje] = useState("");
-
     const [showEditar, setShowEditar] = useState(false);
     const handleEditarClose = () => setShowEditar(false);
     const handleEditarShow = () => setShowEditar(true);
@@ -31,8 +30,6 @@ const TipoHabitacion = () => {
     const [showEliminar, setShowEliminar] = useState(false);
     const handleEliminarClose = () => setShowEliminar(false);
     const handleEliminarShow = () => setShowEliminar(true);
-
-    const { handleSubmit, formState: { errors }, setValue, reset } = useForm();
 
     const [consolaSeleccionada, setConsolaSeleccionada] = useState({
         codTipoHabitacion: "",
@@ -48,6 +45,25 @@ const TipoHabitacion = () => {
             [name]: value,
         }));
     };
+    const handleBlur = (e) => {
+        handleChange(e);
+        setErrors(validationsForm(consolaSeleccionada));
+    }
+    const validationsForm = (form) => {
+        let errors = {};
+        if (!form.nombre.trim()) {
+            errors.nombre = "El campo 'Nombre' es requerido";
+        } else if (!EXPRESION_REGULAR_NOMBRE_APELLIDO.test(form.nombre.trim())) {
+            errors.nombre = "El campo 'Nombre' no es valido";
+        }
+        if (!form || form.precioXPersona === "") {
+            errors.precioXPersona = "Precio Por Persona Es Requerido";
+        }
+        if (!form || form.precioXAcompanante === "") {
+            errors.precioXAcompanante = "Precio Por Acompañante Es Requerido";
+        }
+        return errors;
+    }
 
     const peticionGet = async () => {
         try {
@@ -68,66 +84,77 @@ const TipoHabitacion = () => {
         }
     }
 
-    const peticionPost = async () => {
+    const peticionPost = async (e) => {
         try {
-            const response = await axios.post(urlG, consolaSeleccionada, {
-                headers: {
-                    Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
-                }
-            })
-            console.log("response post tipohabitación", response.status);
-
-            if (response.status === 201) {
-                setData(data.concat(response.data));
-                setMensaje("Tipo Habitación Agregado");
-                peticionGet();
-                handleShowMensaje();
-                handleTipoHabitacionClose();
-                setConsolaSeleccionada({
-                    codTipoHabitacion: "",
-                    nombre: "",
-                    precioXAcompanante: "",
-                    precioXPersona: "",
+            e.preventDefault();
+            if (Object.keys(errors).length === 0) {
+                const response = await axios.post(urlG, consolaSeleccionada, {
+                    headers: {
+                        Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
+                    }
                 })
-                reset();
-            } else {
-                console.log("Error post Habitación");
+                if (response.status === 201) {
+                    setData(data.concat(response.data));
+                    setMensaje("Tipo Habitación Agregado");
+                    peticionGet();
+                    handleTipoHabitacionClose();
+                    abrirCerrarModalMensaje();
+                    setConsolaSeleccionada({
+                        codTipoHabitacion: "",
+                        nombre: "",
+                        precioXAcompanante: "",
+                        precioXPersona: "",
+                    })
+                }
+                setErrors({});
             }
         } catch (error) {
-            console.log(error);
+            const mensajeError = error.response && error.response.data && error.response.data.mensaje ? error.response.data.mensaje : "Hubo un error al Editar el Empleado. Por favor, intenta nuevamente.";
+            setMensaje(mensajeError);
+            abrirCerrarModalMensaje();
+            setErrors({});
         }
     }
 
-    const peticionPut = async () => {
+    const peticionPut = async (e) => {
         try {
-            const response = await axios.put(urlE + consolaSeleccionada.codTipoHabitacion, consolaSeleccionada, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
-                }
-            });
-            console.log("Editar tipo Habitación:", response.status);
-            if (response.status === 201) {
-                const dataNueva = data.map((consola) => {
-                    if (consolaSeleccionada.codTipoHabitacion === consola.codTipoHabitacion) {
-                        consola.codTipoHabitacion = consolaSeleccionada.codTipoHabitacion;
-                        consola.nombre = consolaSeleccionada.nombre;
-                        consola.precioXAcompanante = consolaSeleccionada.precioXAcompanante;
-                        consola.precioXPersona = consolaSeleccionada.precioXPersona;
+            e.preventDefault();
+            console.log(Object.keys(errors).length, "put");
+            if (Object.keys(errors).length === 0) {
+                const response = await axios.put(urlE + consolaSeleccionada.codTipoHabitacion, consolaSeleccionada, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
                     }
-                    return consola;
-                })
-                setData(dataNueva);
-                peticionGet();
-                handleEditarClose();
-                setMensaje("Tipo Habitación Actualizada");
-                handleShowMensaje();
-                reset();
-            } else {
-                console.log("Error Actualizar Tipo Habitación", response.status);
+                });
+                if (response.status === 201) {
+                    const dataNueva = data.map((consola) => {
+                        if (consolaSeleccionada.codTipoHabitacion === consola.codTipoHabitacion) {
+                            consola.codTipoHabitacion = consolaSeleccionada.codTipoHabitacion;
+                            consola.nombre = consolaSeleccionada.nombre;
+                            consola.precioXAcompanante = consolaSeleccionada.precioXAcompanante;
+                            consola.precioXPersona = consolaSeleccionada.precioXPersona;
+                        }
+                        return consola;
+                    })
+                    setData(dataNueva);
+                    peticionGet();
+                    handleEditarClose();
+                    setMensaje("Tipo Habitación Actualizada");
+                    abrirCerrarModalMensaje();
+                    setConsolaSeleccionada({
+                        codTipoHabitacion: "",
+                        nombre: "",
+                        precioXAcompanante: "",
+                        precioXPersona: "",
+                    })
+                }
             }
         } catch (error) {
-            console.log("error put", error);
+            console.log(error);
+            const mensajeError = error.response && error.response.data && error.response.data.mensaje ? error.response.data.mensaje : "Hubo un error al Editar Tipo Habitación. Por favor, intenta nuevamente.";
+            setMensaje(mensajeError);
+            abrirCerrarModalMensaje();
         }
     }
 
@@ -153,6 +180,12 @@ const TipoHabitacion = () => {
 
         }
     }
+    const abrirCerrarModalMensaje = () => {
+        handleShowMensaje();
+        setTimeout(() => {
+            handleMensajeClose();
+        }, 2000); // 2000 milisegundos = 2 segundos
+    };
     const popUp = (
         <div>
             <Modal size="sm" show={smShow} onHide={() => setSmShow(false)} aria-labelledby="example-modal-sizes-title-sm">
@@ -166,19 +199,22 @@ const TipoHabitacion = () => {
     )
     const bodyTipoHabitacion = (
         <div className='bodyCrearTipoHabitación'>
-            <form onSubmit={handleSubmit(peticionPost)}>
+            <form onSubmit={peticionPost}>
                 <div className='flex'>
                     <div className='formulario'>
                         <label>Nombre Habitación</label>
-                        <input className='form-control' name='nombre' onChange={handleChange}></input>
+                        <input className='form-control' type='text' name='nombre' onBlur={handleBlur} value={consolaSeleccionada?.nombre || ""} onChange={handleChange} />
+                        {errors.nombre && <p id='errores'>{errors.nombre}</p>}
                     </div>
                     <div className='formulario'>
                         <label>Precio * Persona</label>
-                        <input className='form-control' name='precioXPersona' onChange={handleChange}></input>
+                        <input className='form-control' type='number' name='precioXPersona' onBlur={handleBlur} value={consolaSeleccionada?.precioXPersona || ""} onChange={handleChange} />
+                        {errors.precioXPersona && <p id='errores'>{errors.precioXPersona}</p>}
                     </div>
                     <div className='formulario'>
                         <label>Precio * Acompañante</label>
-                        <input className='form-control' name='precioXAcompanante' onChange={handleChange}></input>
+                        <input className='form-control' type='number' name='precioXAcompanante' onBlur={handleBlur} value={consolaSeleccionada?.precioXAcompanante || ""} onChange={handleChange} />
+                        {errors.precioXAcompanante && <p id='errores'>{errors.precioXAcompanante}</p>}
                     </div>
                 </div>
                 <div className='flex'>
@@ -187,32 +223,35 @@ const TipoHabitacion = () => {
                 </div>
             </form>
         </div>
-    )
+    );
 
     const bodyEditar = (
         <div className='bodyCrearTipoHabitación'>
-            <form onSubmit={handleSubmit(peticionPut)}>
+            <form onSubmit={peticionPut}>
                 <div className='flex'>
                     <div className='formulario'>
                         <label>Nombre Habitación</label>
-                        <input className='form-control' name='nombre' onChange={handleChange} value={consolaSeleccionada.nombre}></input>
+                        <input className='form-control' name='nombre' onBlur={handleBlur} value={consolaSeleccionada?.nombre || ""} onChange={handleChange} placeholder='Tipo Habitación' />
+                        {errors.nombre && <p id='errores'>{errors.nombre}</p>}
                     </div>
                     <div className='formulario'>
                         <label>Precio * Persona</label>
-                        <input className='form-control' name='precioXPersona' onChange={handleChange} value={consolaSeleccionada.precioXPersona}></input>
+                        <input className='form-control' name='precioXPersona' onBlur={handleBlur} value={consolaSeleccionada?.precioXPersona || ""} onChange={handleChange} placeholder='Valor * 1 persona' />
+                        {errors.precioXPersona && <p id='errores'>{errors.precioXPersona}</p>}
                     </div>
                     <div className='formulario'>
                         <label>Precio * Acompañante</label>
-                        <input className='form-control' name='precioXAcompanante' onChange={handleChange} value={consolaSeleccionada.precioXAcompanante}></input>
+                        <input className='form-control' name='precioXAcompanante' onBlur={handleBlur} value={consolaSeleccionada?.precioXAcompanante || ""} onChange={handleChange} placeholder='Valor * Acompañante' />
+                        {errors.precioXAcompanante && <p id='errores'>{errors.precioXAcompanante}</p>}
                     </div>
                 </div>
                 <div className='flex'>
                     <button type='submit' className='btn btn-primary'>Agregar</button>
-                    <button type='submit' className='btn btn-secondary' onClick={handleTipoHabitacionClose}>Cancelar</button>
+                    <button type='submit' className='btn btn-secondary' onClick={handleEditarClose}>Cancelar</button>
                 </div>
             </form>
         </div>
-    )
+    );
 
     const bodyEliminar = (
         <div className='bodyEliminar'>
@@ -226,14 +265,12 @@ const TipoHabitacion = () => {
         </div>
     )
     const seleccionarTipoHabitacion = (consola, caso) => {
-        console.log("consola", consola);
         setConsolaSeleccionada({
             codTipoHabitacion: consola[0],
             nombre: consola[1],
-            precioXAcompanante: consola[2],
-            precioXPersona: consola[3],
+            precioXPersona: consola[2],
+            precioXAcompanante: consola[3],
         })
-        console.log("consolaSeleccionada", consolaSeleccionada);
         if (caso === "Editar") {
             handleEditarShow();
         }
@@ -256,7 +293,7 @@ const TipoHabitacion = () => {
             label: "Precio * Persona"
         }, {
             name: "precioXAcompanante",
-            label: "Precio * Acompanante"
+            label: "Precio * Acompañante"
         }, {
             name: "acciones",
             label: "Acciones",
@@ -308,7 +345,7 @@ const TipoHabitacion = () => {
                 <Modal.Body className="body">{bodyTipoHabitacion}</Modal.Body>
             </Modal>
             <Modal show={smShow} onHide={handleMensajeClose} animation={false} > {popUp}</Modal>
-            <Modal show={showEditar} onHide={handleEditarShow} animation={false} dialogClassName='TipoHabitacion' size='lg'>
+            <Modal show={showEditar} onHide={handleEditarClose} animation={false} dialogClassName='TipoHabitacion' size='lg'>
                 <Modal.Header closeButton>
                     <Modal.Title>Modificar Tipo Habitación</Modal.Title>
                 </Modal.Header>

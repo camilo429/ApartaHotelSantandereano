@@ -7,22 +7,22 @@ const url = Apiurl + "producto/listarProductos";
 
 const SelectMultiProductos = ({ name, handleChangeData, value = null }) => {
     const [data, setData] = useState([]);
-
+    const [selectedValues, setSelectedValues] = useState(value || []);
 
     const getHuespedes = async () => {
         try {
             const response = await axios.get(url, {
                 headers: {
+                    'Content-Type': 'application/json',
                     Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
                 }
             })
             if (response.status === 200) {
                 setData(response.data);
-            } else {
-                alert("Hubo error Select Productos");
             }
         } catch (error) {
-            console.log("error al obtener las opciones:", error);
+            alert("Error al traer los Productos");
+            console.log("Error al traer tipos documentos", error.message)
         }
     };
 
@@ -30,27 +30,28 @@ const SelectMultiProductos = ({ name, handleChangeData, value = null }) => {
         getHuespedes();
     }, []);
 
-    const handleChange = ({
-        label, value, nombreProducto, marca, cantidad, precio, fechaRegistro, horaRegistro
-    }) => {
+
+    const handleChange = (selectedOptions) => {
+        setSelectedValues(selectedOptions)
         handleChangeData({
             target: {
                 name,
-                value: {
-                    codProducto: value,
-                    nombreProducto: label,
-                    marca: marca,
-                    cantidad: cantidad,
-                    precio: precio,
-                    fechaRegistro: fechaRegistro,
-                    horaRegistro: horaRegistro
-                }
+                value: selectedOptions.map(option => ({
+                    codProducto: option.value,
+                    nombreProducto: option.label,
+                    marca: option.marca,
+                    cantidad: option.cantidad,
+                    precio: option.precio,
+                    fechaRegistro: option.fechaRegistro,
+                    horaRegistro: option.horaRegistro
+                }))
             }
         })
     }
     return (
-        <div className='SelectProductos'>
+        <div className='SelectProductos' style={{ width: "100%" }}>
             <Select
+                value={selectedValues}
                 options={data.map((produ) => ({
                     value: produ.codProducto,
                     label: produ.nombreProducto,
@@ -61,6 +62,7 @@ const SelectMultiProductos = ({ name, handleChangeData, value = null }) => {
                     horaRegistro: produ.horaRegistro
                 }))}
                 onChange={handleChange}
+                isMulti
                 placeholder="Seleccione los Productos"
             />
         </div>
