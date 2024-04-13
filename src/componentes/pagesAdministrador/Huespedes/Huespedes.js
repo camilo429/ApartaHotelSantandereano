@@ -211,11 +211,9 @@ function Huespedes() {
           peticionGet();
           handleEditarClose();
           setMensaje("Huesped Actualizado");
-          handleShowMensaje();
+          abrirCerrarModalMensaje();
           setConsolaSeleccionada({});
           setIsLoading(false);
-        } else {
-          console.error("La solicitud PUT no fue exitosa");
         }
       }
     } catch (error) {
@@ -242,9 +240,10 @@ function Huespedes() {
         peticionGet();
       }
     } catch (error) {
-      alert("Error al eliminar Huesped");
-      handleShowMensaje();
-      console.log("Error editar empleado", error);
+      console.error("Error al realizar la solicitud PUT:", error);
+      const mensajeError = error.response && error.response.data && error.response.data.mensaje ? error.response.data.mensaje : "Hubo un error al Eliminar el Huésped. Por favor, intenta nuevamente.";
+      setMensaje(mensajeError);
+      abrirCerrarModalMensaje();
     }
   }
   const validationsForm = () => {

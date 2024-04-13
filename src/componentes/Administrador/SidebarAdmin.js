@@ -61,6 +61,11 @@ function SidebarAdmin() {
         }
     }, [toggleRootClass]);
 
+    const eliminarToken = () => {
+        localStorage.removeItem('token');
+        window.location.href = "https://apartahotelsantandereano.web.app/";
+    }
+
     return (
         <nav className="navbar navbar-expand px-3 border-bottom">
             <button className="btn" id='sidebar-toggle' type='button'>
@@ -73,9 +78,7 @@ function SidebarAdmin() {
                             <img src={Cliente1} className='avatar img-fluid rounded' alt='monacho' />
                         </a>
                         <div className='dropdown-menu dropdown-menu-end'>
-                            <a href='#fe' className='dropdown-item'>Perfil</a>
-                            <a href='#fe' className='dropdown-item'>Configuracione</a>
-                            <a href='#fe' className='dropdown-item'>Salir</a>
+                            <a href="https://apartahotelsantandereano.web.app/" className='dropdown-item'>Salir</a>
                         </div>
                     </li>
                 </ul>

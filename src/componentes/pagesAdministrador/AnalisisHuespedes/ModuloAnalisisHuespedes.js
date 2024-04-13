@@ -1,14 +1,14 @@
 import React from 'react';
 import SidebarAdmin from '../../Administrador/SidebarAdmin';
 import Footer from '../../Administrador/Footer';
-import Reservacion from './Reservacion';
+import AnalisisHuespedes from './AnalisisHuespedes';
 import { CiSun } from "react-icons/ci";
 import { FaMoon } from "react-icons/fa";
-const ModuloReservacion = () => {
+const ModuloAnalisisHuespedes = () => {
     return (
         <div className='main'>
             <SidebarAdmin />
-            <Reservacion />
+            <AnalisisHuespedes />
             <a href='#html' className='theme-toggle'>
                 <CiSun />
                 <FaMoon />
@@ -17,4 +17,5 @@ const ModuloReservacion = () => {
         </div>
     );
 }
-export default ModuloReservacion;
+
+export default ModuloAnalisisHuespedes;

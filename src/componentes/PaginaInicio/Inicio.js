@@ -39,7 +39,6 @@ const urlG = Apiurl + "reservaciones/crearReservacion";
 function Inicio() {
   const [mensaje, setMensaje] = useState("");
   const [errors, setErrors] = useState({});
-  const navigate = useNavigate();
 
   const [showReservacion, setReservacion] = useState(false);
   const handleReservacionClose = () => setReservacion(false);
@@ -53,7 +52,7 @@ function Inicio() {
   const [consolaSeleccionada, setConsolaSeleccionada] = useState({
     fechaEntrada: "",
     fechaSalida: "",
-    adultos: 0,
+    adultos: 1,
     ninos: 0,
     tipoDocumento: {
       codTipoDocumento: "",
@@ -112,51 +111,17 @@ function Inicio() {
     return yyyy + '-' + mm + '-' + dd;
   }
 
-  const validationsForm = (form) => {
-    let errors = {};
 
-    if (!form.fechaEntrada.trim()) {
-      errors.fechaEntrada = "El campo 'Fecha de Entrada'es requerido";
-    }
-    if (!form.fechaSalida.trim()) {
-      errors.fechaSalida = "El campo 'Fecha de Entrada'es requerido";
-    }
-    if (form.fechaSalida < form.fechaEntrada) {
-      errors.fechaSalida = "El campo 'Fecha Salida' No es valida"
-    }
-    if (form.adultos <= 0) {
-      errors.adultos = "El campo 'Número Adultos' no puede ser cero o negativo";
-    }
-    if (form.ninos < 0) {
-      errors.ninos = "El campo 'Número Niños' no puede ser negativo";
-    }
-    if (!form.nombre.trim()) {
-      errors.nombre = "El campo 'Nombre' es requerido";
-    } else if (!EXPRESION_REGULAR_NOMBRE_APELLIDO.test(form.nombre.trim())) {
-      errors.nombre = "El campo 'Nombre' no es valido";
-    }
-    if (!form.apellido.trim()) {
-      errors.apellido = "El campo 'Apellido' es requerido";
-    } else if (!EXPRESION_REGULAR_NOMBRE_APELLIDO.test(form.apellido.trim())) {
-      errors.apellido = "El campo 'Apellido' no es valido";
-    }
-    if (!form.email.trim()) {
-      errors.email = "El campo 'Correo' es requerido";
-    } else if (!EXPRESION_REGULAR_EMAIL.test(form.email.trim())) {
-      errors.email = "El campo 'Correo' no es valido";
-    }
-
-    return errors;
-  }
   const peticionPost = async (e) => {
     try {
       e.preventDefault();
+      loading(true);
       setErrors(validationsForm(consolaSeleccionada));
       if (Object.keys(errors).length === 0) {
         setLoading(true);
-        //console.log("ConsolaSeleccionada", consolaSeleccionada)
         const response = await axios.post(urlG, consolaSeleccionada);
         if (response.status === 201) {
+          setErrors({});
           handleReservacionClose();
           setMensaje("Reservación Exitosa");
           abrirCerrarModalMensaje();
@@ -184,27 +149,96 @@ function Inicio() {
               imagenHabitacion: null
             }
           })
+        } else {
+          setErrors({});
+          setMensaje("Error al realizar reservación");
+          abrirCerrarModalMensaje();
         }
-      } else {
-        setMensaje("Error al realizar reservación");
-        abrirCerrarModalMensaje();
       }
     } catch (error) {
+      console.log(error);
       const mensajeError = error.response && error.response.data && error.response.data.mensaje ? error.response.data.mensaje : "Hubo un error al Realizar Reservación. Por favor, intenta nuevamente.";
       setMensaje(mensajeError);
       abrirCerrarModalMensaje();
       setErrors({});
     } finally {
-      navigate('/');
+      setLoading(false);
     }
   }
+  const validationsForm = (form) => {
+    let errors = {};
 
+    if (!form.fechaEntrada || form.fechaEntrada === "") {
+      errors.fechaEntrada = "El campo 'Fecha de Entrada'es requerido";
+    }
+    if (!form.fechaSalida || form.fechaSalida === "") {
+      errors.fechaSalida = "El campo 'Fecha de Entrada'es requerido";
+    }
+    if (form.fechaSalida < form.fechaEntrada) {
+      errors.fechaSalida = "El campo 'Fecha Salida' No es valida"
+    }
+    //if (form.adultos < 1) {
+    //  errors.adultos = "El campo 'Número Adultos' no puede ser menor a 1";
+    //}
+    if (form.ninos < 0) {
+      errors.ninos = "El campo 'Número Niños' no puede ser negativo";
+    }
+    if (!form.nombre || form.nombre === "") {
+      errors.nombre = "El campo 'Nombre' es requerido";
+    } else if (!EXPRESION_REGULAR_NOMBRE_APELLIDO.test(form.nombre)) {
+      errors.nombre = "El campo 'Nombre' no es valido";
+    }
+    if (!form.apellido || form.apellido === "") {
+      errors.apellido = "El campo 'Apellido' es requerido";
+    } else if (!EXPRESION_REGULAR_NOMBRE_APELLIDO.test(form.apellido)) {
+      errors.apellido = "El campo 'Apellido' no es valido";
+    }
+    if (!form.email || form.email === "") {
+      errors.email = "El campo 'Correo' es requerido";
+    } else if (!EXPRESION_REGULAR_EMAIL.test(form.email.trim())) {
+      errors.email = "El campo 'Correo' no es valido";
+    }
+    if (!form.numDocumento || form.numDocumento === "") {
+      errors.numDocumento = "Número de documento es Requerido";
+    }
+    if (!form || !form.tipoDocumento || !form.tipoDocumento.nomTipoDocumento || form.tipoDocumento.nomTipoDocumento === "" || form.tipoDocumento.nomTipoDocumento === undefined) {
+      errors.tipoDocumento = "Tipo documento es Requerido";
+    }
+    return errors;
+  }
   const abrirCerrarModalMensaje = () => {
     handleShowMensaje();
     setTimeout(() => {
       handleMensajeClose();
     }, 2000); // 2000 milisegundos = 2 segundos
   };
+  const cerrarReservacion = () => {
+    handleReservacionClose();
+    setConsolaSeleccionada({
+      tipoDocumento: {
+        codTipoDocumento: "",
+        nomTipoDocument: "",
+      },
+      habitacion: {
+        codHabitacion: "",
+        nombreHabitacion: {
+          codTipoHabitacio: "",
+          nombre: "",
+          precioXPersona: "",
+          precioXAcompanante: ""
+        },
+        descripHabitacion: "",
+        numHabitacion: "",
+        pisoHabitacion: "",
+        maxPersonasDisponibles: "",
+        estadoHabitacion: {
+          codEstadoHabitacion: "",
+          nombre: ""
+        },
+        imagenHabitacion: null
+      }
+    })
+  }
 
   const bodyInsertar = (
     <div>
@@ -213,35 +247,36 @@ function Inicio() {
           <FormGroup>
             <div id="reservacion">
               <Label for="exampleEmail">Fecha de Entrada</Label>
-              <input required name="fechaEntrada" type="date" placeholder="fechaEntrada" className="form-control" onBlur={handleBlur} value={consolaSeleccionada.fechaEntrada} onChange={handleChange} min={getCurrentDate()} />
+              <input required name="fechaEntrada" type="date" placeholder="fechaEntrada" className="form-control" onBlur={handleBlur} value={consolaSeleccionada?.fechaEntrada || ""} onChange={handleChange} min={getCurrentDate()} />
               {errors.fechaEntrada && <p id="errores">{errors.fechaEntrada}</p>}
             </div>
           </FormGroup>
           <FormGroup  >
             <div id="reservacion">
               <Label for="exampleEmail">Fecha de Salida</Label>
-              <input required name="fechaSalida" type="date" placeholder="fechaSalida" className="form-control" onBlur={handleBlur} value={consolaSeleccionada.fechaSalida} onChange={handleChange} min={getCurrentDate()} />
+              <input required name="fechaSalida" type="date" placeholder="fechaSalida" className="form-control" onBlur={handleBlur} value={consolaSeleccionada?.fechaSalida || ""} onChange={handleChange} min={getCurrentDate()} />
               {errors.fechaSalida && <p id="errores">{errors.fechaSalida}</p>}
             </div>
           </FormGroup>
           <FormGroup>
             <div id="reservacion">
               <Label for="exampleEmail">Número de Adultos</Label>
-              <input required name="adultos" type="number" placeholder="# Adultos" max="5" min="1" className="form-control" onBlur={handleBlur} value={consolaSeleccionada.adultos} onChange={handleChange} />
+              <input required name="adultos" type="number" placeholder="# Adultos" max="5" min="1" className="form-control" onBlur={handleBlur} value={consolaSeleccionada?.adultos || 1} onChange={handleChange} />
               {errors.adultos && <p id="errores">{errors.adultos}</p>}
             </div>
           </FormGroup>
           <FormGroup>
             <div id="reservacion">
               <Label for="exampleEmail">Número de Niños</Label>
-              <input required name="ninos" type="number" placeholder="# Niños" min="0" max="4" className="form-control" onBlur={handleBlur} value={consolaSeleccionada.ninos || 0} onChange={handleChange} />
+              <input required name="ninos" type="number" placeholder="# Niños" min="0" max="4" className="form-control" onBlur={handleBlur} value={consolaSeleccionada?.ninos || 0} onChange={handleChange} />
               {errors.ninos && <p id="errores"> {errors.ninos}</p>}
             </div>
           </FormGroup>
           <FormGroup style={{ marginLeft: "7px" }}>
             <div id="reservacion">
               <Label for="exampleEmail">Tipo de Documento</Label>
-              <TipoDocumento name="tipoDocumento" handleChangeData={handleChange} value={consolaSeleccionada.tipoDocumento} />
+              <TipoDocumento name="tipoDocumento" handleChangeData={handleChange} value={consolaSeleccionada?.tipoDocumento || ""} onBlur={handleBlur} />
+              {errors.tipoDocumento && <p id="errores">{errors.tipoDocumento}</p>}
             </div>
           </FormGroup>
         </div>
@@ -249,35 +284,35 @@ function Inicio() {
           <FormGroup >
             <div id="reservacion">
               <Label for="exampleEmail"># Documento</Label>
-              <input name="numDocumento" type="number" placeholder="Número de Documento" className="form-control" onBlur={handleBlur} value={consolaSeleccionada.numDocumento} onChange={handleChange} />
+              <input name="numDocumento" type="number" placeholder="Número de Documento" className="form-control" onBlur={handleBlur} value={consolaSeleccionada?.numDocumento || ""} onChange={handleChange} />
               {errors.numDocumento && <p id="errores">{errors.numDocumento}</p>}
             </div>
           </FormGroup>
           <FormGroup >
             <div id="reservacion">
               <Label for="exampleEmail">Nombre</Label>
-              <input required name="nombre" placeholder="Nombre" className="form-control" onBlur={handleBlur} value={consolaSeleccionada.nombre} onChange={handleChange} />
+              <input required name="nombre" placeholder="Nombre" className="form-control" onBlur={handleBlur} value={consolaSeleccionada?.nombre || ""} onChange={handleChange} />
               {errors.nombre && <p id="errores">{errors.nombre}</p>}
             </div>
           </FormGroup>
           <FormGroup >
             <div id="reservacion">
               <Label for="exampleEmail">Apellido</Label>
-              <input name="apellido" placeholder="Apellido" className="form-control" onBlur={handleBlur} value={consolaSeleccionada.apellido} onChange={handleChange} />
+              <input name="apellido" placeholder="Apellido" className="form-control" onBlur={handleBlur} value={consolaSeleccionada?.apellido || ""} onChange={handleChange} />
               {errors.apellido && <p id="errores">{errors.apellido}</p>}
             </div>
           </FormGroup>
           <FormGroup >
             <div id="reservacion">
               <Label for="exampleEmail">Correo Electronico</Label>
-              <input name="email" type="email" placeholder="email" className="form-control" onBlur={handleBlur} value={consolaSeleccionada.email} onChange={handleChange} />
+              <input name="email" type="email" placeholder="email" className="form-control" onBlur={handleBlur} value={consolaSeleccionada?.email || ""} onChange={handleChange} />
               {errors.email && <p id="errores">{errors.email}</p>}
             </div>
           </FormGroup>
           <FormGroup style={{ marginLeft: "7px" }}>
             <div id="reservacion">
               <Label for="exampleEmail">Tipo Habitación </Label>
-              <SelectHabitacionesDisponibles name="habitacion" handleChangeData={handleChange} value={consolaSeleccionada.habitacion} />
+              <SelectHabitacionesDisponibles name="habitacion" handleChangeData={handleChange} value={consolaSeleccionada?.habitacion || ""} onBlur={handleBlur} />
             </div>
           </FormGroup>
         </div>
@@ -291,7 +326,8 @@ function Inicio() {
               </div>
             </div>
           )}
-          <button type="submit" className="btn btn-success">Agendar</button>
+          <button type="submit" className="btn btn-primary">Agendar</button>
+          <button type="submit" className="btn btn-secondary" onClick={cerrarReservacion}>Cancelar</button>
         </div>
       </form >
       <br />

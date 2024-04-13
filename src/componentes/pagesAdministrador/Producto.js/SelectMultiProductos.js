@@ -5,92 +5,77 @@ import Select from "react-select";
 import { Apiurl } from '../../../services/userService';
 const url = Apiurl + "producto/listarProductos";
 
-const SelectMultiProductos = ({ name, handleChangeData, value = [] }) => {
+const SelectMultiProductos = ({ name, handleChangeData, value = null }) => {
     const [data, setData] = useState([]);
-    const [selectedProducts, setSelectedProducts] = useState(value);
+    const [selectedValues, setSelectedValues] = useState(value || []);
+    const [cantidad, setCantidad] = useState('');
 
-    const getHuespedes = async () => {
+    const getProductos = async () => {
         try {
             const response = await axios.get(url, {
                 headers: {
-                    'Content-Type': 'application/json',
                     Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
                 }
             })
             if (response.status === 200) {
                 setData(response.data);
+            } else {
+                alert("Hubo error Select Productos");
             }
         } catch (error) {
-            alert("Error al traer los Productos");
-            console.log("Error al traer tipos documentos", error.message)
+            console.log("error al obtener las opciones:", error);
         }
     };
 
     useEffect(() => {
-        getHuespedes();
+        getProductos();
     }, []);
 
+    const handleCantidadChange = (event) => {
+        setCantidad(event.target.value);
+    };
 
     const handleChange = (selectedOptions) => {
-        setSelectedProducts(selectedOptions);
+        setSelectedValues(selectedOptions);
         handleChangeData({
             target: {
                 name,
                 value: selectedOptions.map(option => ({
-                    codProducto: option.value,
-                    nombreProducto: option.label,
-                    marca: option.marca,
-                    cantidad: option.cantidad,
-                    precio: option.precio,
-                    fechaRegistro: option.fechaRegistro,
-                    horaRegistro: option.horaRegistro,
-                }))
-            }
-        })
-    }
-
-    const handleQuantityChange = (index, event) => {
-        const newSelectedProducts = [...selectedProducts];
-        newSelectedProducts[index].cantidad = event.target.value;
-        setSelectedProducts(newSelectedProducts);
-        handleChangeData({
-            target: {
-                name,
-                value: newSelectedProducts
+                    cantidad: cantidad,
+                    producto: {
+                        codProducto: option.value,
+                        nombreProducto: option.label,
+                        marca: option.marca,
+                        cantidad: option.cantidad,
+                        precio: option.precio,
+                        fechaRegistro: option.fechaRegistro,
+                        horaRegistro: option.horaRegistro
+                    }
+                })),
             }
         });
     };
 
     return (
-        <div className='SelectProductos' style={{ width: "100%" }}>
+        <div className='SelectProductos'>
             <Select
-                value={selectedProducts}
-                options={data.map((producto) => ({
-                    value: producto.codProducto,
-                    label: producto.nombreProducto,
-                    marca: producto.marca,
-                    cantidad: producto.cantidad,
-                    precio: producto.precio,
-                    fechaRegistro: producto.fechaRegistro,
-                    horaRegistro: producto.horaRegistro
+                value={selectedValues}
+                options={data.map((produ) => ({
+                    value: produ.codProducto,
+                    label: produ.nombreProducto,
+                    marca: produ.marca,
+                    cantidad: produ.cantidad,
+                    precio: produ.precio,
+                    fechaRegistro: produ.fechaRegistro,
+                    horaRegistro: produ.horaRegistro
                 }))}
                 onChange={handleChange}
                 isMulti
                 placeholder="Seleccione los Productos"
             />
-            {selectedProducts.map((selectedProduct, index) => (
-                <div key={index}>
-                    <span>{selectedProduct.producto?.label}</span>
-                    <input
-                        type="number"
-                        value={selectedProduct.cantidad}
-                        onChange={(event) => handleQuantityChange(index, event)}
-                        placeholder="Cantidad"
-                    />
-                </div>
-            ))}
+            <input type='number' name='cantidad' value={1} onChange={handleCantidadChange} />
         </div>
     );
-}
+};
 
 export default SelectMultiProductos;

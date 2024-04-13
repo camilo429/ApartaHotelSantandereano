@@ -60,11 +60,11 @@ function SelectHabitacionesDisponibles({ name, handleChangeData, value = null })
     <>
       <div className="habitaciones" style={{ height: "25px", width: "170px" }}>
         <Select
-          defaultValue={
-            value ?
-              {
-                label: value?.nombre,
-                value: value?.codHabitacion
+          value={
+            value
+              ? {
+                label: value?.nombreHabitacion.nombre,
+                value: value?.codHabitacion,
               } : null
           }
           options={data.map((docu) => ({
@@ -88,7 +88,9 @@ function SelectHabitacionesDisponibles({ name, handleChangeData, value = null })
           }))
 
           }
-          onChange={handleChange} />
+          onChange={handleChange}
+          required
+          placeholder="Habitación" />
       </div>
     </>
   );

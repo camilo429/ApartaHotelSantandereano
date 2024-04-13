@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { accordionSummaryClasses } from '@mui/material';
 import { Apiurl } from '../../../services/userService';
 import MUIDataTable from 'mui-datatables';
-
 import { Modal } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 const url = Apiurl + "comentarios/listarComentarios";
@@ -162,7 +160,6 @@ const Comentarios = () => {
         }
     ]
 
-
     return (
         <div>
             <MUIDataTable
@@ -172,7 +169,6 @@ const Comentarios = () => {
             />
             <Modal show={showEliminar} onHide={handleEliminarClose} size="lg"> {bodyEliminar} </Modal>
             <Modal show={smShow} onHide={handleMensajeClose} animation={false}> {popUp}</Modal>
-
         </div>
     );
 }

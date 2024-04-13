@@ -224,7 +224,7 @@ const CheckIn = () => {
                 <div className='flex' style={{ width: "100%" }}>
                     <div>
                         <label>Productos</label>
-                        <SelectMultiProductos name="producto" value={consolaFactura?.itemFactura || []} handleChangeData={handleChange} />
+                        <SelectMultiProductos name="itemFactura" value={consolaFactura?.itemFactura || []} handleChangeData={handleChange} />
                     </div>
                 </div>
                 <div className='flex'>

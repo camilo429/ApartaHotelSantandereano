@@ -1,8 +1,4 @@
 import React from "react";
-// Componentes
-import Graficas from "../pagesAdministrador/Graficas";
-import Recibos from "../pagesAdministrador/Factura/Recibos";
-import Tarea from "../pagesAdministrador/Tarea";
 //iconos
 import { Routes, Route } from "react-router-dom";
 import { MdOutlineRestorePage } from "react-icons/md";
@@ -17,7 +13,10 @@ import { MdOutlineBedroomParent } from "react-icons/md";
 import { MdFamilyRestroom } from "react-icons/md";
 import { FaPeopleCarry } from "react-icons/fa";
 import { MdBedroomParent } from "react-icons/md";
-
+import { MdElectricalServices } from "react-icons/md";
+import { MdOutlineWaterDrop } from "react-icons/md";
+import { FaRegLightbulb } from "react-icons/fa";
+// Componentes
 import Acciones from "../pagesAdministrador/Acciones";
 import ModuloHuespued from "../pagesAdministrador/Huespedes/ModuloHuespued";
 import ModuloHabitacion from "../pagesAdministrador/Habitacion/ModuloHabitacion";
@@ -28,7 +27,15 @@ import ModuloReservacion from "../pagesAdministrador/Reservacion/ModuloReservaci
 import ModuloComentario from "../pagesAdministrador/Comentarios/ModuloComentario";
 import ModuloFactura from "../pagesAdministrador/Factura/ModuloFactura";
 import ModuloCheckIn from "../pagesAdministrador/CheckIn/ModuloCheckIn";
-
+import ModuloReciboPublico from "../pagesAdministrador/ReciboPublico/ModuloReciboPublico";
+import ModuloTipoReciboPublico from "../pagesAdministrador/TipoReciboPublico/ModuloTipoReciboPublico";
+import Graficas from "../pagesAdministrador/Graficas";
+import Recibos from "../pagesAdministrador/Factura/Recibos";
+import Tarea from "../pagesAdministrador/Tarea";
+import ModuloAnalisisComentario from "../pagesAdministrador/AnalisisComentario/ModuloAnalisisComentario";
+import ModuloAnalisisReservacion from "../pagesAdministrador/AnalisisReservacion/ModuloAnalasisReservacion";
+import ModuloAnalisisHuespedes from "../pagesAdministrador/AnalisisHuespedes/ModuloAnalisisHuespedes";
+import ModuloActividad from "../pagesAdministrador/Actividad/ModuloActividad";
 function MenuLateral() {
   return (
     <div>
@@ -59,6 +66,16 @@ function MenuLateral() {
                   <li className="sidebar-item">
                     <NavLink className="sidebar-link" to="Empleados" exact="true" activeclassname="active">
                       <FaUsers className="me-2" />Empleados
+                    </NavLink>
+                  </li>
+                  <li className="sidebar-item">
+                    <NavLink className="sidebar-link" to="AnalisisHuespedes" exact="true" activeclassname="active">
+                      <FaUsers className="me-2" />Analisis Huespedes
+                    </NavLink>
+                  </li>
+                  <li className="sidebar-item">
+                    <NavLink className="sidebar-link" to="Actividades" exact="true" activeclassname="active">
+                      <FaUsers className="me-2" />Actividades
                     </NavLink>
                   </li>
                 </ul>
@@ -121,7 +138,7 @@ function MenuLateral() {
                     </NavLink>
                   </li>
                   <li className="sidebar-item">
-                    <NavLink className="sidebar-link" to="Reservacion" exact="true" activeclassname="active">
+                    <NavLink className="sidebar-link" to="AnalisisReservacion" exact="true" activeclassname="active">
                       <FaPeopleCarry className="me-2" />Analisis Reservaciones
                     </NavLink>
                   </li>
@@ -139,16 +156,13 @@ function MenuLateral() {
                   <NavLink className="sidebar-link" to="Facturas" exact="true" activeclassname="active">
                     <FaPeopleCarry className="me-2" /> Facturas
                   </NavLink>
-                  <NavLink className="sidebar-link" to="Facturas" exact="true" activeclassname="active">
-                    <FaPeopleCarry className="me-2" /> Analisis de Comentarios
-                  </NavLink>
-                  <NavLink className="sidebar-link" to="Facturas" exact="true" activeclassname="active">
+                  <NavLink className="sidebar-link" to="AnalisisComentarios" exact="true" activeclassname="active">
                     <FaPeopleCarry className="me-2" /> Analisis de Comentarios
                   </NavLink>
                 </ul>
               </li>
 
-              <li className="sidebar-header">Graficas</li>
+              <li className="sidebar-header">Pagos</li>
               <li className="sidebar-item">
                 <a href="pages.html" className="sidebar-link collapsed" data-bs-target="#multi" data-bs-toggle="collapse" aria-expanded="false">
                   <BsFillGrid3X3GapFill style={{ margin: "3px" }} /> Desarrollo
@@ -169,6 +183,24 @@ function MenuLateral() {
                   </li>
                 </ul>
               </li>
+
+              <li className="sidebar-item">
+                <a href="pages.html" className="sidebar-link collapsed" data-bs-target="#recibo" data-bs-toggle="collapse" aria-expanded="false">
+                  <MdElectricalServices className="me-2" /> Recibos Publicos
+                </a>
+                <ul id="recibo" className="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                  <li className="sidebar-item">
+                    <NavLink className="sidebar-link" to="RecibosPublicos" exact="true" activeclassname="active">
+                      <MdOutlineWaterDrop className="me-2" /> Recibos Publicos
+                    </NavLink>
+                  </li>
+                  <li className="sidebar-item">
+                    <NavLink className="sidebar-link" to="TipoServiciosPublicos" exact="true" activeclassname="active">
+                      <FaRegLightbulb className="me-2" /> Tipo Recibo
+                    </NavLink>
+                  </li>
+                </ul>
+              </li>
             </ul>
           </div>
         </aside>
@@ -181,8 +213,13 @@ function MenuLateral() {
           <Route path="Productos" exact={true} element={<ModuloProducto />} />
           <Route path="Reservacion" exact={true} element={<ModuloReservacion />} />
           <Route path="Comentarios" exact={true} element={<ModuloComentario />} />
-          <Route path="Facturas" exact={true} element={<ModuloFactura />} />
+          <Route path="RecibosPublicos" exact={true} element={<ModuloReciboPublico />} />
+          <Route path="TipoServiciosPublicos" exact={true} element={<ModuloTipoReciboPublico />} />
           <Route path="CheckIn" exact={true} element={<ModuloCheckIn />} />
+          <Route path="AnalisisComentarios" exact={true} element={<ModuloAnalisisComentario />} />
+          <Route path="AnalisisReservacion" exact={true} element={<ModuloAnalisisReservacion />} />
+          <Route path="AnalisisHuespedes" exact={true} element={<ModuloAnalisisHuespedes />} />
+          <Route path="Actividades" exact={true} element={<ModuloActividad />} />
           <Route path="/Graficas" exact={true} element={<Graficas />} />
           <Route path="/Recibos" exact={true} element={<Recibos />} />
           <Route path="/Tarea" exact={true} element={<Tarea />} />
