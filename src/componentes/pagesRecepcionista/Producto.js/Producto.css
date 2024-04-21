@@ -1,0 +1,12 @@
+div>form>div>div {
+    margin: 4px;
+}
+
+button {
+    margin: 10px;
+}
+
+.botones {
+    align-items: center;
+
+}

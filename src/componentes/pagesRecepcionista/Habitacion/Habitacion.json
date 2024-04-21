@@ -1,0 +1,18 @@
+{
+    "codHabitacion": 1,
+    "nombreHabitacion": {
+        "codTipoHabitacion": 1,
+        "nombre": "DISPONIBLE",
+        "precioXPersona": 35000.0,
+        "precioXAcompanante": 15000.0
+    },
+    "descripHabitacion": "HABITACIÓN BONITA",
+    "numHabitacion": 103,
+    "pisoHabitacion": 1,
+    "maxPersonasDisponibles": 1,
+    "estadoHabitacion": {
+        "codEstadoHabitacion": 1,
+        "nombre": "DISPONIBLE"
+    },
+    "imagenHabitacion": "URL"
+}

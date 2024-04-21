@@ -1,0 +1,8 @@
+.formulario,
+button {
+    margin: 10px
+}
+
+.bodyEliminar>p>b {
+    color: red;
+}

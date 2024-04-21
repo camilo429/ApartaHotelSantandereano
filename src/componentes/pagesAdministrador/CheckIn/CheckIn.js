@@ -5,14 +5,16 @@ import { Link } from "react-router-dom";
 import { Modal } from 'react-bootstrap';
 import MUIDataTable from 'mui-datatables';
 import SelectMultiProductos from '../Producto.js/SelectMultiProductos';
+import { useNavigate } from 'react-router-dom';
+
 const url = Apiurl + "checkin/listarCheckin";
-const urlC = Apiurl + "checkin/crearCheckin";
+const urlC = Apiurl + "factura/crearFactura";
 
 const CheckIn = () => {
     const [data, setData] = useState([]);
     const [mensaje, setMensaje] = useState("");
     const [errors, setErrors] = useState({});
-
+    //const navigate = useNavigate();
 
     const [smShow, setSmShow] = useState(false);
     const handleMensajeClose = () => setSmShow(false);
@@ -21,6 +23,10 @@ const CheckIn = () => {
     const [showProductos, setShowProductos] = useState(false);
     const handleProductosClose = () => setShowProductos(false);
     const handleProductosShow = () => setShowProductos(true);
+
+    const [verCheckIn, setVerCheckIn] = useState(false);
+    const handleCheckInClose = () => setVerCheckIn(false);
+    const handleVerCheckInShow = () => setVerCheckIn(true);
 
     const [consolaFactura, setConsolaFactura] = useState({
         codFactura: "",
@@ -98,7 +104,6 @@ const CheckIn = () => {
         },
         total: ""
     })
-
     const handleChange = (e) => {
         const { name, value } = e.target;
         setConsolaFactura((prevState) => ({
@@ -115,9 +120,14 @@ const CheckIn = () => {
             });
             if (response.status === 200) {
                 setData(response.data);
+                //  console.log("CheckIn", response.data);
             }
         } catch (error) {
-            console.log("CheckIn get", error.status);
+            console.log(error);
+            const mensajeError = error.response && error.response.data && error.response.data.mensaje ? error.response.data.mensaje : "Hubo un error Atraer CheckIn. Por favor, intenta nuevamente.";
+            setMensaje(mensajeError);
+            abrirCerrarModalMensaje();
+            setErrors({});
         }
     }
     const peticionPost = async (e) => {
@@ -138,7 +148,6 @@ const CheckIn = () => {
                 abrirCerrarModalMensaje();
                 setConsolaFactura({});
             }
-
         } catch (error) {
             console.log(error);
             const mensajeError = error.response && error.response.data && error.response.data.mensaje ? error.response.data.mensaje : "Hubo un error Crear Factura. Por favor, intenta nuevamente.";
@@ -151,9 +160,12 @@ const CheckIn = () => {
         handleShowMensaje();
         setTimeout(() => {
             handleMensajeClose();
-        }, 2000); // 2000 milisegundos = 2 segundos
+        }, 2000);
     };
-
+    const CerrarVerCheckIn = () => {
+        handleCheckInClose();
+        setConsolaFactura({});
+    }
     const seleccionarCheckIn = (consola, caso) => {
         console.log("consola", consola);
         setConsolaFactura({
@@ -168,7 +180,7 @@ const CheckIn = () => {
                     numCelular: consola[3].numCelular,
                     correo: consola[3].correo,
                     edad: consola[3].edad,
-                    estadoHuesped: consola[3].estado,
+                    estadoHuesped: consola[3].estadoHuespeddo,
                     fechaNacimiento: consola[3].fechaNacimiento,
                     lugarOrigen: {
                         codRegion: consola[3].lugarOrigen.codRegion,
@@ -208,19 +220,51 @@ const CheckIn = () => {
                     },
                     imagenHabitacion: consola[4].imagenHabitacion
                 },
-
+                totalAcompañantes: consola[5],
+                //facturas: [{
+                //    codFactura: consola[6].codFactura,
+                //    descripcion: consola[6].descripcion,
+                //    estado: consola[6].estado,
+                //    fechaCreacion: consola[6].fechaCreacion,
+                //    horaCreacion: consola[6].horaCreacion,
+                //    itemFactura: [{
+                //        cantidad: consola[6].facturas.itemFactura.cantidad,
+                //        cantidadTotal: consola[6].itemFactura.cantidadTotal,
+                //        codItemFactura: consola[6].itemFactura.codItemFactura,
+                //        producto: [{
+                //            codProducto: consola[6].producto.codProducto,
+                //            nombreProducto: consola[6].producto.nombreProducto,
+                //            marca: consola[6].facturas.itemFactura.producto.marca,
+                //            cantidad: consola[6].facturas.itemFactura.producto.cantidad,
+                //            precio: consola[6].facturas.itemFactura.producto.precio
+                //        }],
+                //        subtotal: consola[6].itemFactura.subtotal
+                //    }],
+                //    total: consola[6].total
+                //}]
             },
-
         })
 
         if (caso === "Factura") {
             handleProductosShow();
         }
+        if (caso === "Ver") {
+            handleVerCheckInShow();
+        }
     }
-
-    const bodyProductos = (
+    const bodyCheckIn = (
         <div>
             <form onSubmit={peticionPost}>
+                <div className='flex'>
+                    <div>
+                        <label>Nombre(s)</label>
+                        <input type='text' disabled name='nombre' value={consolaFactura?.checkin?.codHuesped?.nombre || ""} className='form-control' />
+                    </div>
+                    <div>
+                        <label>Apellido(s)</label>
+                        <input type='text' disabled name='apellido' value={consolaFactura?.checkin?.codHuesped?.apellido || ""} className='form-control' />
+                    </div>
+                </div>
                 <div className='flex' style={{ width: "100%" }}>
                     <div>
                         <label>Productos</label>
@@ -229,24 +273,16 @@ const CheckIn = () => {
                 </div>
                 <div className='flex'>
                     <div>
-                        <label>Nombre</label>
-                        <input type='text' disabled name='nombre' value={consolaFactura?.checkin?.codHuesped?.nombre || ""} className='form-control' />
-                    </div>
-                    <div>
-                        <label>Apellido</label>
-                        <input type='text' disabled name='apellido' value={consolaFactura?.checkin?.codHuesped?.apellido || ""} className='form-control' />
-                    </div>
-                    <div>
-                        <label>total</label>
+                        <label style={{ display: "block" }}>Total</label>
                         <input type='text' name='total' value={consolaFactura?.total || ""} onChange={handleChange} className='form-control' />
                     </div>
                     <div>
-                        <label>estado</label>
+                        <label>Estado</label>
                         <input type='text' name='estado' value={consolaFactura?.estado || ""} onChange={handleChange} className='form-control' />
                     </div>
                     <div>
-                        <label>descripcion</label>
-                        <input type='text' name='descripcion' value={consolaFactura?.descripcion || ""} onChange={handleChange} className='form-control' />
+                        <label>Descripcion</label>
+                        <textarea type='textare' name='descripcion' value={consolaFactura?.descripcion || ""} onChange={handleChange} className='form-control' style={{ resize: "none", width: "200px" }} />
                     </div>
                 </div>
                 <div className='flex'>
@@ -255,7 +291,45 @@ const CheckIn = () => {
                 </div>
             </form>
         </div>
-    )
+    );
+    const bodyVerCheckIn = (
+        <div>
+            <form>
+                <div className='flex'>
+                    <div>
+                        <label>Nombre(s)</label>
+                        <input type='text' disabled name='nombre' value={consolaFactura?.checkin?.codHuesped?.nombre || ""} className='form-control' />
+                    </div>
+                    <div>
+                        <label>Apellido(s)</label>
+                        <input type='text' disabled name='apellido' value={consolaFactura?.checkin?.codHuesped?.apellido || ""} className='form-control' />
+                    </div>
+                    <div>
+                        <label>Apellido(s)</label>
+                        <input type='text' disabled name='numDocumento' value={consolaFactura?.checkin?.codHuesped?.numDocumento || ""} className='form-control' />
+                    </div>
+                </div>
+                <div className='flex'>
+                    <div>
+                        <label>Tipo Habitación</label>
+                        <input type='text' disabled name='nombre' value={consolaFactura?.checkin?.codHabitacion?.nombreHabitacion?.nombre || ""} className='form-control' />
+                    </div>
+                    <div>
+                        <label>Número Habitación</label>
+                        <input type='text' disabled name='apellido' value={consolaFactura?.checkin?.codHabitacion?.numHabitacion || ""} className='form-control' />
+                    </div>
+                    <div>
+                        <label>Total Personas Hospedadas</label>
+                        <input type='text' disabled name='totalAcompañantes' value={consolaFactura?.checkin?.totalAcompañantes || ""} className='form-control' />
+                    </div>
+                </div>
+                <div className='flex' style={{ width: "100%" }}>
+                    <Link className="btn btn-success" to="Facturas">Ver Factura Completa</Link>
+                    {localStorage.setItem('factura', JSON.stringify(consolaFactura))}
+                </div>
+            </form>
+        </div>
+    );
     const popUp = (
         <div>
             <Modal size="sm" show={smShow} onHide={() => setSmShow(false)} aria-labelledby="example-modal-sizes-title-sm">
@@ -282,8 +356,8 @@ const CheckIn = () => {
             label: "Nombre Huesped",
             options: {
                 customBodyRender: (value, tableMeta) => {
-                    if (value && value.nombre) {
-                        return value.nombre;
+                    if (value && value.nombre && value.apellido) {
+                        return value.nombre + " " + value.apellido;
                     } else {
                         return "";
                     }
@@ -296,6 +370,21 @@ const CheckIn = () => {
                 customBodyRender: (value, tableMeta) => {
                     if (value && value.numHabitacion) {
                         return value.numHabitacion;
+                    } else {
+                        return "";
+                    }
+                }
+            }
+        }, {
+            name: "totalAcompañantes",
+            label: "Total Personas"
+        }, {
+            name: "facturas",
+            label: "Facturas",
+            options: {
+                customBodyRender: (value, tableMeta) => {
+                    if (value && value.estado && value.codFactura) {
+                        return value.codFactura + " " + value.estado;
                     } else {
                         return "";
                     }
@@ -316,7 +405,10 @@ const CheckIn = () => {
                                 </Link>
                                 <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <li>
-                                        <Link className="dropdown-item" onClick={() => seleccionarCheckIn(tableMeta.rowData, "Factura")}> Factura </Link>
+                                        <Link className="dropdown-item" onClick={() => seleccionarCheckIn(tableMeta.rowData, "Factura")}>Crear Factura </Link>
+                                    </li>
+                                    <li>
+                                        <Link className="dropdown-item" onClick={() => seleccionarCheckIn(tableMeta.rowData, "Ver")}> Ver CheckIn </Link>
                                     </li>
                                 </ul>
                             </li>
@@ -328,21 +420,26 @@ const CheckIn = () => {
     ]
     useEffect(() => {
         peticionGet();
-    }, [])
+    }, []);
+
     return (
         <div>
-            checkIn
-            <MUIDataTable
-                data={data}
-                columns={columns}
-            />
-            <Modal show={showProductos} onHide={handleProductosClose} animation={false} size='xl'>
+            <div>
+                <MUIDataTable data={data} columns={columns} title="Check - In Registrados" />
+            </div>
+            <Modal show={showProductos} onHide={handleProductosClose} animation={false} size='lg'>
                 <Modal.Header>
-                    <Modal.Title>Registrar Agregar Factura</Modal.Title>
+                    <Modal.Title>Registrar Factura</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>{bodyProductos}</Modal.Body>
+                <Modal.Body>{bodyCheckIn}</Modal.Body>
             </Modal>
             <Modal show={smShow} onHide={handleMensajeClose} animation={false} > {popUp}</Modal>
+            <Modal show={verCheckIn} onHide={handleCheckInClose} animation={false} size='lg'>
+                <Modal.Header closeButton>
+                    <Modal.Title> Check - In</Modal.Title>
+                </Modal.Header>
+                <Modal.Body className="body">{bodyVerCheckIn}</Modal.Body>
+            </Modal>
         </div>
     );
 }

@@ -1,0 +1,63 @@
+input::placeholder {
+    color: black;
+    font-size: small;
+}
+
+.crearHuesped {
+    max-width: 1100px !important;
+    /* Establece el ancho máximo del modal */
+}
+
+input {
+    color: black;
+    margin: 10px;
+    width: 100%;
+}
+
+label {
+    font-size: small;
+}
+
+h3,
+h6 {
+    text-align: center;
+}
+
+button {
+    margin: 10px;
+    width: 175px;
+}
+
+#insertar {
+    margin-right: 10px;
+}
+
+#huespedesbotonesinsertar {
+    margin-left: 100px;
+    margin-top: 35px;
+}
+
+#custom-table {
+    color: red;
+}
+
+.modalInsertar {
+    transform: translate(-50%, -50%);
+}
+
+
+.formHuesped {
+    margin: 10px;
+    width: 180px;
+}
+
+.bodyEliminar {
+    margin: 5px;
+    font-size: large;
+    text-align: center;
+
+}
+
+.bodyEliminar>p>b {
+    color: red;
+}

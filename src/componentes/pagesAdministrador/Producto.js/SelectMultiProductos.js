@@ -8,7 +8,7 @@ const url = Apiurl + "producto/listarProductos";
 const SelectMultiProductos = ({ name, handleChangeData, value = null }) => {
     const [data, setData] = useState([]);
     const [selectedValues, setSelectedValues] = useState(value || []);
-    const [cantidad, setCantidad] = useState('');
+    const [quantities, setQuantities] = useState({});
 
     const getProductos = async () => {
         try {
@@ -31,17 +31,13 @@ const SelectMultiProductos = ({ name, handleChangeData, value = null }) => {
         getProductos();
     }, []);
 
-    const handleCantidadChange = (event) => {
-        setCantidad(event.target.value);
-    };
-
-    const handleChange = (selectedOptions) => {
-        setSelectedValues(selectedOptions);
+    useEffect(() => {
+        // Construimos el valor que se pasa a handleChangeData usando el estado actualizado de las cantidades
         handleChangeData({
             target: {
                 name,
-                value: selectedOptions.map(option => ({
-                    cantidad: cantidad,
+                value: selectedValues.map(option => ({
+                    cantidad: quantities[option.value] || 0, // Usamos la cantidad del estado quantities
                     producto: {
                         codProducto: option.value,
                         nombreProducto: option.label,
@@ -54,6 +50,26 @@ const SelectMultiProductos = ({ name, handleChangeData, value = null }) => {
                 })),
             }
         });
+    }, [handleChangeData, name, quantities, selectedValues]);
+
+    const handleChange = (selectedOptions) => {
+        setSelectedValues(selectedOptions);
+        // Actualizamos el estado de las cantidades
+        const updatedQuantities = { ...quantities };
+        selectedOptions.forEach(option => {
+            if (!updatedQuantities.hasOwnProperty(option.value)) {
+                updatedQuantities[option.value] = 0;
+            }
+        });
+        setQuantities(updatedQuantities);
+    };
+
+    const handleQuantityChange = (productId, event) => {
+        const { value } = event.target;
+        setQuantities(prevQuantities => ({
+            ...prevQuantities,
+            [productId]: value
+        }));
     };
 
     return (
@@ -73,7 +89,20 @@ const SelectMultiProductos = ({ name, handleChangeData, value = null }) => {
                 isMulti
                 placeholder="Seleccione los Productos"
             />
-            <input type='number' name='cantidad' value={1} onChange={handleCantidadChange} />
+            <div className='flex'>
+                {selectedValues.map((option) => (
+                    <div key={option.value} className="product-quantity">
+                        <label htmlFor={`quantity-${option.value}`}>{option.label}</label>
+                        <input
+                            id={`quantity-${option.value}`}
+                            className='form-control'
+                            type="number"
+                            value={quantities[option.value] || "1"}
+                            onChange={(e) => handleQuantityChange(option.value, e)}
+                        />
+                    </div>
+                ))}
+            </div>
         </div>
     );
 };

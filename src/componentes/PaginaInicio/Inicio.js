@@ -111,11 +111,50 @@ function Inicio() {
     return yyyy + '-' + mm + '-' + dd;
   }
 
+  const validationsForm = (form) => {
+    let errors = {};
 
+    if (!form.fechaEntrada || form.fechaEntrada === "") {
+      errors.fechaEntrada = "El campo 'Fecha de Entrada'es requerido";
+    }
+    if (!form.fechaSalida || form.fechaSalida === "") {
+      errors.fechaSalida = "El campo 'Fecha de Entrada'es requerido";
+    }
+    if (form.fechaSalida < form.fechaEntrada) {
+      errors.fechaSalida = "El campo 'Fecha Salida' No es valida"
+    }
+    //if (form.adultos < 1) {
+    //  errors.adultos = "El campo 'Número Adultos' no puede ser menor a 1";
+    //}
+    if (form.ninos < 0) {
+      errors.ninos = "El campo 'Número Niños' no puede ser negativo";
+    }
+    if (!form.nombre || form.nombre === "") {
+      errors.nombre = "El campo 'Nombre' es requerido";
+    } else if (!EXPRESION_REGULAR_NOMBRE_APELLIDO.test(form.nombre)) {
+      errors.nombre = "El campo 'Nombre' no es valido";
+    }
+    if (!form.apellido || form.apellido === "") {
+      errors.apellido = "El campo 'Apellido' es requerido";
+    } else if (!EXPRESION_REGULAR_NOMBRE_APELLIDO.test(form.apellido)) {
+      errors.apellido = "El campo 'Apellido' no es valido";
+    }
+    if (!form.email || form.email === "") {
+      errors.email = "El campo 'Correo' es requerido";
+    } else if (!EXPRESION_REGULAR_EMAIL.test(form.email.trim())) {
+      errors.email = "El campo 'Correo' no es valido";
+    }
+    if (!form.numDocumento || form.numDocumento === "") {
+      errors.numDocumento = "Número de documento es Requerido";
+    }
+    if (!form || !form.tipoDocumento || !form.tipoDocumento.nomTipoDocumento || form.tipoDocumento.nomTipoDocumento === "" || form.tipoDocumento.nomTipoDocumento === undefined) {
+      errors.tipoDocumento = "Tipo documento es Requerido";
+    }
+    return errors;
+  }
   const peticionPost = async (e) => {
     try {
       e.preventDefault();
-      loading(true);
       setErrors(validationsForm(consolaSeleccionada));
       if (Object.keys(errors).length === 0) {
         setLoading(true);
@@ -165,47 +204,7 @@ function Inicio() {
       setLoading(false);
     }
   }
-  const validationsForm = (form) => {
-    let errors = {};
 
-    if (!form.fechaEntrada || form.fechaEntrada === "") {
-      errors.fechaEntrada = "El campo 'Fecha de Entrada'es requerido";
-    }
-    if (!form.fechaSalida || form.fechaSalida === "") {
-      errors.fechaSalida = "El campo 'Fecha de Entrada'es requerido";
-    }
-    if (form.fechaSalida < form.fechaEntrada) {
-      errors.fechaSalida = "El campo 'Fecha Salida' No es valida"
-    }
-    //if (form.adultos < 1) {
-    //  errors.adultos = "El campo 'Número Adultos' no puede ser menor a 1";
-    //}
-    if (form.ninos < 0) {
-      errors.ninos = "El campo 'Número Niños' no puede ser negativo";
-    }
-    if (!form.nombre || form.nombre === "") {
-      errors.nombre = "El campo 'Nombre' es requerido";
-    } else if (!EXPRESION_REGULAR_NOMBRE_APELLIDO.test(form.nombre)) {
-      errors.nombre = "El campo 'Nombre' no es valido";
-    }
-    if (!form.apellido || form.apellido === "") {
-      errors.apellido = "El campo 'Apellido' es requerido";
-    } else if (!EXPRESION_REGULAR_NOMBRE_APELLIDO.test(form.apellido)) {
-      errors.apellido = "El campo 'Apellido' no es valido";
-    }
-    if (!form.email || form.email === "") {
-      errors.email = "El campo 'Correo' es requerido";
-    } else if (!EXPRESION_REGULAR_EMAIL.test(form.email.trim())) {
-      errors.email = "El campo 'Correo' no es valido";
-    }
-    if (!form.numDocumento || form.numDocumento === "") {
-      errors.numDocumento = "Número de documento es Requerido";
-    }
-    if (!form || !form.tipoDocumento || !form.tipoDocumento.nomTipoDocumento || form.tipoDocumento.nomTipoDocumento === "" || form.tipoDocumento.nomTipoDocumento === undefined) {
-      errors.tipoDocumento = "Tipo documento es Requerido";
-    }
-    return errors;
-  }
   const abrirCerrarModalMensaje = () => {
     handleShowMensaje();
     setTimeout(() => {
@@ -242,7 +241,7 @@ function Inicio() {
 
   const bodyInsertar = (
     <div>
-      <form onSubmit={peticionPost}>
+      <form onSubmit={(e) => peticionPost(e)}>
         <div className="flex" id="fomularioReservacion">
           <FormGroup>
             <div id="reservacion">
@@ -326,8 +325,8 @@ function Inicio() {
               </div>
             </div>
           )}
-          <button type="submit" className="btn btn-primary">Agendar</button>
-          <button type="submit" className="btn btn-secondary" onClick={cerrarReservacion}>Cancelar</button>
+          <button type="button " className="btn btn-primary">Agendar</button>
+          <button type="button " className="btn btn-secondary" onClick={cerrarReservacion}>Cancelar</button>
         </div>
       </form >
       <br />
@@ -489,7 +488,7 @@ function Inicio() {
       <Footer />
       <Modal show={showReservacion} onHide={handleReservacionClose} animation={false} dialogClassName="Reservacion">
         <Modal.Header closeButton>
-          <Modal.Title>Insertar Tipo Habitación</Modal.Title>
+          <Modal.Title>Realizar Reservación</Modal.Title>
         </Modal.Header>
         <Modal.Body className="body">{bodyInsertar}</Modal.Body>
       </Modal>

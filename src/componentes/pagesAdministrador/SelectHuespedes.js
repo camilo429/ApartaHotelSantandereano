@@ -3,30 +3,28 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Select from "react-select";
 
-function SelectHuespedes({ name, handleChangeData, value = null, url }) {
+import { Apiurl } from "../../services/userService";
+const url = Apiurl + "huespedes/listarHuespedes";
+function SelectHuespedes({ name, handleChangeData, value = null }) {
   const [data, setData] = useState([]);
 
   useEffect(() => {
     const getHuespedes = async () => {
       try {
-        axios
-          .request({
-            method: "get",
-            url: url,
-            headers: {
-              Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
-            },
-          })
-          .then((response) => {
-            setData(response.data);
-            //console.log(response.data);
-          });
+        const response = await axios.get(url, {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
+          }
+        })
+        if (response.status === 200) {
+          setData(response.data);
+        }
       } catch (error) {
         console.log("error al obtener las opciones:", error);
       }
     };
     getHuespedes();
-  }, [url]);
+  }, []);
 
   const handleChange = ({ label, value, nombrep, apellido, numCelular, correo, tipoDocumento: { codTipoDocumento, nomTipoDocumento },
     numDocumento, nacionalidad: { codNacion, nombre }, lugarOrigen, nomContactoEmergencia, numContactoEmergencia, estadoHuesped,
@@ -61,6 +59,14 @@ function SelectHuespedes({ name, handleChangeData, value = null, url }) {
   return (
     <div className="huesped" style={{ width: "170px" }}>
       <Select
+        value={
+          value
+            ? {
+              label: value?.numDocumento,
+              value: value?.codHuesped,
+            }
+            : null
+        }
         options={data.map((docu) => ({
           value: docu.codHuesped,
           label: docu.numDocumento,

@@ -124,6 +124,84 @@ function EmpleadoComponent() {
       }
     ]
   });
+
+
+  const resetearConsolas = () => {
+    setConsolaSeleccionada({
+      codEmpleado: "",
+      nombre: "",
+      apellido: "",
+      tipDocumento: {
+        codTipoDocumento: "",
+        nomTipoDocumento: "",
+      },
+      numDocumento: "",
+      edad: "",
+      numTelefono: "",
+      correo: "",
+      fechaNacimiento: "",
+      direccion: "",
+      nomContactoEmergencia: "",
+      numContactoEmergencia: "",
+      eps: "",
+      arl: "",
+      sexo: {
+        codSexo: "",
+        nomSexo: "",
+      },
+      tipoSangre: {
+        codTipoSangre: "",
+        nomTipoSangre: "",
+      },
+      fotoEmpleado: "",
+      actividad: [],
+      fechaIngreso: "",
+      fechaSalida: "",
+    });
+
+    setConsolaFunciones({
+      empleado: {
+        codEmpleado: "",
+        nombre: "",
+        apellido: "",
+        tipDocumento: {
+          codTipoDocumento: "",
+          nomTipoDocumento: "",
+        },
+        numDocumento: "",
+        edad: "",
+        numTelefono: "",
+        correo: "",
+        fechaNacimiento: "",
+        direccion: "",
+        nomContactoEmergencia: "",
+        numContactoEmergencia: "",
+        eps: "",
+        arl: "",
+        sexo: {
+          codSexo: "",
+          nomSexo: "",
+        },
+        tipoSangre: {
+          codTipoSangre: "",
+          nomTipoSangre: "",
+        },
+        fotoEmpleado: "",
+        actividad: [],
+        fechaIngreso: "",
+        fechaSalida: "",
+      },
+      userName: "",
+      contrasena: "",
+      confirContrasena: "",
+      rol: [
+        {
+          codRole: "",
+          nombre: ""
+        }
+      ]
+    });
+  }
   const handleChange = (e) => {
     const { name, value } = e.target;
     setConsolaSeleccionada((prevState) => ({
@@ -150,7 +228,7 @@ function EmpleadoComponent() {
       })
       if (response.status === 200) {
         setData(response.data);
-        //console.log(response.data);
+        console.log(response.data);
       } else {
         console.log("error en listar empleados", response.status)
       }
@@ -164,6 +242,7 @@ function EmpleadoComponent() {
       e.preventDefault();
       console.log("empleado", consolaSeleccionada, errors);
       if (Object.keys(errors).length === 0) {
+        setIsLoading(true);
         const response = await axios.post(urlG, consolaSeleccionada, {
           headers: {
             'Content-Type': 'application/json',
@@ -177,42 +256,18 @@ function EmpleadoComponent() {
           handleCloseInsertar();
           abrirCerrarModalMensaje();
           peticionGet();
-          setConsolaSeleccionada({
-            codEmpleado: "",
-            nombre: "",
-            apellido: "",
-            tipDocumento: {
-              codTipoDocumento: "",
-              nomTipoDocumento: "",
-            },
-            edad: "",
-            numTelefono: "",
-            correo: "",
-            fechaNacimiento: "",
-            direccion: "",
-            nomContactoEmergencia: "",
-            numContactoEmergencia: "",
-            eps: "",
-            arl: "",
-            sexo: {
-              codSexo: "",
-              nomSexo: "",
-            },
-            tipoSangre: {
-              codTipoSangre: "",
-              nomTipoSangre: "",
-            },
-            fotoEmpleado: "",
-          })
+          resetearConsolas();
         }
       }
       setErrors({});
+      setIsLoading(false);
     } catch (error) {
       console.log("Error post Empleado", error);
       const mensajeError = error.response && error.response.data && error.response.data.mensaje ? error.response.data.mensaje : "Hubo un error al insertar el Huésped. Por favor, intenta nuevamente.";
       setMensaje(mensajeError);
       abrirCerrarModalMensaje();
       setErrors({});
+      setIsLoading(false);
     } finally {
       setIsLoading(false);
     }
@@ -270,6 +325,7 @@ function EmpleadoComponent() {
           handleEditarClose();
           abrirCerrarModalMensaje();
           setConsolaSeleccionada({});
+          resetearConsolas();
         }
       }
     } catch (error) {
@@ -284,6 +340,7 @@ function EmpleadoComponent() {
 
   const peticionDelete = async () => {
     try {
+      console.log("Eliminar");
       const response = await axios.delete(urlD + consolaSeleccionada.codEmpleado, {
         headers: {
           'Content-Type': 'application/json',
@@ -297,14 +354,15 @@ function EmpleadoComponent() {
         handleEliminarClose();
         abrirCerrarModalMensaje();
         peticionGet();
+        resetearConsolas();
       } else {
         console.log("Se generado un error", response.status);
       }
     } catch (error) {
-      alert("Error al eliminar empleado");
-      console.log("Error editar empleado", error);
+      const mensajeError = error.response && error.response.data && error.response.data.mensaje ? error.response.data.mensaje : "Hubo un error al dar Eliminar al Empleado. Por favor, intenta nuevamente.";
+      setMensaje(mensajeError);
+      abrirCerrarModalMensaje();
     }
-
   };
 
   const peticionfunciones = async (e) => {
@@ -363,6 +421,7 @@ function EmpleadoComponent() {
           })
         }
       }
+      resetearConsolas();
     } catch (error) {
       const mensajeError = error.response && error.response.data && error.response.data.mensaje ? error.response.data.mensaje : "Hubo un error al insertar el Huésped. Por favor, intenta nuevamente.";
       setMensaje(mensajeError);
@@ -521,9 +580,9 @@ function EmpleadoComponent() {
     if (!consolaSeleccionada.fechaNacimiento || !consolaSeleccionada.fechaIngreso || consolaSeleccionada.fechaNacimiento > consolaSeleccionada.fechaIngreso) {
       errors.fechaIngreso = "La fecha Ingreso es mayor que Fecha Nacimiento";
     }
-    if (!consolaSeleccionada.fechaIngreso || !consolaSeleccionada.fechaSalida || consolaSeleccionada.fechaIngreso > consolaSeleccionada.fechaSalida) {
-      errors.fechaSalida = "La fecha Ingreso es menor a la de Entrada";
-    }
+    //if (!consolaSeleccionada.fechaIngreso || !consolaSeleccionada.fechaSalida || consolaSeleccionada.fechaIngreso > consolaSeleccionada.fechaSalida) {
+    //  errors.fechaSalida = "La fecha Ingreso es menor a la de Entrada";
+    //}
     return errors;
   }
   const validationsFormFunciones = () => {
@@ -763,7 +822,7 @@ function EmpleadoComponent() {
     <div>
       <p>Esta seguro de Eliminar Empleado{" "}<b>{consolaSeleccionada && consolaSeleccionada.nombre}</b> ?</p>
       <div align="right">
-        <button className="btn btn-primary" type="submit" onSubmit={() => peticionDelete()}> Si </button>
+        <button className="btn btn-primary" type="submit" onClick={() => peticionDelete()}> Si </button>
         <button className="btn btn-secondary" type="submit" onSubmit={handleEditarClose}>No</button>
       </div>
     </div>
@@ -804,11 +863,11 @@ function EmpleadoComponent() {
         </div>
         <div>
           <label>Contraseña</label>
-          <input type="text" name="contrasena" value={consolaFunciones.contrasena || ""} className="form-control" onBlur={handleBlurFunciones} onChange={handleFunciones} />
+          <input type="password" name="contrasena" value={consolaFunciones.contrasena || ""} className="form-control" onBlur={handleBlurFunciones} onChange={handleFunciones} />
         </div>
         <div>
           <label>Repetir Contraseña</label>
-          <input type="text" name="confirContrasena" value={consolaFunciones.confirContrasena || ""} className="form-control" onBlur={handleBlurFunciones} onChange={handleFunciones} />
+          <input type="password" name="confirContrasena" value={consolaFunciones.confirContrasena || ""} className="form-control" onBlur={handleBlurFunciones} onChange={handleFunciones} />
         </div>
       </div>
       <div className="flex">
@@ -1035,7 +1094,7 @@ function EmpleadoComponent() {
       </Modal>
       <Modal show={showEliminar} onHide={handleEliminarClose} animation={false} >
         <Modal.Header closeButton>
-          <Modal.Title>Actualizar Empleado</Modal.Title>
+          <Modal.Title>Eliminar Empleado</Modal.Title>
         </Modal.Header>
         <Modal.Body>{bodyEliminar}</Modal.Body>
       </Modal>

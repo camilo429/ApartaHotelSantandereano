@@ -13,7 +13,7 @@ function SelectHabitacionesDisponibles({ name, handleChangeData, value = null })
       const response = await axios.get(url);
       if (response.status === 200) {
         setData(response.data);
-        console.log(response.data);
+        // console.log(response.data);
       } else {
         console.log("Error", response.data.mensaje);
       }

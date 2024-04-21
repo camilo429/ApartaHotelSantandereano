@@ -93,7 +93,7 @@ function About() {
                     <br></br>
                     <br></br>
                     Con todos estos avances y con los distintos servicios que se adicionaron para beneficios de nuestros huéspedes es que nos
-                    direccionamos a seguir creciendo para que nuestros clientes y huéspedes disfruten de nuestros servicios y la atención
+                    diseccionemos a seguir creciendo para que nuestros clientes y huéspedes disfruten de nuestros servicios y la atención
                     personalizada de nuestros colaboradores que saben perfectamente que nuestros huéspedes son primero.
                     <br></br>
                     <br></br>

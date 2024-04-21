@@ -1,0 +1,14 @@
+.formActividad {
+    width: 170px;
+    margin: auto;
+}
+
+.formDescripcion {
+    width: 350px;
+    resize: none;
+}
+
+#errors {
+    font-size: x-small;
+    color: red;
+}

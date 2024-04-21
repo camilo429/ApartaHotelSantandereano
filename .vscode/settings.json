@@ -19,5 +19,8 @@
     "editor.smartSelect.selectLeadingAndTrailingWhitespace": false,
     "editor.showUnused": false,
     "editor.selectionHighlight": false,
-    "editor.scrollPredominantAxis": true
+    "editor.scrollPredominantAxis": true,
+    "cSpell.words": [
+        "Santandereano"
+    ]
 }

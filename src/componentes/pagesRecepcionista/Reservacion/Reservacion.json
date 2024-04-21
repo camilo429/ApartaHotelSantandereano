@@ -1,0 +1,32 @@
+{
+    "fechaEntrada": "2024-04-13",
+    "fechaSalida": "2024-04-15",
+    "adultos": 3,
+    "ninos": 0,
+    "tipoDocumento": {
+        "codTipoDocumento": 3,
+        "nomTipoDocumento": "CEDULA DE CIUDADANIA"
+    },
+    "numDocumento": 138475950,
+    "nombre": "Camilo",
+    "apellido": "Ahumada",
+    "email": "cahumadag@unbosque.edu.co",
+    "habitacion": {
+        "codHabitacion": 1,
+        "nombreHabitacion": {
+            "codTipoHabitacion": 1,
+            "nombre": "Matrimonial",
+            "precioXPersona": 15000.0,
+            "precioXAcompanante": 35000.0
+        },
+        "descripHabitacion": "Wifi",
+        "numHabitacion": 101,
+        "pisoHabitacion": 1,
+        "maxPersonasDisponibles": 4,
+        "estadoHabitacion": {
+            "codEstadoHabitacion": 1,
+            "nombre": "Disponible"
+        },
+        "imagenHabitacion": null
+    }
+}

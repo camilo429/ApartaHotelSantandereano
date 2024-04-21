@@ -45,7 +45,6 @@ const Login = () => {
                 grant_type: "password",
             };
 
-            console.log("datalogin", reqData);
             const response = await axios.post(Apiurl + "oauth/token", new URLSearchParams(reqData), {
                 withCredentials: true,
                 auth: {
@@ -57,11 +56,15 @@ const Login = () => {
                 },
             });
 
-            console.log(response.status);
+            console.log("data", response.data);
             if (response.status === 200) {
                 sessionStorage.setItem("access_token", response.data.access_token);
+                sessionStorage.setItem("empleado", response.data.empleado[0]);
+
                 const decoded = jwtDecode(response.data.access_token);
+
                 console.log("Payload:", decoded.authorities[0]);
+                console.log("Payload Código:", decoded.empleado[0]);
 
                 switch (decoded.authorities[0]) {
                     case "ROLE_ADMINISTRADOR":
@@ -70,8 +73,8 @@ const Login = () => {
                     case "ROLE_RECEPCIONISTA":
                         window.location.href = "PanelRecepcionista";
                         break;
-                    case "ROLE_SERVICIOS":
-                        window.location.href = "SERVICIOS";
+                    case "ROLE_ASEADOR":
+                        window.location.href = "PanelAseador";
                         break;
                     default:
                         break;

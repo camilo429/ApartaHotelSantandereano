@@ -12,7 +12,7 @@ button {
 }
 
 .checkIn {
-    max-width: 900px !important;
+    max-width: 700px !important;
 }
 
 .cajasCheckIn {
@@ -25,4 +25,12 @@ button {
 
 .button {
     margin-right: 10px;
+}
+
+.acompanante>input {
+    width: 170px;
+}
+
+.acompanante>button {
+    margin-top: 40px;
 }

@@ -1,0 +1,16 @@
+h2 {
+    font-size: small;
+}
+
+input {
+    margin: 5px;
+    font-size: small;
+}
+
+.formularioFactura {
+    margin: 5px;
+}
+
+.formularioFactura>input {
+    text-align: center;
+}

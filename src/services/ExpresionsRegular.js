@@ -3,3 +3,4 @@ export const EXPRESION_REGULAR_NOMBRE_APELLIDO = /^[a-zA-ZáéíóúÁÉÍÓÚñ
 export const EXPRESION_REGULAR_CELULAR = /^[3]\d{9}$/;
 export const EXPRESION_REGULAR_IDENTIFICACION = /^[1-9]\d{0,10}$/;
 export const EXPRESION_REGULAR_COMENTARIO = /^.{ 0, 255}$;/
+export const EXPRESION_REGULAR_HORA_MINUTO_SEGUNDO = /^(?:[01]\d|2[0-3]):(?:[0-5]\d):(?:[0-5]\d)$/;

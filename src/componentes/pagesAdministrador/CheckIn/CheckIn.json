@@ -1,67 +1,64 @@
 {
-    "codCheckin": 1,
-    "fechaEntrada": "2024-04-04",
-    "fechaSalida": "2024-04-10",
+    "fechaEntrada": "2024-04-19",
+    "fechaSalida": "2024-04-20",
     "codHuesped": {
-        "codHuesped": 40,
-        "nombre": "ALEJANDRito",
-        "apellido": "MEDINA",
-        "numCelular": 3201718211,
-        "correo": "alejo@gmail.com",
+        "codHuesped": 1,
+        "nombre": "Mónica Daniela",
+        "apellido": "Lopez",
+        "numCelular": 3252056623,
+        "correo": "monik@gmail.com",
         "tipoDocumento": {
             "codTipoDocumento": 3,
             "nomTipoDocumento": "CEDULA DE CIUDADANIA"
         },
-        "numDocumento": 1001788611,
-        "fechaNacimiento": "2024-02-27",
-        "edad": 0,
+        "numDocumento": 102561256,
+        "fechaNacimiento": "1999-12-06",
+        "edad": 24,
         "nacionalidad": {
-            "codNacion": 4,
-            "nombre": "Brasil"
+            "codNacion": 8,
+            "nombre": "Colombia"
         },
         "lugarOrigen": {
-            "codRegion": 58,
+            "codRegion": 148,
             "nacionalidad": {
-                "codNacion": 4,
-                "nombre": "Brasil"
+                "codNacion": 8,
+                "nombre": "Colombia"
             },
-            "nombre": "Amazonas"
+            "nombre": "Meta"
         },
-        "nomContactoEmergencia": "YERSON",
-        "numContactoEmergencia": 3020981212,
-        "estadoHuesped": false
+        "nomContactoEmergencia": "",
+        "numContactoEmergencia": null,
+        "estadoHuesped": true
     },
     "codHabitacion": {
-        "codHabitacion": 2,
+        "codHabitacion": 1,
         "nombreHabitacion": {
             "codTipoHabitacion": 1,
-            "nombre": "PERSONAL",
-            "precioXPersona": 35000.0,
-            "precioXAcompanante": 20000.0
+            "nombre": "Personal",
+            "precioXPersona": 30000.0,
+            "precioXAcompanante": 15000.0
         },
-        "descripHabitacion": "BONITA",
-        "numHabitacion": 94,
+        "descripHabitacion": "wifi-BañoPrivado-TV-Cama Personal",
+        "numHabitacion": 101,
         "pisoHabitacion": 1,
-        "maxPersonasDisponibles": 1,
+        "maxPersonasDisponibles": 2,
         "estadoHabitacion": {
-            "codEstadoHabitacion": 2,
-            "nombre": "OCUPADA"
+            "codEstadoHabitacion": 1,
+            "nombre": "Disponible"
         },
-        "imagenHabitacion": "UR"
+        "imagenHabitacion": null
     },
-    "numAdultos": 1,
-    "numNinos": 0,
-    "facturas": [
+    "facturas": [],
+    "acompanante": [
         {
-            "codFactura": 1,
-            "descripcion": "habitación productos",
-            "itemFactura": [],
-            "fechaCreacion": "2024-04-05",
-            "horaCreacion": "07:00:00",
-            "estado": "DEBE",
-            "total": 0.0
+            "nombre": "Juna",
+            "apellido": "Barrera",
+            "tipoDocumento": {
+                "codTipoDocumento": 3,
+                "nomTipoDocumento": "CEDULA DE CIUDADANIA"
+            },
+            "numDocumento": 1051252,
+            "fechaNacimiento": "2012-06-14"
         }
-    ],
-    "totalAcompañantes": 1,
-    "totalPersona": 210000.0
+    ]
 }

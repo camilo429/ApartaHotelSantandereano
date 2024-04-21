@@ -16,6 +16,7 @@ import { MdBedroomParent } from "react-icons/md";
 import { MdElectricalServices } from "react-icons/md";
 import { MdOutlineWaterDrop } from "react-icons/md";
 import { FaRegLightbulb } from "react-icons/fa";
+import { FiActivity } from "react-icons/fi";
 // Componentes
 import Acciones from "../pagesAdministrador/Acciones";
 import ModuloHuespued from "../pagesAdministrador/Huespedes/ModuloHuespued";
@@ -75,7 +76,7 @@ function MenuLateral() {
                   </li>
                   <li className="sidebar-item">
                     <NavLink className="sidebar-link" to="Actividades" exact="true" activeclassname="active">
-                      <FaUsers className="me-2" />Actividades
+                      <FiActivity className="me-2" />Actividades
                     </NavLink>
                   </li>
                 </ul>
@@ -147,7 +148,7 @@ function MenuLateral() {
 
               <li className="sidebar-item">
                 <a href="pages.html" className="sidebar-link collapsed" data-bs-target="#auth" data-bs-toggle="collapse" aria-expanded="false">
-                  <FaUser style={{ margin: "3px" }} /> Actividades
+                  <FaUser style={{ margin: "3px" }} /> Comentario
                 </a>
                 <ul id="auth" className="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                   <NavLink className="sidebar-link" to="Comentarios" exact="true" activeclassname="active">
@@ -162,7 +163,7 @@ function MenuLateral() {
                 </ul>
               </li>
 
-              <li className="sidebar-header">Pagos</li>
+              {/*<li className="sidebar-header">Pagos</li>
               <li className="sidebar-item">
                 <a href="pages.html" className="sidebar-link collapsed" data-bs-target="#multi" data-bs-toggle="collapse" aria-expanded="false">
                   <BsFillGrid3X3GapFill style={{ margin: "3px" }} /> Desarrollo
@@ -182,7 +183,7 @@ function MenuLateral() {
                     </ul>
                   </li>
                 </ul>
-              </li>
+              </li>*/}
 
               <li className="sidebar-item">
                 <a href="pages.html" className="sidebar-link collapsed" data-bs-target="#recibo" data-bs-toggle="collapse" aria-expanded="false">
@@ -216,6 +217,7 @@ function MenuLateral() {
           <Route path="RecibosPublicos" exact={true} element={<ModuloReciboPublico />} />
           <Route path="TipoServiciosPublicos" exact={true} element={<ModuloTipoReciboPublico />} />
           <Route path="CheckIn" exact={true} element={<ModuloCheckIn />} />
+          <Route path="CheckIn/Facturas" exact={true} element={<ModuloFactura />} />
           <Route path="AnalisisComentarios" exact={true} element={<ModuloAnalisisComentario />} />
           <Route path="AnalisisReservacion" exact={true} element={<ModuloAnalisisReservacion />} />
           <Route path="AnalisisHuespedes" exact={true} element={<ModuloAnalisisHuespedes />} />

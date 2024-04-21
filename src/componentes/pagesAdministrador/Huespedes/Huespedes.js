@@ -7,14 +7,14 @@ import MUIDataTable from "mui-datatables";
 import TipoDocumento from "../TipoDocumento";
 import Nacionalidades from "../Nacionalidades";
 import { Modal } from 'react-bootstrap';
-import { Link } from "react-router-dom";
-//Componentes
-// url
-import { EXPRESION_REGULAR_NOMBRE_APELLIDO, EXPRESION_REGULAR_EMAIL, EXPRESION_REGULAR_IDENTIFICACION } from "../../../services/ExpresionsRegular"
 import Region from "../Region";
+import { Link } from "react-router-dom";
 import Spinner from 'react-bootstrap/Spinner';
+// Expresiones Regulares
+import { EXPRESION_REGULAR_NOMBRE_APELLIDO, EXPRESION_REGULAR_EMAIL, EXPRESION_REGULAR_IDENTIFICACION } from "../../../services/ExpresionsRegular"
 //Estilos
 import "./Huesped.css";
+//url
 const url = Apiurl + "huespedes/listarHuespedes";
 const urlG = Apiurl + "huespedes/crearHuesped";
 const urlE = Apiurl + "huespedes/actualizarHuesped/";
@@ -24,6 +24,7 @@ function Huespedes() {
   const [data, setData] = useState([]);
   const [errors, setErrors] = useState({});
 
+  const [isLoading, setIsLoading] = useState(false);
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -43,7 +44,6 @@ function Huespedes() {
   const [mensaje, setMensaje] = useState("");
   const [codNacionalidad, setCodNacionalidad] = useState();
 
-  const [isLoading, setIsLoading] = useState(false);
   const [consolaSeleccionada, setConsolaSeleccionada] = useState({
     codHuesped: "",
     nombre: "",
@@ -248,17 +248,17 @@ function Huespedes() {
   }
   const validationsForm = () => {
     let errors = {};
-    if (!consolaSeleccionada.nombre.trim()) {
+    if (!consolaSeleccionada || consolaSeleccionada.nombre === "") {
       errors.nombre = "El campo 'Nombre' es requerido";
     } else if (!EXPRESION_REGULAR_NOMBRE_APELLIDO.test(consolaSeleccionada.nombre.trim())) {
       errors.nombre = "El campo 'Nombre' no es valido";
     }
-    if (!consolaSeleccionada.apellido.trim()) {
+    if (!consolaSeleccionada || !consolaSeleccionada.apellido === "") {
       errors.apellido = "El campo 'Apellido' es requerido";
     } else if (!EXPRESION_REGULAR_NOMBRE_APELLIDO.test(consolaSeleccionada.apellido.trim())) {
       errors.apellido = "El campo 'Apellido' no es valido";
     }
-    if (!consolaSeleccionada.correo.trim()) {
+    if (!consolaSeleccionada || !consolaSeleccionada.correo === "") {
       errors.correo = "El campo 'Correo' es requerido";
     } else if (!EXPRESION_REGULAR_EMAIL.test(consolaSeleccionada.correo.trim())) {
       errors.email = "El campo 'Correo' no es valido";
@@ -266,7 +266,7 @@ function Huespedes() {
     if (!consolaSeleccionada.numCelular === "") {
       errors.numCelular = "El '# Celular' es requerido";
     }
-    if (!consolaSeleccionada.fechaNacimiento.trim()) {
+    if (!consolaSeleccionada || !consolaSeleccionada.fechaNacimiento === "") {
       errors.fechaNacimiento = "El 'Fecha Nacimiento' es requerido";
     }
     if (!consolaSeleccionada.tipoDocumento || consolaSeleccionada.tipoDocumento.nomTipoDocumento === "") {
@@ -283,7 +283,7 @@ function Huespedes() {
     if (!consolaSeleccionada.lugarOrigen || consolaSeleccionada.lugarOrigen.nombre === "") {
       errors.lugarOrigen = "El 'lugar Origen' es requerido";
     }
-    if (!consolaSeleccionada.nomContactoEmergencia.trim()) {
+    if (!consolaSeleccionada || !consolaSeleccionada.nomContactoEmergencia === "") {
       errors.nomContactoEmergencia = "El 'Nombre Emergencia' es requerido";
     }
     if (!consolaSeleccionada.numContactoEmergencia === "") {
@@ -364,61 +364,61 @@ function Huespedes() {
       <div className="flex">
         <div className="formHuesped">
           <label>Nombre</label>
-          <input className="form-control" name="nombre" placeholder="Nombre (s)" onBlur={handleBlur} value={consolaSeleccionada.nombre} onChange={handleChange} />
+          <input className="form-control" name="nombre" placeholder="Nombre (s)" onBlur={handleBlur} value={consolaSeleccionada?.nombre || ""} onChange={handleChange} />
           {errors.nombre && <p id="errores">{errors.nombre}</p>}
         </div>
         <div className="formHuesped">
           <label>Apellido</label>
-          <input className="form-control" name="apellido" placeholder="Apellido" onBlur={handleBlur} value={consolaSeleccionada.apellido} onChange={handleChange} />
+          <input className="form-control" name="apellido" placeholder="Apellido" onBlur={handleBlur} value={consolaSeleccionada?.apellido || ""} onChange={handleChange} />
           {errors.apellido && <p id="errores">{errors.apellido}</p>}
         </div>
         <div className="formHuesped">
           <label>Número Celular</label>
-          <input className="form-control" name="numCelular" placeholder="Celular" onBlur={handleBlur} value={consolaSeleccionada.numCelular} onChange={handleChange} />
+          <input className="form-control" name="numCelular" placeholder="Celular" onBlur={handleBlur} value={consolaSeleccionada?.numCelular || ""} onChange={handleChange} />
           {errors.numCelular && <p id="errores">{errors.numCelular}</p>}
         </div>
         <div className="formHuesped">
           <label>Fecha de Nacimiento</label>
-          <input type="date" className="form-control" name="fechaNacimiento" placeholder="Nacimiento" onBlur={handleBlur} value={consolaSeleccionada.fechaNacimiento} onChange={handleChange} max={calcularFechaMaxima()} />
+          <input type="date" className="form-control" name="fechaNacimiento" placeholder="Nacimiento" onBlur={handleBlur} value={consolaSeleccionada?.fechaNacimiento || ""} onChange={handleChange} max={calcularFechaMaxima()} />
           {errors.fechaNacimiento && <p id="errores">{errors.fechaNacimiento}</p>}
         </div>
         <div className="formHuesped">
           <label>Correo Electronico</label>
-          <input className="form-control" name="correo" placeholder="correo electronico" onBlur={handleBlur} value={consolaSeleccionada.correo} onChange={handleChange} />
+          <input className="form-control" name="correo" placeholder="correo electronico" onBlur={handleBlur} value={consolaSeleccionada?.correo || ""} onChange={handleChange} />
           {errors.correo && <p id="errores">{errors.correo}</p>}
         </div>
       </div>
       <div className="flex" style={{ marginLeft: "10px" }}>
         <div className="formHuesped">
           <label>Tipo Documento</label>
-          <TipoDocumento name="tipoDocumento" value={consolaSeleccionada.tipoDocumento} handleChangeData={handleChange} />
+          <TipoDocumento name="tipoDocumento" value={consolaSeleccionada?.tipoDocumento || ""} handleChangeData={handleChange} />
           {errors.tipoDocumento && <p id="errores">{errors.tipoDocumento}</p>}
         </div>
         <div className="formHuesped" >
           <label>Número Documento</label>
-          <input className="form-control" name="numDocumento" type="number" placeholder="# Documento" onBlur={handleBlur} value={consolaSeleccionada.numDocumento} onChange={handleChange} />
+          <input className="form-control" name="numDocumento" type="number" placeholder="# Documento" onBlur={handleBlur} value={consolaSeleccionada?.numDocumento || ""} onChange={handleChange} />
           {errors.numDocumento && <p id="errores">{errors.numDocumento}</p>}
         </div>
         <div className="formHuesped">
           <label>Nacionalidad</label>
-          <Nacionalidades name="nacionalidad" value={consolaSeleccionada.nacionalidad} handleChangeData={handleChange} />
+          <Nacionalidades name="nacionalidad" value={consolaSeleccionada?.nacionalidad || ""} handleChangeData={handleChange} />
           {errors.nacionalidad && <p id="errores">{errors.nacionalidad}</p>}
         </div>
         <div className="formHuesped">
           <label > ¿Región de dónde proviene?</label>
-          <Region name="lugarOrigen" codNacion={codNacionalidad || 1} value={consolaSeleccionada.lugarOrigen} handleChangeData={handleChange} />
+          <Region name="lugarOrigen" codNacion={codNacionalidad || 1} value={consolaSeleccionada?.lugarOrigen || ""} handleChangeData={handleChange} />
           {errors.lugarOrigen && <p id="errores">{errors.lugarOrigen}</p>}
         </div>
         <div className="formHuesped">
           <label>Nombre Emergencia</label>
-          <input className="form-control" name="nomContactoEmergencia" placeholder="Nombre Contacto" onBlur={handleBlur} value={consolaSeleccionada.nomContactoEmergencia} onChange={handleChange} />
+          <input className="form-control" name="nomContactoEmergencia" placeholder="Nombre Contacto" onBlur={handleBlur} value={consolaSeleccionada?.nomContactoEmergencia || ""} onChange={handleChange} />
           {errors.nomContactoEmergencia && <p id="errores">{errors.nomContactoEmergencia}</p>}
         </div>
       </div>
       <div className="flex">
         <div className="formHuesped">
           <label>#Contacto Emergencia</label>
-          <input className="form-control" type="number" name="numContactoEmergencia" onBlur={handleBlur} value={consolaSeleccionada.numContactoEmergencia} onChange={handleChange} placeholder="# Contacto" />
+          <input className="form-control" type="number" name="numContactoEmergencia" onBlur={handleBlur} value={consolaSeleccionada?.numContactoEmergencia || ""} onChange={handleChange} placeholder="# Contacto" />
           {errors.numContactoEmergencia && <p id="errores">{errors.numContactoEmergencia}</p>}
         </div>
         <div className="formHuesped">
@@ -444,61 +444,61 @@ function Huespedes() {
       <div className="flex">
         <div className="me-2">
           <label>Nombre(s)</label>
-          <input className="form-control" name="nombre" onBlur={handleBlur} value={consolaSeleccionada?.nombre} onChange={handleChange} />
+          <input className="form-control" name="nombre" onBlur={handleBlur} value={consolaSeleccionada?.nombre || ""} onChange={handleChange} />
           {errors.nombre && <p id="errores">{errors.nombre}</p>}
         </div>
         <div className="me-2">
           <label>Apellido(s)</label>
-          <input className="form-control" name="apellido" onBlur={handleBlur} value={consolaSeleccionada?.apellido} onChange={handleChange} />
+          <input className="form-control" name="apellido" onBlur={handleBlur} value={consolaSeleccionada?.apellido || ""} onChange={handleChange} />
           {errors.apellido && <p id="errores">{errors.apellido}</p>}
         </div>
         <div className="me-2">
           <label>Número Celular</label>
-          <input className="form-control" name="numCelular" onBlur={handleBlur} value={consolaSeleccionada?.numCelular} onChange={handleChange} />
+          <input className="form-control" name="numCelular" onBlur={handleBlur} value={consolaSeleccionada?.numCelular || ""} onChange={handleChange} />
           {errors.numCelular && <p id="errores">{errors.numCelular}</p>}
         </div>
         <div className="me-2">
           <label>Fecha Nacimiento</label>
-          <input className="form-control" name="fechaNacimiento" type="date" onBlur={handleBlur} onChange={handleChange} value={consolaSeleccionada?.fechaNacimiento} max={calcularFechaMaxima()} />
+          <input className="form-control" name="fechaNacimiento" type="date" onBlur={handleBlur} onChange={handleChange} value={consolaSeleccionada?.fechaNacimiento || ""} max={calcularFechaMaxima()} />
           {errors.fechaNacimiento && <p id="errores">{errors.fechaNacimiento}</p>}
         </div>
         <div className="me-2">
           <label>Correo Electronico</label>
-          <input className="form-control" name="correo" onBlur={handleBlur} onChange={handleChange} value={consolaSeleccionada?.correo} />
+          <input className="form-control" name="correo" onBlur={handleBlur} onChange={handleChange} value={consolaSeleccionada?.correo || ""} />
           {errors.correo && <p id="errores">Dirección no valida</p>}
         </div>
       </div>
       <div className="flex">
         <div className="me-2" >
           <label>Tipo Documento</label>
-          <TipoDocumento name="tipoDocumento" value={consolaSeleccionada?.tipoDocumento} handleChangeData={handleChange} />
+          <TipoDocumento name="tipoDocumento" value={consolaSeleccionada?.tipoDocumento || ""} handleChangeData={handleChange} />
           {errors.tipoDocumento && <p id="errores">{errors.tipoDocumento}</p>}
         </div>
         <div className="me-2">
           <label>Número Documento</label>
-          <input className="form-control" name="numDocumento" onBlur={handleBlur} onChange={handleChange} value={consolaSeleccionada?.numDocumento} />
+          <input className="form-control" name="numDocumento" onBlur={handleBlur} onChange={handleChange} value={consolaSeleccionada?.numDocumento || ""} />
           {errors.numDocumento && <p id="errores">{errors.numDocumento}</p>}
         </div>
         <div className="me-2" style={{ width: "200px", margin: "20px" }}>
           <label>Nacionalidad</label>
-          <Nacionalidades name="nacionalidad" value={consolaSeleccionada?.nacionalidad} handleChangeData={handleChange} />
+          <Nacionalidades name="nacionalidad" value={consolaSeleccionada?.nacionalidad || ""} handleChangeData={handleChange} />
           {errors.nacionalidad && <p id="errores">{errors.nacionalidad}</p>}
         </div>
         <div className="me-2">
           <label>¿De dónde proviene?</label>
-          <Region name="lugarOrigen" value={consolaSeleccionada?.lugarOrigen} codNacion={codNacionalidad || 1} handleChangeData={handleChange} />
+          <Region name="lugarOrigen" value={consolaSeleccionada?.lugarOrigen || ""} codNacion={codNacionalidad || 1} handleChangeData={handleChange} />
           {errors.lugarOrigen && <p id="errores">{errors.lugarOrigen}</p>}
         </div>
         <div className="me-2">
           <label>Nombre Emergencia</label>
-          <input className="form-control" name="nomContactoEmergencia" onBlur={handleBlur} onChange={handleChange} value={consolaSeleccionada?.nomContactoEmergencia} />
+          <input className="form-control" name="nomContactoEmergencia" onBlur={handleBlur} onChange={handleChange} value={consolaSeleccionada?.nomContactoEmergencia || ""} />
           {errors.nomContactoEmergencia && <p id="errores">{errors.nomContactoEmergencia}</p>}
         </div>
       </div>
       <div className="flex">
         <div className="me-2">
           <label>#Contacto Emergencia</label>
-          <input className="form-control" name="numContactoEmergencia" onBlur={handleBlur} onChange={handleChange} value={consolaSeleccionada?.numContactoEmergencia} />
+          <input className="form-control" name="numContactoEmergencia" onBlur={handleBlur} onChange={handleChange} value={consolaSeleccionada?.numContactoEmergencia || ""} />
           {errors.numContactoEmergencia && <p id="errores">{errors.numContactoEmergencia}</p>}
         </div>
         <div className="me-2" style={{ width: "200px", margin: "20px" }}>
@@ -648,9 +648,7 @@ function Huespedes() {
                   <li>
                     <hr className="dropdown-divider" />
                   </li>
-                  <li>
-                    <Link className="dropdown-item" to={`/Login`}> Factura </Link>
-                  </li>
+
                 </ul>
               </li>
             </div>
@@ -666,13 +664,7 @@ function Huespedes() {
         <h6 className="m-0 font-weight-bold text-primary"> Base de Datos Huespedes </h6>
         <div> <button onClick={handleShow} className="btn btn-primary"> Agregar Huesped</button> </div>
         <div style={{ color: "red" }}>
-          <MUIDataTable
-            title={"Lista Huespedes"}
-            data={data}
-            columns={columns}
-            options={{ selectableRows: 'none' }}
-            id="custom-table" // Aplica los estilos personalizados
-          />
+          <MUIDataTable title={"Lista Huespedes"} data={data} columns={columns} options={{ selectableRows: 'none' }} id="custom-table" />
         </div>
       </div>
       <Modal show={show} onHide={handleClose} animation={false} dialogClassName="crearHuesped">

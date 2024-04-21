@@ -1,0 +1,65 @@
+{
+    "codFactura": 1,
+    "descripcion": "habitación productos",
+    "itemFactura": [],
+    "fechaCreacion": "2024-04-05",
+    "horaCreacion": "07:00:00",
+    "estado": "DEBE",
+    "checkin": {
+        "codCheckin": 1,
+        "fechaEntrada": "2024-04-04",
+        "fechaSalida": "2024-04-10",
+        "codHuesped": {
+            "codHuesped": 40,
+            "nombre": "ALEJANDRito",
+            "apellido": "MEDINA",
+            "numCelular": 3201718211,
+            "correo": "alejo@gmail.com",
+            "tipoDocumento": {
+                "codTipoDocumento": 3,
+                "nomTipoDocumento": "CEDULA DE CIUDADANIA"
+            },
+            "numDocumento": 1001788611,
+            "fechaNacimiento": "2024-02-27",
+            "edad": 0,
+            "nacionalidad": {
+                "codNacion": 4,
+                "nombre": "Brasil"
+            },
+            "lugarOrigen": {
+                "codRegion": 58,
+                "nacionalidad": {
+                    "codNacion": 4,
+                    "nombre": "Brasil"
+                },
+                "nombre": "Amazonas"
+            },
+            "nomContactoEmergencia": "YERSON",
+            "numContactoEmergencia": 3020981212,
+            "estadoHuesped": false
+        },
+        "codHabitacion": {
+            "codHabitacion": 2,
+            "nombreHabitacion": {
+                "codTipoHabitacion": 1,
+                "nombre": "PERSONAL",
+                "precioXPersona": 35000.0,
+                "precioXAcompanante": 20000.0
+            },
+            "descripHabitacion": "BONITA",
+            "numHabitacion": 94,
+            "pisoHabitacion": 1,
+            "maxPersonasDisponibles": 1,
+            "estadoHabitacion": {
+                "codEstadoHabitacion": 2,
+                "nombre": "OCUPADA"
+            },
+            "imagenHabitacion": "UR"
+        },
+        "numAdultos": 1,
+        "numNinos": 0,
+        "totalAcompañantes": 1,
+        "totalPersona": 210000.0
+    },
+    "total": 0.0
+}

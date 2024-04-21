@@ -144,6 +144,7 @@ function Reservacion() {
                     handleReservacionClose();
                     setMensaje("Reservación Exitosa");
                     abrirCerrarModalMensaje();
+                    peticionGet();
                     setConsolaSeleccionada({
                         tipoDocumento: {
                             codTipoDocumento: "",
@@ -736,9 +737,6 @@ function Reservacion() {
                                     </li>
                                     <li>
                                         <hr className="dropdown-divider" />
-                                    </li>
-                                    <li>
-                                        <Link className="dropdown-item" to={`/Login`}> Factura </Link>
                                     </li>
                                 </ul>
                             </li>

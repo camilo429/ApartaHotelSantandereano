@@ -219,7 +219,7 @@ const ReciboPublico = () => {
         </form>
     );
     const bodyEditar = (
-        <form onSubmit={peticionPost}>
+        <form onSubmit={peticionPut}>
             <div className='flex'>
                 <div>
                     <label>Empresa</label>
@@ -351,7 +351,7 @@ const ReciboPublico = () => {
                         <a className='btn btn-secondary' href='https://www.enel.com.co/es/personas/boton-de-pago.html?ecid=EnlaceInterno-BotonesWeb-CO_btnflotante_Hogar_ZonaPrivada_202303_CO_btn_flotante-Hogar_pago' target='_black' rel='noopener noreferrer' >Pagar Luz</a>
                         <a className="btn btn-success" href="https://pagos.acueducto.com.co/" target="_blank" rel="noopener noreferrer">Pagar Agua</a>
                         <a className="btn btn-danger" href="https://www.grupovanti.com/tramites-y-ayuda/factura/paga-tu-factura" target="_blank" rel="noopener noreferrer">Pagar Gas</a>
-                        <a className="btn btn-warning" href="https://www.conexiondigital.co/cancelatufactura/" target="_blank" rel="noopener noreferrer">Ir a Ejemplo.com</a>
+                        <a className="btn btn-warning" href="https://www.mipagoamigo.com/MPA_WebSite/ServicePayments/StartPayment?id=5724&searchedCategoryId=&searchedAgreementName=CONEXION%20DIGITAL" target="_blank" rel="noopener noreferrer">Parabolica</a>
                     </div>
                     <div className="card-body">
                         <MUIDataTable

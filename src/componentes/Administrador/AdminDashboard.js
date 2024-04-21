@@ -17,7 +17,7 @@ function AdminDashboard() {
                                     <div className='col-6'>
                                         <div className='p-3 m-1'>
                                             <h4>Bienvenido</h4>
-                                            <p className='mb-0'> Directora Giovanna </p>
+                                            <p className='mb-0'> Camilo Ahumada</p>
                                         </div>
                                     </div>
                                     <div className='col-6 align-self-end text-end'>
