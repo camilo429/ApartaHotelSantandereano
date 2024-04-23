@@ -7,10 +7,10 @@ const AnalisisHuespedes = () => {
         <div>
             <div style={{ margin: "30px" }}>
                 <div className='flex'>
-                    <Tarjeta propiedad={"Huéspedes Registrados"} cantidad={"40"} />
-                    <Tarjeta propiedad={"Huéspedes Recurrentes"} cantidad={"20%"} />
-                    <Tarjeta propiedad={"Huéspedes No retorno 25%"} cantidad={"30%"} />
-                    <Tarjeta propiedad={"Presencial No Regresan"} cantidad={"50%"} />
+                    <Tarjeta propiedad={"Huéspedes Registrados"} cantidad={"60"} />
+                    <Tarjeta propiedad={"Huéspedes Recurrentes"} cantidad={"60%"} />
+                    <Tarjeta propiedad={"Huéspedes poco Frecuentes retorno "} cantidad={"20%"} />
+                    <Tarjeta propiedad={"Huéspedes No Frecuentes"} cantidad={"20%"} />
                 </div>
                 <div>
                     <Ocupacion />

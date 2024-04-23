@@ -36,7 +36,6 @@ const Actividad = () => {
     const handleEliminarClose = () => setShowEliminar(false);
     const handleEliminarShow = () => setShowEliminar(true);
 
-
     const [consolaSeleccionada, setConsolaSeleccionada] = useState({
         codActividad: "",
         descripcion: "",
@@ -491,44 +490,44 @@ const Actividad = () => {
             <div className='flex'>
                 <div className='formActividad'>
                     <label>Título</label>
-                    <input name='titulo' type='text' className='form-control' onBlur={handleBlur} disabled onChange={handleChange} placeholder='Título' value={consolaSeleccionada.titulo || ""} />
-                    {/*{errors.titulo && <p id='errors'>{errors.titulo}</p>}*/}
+                    <input name='titulo' type='text' className='form-control' onBlur={handleBlur} onChange={handleChange} placeholder='Título' value={consolaSeleccionada.titulo || ""} />
+                    {errors.titulo && <p id='errors'>{errors.titulo}</p>}
                 </div>
                 <div className='formActividad'>
                     <label>Fecha Entrega</label>
-                    <input name='fechaEntrega' type='date' className='form-control' onBlur={handleBlur} disabled onChange={handleChange} value={consolaSeleccionada?.fechaEntrega || ""} />
-                    {/*{errors.fechaEntrega && <p id='errors'>{errors.fechaEntrega}</p>}*/}
+                    <input name='fechaEntrega' type='date' className='form-control' onBlur={handleBlur} onChange={handleChange} value={consolaSeleccionada?.fechaEntrega || ""} />
+                    {errors.fechaEntrega && <p id='errors'>{errors.fechaEntrega}</p>}
                 </div>
                 <div className='formActividad'>
                     <label>Hora Entrega</label>
-                    <input name='horaEntrega' type="text" className='form-control' disabled onBlur={handleBlur} onChange={handleChange} value={consolaSeleccionada?.horaEntrega || ""} placeholder='Hora:Minutos:Segundos' />
-                    {/*{errors.horaEntrega && <p id='errors'>{errors.horaEntrega}</p>}*/}
+                    <input name='horaEntrega' type="text" className='form-control' onBlur={handleBlur} onChange={handleChange} value={consolaSeleccionada?.horaEntrega || ""} placeholder='Hora:Minutos:Segundos' />
+                    {errors.horaEntrega && <p id='errors'>{errors.horaEntrega}</p>}
                 </div>
                 <div className='formActividad'>
                     <label>Estado Actividad</label>
-                    <select name='estadoActividad' className='form-select' aria-label="Default select example" disabled onChange={handleChange} placeholder="Seleccione Actividad">
+                    <select name='estadoActividad' className='form-select' aria-label="Default select example" onChange={handleChange} placeholder="Seleccione Actividad">
                         <option value="COMPLETADO">COMPLETADO</option>
                         <option value="PENDIENTE">PENDIENTE</option>
                         <option value="CANCELADO">CANCELADO</option>
                         <option value="EN CURSO">EN CURSO</option>
                     </select>
-                    {/*{errors.estadoActividad && <p id='errors'>{errors.estadoActividad}</p>}*/}
+                    {errors.estadoActividad && <p id='errors'>{errors.estadoActividad}</p>}
                 </div>
             </div>
             <div className='flex'>
                 <div className='formDescripcion'>
                     <label>Empleado</label>
-                    <SelectEmpleados name="empleado" value={consolaSeleccionada?.empleado || ""} handleChangeData={handleChange} disabled />
-                    {/*{errors.empleado && <p id='errors'>{errors.empleado}</p>}*/}
+                    <SelectEmpleados name="empleado" value={consolaSeleccionada?.empleado || ""} handleChangeData={handleChange} />
+                    {errors.empleado && <p id='errors'>{errors.empleado}</p>}
                 </div>
                 <div className='formDescripcion'>
                     <label>Descripcion</label>
-                    <textarea name='descripcion' type="textarea" className='form-control' onBlur={handleBlur} disabled onChange={handleChange} placeholder='Descripcion' value={consolaSeleccionada?.descripcion || ""} style={{ resize: "none" }} />
-                    {/*{errors.descripcion && <p id='errors'>{errors.descripcion}</p>}*/}
+                    <textarea name='descripcion' type="textarea" className='form-control' onBlur={handleBlur} onChange={handleChange} placeholder='Descripcion' value={consolaSeleccionada?.descripcion || ""} style={{ resize: "none" }} />
+                    {errors.descripcion && <p id='errors'>{errors.descripcion}</p>}
                 </div>
             </div>
             <div className='flex' style={{ alignItems: "center" }}>
-                {/*<button className='btn btn-primary' type='submit'>Asignar</button>*/}
+                <button className='btn btn-primary' type='submit'>Guardar Cambios</button>
                 <button className='btn btn-secondary' type='submit' >Cerrar</button>
             </div>
         </form>
@@ -604,7 +603,7 @@ const Actividad = () => {
                             </Link>
                             <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li>
-                                    <Link className="dropdown-item" onClick={() => seleccionarTarea(tableMeta.rowData, "Editar")}> Ver </Link>
+                                    <Link className="dropdown-item" onClick={() => seleccionarTarea(tableMeta.rowData, "Editar")}> Editar </Link>
                                 </li>
                                 <li>
                                     <Link className="dropdown-item" onClick={() => seleccionarTarea(tableMeta.rowData, "Eliminar")}> Eliminar </Link>

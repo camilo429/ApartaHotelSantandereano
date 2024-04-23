@@ -27,6 +27,11 @@ button {
     margin-right: 10px;
 }
 
+.acompanante {
+    margin: auto;
+    height: auto;
+}
+
 .acompanante>input {
     width: 170px;
 }

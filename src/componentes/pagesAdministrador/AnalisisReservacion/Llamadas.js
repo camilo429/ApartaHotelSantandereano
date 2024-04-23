@@ -11,7 +11,7 @@ var midata = {
   labels: meses,
   datasets: [
     {
-      label: "Reservaciones por celular (Domingo 07/04/2024 - 13/04/2024)",
+      label: "Reservaciones por celular (Domingo 14/04/2024 - 20/04/2024)",
       data: beneficios,
       tension: 0.5,
       fill: true,
@@ -23,7 +23,7 @@ var midata = {
     },
     {
       label:
-        "Reservaciones Pagína Web (Domingo 07/04/2024 - 13/04/2024)",
+        "Reservaciones Pagína Web (Domingo 14/04/2024 - 20/04/2024)",
       data: beneficiosWeb,
       tension: 0.5,
       fill: true,
@@ -40,7 +40,7 @@ var misoptions = {};
 export default function LinesChart() {
   return (
     <div style={{ width: "96%", height: "96%", margin: "10px" }}>
-      <Line data={midata} options={misoptions} />;
+      <Line data={midata} options={misoptions} />
       <div>
       </div>
     </div>

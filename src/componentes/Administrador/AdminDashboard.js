@@ -1,27 +1,23 @@
 import React from 'react'
 import TableElements from './TableElements'
 import Estadisticas from './../../image/estadisticas.png';
+import Notification from '../pagesAdministrador/Notification';
 
 function AdminDashboard() {
     return (
         <main className='content px-3 py-2'>
             <div className='container-fluid'>
                 <div className='mb-3'>
-                    <h4> Panel Administrador</h4>
+                    <h4>Geovanny Ahumada</h4>
                 </div>
                 <div className='row'>
                     <div className='col-12 col-md-6 d-flex'>
                         <div className='card flex-fill border-0 illustration'>
                             <div className='card-body p-0 d-flex flex-fill'>
                                 <div className='row g-0 w-100'>
-                                    <div className='col-6'>
-                                        <div className='p-3 m-1'>
-                                            <h4>Bienvenido</h4>
-                                            <p className='mb-0'> Camilo Ahumada</p>
-                                        </div>
-                                    </div>
-                                    <div className='col-6 align-self-end text-end'>
-                                        <img src={Estadisticas} className='img-fluid illustration-img' alt='estadisticas' />
+                                    <div className='col-8 align-self-end '>
+                                        <h4>Recibos por pagar:</h4>
+                                        <Notification />
                                     </div>
                                 </div>
                             </div>
@@ -49,5 +45,4 @@ function AdminDashboard() {
         </main>
     )
 }
-
 export default AdminDashboard

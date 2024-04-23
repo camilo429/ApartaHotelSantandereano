@@ -97,7 +97,7 @@ const SelectMultiProductos = ({ name, handleChangeData, value = null }) => {
                             id={`quantity-${option.value}`}
                             className='form-control'
                             type="number"
-                            value={quantities[option.value] || "1"}
+                            value={quantities[option.value] || 0}
                             onChange={(e) => handleQuantityChange(option.value, e)}
                         />
                     </div>

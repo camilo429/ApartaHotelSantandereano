@@ -28,6 +28,9 @@ const CheckIn = () => {
     const handleCheckInClose = () => setVerCheckIn(false);
     const handleVerCheckInShow = () => setVerCheckIn(true);
 
+    const [selectedItems, setSelectedItems] = useState([]);
+    const [total, setTotal] = useState(0);
+
     const [consolaFactura, setConsolaFactura] = useState({
         codFactura: "",
         descripcion: "",
@@ -106,11 +109,33 @@ const CheckIn = () => {
     })
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setConsolaFactura((prevState) => ({
-            ...prevState,
-            [name]: value,
-        }));
+        if (name === "itemFactura") {
+            // Calcular el nuevo total basado en los nuevos elementos seleccionados
+            const nuevoTotal = calcularTotal(value); // Asume que tienes una función calcularTotal para obtener el nuevo total
+            setConsolaFactura((prevState) => ({
+                ...prevState,
+                [name]: value,
+                total: nuevoTotal, // Actualizar el total en el estado
+            }));
+        } else {
+            // Si el cambio ocurrió en otro lugar, simplemente actualizar el estado como lo estás haciendo actualmente
+            setConsolaFactura((prevState) => ({
+                ...prevState,
+                [name]: value,
+            }));
+        }
     };
+    const calcularTotal = (selectedItems) => {
+        let total = 0;
+
+        // Itera sobre los elementos seleccionados y suma el precio de cada uno al total
+        selectedItems.forEach((item) => {
+            total += item.cantidad * item.producto.precio;
+        });
+
+        return total;
+    };
+
     const peticionGet = async () => {
         try {
             const response = await axios.get(url, {
@@ -146,6 +171,7 @@ const CheckIn = () => {
                 setMensaje("Factura Creada");
                 peticionGet();
                 abrirCerrarModalMensaje();
+                handleProductosClose();
                 setConsolaFactura({});
             }
         } catch (error) {
@@ -252,17 +278,36 @@ const CheckIn = () => {
             handleVerCheckInShow();
         }
     }
-    const bodyCheckIn = (
+    const handleChangeSelectedItems = (selectedItems) => {
+        if (Array.isArray(selectedItems)) {
+            // Aquí va tu lógica para manejar cada item seleccionado
+            let total = 0;
+            selectedItems.forEach(item => {
+                total += item.cantidad * item.producto.precio;
+            });
+
+            // Luego, actualiza el estado con el nuevo total
+            setConsolaFactura(prevState => ({
+                ...prevState,
+                total: total
+            }));
+        } else {
+            console.error("selectedItems no es un array:", selectedItems);
+        }
+    };
+
+
+    const bodyRegistrarFactura = (
         <div>
             <form onSubmit={peticionPost}>
                 <div className='flex'>
                     <div>
                         <label>Nombre(s)</label>
-                        <input type='text' disabled name='nombre' value={consolaFactura?.checkin?.codHuesped?.nombre || ""} className='form-control' />
+                        <input type='text' disabled name='nombre' value={consolaFactura?.checkin?.codHuesped?.nombre || ""} onChange={handleChange} className='form-control' />
                     </div>
                     <div>
                         <label>Apellido(s)</label>
-                        <input type='text' disabled name='apellido' value={consolaFactura?.checkin?.codHuesped?.apellido || ""} className='form-control' />
+                        <input type='text' disabled name='apellido' value={consolaFactura?.checkin?.codHuesped?.apellido || ""} onChange={handleChange} className='form-control' />
                     </div>
                 </div>
                 <div className='flex' style={{ width: "100%" }}>
@@ -278,11 +323,14 @@ const CheckIn = () => {
                     </div>
                     <div>
                         <label>Estado</label>
-                        <input type='text' name='estado' value={consolaFactura?.estado || ""} onChange={handleChange} className='form-control' />
+                        <select required className="form-select" aria-label="Default select example" name="estadoHuesped" value={consolaFactura?.estado} onChange={handleChange}>
+                            <option value="ABIERTA">ABIERTA</option>
+                            <option value="PAGADA">PAGADA</option>
+                        </select>
                     </div>
                     <div>
-                        <label>Descripcion</label>
-                        <textarea type='textare' name='descripcion' value={consolaFactura?.descripcion || ""} onChange={handleChange} className='form-control' style={{ resize: "none", width: "200px" }} />
+                        <label>Descripción</label>
+                        <textarea type='textare' name='descripcion' value={consolaFactura?.descripcion || ""} onChange={handleChange} className='form-control' style={{ resize: "none", width: "200px" }} placeholder='Productos Consumidos' />
                     </div>
                 </div>
                 <div className='flex'>
@@ -376,7 +424,7 @@ const CheckIn = () => {
                 }
             }
         }, {
-            name: "totalAcompañantes",
+            name: "totalAcompanantes",
             label: "Total Personas"
         }, {
             name: "facturas",
@@ -431,7 +479,7 @@ const CheckIn = () => {
                 <Modal.Header>
                     <Modal.Title>Registrar Factura</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>{bodyCheckIn}</Modal.Body>
+                <Modal.Body>{bodyRegistrarFactura}</Modal.Body>
             </Modal>
             <Modal show={smShow} onHide={handleMensajeClose} animation={false} > {popUp}</Modal>
             <Modal show={verCheckIn} onHide={handleCheckInClose} animation={false} size='lg'>

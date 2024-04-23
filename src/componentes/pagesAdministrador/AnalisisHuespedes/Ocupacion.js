@@ -10,7 +10,7 @@ var midata = {
     labels: meses,
     datasets: [
         {
-            label: "Porcentaje Ocupación (Domingo 07/04/2024 - Sábado 13/04/2024)",
+            label: "Porcentaje Ocupación (Domingo 14/04/2024 - Sábado 20/04/2024)",
             data: beneficios,
             tension: 0.5,
             fill: true,
@@ -29,7 +29,7 @@ export default function LinesChart() {
             <Line data={midata} options={misoptions} />
             <div>
                 <p>
-                    Capacidad de Ocupación (Domingo 07/04/2024 - Sábado 13/04/2024)
+                    Capacidad de Ocupación (Domingo 14/04/2024 - Sábado 20/04/2024)
                 </p>
             </div>
         </div>

@@ -4,7 +4,6 @@ import { Routes, Route } from "react-router-dom";
 import { MdOutlineRestorePage } from "react-icons/md";
 import { FaSliders } from "react-icons/fa6";
 import { FaUser } from "react-icons/fa";
-import { BsFillGrid3X3GapFill } from "react-icons/bs";
 import { NavLink } from "react-router-dom";
 import * as HiIcons from "react-icons/hi";
 import { FaUsers } from "react-icons/fa";
@@ -17,6 +16,7 @@ import { MdElectricalServices } from "react-icons/md";
 import { MdOutlineWaterDrop } from "react-icons/md";
 import { FaRegLightbulb } from "react-icons/fa";
 import { FiActivity } from "react-icons/fi";
+import { MdOutlineInventory } from "react-icons/md";
 // Componentes
 import Acciones from "../pagesAdministrador/Acciones";
 import ModuloHuespued from "../pagesAdministrador/Huespedes/ModuloHuespued";
@@ -32,11 +32,11 @@ import ModuloReciboPublico from "../pagesAdministrador/ReciboPublico/ModuloRecib
 import ModuloTipoReciboPublico from "../pagesAdministrador/TipoReciboPublico/ModuloTipoReciboPublico";
 import Graficas from "../pagesAdministrador/Graficas";
 import Recibos from "../pagesAdministrador/Factura/Recibos";
-import Tarea from "../pagesAdministrador/Tarea";
 import ModuloAnalisisComentario from "../pagesAdministrador/AnalisisComentario/ModuloAnalisisComentario";
 import ModuloAnalisisReservacion from "../pagesAdministrador/AnalisisReservacion/ModuloAnalasisReservacion";
 import ModuloAnalisisHuespedes from "../pagesAdministrador/AnalisisHuespedes/ModuloAnalisisHuespedes";
 import ModuloActividad from "../pagesAdministrador/Actividad/ModuloActividad";
+import ModuloInventario from "../pagesAdministrador/Inventario/ModuloInventario";
 function MenuLateral() {
   return (
     <div>
@@ -113,6 +113,11 @@ function MenuLateral() {
                   <li className="sidebar-item">
                     <NavLink className="sidebar-link" to="Productos" exact="true" activeclassname="active">
                       <FaPeopleCarry className="me-2" /> Productos
+                    </NavLink>
+                  </li>
+                  <li className="sidebar-item">
+                    <NavLink className="sidebar-link" to="Inventario" exact="true" activeclassname="active">
+                      <MdOutlineInventory /> Inventario
                     </NavLink>
                   </li>
                   <li className="sidebar-item">
@@ -222,9 +227,9 @@ function MenuLateral() {
           <Route path="AnalisisReservacion" exact={true} element={<ModuloAnalisisReservacion />} />
           <Route path="AnalisisHuespedes" exact={true} element={<ModuloAnalisisHuespedes />} />
           <Route path="Actividades" exact={true} element={<ModuloActividad />} />
+          <Route path="Inventario" exact={true} element={<ModuloInventario />} />
           <Route path="/Graficas" exact={true} element={<Graficas />} />
           <Route path="/Recibos" exact={true} element={<Recibos />} />
-          <Route path="/Tarea" exact={true} element={<Tarea />} />
           <Route path="/Acciones" exact={true} element={<Acciones />} />
           <Route path="/Habitaciones" exact={true} element={<ModuloHabitacion />} />
         </Routes>

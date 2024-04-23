@@ -20,7 +20,6 @@ const urlG = Apiurl + "habitacion/crearHabitacion";
 const urlE = Apiurl + "habitacion/actualizarHabitacion/";
 const urlD = Apiurl + "habitacion/eliminarHabitacion/";
 const urlCheckIn = Apiurl + "checkin/crearCheckin";
-const urlHuespedes = Apiurl + "huespedes/listarHuespedes";
 const urlCheckOut = Apiurl + "checkout/checkout/"
 
 function Habitacion() {
@@ -265,7 +264,10 @@ function Habitacion() {
         console.log("Ha ocurrido un error get Habitación", response.status);
       }
     } catch (error) {
-      console.log("error get habitación", error);
+      const mensajeError = error.response && error.response.data && error.response.data.mensaje ? error.response.data.mensaje : "Hubo un error al trater Habitaciones. Por favor, intenta nuevamente.";
+      setMensaje(mensajeError);
+      abrirCerrarModalMensaje();
+      setErrors({});
     }
   }
   const peticionPost = async (e) => {
@@ -670,7 +672,7 @@ function Habitacion() {
   const bodyCheckIn = (
     <div>
       <form onSubmit={peticionCheckIn}>
-        <div className="flex">
+        <div className="flex" style={{ margin: "justify" }}>
           <div className="cajasCheckIn">
             <Label for="exampleEmail">Huesped Registrado </Label>
             <SelectHuespedes name="codHuesped" value={consolaCheckIn?.codHuesped || "1"} handleChangeData={manejarCambio} />
@@ -690,8 +692,8 @@ function Habitacion() {
         <div className="flex">
           <button onClick={handleAcompananteShow} className="btn btn-warning">Agregar Acompañante</button>
           <div align="right" style={{ marginTop: "30px" }}>
-            <button className="btn btn-primary" type="submit"> Insertar </button>
-            <button className="btn btn-secondary" onClick={cerrarCheckIn}>Cancelar</button>
+            <button className="btn btn-primary" type="submit"> Dar Ingreso </button>
+            <button className="btn btn-secondary" onClick={cerrarCheckIn}>Cancelar Ingreso</button>
           </div>
         </div>
       </form>
@@ -815,6 +817,9 @@ function Habitacion() {
                     <Link className="dropdown-item" onClick={() => seleccionarHabitacion(tableMeta.rowData, "Eliminar")}> Eliminar </Link>
                   </li>
                   <li>
+                    <Link className="dropdown-item" onClick={() => seleccionarHabitacion(tableMeta.rowData, "Editar")}> Editar </Link>
+                  </li>
+                  <li>
                     <Link className="dropdown-item" onClick={() => seleccionarHabitacion(tableMeta.rowData, "CheckOut")}> Check-Out </Link>
                   </li>
                 </ul>
@@ -828,7 +833,6 @@ function Habitacion() {
   const options = {
     filterType: "dropdown",
     responsive: "standard",
-    /*  customToolbarSelect: (selectedRows) => <CustomToolbarSelect selectedRows={selectedRows} />*/
   };
   return (
     <div className="Habitacion">
@@ -836,8 +840,6 @@ function Habitacion() {
       <div className="card shadow mb-4">
         <div className="flex">
           <button onClick={handleHabitacionShow} className="btn btn-primary" > Agregar Habitación </button>
-          {/*<button onClick={() => abrirCerrarModalCheckIn()} className="btn btn-success"> Check-in </button>
-          <button onClick={() => abrirCerrarModalInsertar()} className="btn btn-danger"> Check-out </button>*/}
         </div>
         <div className="card-body" style={{ width: "100%" }}>
           <MUIDataTable title={"Lista habitaciones"} data={data} columns={columns} options={options} />
@@ -869,11 +871,13 @@ function Habitacion() {
         </Modal.Header>
         {bodyCheckOut}
       </Modal>
-      <Modal show={showAcompanante} onHide={handleAcompananteClose} animation={false} dialogClassName="checkIn">
+      <Modal show={showAcompanante} onHide={handleAcompananteClose} animation={false} size="lg">
         <Modal.Header>
           <Modal.Title>Agregar Acompañante</Modal.Title>
         </Modal.Header>
-        {bodyAcompanante}
+        <Modal.Body>
+          {bodyAcompanante}
+        </Modal.Body>
       </Modal>
     </div>
   );

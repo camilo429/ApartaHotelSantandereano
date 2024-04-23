@@ -128,7 +128,7 @@ function Reservacion() {
     const peticionPost = async (e) => {
         try {
             e.preventDefault();
-            console.log("ConsolaSeleccionada", consolaSeleccionada);
+            // console.log("ConsolaSeleccionada", consolaSeleccionada);
             setErrors(validationsForm(consolaSeleccionada));
             if (Object.keys(errors).length === 0) {
                 setLoading(true);
@@ -139,8 +139,8 @@ function Reservacion() {
                 });
 
                 if (response.status === 201) {
-                    setErrors({});
                     setData(data.concat(response.data));
+                    setErrors({});
                     handleReservacionClose();
                     setMensaje("Reservación Exitosa");
                     abrirCerrarModalMensaje();

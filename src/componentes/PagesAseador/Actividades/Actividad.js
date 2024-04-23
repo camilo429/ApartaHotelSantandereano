@@ -444,9 +444,7 @@ const Actividad = () => {
                 if (response.status === 200) {
                     setTareasAsignadas(response.data);
                     // console.log("Actividades Propias", response.data);
-
                 }
-
             } catch (error) {
                 console.log("get", error);
                 const mensajeError = error.response && error.response.data && error.response.data.mensaje ? error.response.data.mensaje : "Hubo un error al traer Tareas Asignadas.";

@@ -7,7 +7,7 @@ const AnalisisFactura = () => {
         <div>
             <div style={{ margin: "30px" }}>
                 <div className='flex'>
-                    <Tarjeta propiedad={"Total Reservaciones"} cantidad={23} />
+                    <Tarjeta propiedad={"Tipo Habitación más solicitada"} cantidad={"Matrimonial #15"} />
                     <Tarjeta propiedad={"Celular"} cantidad={10} />
                     <Tarjeta propiedad={"WEB"} cantidad={8} />
                     <Tarjeta propiedad={"Presencial"} cantidad={5} />

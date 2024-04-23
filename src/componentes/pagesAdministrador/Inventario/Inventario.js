@@ -1,18 +1,17 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-
+import axios from 'axios';
 import { Apiurl } from '../../../services/userService';
 import MUIDataTable from 'mui-datatables';
+import { useForm } from 'react-hook-form';
 import { Modal } from 'react-bootstrap';
 import { Link } from "react-router-dom";
-import "./Producto.css";
 
-const url = Apiurl + "producto/listarProductos";
-const urlG = Apiurl + "producto/crearProducto";
-const urlE = Apiurl + "producto/actualizarProducto/";
-const urlD = Apiurl + "producto/eliminarProducto/"
+const url = Apiurl + "productsInt/listarProductos";
+const urlG = Apiurl + "productsInt/crearProducto";
+const urlE = Apiurl + "productsInt/actualizarProducto/";
+const urlD = Apiurl + "productsInt/eliminarProducto/"
 
-const Producto = () => {
+const Inventario = () => {
     const [data, setData] = useState();
 
     const [showProducto, setShowProducto] = useState(false);
@@ -340,7 +339,7 @@ const Producto = () => {
             </div>
             <div>
                 <MUIDataTable
-                    title="Lista Productos"
+                    title="Lista Productos Inventario"
                     data={data}
                     columns={columns} />
             </div>
@@ -361,4 +360,4 @@ const Producto = () => {
         </div>
     );
 }
-export default Producto;
+export default Inventario;

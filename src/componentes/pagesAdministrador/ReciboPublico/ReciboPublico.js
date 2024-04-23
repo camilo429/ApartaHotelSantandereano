@@ -258,7 +258,7 @@ const ReciboPublico = () => {
     const bodyEliminar = (
         <div className="bodyEliminar">
             <p>
-                Esta seguro de Eliminar Recibo <b>{(consolaSeleccionada && consolaSeleccionada?.tipRecibo?.empresaPub) || ""} Valor: {consolaSeleccionada.totalPagar || ""} </b> ? <br />
+                ¿Está seguro de eliminar recibo <b>{(consolaSeleccionada && consolaSeleccionada?.tipRecibo?.empresaPub) || ""} Valor: {consolaSeleccionada.totalPagar || ""} </b> ? <br />
             </p>
             <div align="right">
                 <button className="btn btn-primary" onClick={() => peticionDelete()}> Si </button>
@@ -274,7 +274,6 @@ const ReciboPublico = () => {
             name: "tipRecibo",
             label: "Empresa",
             options: {
-                sort: false,
                 customBodyRender: (value, tableMeta) => {
                     if (value && value.empresaPub) {
                         return value.empresaPub;
@@ -291,13 +290,13 @@ const ReciboPublico = () => {
             label: "Fecha Pago Oportuno"
         }, {
             name: "supension",
-            label: "Fecha  supension"
+            label: "Fecha Suspensión"
         }, {
             name: "totalPagar",
             label: "Valor a Pagar"
         }, {
             name: "docRecibo",
-            label: "docRecibo"
+            label: "Documento Recibo"
         }, {
             name: "acciones",
             label: "Acciones",
@@ -371,7 +370,7 @@ const ReciboPublico = () => {
                 <Modal show={smShow} onHide={handleMensajeClose} animation={false} > {popUp}</Modal>
                 <Modal show={showEditar} onHide={handleEditarClose} animation={false} dialogClassName="crearHuesped">
                     <Modal.Header closeButton>
-                        <Modal.Title>Editar Huesped</Modal.Title>
+                        <Modal.Title>Editar Huésped</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>{bodyEditar}</Modal.Body>
                 </Modal>
