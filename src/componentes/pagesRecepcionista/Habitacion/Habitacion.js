@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 // librerias
 import axios from "axios";
 import MUIDataTable from "mui-datatables";
@@ -14,12 +14,13 @@ import SelectHuespedes from "../SelectHuespedes";
 import { Apiurl } from "../../../services/userService";
 import SelectTipoHabitacion from "./SelectTipoHabitacion";
 import SelectEstadoHabitacion from "./SelectEstadoHabitacion";
+import TipoDocumento from "../TipoDocumento";
 const url = Apiurl + "habitacion/listarHabitaciones";
 const urlG = Apiurl + "habitacion/crearHabitacion";
 const urlE = Apiurl + "habitacion/actualizarHabitacion/";
 const urlD = Apiurl + "habitacion/eliminarHabitacion/";
 const urlCheckIn = Apiurl + "checkin/crearCheckin";
-const urlHuespedes = Apiurl + "huespedes/listarHuespedes";
+const urlCheckOut = Apiurl + "checkout/checkout/"
 
 function Habitacion() {
   const [data, setData] = useState([]);
@@ -32,8 +33,8 @@ function Habitacion() {
   const handleHabitacionShow = () => setShowHabitacion(true);
 
   const [smShow, setSmShow] = useState(false);
-  const handleMensajeClose = () => setSmShow(false);
-  const handleShowMensaje = () => setSmShow(true);
+  const handleMensajeClose = useCallback(() => setSmShow(false), [setSmShow]);
+  const handleShowMensaje = useCallback(() => setSmShow(true), [setSmShow]);
 
   const [showEditar, setShowEditar] = useState(false);
   const handleEditarClose = () => setShowEditar(false);
@@ -47,6 +48,18 @@ function Habitacion() {
   const handleCheckInClose = () => setShowCheckIn(false);
   const handleCheckInShow = () => setShowCheckIn(true);
 
+  const [showCheckOut, setShowCheckOut] = useState(false);
+  const handleCheckOutClose = () => setShowCheckOut(false);
+  const handleCheckOutShow = () => setShowCheckOut(true);
+
+  const [showAcompanante, setShowAcompanante] = useState(false);
+  const handleAcompananteClose = () => setShowAcompanante(false);
+  //const handleAcompananteShow = () => setShowAcompanante(true);
+
+  const handleAcompananteShow = (event) => {
+    event.preventDefault(); // Prevenir el comportamiento por defecto del evento de clic
+    setShowAcompanante(true);
+  };
   const [consolaSeleccionada, setConsolaSeleccionada] = useState({
     codHabitacion: "",
     nombreHabitacion: {
@@ -115,10 +128,29 @@ function Habitacion() {
       },
       imagenHabitacion: ""
     },
-    numAdultos: "",
-    numNinos: ""
+    acompanante: [
+      {
+        nombre: "",
+        apellido: "",
+        tipoDocumento: {
+          codTipoDocumento: "",
+          nomTipoDocumento: ""
+        },
+        numDocumento: "",
+        fechaNacimiento: ""
+      }
+    ]
   });
-
+  const [newAccompanante, setNewAccompanante] = useState({
+    nombre: "",
+    apellido: "",
+    tipoDocumento: {
+      codTipoDocumento: "",
+      nomTipoDocumento: ""
+    },
+    numDocumento: "",
+    fechaNacimiento: ""
+  });
   const handleChange = (e) => {
     const { name, value } = e.target;
     setConsolaSeleccionada((prevState) => ({
@@ -131,6 +163,37 @@ function Habitacion() {
     setConsolaCheckIn((prevState) => ({
       ...prevState,
       [name]: value,
+    }));
+  };
+  const handleSaveAccompanante = () => {
+    setConsolaCheckIn(prevState => {
+      const nuevoAcompanante = prevState.acompanante || []; // Verificación de que prevState.acompanante sea un arreglo
+      return {
+        ...prevState,
+        acompanante: [...nuevoAcompanante, newAccompanante]
+      };
+    });
+
+    // Reiniciar newAccompanante a sus valores iniciales
+    setNewAccompanante({
+      nombre: "",
+      apellido: "",
+      tipoDocumento: {
+        codTipoDocumento: "",
+        nomTipoDocumento: ""
+      },
+      numDocumento: "",
+      fechaNacimiento: ""
+    });
+
+    // Cerrar el modal de acompañante
+    handleAcompananteClose();
+  };
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setNewAccompanante(prevState => ({
+      ...prevState,
+      [name]: value
     }));
   };
   const handleBlur = (e) => {
@@ -167,7 +230,6 @@ function Habitacion() {
     }
     return errors;
   }
-
   const validationFormCheckIn = (form) => {
     let errorsChecIn = {};
 
@@ -180,100 +242,20 @@ function Habitacion() {
     if (form.fechaSalida < form.fechaEntrada) {
       errorsChecIn.fechaSalida = "La fecha de salida debe ser posterior a la fecha de entrada";
     }
-    if (!form || form.numAdultos === "" || form.numAdultos <= 0) {
-      errorsChecIn.numAdultos = "El campo 'Número Adultos' es requerido y debe ser mayor que cero";
-    }
-    if (!form || form.numNinos === "") {
-      errorsChecIn.numNinos = "Si no hay menores de edad el campo debe ser '0'";
-    }
-    if (!form || form.numNinos < 0) {
-      errorsChecIn.numNinos = "El campo 'Número Niños' no puede ser negativo";
-    }
+
     if (!form || !form.codHuesped || form.codHuesped.codHuesped === "") {
       errorsChecIn.codHuesped = "El Documento Huesped Es requerido";
-    }
-    if (!form || ((form.numAdultos + form.numNinos) > form.maxPersonasDisponibles)) {
-      errorsChecIn.numAdultos = "El número total de personas supera la capacidad de la habitación";
     }
 
     return errorsChecIn;
   }
-
-  const setearConsolaSeleccionada = () => {
-    setConsolaSeleccionada({
-      codHabitacion: "",
-      nombreHabitacion: {
-        codTipoHabitacion: "",
-        nombre: "",
-        precioXPersona: "",
-        precioXAcompanante: ""
-      },
-      descripHabitacion: "",
-      numHabitacion: "",
-      pisoHabitacion: "",
-      maxPersonasDisponibles: "",
-      estadoHabitacion: {
-        codEstadoHabitacion: "",
-        nombre: ""
-      },
-      imagenHabitacion: ""
-    })
-
-    setConsolaCheckIn({
-      fechaEntrada: "",
-      fechaSalida: "",
-      codHuesped: {
-        codHuesped: "",
-        nombre: "",
-        apellido: "",
-        numCelular: "",
-        correo: "",
-        tipoDocumento: {
-          codTipoDocumento: "",
-          nomTipoDocumento: ""
-        },
-        numDocumento: "",
-        fechaNacimiento: "",
-        edad: "",
-        nacionalidad: {
-          codNacion: "",
-          nombre: ""
-        },
-        lugarOrigen: {
-          codRegion: "",
-          nacionalidad: {
-            codNacion: "",
-            nombre: "",
-          },
-          nombre: "",
-        },
-        nomContactoEmergencia: "",
-        numContactoEmergencia: "",
-        estadoHuesped: ""
-      },
-      codHabitacion: {
-        codHabitacion: "",
-        nombreHabitacion: {
-          codTipoHabitacion: "",
-          nombre: "",
-          precioXPersona: "",
-          precioXAcompanante: ""
-        },
-        descripHabitacion: "",
-        numHabitacion: "",
-        pisoHabitacion: "",
-        maxPersonasDisponibles: "",
-        estadoHabitacion: {
-          codEstadoHabitacion: "",
-          nombre: ""
-        },
-        imagenHabitacion: ""
-      },
-      numAdultos: "",
-      numNinos: ""
-    })
-  }
-  const peticionGet = async () => {
+  const abrirCerrarModalMensaje = useCallback(() => {
+    handleShowMensaje();
+    setTimeout(() => {
+      handleMensajeClose();
+    }, 2000); // 2000 milisegundos = 2 segundos
+  }, [handleShowMensaje, handleMensajeClose])
+  const peticionGet = useCallback(async () => {
     try {
       const response = await axios.get(url, {
         headers: {
@@ -288,9 +270,15 @@ function Habitacion() {
         console.log("Ha ocurrido un error get Habitación", response.status);
       }
     } catch (error) {
-      console.log("error get habitación", error);
+      const mensajeError = error.response && error.response.data && error.response.data.mensaje ? error.response.data.mensaje : "Hubo un error al trater Habitaciones. Por favor, intenta nuevamente.";
+      setMensaje(mensajeError);
+      abrirCerrarModalMensaje();
+      setErrors({});
     }
-  }
+  }, [abrirCerrarModalMensaje])
+  useEffect(() => {
+    peticionGet();
+  }, [peticionGet]);
   const peticionPost = async (e) => {
     try {
       e.preventDefault();
@@ -309,7 +297,24 @@ function Habitacion() {
           peticionGet();
           handleHabitacionClose();
           abrirCerrarModalMensaje();
-          setearConsolaSeleccionada();
+          setConsolaSeleccionada({
+            codHabitacion: "",
+            nombreHabitacion: {
+              codTipoHabitacion: "",
+              nombre: "",
+              precioXPersona: "",
+              precioXAcompanante: ""
+            },
+            descripHabitacion: "",
+            numHabitacion: "",
+            pisoHabitacion: "",
+            maxPersonasDisponibles: "",
+            estadoHabitacion: {
+              codEstadoHabitacion: "",
+              nombre: ""
+            },
+            imagenHabitacion: ""
+          })
         }
       }
     } catch (error) {
@@ -319,7 +324,6 @@ function Habitacion() {
       setErrors({});
     }
   };
-
   const peticionPut = async (e) => {
     try {
       e.preventDefault();
@@ -358,7 +362,6 @@ function Habitacion() {
         handleEditarClose();
         setMensaje("Habitación Actualizada");
         abrirCerrarModalMensaje();
-        setearConsolaSeleccionada();
       } else {
         console.log("Error Actualizar Habitación", response.status);
       }
@@ -369,9 +372,7 @@ function Habitacion() {
       setErrors({});
     }
   };
-
-  const peticionDelete = async (e) => {
-    e.preventDefault();
+  const peticionDelete = async () => {
     try {
       console.log("codigo", consolaSeleccionada.codHabitacion);
       const response = await axios.delete(urlD + consolaSeleccionada.codHabitacion, {
@@ -386,7 +387,6 @@ function Habitacion() {
         handleEliminarClose();
         handleShowMensaje();
         peticionGet();
-        setearConsolaSeleccionada();
       }
     } catch (error) {
       const mensajeError = error.response && error.response.data && error.response.data.mensaje ? error.response.data.mensaje : "Hubo un error al Editar el Empleado. Por favor, intenta nuevamente.";
@@ -395,7 +395,6 @@ function Habitacion() {
       setErrors({});
     }
   };
-
   const peticionCheckIn = async (e) => {
     try {
       e.preventDefault();
@@ -415,7 +414,7 @@ function Habitacion() {
           setMensaje("Habitación Reservada");
           abrirCerrarModalMensaje();
           setErrorsChecIn({});
-          setearConsolaSeleccionada();
+          setConsolaCheckIn({});
         }
       }
     } catch (error) {
@@ -425,7 +424,47 @@ function Habitacion() {
       setErrorsChecIn({});
     }
   };
+  const peticionCheckOut = async (e) => {
+    try {
+      const response = await axios.put(urlCheckOut + consolaSeleccionada.codHabitacion.Habitacion, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
+        }
+      })
 
+      if (response.status === 201) {
+        const dataNueva = data.map((consola) => {
+          if (consolaSeleccionada.codHabitacion === consola.codHabitacion) {
+            consola.nombreHabitacion = {
+              codTipoHabitacion: consolaSeleccionada.nombreHabitacion.codTipoHabitacion,
+              nombre: consolaSeleccionada.nombreHabitacion.nombre,
+              precioXPersona: consolaSeleccionada.nombreHabitacion.precioXPersona,
+              precioXAcompanante: consolaSeleccionada.nombreHabitacion.precioXAcompanante
+            };
+            consola.descripHabitacion = consolaSeleccionada.descripHabitacion;
+            consola.numHabitacion = consolaSeleccionada.numHabitacion;
+            consola.pisoHabitacion = consolaSeleccionada.pisoHabitacion;
+            consola.maxPersonasDisponibles = consolaSeleccionada.maxPersonasDisponibles;
+            consola.estadoHabitacion = {
+              codEstadoHabitacion: consolaSeleccionada.estadoHabitacion.codEstadoHabitacion,
+              nombre: consolaSeleccionada.estadoHabitacion.nombre
+            };
+            consola.imagenHabitacion = consolaSeleccionada.imagenHabitacion;
+          }
+          return consola;
+        })
+        setData(dataNueva);
+        peticionGet();
+        handleEditarClose();
+        setMensaje("Habitación Actualizada");
+        abrirCerrarModalMensaje();
+      }
+    } catch (error) {
+      const mensajeError = error.response && error.response.data && error.response.data.mensaje ? error.response.data.mensaje : "Hubo un error al hacer Check-Out. Por favor, intenta nuevamente.";
+      setMensaje(mensajeError);
+      abrirCerrarModalMensaje();
+    }
+  }
   const seleccionarHabitacion = (consola, caso) => {
     console.log("consola", consola);
     setConsolaSeleccionada({
@@ -475,6 +514,9 @@ function Habitacion() {
     if (caso === "CheckIn") {
       handleCheckInShow();
     }
+    if (caso === "CheckOut") {
+      handleCheckOutShow();
+    }
   }
   const cerrtarInsertar = () => {
     handleHabitacionClose();
@@ -489,16 +531,7 @@ function Habitacion() {
     setConsolaCheckIn();
   }
 
-  useEffect(() => {
-    peticionGet();
-  }, []);
 
-  const abrirCerrarModalMensaje = () => {
-    handleShowMensaje();
-    setTimeout(() => {
-      handleMensajeClose();
-    }, 2000); // 2000 milisegundos = 2 segundos
-  };
   function fechaMinima() {
     const today = new Date();
     let dd = today.getDate();
@@ -641,10 +674,10 @@ function Habitacion() {
   const bodyCheckIn = (
     <div>
       <form onSubmit={peticionCheckIn}>
-        <div className="flex">
+        <div className="flex" style={{ margin: "justify" }}>
           <div className="cajasCheckIn">
             <Label for="exampleEmail">Huesped Registrado </Label>
-            <SelectHuespedes name="codHuesped" value={consolaCheckIn?.codHuesped || "1"} handleChangeData={manejarCambio} url={urlHuespedes} />
+            <SelectHuespedes name="codHuesped" value={consolaCheckIn?.codHuesped || "1"} handleChangeData={manejarCambio} />
             {errorsChecIn.codHuesped && <p id="errores">{errorsChecIn.codHuesped}</p>}
           </div>
           <div className="cajasCheckIn">
@@ -657,28 +690,64 @@ function Habitacion() {
             <input name="fechaSalida" type="date" className="form-control" onBlur={handleBlurCheckIn} value={consolaCheckIn?.fechaSalida || ""} onChange={manejarCambio} min={fechaMinima()} />
             {errorsChecIn.fechaSalida && <p id="errores">{errorsChecIn.fechaSalida}</p>}
           </div>
-          <div className="cajasCheckIn">
-            <label># Adultos</label>
-            <input name="numAdultos" type="number" className="form-control" onBlur={handleBlurCheckIn} value={consolaCheckIn?.numAdultos || ""} onChange={manejarCambio} placeholder="numAdultos" />
-            {errorsChecIn.numAdultos && <p id="errores">{errorsChecIn.numAdultos}</p>}
-          </div>
-
         </div>
         <div className="flex">
-          <div className="cajasCheckIn">
-            <label># Niños</label>
-            <input name="numNinos" type="number" className="form-control" onBlur={handleBlurCheckIn} value={consolaCheckIn?.numNinos || ""} onChange={manejarCambio} placeholder="numNinos" />
-            {errorsChecIn.numNinos && <p id="errores">{errorsChecIn.numNinos}</p>}
-          </div>
+          <button onClick={handleAcompananteShow} className="btn btn-warning">Agregar Acompañante</button>
           <div align="right" style={{ marginTop: "30px" }}>
-            <button className="btn btn-primary" type="submit"> Insertar </button>
-            <button className="btn btn-secondary" onClick={cerrarCheckIn}>Cancelar</button>
+            <button className="btn btn-primary" type="submit"> Dar Ingreso </button>
+            <button className="btn btn-secondary" onClick={cerrarCheckIn}>Cancelar Ingreso</button>
           </div>
         </div>
       </form>
     </div>
   );
-
+  const bodyAcompanante = (
+    <>
+      <div className="acompanante">
+        <div className="flex">
+          <div className="acompanante">
+            <label>Nombre</label>
+            <input name="nombre" className="form-control" value={newAccompanante.nombre} onChange={handleInputChange} placeholder="Nombre" />
+          </div>
+          <div className="acompanante">
+            <label>Apellido</label>
+            <input name="apellido" className="form-control" value={newAccompanante.apellido} onChange={handleInputChange} placeholder="Apellido" />
+          </div>
+          <div className="acompanante">
+            <label>Tipo Documento</label>
+            <TipoDocumento name="tipoDocumento" handleChangeData={handleInputChange} value={newAccompanante.tipoDocumento || ""} />
+          </div>
+          <div className="acompanante">
+            <label>Número</label>
+            <input name="numDocumento" type="number" className="form-control" value={newAccompanante.tipoDocumento.numDocumento} onChange={handleInputChange} placeholder="Número Documento" />
+          </div>
+        </div>
+        <div className="flex">
+          <div>
+            <label>Fecha Nacimiento</label>
+            <input name="fechaNacimiento" type="date" className="form-control" value={newAccompanante.fechaNacimiento} onChange={handleInputChange} />
+          </div>
+          <div className="acompanante">
+            <button onClick={handleSaveAccompanante} className="btn btn-primary">Agregar</button>
+            <button onClick={handleAcompananteClose} className="btn btn-secondary">Volver</button>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+  const bodyCheckOut = (
+    <div className="bodyEliminar">
+      <p>
+        ¿Desea  desocupar la habitación?
+        <br />
+        <b> {!(consolaCheckIn && consolaSeleccionada.nombreHabitacion.numHabitacion) || ""} </b> ?
+      </p>
+      <div align="right">
+        <button className="btn btn-primary" type="submit" onClick={() => peticionCheckOut()} style={{ margin: "5px" }}> Si </button>
+        <button className="btn btn-danger" type="submit" onClick={handleCheckOutClose} > No  </button>
+      </div>
+    </div>
+  );
   const columns = [
     {
       name: "codHabitacion",
@@ -757,8 +826,8 @@ function Habitacion() {
   const options = {
     filterType: "dropdown",
     responsive: "standard",
-    /*  customToolbarSelect: (selectedRows) => <CustomToolbarSelect selectedRows={selectedRows} />*/
   };
+
   return (
     <div className="Habitacion">
       <br />
@@ -789,6 +858,20 @@ function Habitacion() {
           <Modal.Title>Check - In</Modal.Title>
         </Modal.Header>
         {bodyCheckIn}
+      </Modal>
+      <Modal show={showCheckOut} onHide={handleCheckOutClose} animation={false} dialogClassName="checkIn">
+        <Modal.Header>
+          <Modal.Title>Check - Out</Modal.Title>
+        </Modal.Header>
+        {bodyCheckOut}
+      </Modal>
+      <Modal show={showAcompanante} onHide={handleAcompananteClose} animation={false} size="lg">
+        <Modal.Header>
+          <Modal.Title>Agregar Acompañante</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {bodyAcompanante}
+        </Modal.Body>
       </Modal>
     </div>
   );
