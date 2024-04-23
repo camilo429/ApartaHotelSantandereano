@@ -219,7 +219,7 @@ const ReciboPublico = () => {
         </form>
     );
     const bodyEditar = (
-        <form onSubmit={peticionPost}>
+        <form onSubmit={peticionPut}>
             <div className='flex'>
                 <div>
                     <label>Empresa</label>

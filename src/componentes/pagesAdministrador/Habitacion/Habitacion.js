@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 // librerias
 import axios from "axios";
 import MUIDataTable from "mui-datatables";
@@ -33,8 +33,8 @@ function Habitacion() {
   const handleHabitacionShow = () => setShowHabitacion(true);
 
   const [smShow, setSmShow] = useState(false);
-  const handleMensajeClose = () => setSmShow(false);
-  const handleShowMensaje = () => setSmShow(true);
+  const handleMensajeClose = useCallback(() => setSmShow(false), [setSmShow]);
+  const handleShowMensaje = useCallback(() => setSmShow(true), [setSmShow]);
 
   const [showEditar, setShowEditar] = useState(false);
   const handleEditarClose = () => setShowEditar(false);
@@ -249,7 +249,13 @@ function Habitacion() {
 
     return errorsChecIn;
   }
-  const peticionGet = async () => {
+  const abrirCerrarModalMensaje = useCallback(() => {
+    handleShowMensaje();
+    setTimeout(() => {
+      handleMensajeClose();
+    }, 2000); // 2000 milisegundos = 2 segundos
+  }, [handleShowMensaje, handleMensajeClose])
+  const peticionGet = useCallback(async () => {
     try {
       const response = await axios.get(url, {
         headers: {
@@ -269,7 +275,10 @@ function Habitacion() {
       abrirCerrarModalMensaje();
       setErrors({});
     }
-  }
+  }, [abrirCerrarModalMensaje])
+  useEffect(() => {
+    peticionGet();
+  }, [peticionGet]);
   const peticionPost = async (e) => {
     try {
       e.preventDefault();
@@ -521,15 +530,8 @@ function Habitacion() {
     handleCheckInClose();
     setConsolaCheckIn();
   }
-  useEffect(() => {
-    peticionGet();
-  }, []);
-  const abrirCerrarModalMensaje = () => {
-    handleShowMensaje();
-    setTimeout(() => {
-      handleMensajeClose();
-    }, 2000); // 2000 milisegundos = 2 segundos
-  };
+
+
   function fechaMinima() {
     const today = new Date();
     let dd = today.getDate();
@@ -834,6 +836,7 @@ function Habitacion() {
     filterType: "dropdown",
     responsive: "standard",
   };
+
   return (
     <div className="Habitacion">
       <br />

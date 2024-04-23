@@ -1,6 +1,5 @@
 import React from 'react'
 import TableElements from './TableElements'
-import Estadisticas from './../../image/estadisticas.png';
 import Notification from '../pagesAdministrador/Notification';
 
 function AdminDashboard() {

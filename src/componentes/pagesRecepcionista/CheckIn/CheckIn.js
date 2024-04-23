@@ -1,25 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 import { Apiurl } from '../../../services/userService';
 import { Link } from "react-router-dom";
 import { Modal } from 'react-bootstrap';
 import MUIDataTable from 'mui-datatables';
 import SelectMultiProductos from '../Producto.js/SelectMultiProductos';
-import FacturaHijo from './FacturaHijo';
-import { useNavigate } from 'react-router-dom';
-
 const url = Apiurl + "checkin/listarCheckin";
 const urlC = Apiurl + "factura/crearFactura";
 
 const CheckIn = () => {
     const [data, setData] = useState([]);
     const [mensaje, setMensaje] = useState("");
-    const [errors, setErrors] = useState({});
-    const navigate = useNavigate();
 
     const [smShow, setSmShow] = useState(false);
-    const handleMensajeClose = () => setSmShow(false);
-    const handleShowMensaje = () => setSmShow(true);
+    const handleMensajeClose = useCallback(() => setSmShow(false), [setSmShow]);
+    const handleShowMensaje = useCallback(() => setSmShow(true), [setSmShow]);
 
     const [showProductos, setShowProductos] = useState(false);
     const handleProductosClose = () => setShowProductos(false);
@@ -28,6 +23,7 @@ const CheckIn = () => {
     const [verCheckIn, setVerCheckIn] = useState(false);
     const handleCheckInClose = () => setVerCheckIn(false);
     const handleVerCheckInShow = () => setVerCheckIn(true);
+    const [errors, setErrors] = useState();
 
     const [consolaFactura, setConsolaFactura] = useState({
         codFactura: "",
@@ -112,7 +108,13 @@ const CheckIn = () => {
             [name]: value,
         }));
     };
-    const peticionGet = async () => {
+    const abrirCerrarModalMensaje = useCallback(() => {
+        handleShowMensaje();
+        setTimeout(() => {
+            handleMensajeClose();
+        }, 2000);
+    }, [handleShowMensaje, handleMensajeClose])
+    const peticionGet = useCallback(async () => {
         try {
             const response = await axios.get(url, {
                 headers: {
@@ -130,7 +132,10 @@ const CheckIn = () => {
             abrirCerrarModalMensaje();
             setErrors({});
         }
-    }
+    }, [abrirCerrarModalMensaje])
+    useEffect(() => {
+        peticionGet();
+    }, [peticionGet]);
     const peticionPost = async (e) => {
         e.preventDefault();
         try {
@@ -158,16 +163,7 @@ const CheckIn = () => {
             setErrors({});
         }
     }
-    const abrirCerrarModalMensaje = () => {
-        handleShowMensaje();
-        setTimeout(() => {
-            handleMensajeClose();
-        }, 2000);
-    };
-    const CerrarVerCheckIn = () => {
-        handleCheckInClose();
-        setConsolaFactura({});
-    }
+
     const seleccionarCheckIn = (consola, caso) => {
         console.log("consola", consola);
         setConsolaFactura({
@@ -261,6 +257,7 @@ const CheckIn = () => {
                     <div>
                         <label>Nombre(s)</label>
                         <input type='text' disabled name='nombre' value={consolaFactura?.checkin?.codHuesped?.nombre || ""} className='form-control' />
+                        {errors.nombre && <p>{errors.nombre}</p>}
                     </div>
                     <div>
                         <label>Apellido(s)</label>
@@ -420,9 +417,7 @@ const CheckIn = () => {
             }
         }
     ]
-    useEffect(() => {
-        peticionGet();
-    }, []);
+
 
     return (
         <div>

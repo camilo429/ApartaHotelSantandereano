@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 import { Apiurl } from '../../../services/userService';
 import { Link } from "react-router-dom";
 import { Modal } from 'react-bootstrap';
 import MUIDataTable from 'mui-datatables';
 import SelectMultiProductos from '../Producto.js/SelectMultiProductos';
-import { useNavigate } from 'react-router-dom';
 
 const url = Apiurl + "checkin/listarCheckin";
 const urlC = Apiurl + "factura/crearFactura";
@@ -17,8 +16,17 @@ const CheckIn = () => {
     //const navigate = useNavigate();
 
     const [smShow, setSmShow] = useState(false);
-    const handleMensajeClose = () => setSmShow(false);
-    const handleShowMensaje = () => setSmShow(true);
+
+    const handleMensajeClose = useCallback(() => {
+        setSmShow(false);
+        abrirCerrarModalMensaje(); // Asegúrate de incluir esta función aquí
+    }, [setSmShow, abrirCerrarModalMensaje]);
+
+    const handleShowMensaje = useCallback(() => {
+        setSmShow(false);
+        abrirCerrarModalMensaje(); // Asegúrate de incluir esta función aquí
+
+    }, [setSmShow, abrirCerrarModalMensaje]);
 
     const [showProductos, setShowProductos] = useState(false);
     const handleProductosClose = () => setShowProductos(false);
@@ -27,9 +35,6 @@ const CheckIn = () => {
     const [verCheckIn, setVerCheckIn] = useState(false);
     const handleCheckInClose = () => setVerCheckIn(false);
     const handleVerCheckInShow = () => setVerCheckIn(true);
-
-    const [selectedItems, setSelectedItems] = useState([]);
-    const [total, setTotal] = useState(0);
 
     const [consolaFactura, setConsolaFactura] = useState({
         codFactura: "",
@@ -136,7 +141,14 @@ const CheckIn = () => {
         return total;
     };
 
-    const peticionGet = async () => {
+    const abrirCerrarModalMensaje = useCallback(() => {
+        handleShowMensaje();
+        setTimeout(() => {
+            handleMensajeClose();
+        }, 2000);
+    }, [handleShowMensaje, handleMensajeClose]);
+
+    const peticionGet = useCallback(async () => {
         try {
             const response = await axios.get(url, {
                 headers: {
@@ -154,7 +166,12 @@ const CheckIn = () => {
             abrirCerrarModalMensaje();
             setErrors({});
         }
-    }
+    }, [abrirCerrarModalMensaje]);
+
+    useEffect(() => {
+        peticionGet();
+    }, [peticionGet]);
+
     const peticionPost = async (e) => {
         e.preventDefault();
         try {
@@ -182,16 +199,7 @@ const CheckIn = () => {
             setErrors({});
         }
     }
-    const abrirCerrarModalMensaje = () => {
-        handleShowMensaje();
-        setTimeout(() => {
-            handleMensajeClose();
-        }, 2000);
-    };
-    const CerrarVerCheckIn = () => {
-        handleCheckInClose();
-        setConsolaFactura({});
-    }
+
     const seleccionarCheckIn = (consola, caso) => {
         console.log("consola", consola);
         setConsolaFactura({
@@ -278,24 +286,6 @@ const CheckIn = () => {
             handleVerCheckInShow();
         }
     }
-    const handleChangeSelectedItems = (selectedItems) => {
-        if (Array.isArray(selectedItems)) {
-            // Aquí va tu lógica para manejar cada item seleccionado
-            let total = 0;
-            selectedItems.forEach(item => {
-                total += item.cantidad * item.producto.precio;
-            });
-
-            // Luego, actualiza el estado con el nuevo total
-            setConsolaFactura(prevState => ({
-                ...prevState,
-                total: total
-            }));
-        } else {
-            console.error("selectedItems no es un array:", selectedItems);
-        }
-    };
-
 
     const bodyRegistrarFactura = (
         <div>
@@ -304,6 +294,7 @@ const CheckIn = () => {
                     <div>
                         <label>Nombre(s)</label>
                         <input type='text' disabled name='nombre' value={consolaFactura?.checkin?.codHuesped?.nombre || ""} onChange={handleChange} className='form-control' />
+                        {errors.nombre && <p>{errors.nombre}</p>}
                     </div>
                     <div>
                         <label>Apellido(s)</label>
@@ -466,9 +457,7 @@ const CheckIn = () => {
             }
         }
     ]
-    useEffect(() => {
-        peticionGet();
-    }, []);
+
 
     return (
         <div>

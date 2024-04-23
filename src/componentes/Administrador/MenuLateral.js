@@ -1,4 +1,4 @@
-import React from "react";
+import React, { lazy } from "react";
 //iconos
 import { Routes, Route } from "react-router-dom";
 import { MdOutlineRestorePage } from "react-icons/md";
@@ -31,7 +31,6 @@ import ModuloCheckIn from "../pagesAdministrador/CheckIn/ModuloCheckIn";
 import ModuloReciboPublico from "../pagesAdministrador/ReciboPublico/ModuloReciboPublico";
 import ModuloTipoReciboPublico from "../pagesAdministrador/TipoReciboPublico/ModuloTipoReciboPublico";
 import Graficas from "../pagesAdministrador/Graficas";
-import Recibos from "../pagesAdministrador/Factura/Recibos";
 import ModuloAnalisisComentario from "../pagesAdministrador/AnalisisComentario/ModuloAnalisisComentario";
 import ModuloAnalisisReservacion from "../pagesAdministrador/AnalisisReservacion/ModuloAnalasisReservacion";
 import ModuloAnalisisHuespedes from "../pagesAdministrador/AnalisisHuespedes/ModuloAnalisisHuespedes";
@@ -167,29 +166,6 @@ function MenuLateral() {
                   </NavLink>
                 </ul>
               </li>
-
-              {/*<li className="sidebar-header">Pagos</li>
-              <li className="sidebar-item">
-                <a href="pages.html" className="sidebar-link collapsed" data-bs-target="#multi" data-bs-toggle="collapse" aria-expanded="false">
-                  <BsFillGrid3X3GapFill style={{ margin: "3px" }} /> Desarrollo
-                </a>
-                <ul id="multi" className="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                  <li className="sidebar-item">
-                    <a href="pages.html" className="sidebar-link collapsed" data-bs-target="#level-1" data-bs-toggle="collapse" aria-expanded="false">
-                      Comentarios
-                    </a>
-                    <ul id="level-1" className="sidebar-dropdown list-unstyled collapse">
-                      <li className="sidebar-item">
-                        <a href="#clas" className="sidebar-link">Semanales</a>
-                      </li>
-                      <li className="sidebar-item">
-                        <a href="#clas" className="sidebar-link">Diarias</a>
-                      </li>
-                    </ul>
-                  </li>
-                </ul>
-              </li>*/}
-
               <li className="sidebar-item">
                 <a href="pages.html" className="sidebar-link collapsed" data-bs-target="#recibo" data-bs-toggle="collapse" aria-expanded="false">
                   <MdElectricalServices className="me-2" /> Recibos Publicos
@@ -229,7 +205,6 @@ function MenuLateral() {
           <Route path="Actividades" exact={true} element={<ModuloActividad />} />
           <Route path="Inventario" exact={true} element={<ModuloInventario />} />
           <Route path="/Graficas" exact={true} element={<Graficas />} />
-          <Route path="/Recibos" exact={true} element={<Recibos />} />
           <Route path="/Acciones" exact={true} element={<Acciones />} />
           <Route path="/Habitaciones" exact={true} element={<ModuloHabitacion />} />
         </Routes>

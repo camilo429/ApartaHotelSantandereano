@@ -50,7 +50,7 @@ const SelectMultiProductos = ({ name, handleChangeData, value = null }) => {
                 })),
             }
         });
-    }, [quantities]); // Se dispara cada vez que el estado quantities cambia
+    }, [quantities, handleChangeData, name, selectedValues]); // Se dispara cada vez que el estado quantities cambia
 
     const handleChange = (selectedOptions) => {
         setSelectedValues(selectedOptions);

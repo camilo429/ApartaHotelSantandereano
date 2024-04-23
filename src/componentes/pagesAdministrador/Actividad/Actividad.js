@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import MUIDataTable from "mui-datatables";
 
 import { Apiurl } from '../../../services/userService';
-import { resetErrorsCount } from 'ajv/dist/compile/errors';
 import SelectEmpleados from '../SelectEmpleados';
 import { Modal } from 'react-bootstrap';
 import { Link } from "react-router-dom";
@@ -25,8 +24,9 @@ const Actividad = () => {
     const handleShow = () => setShow(true);
 
     const [smShow, setSmShow] = useState(false);
-    const handleMensajeClose = () => setSmShow(false);
-    const handleShowMensaje = () => setSmShow(true);
+    const handleMensajeClose = useCallback(() => setSmShow(false), [setSmShow]);
+    const handleShowMensaje = useCallback(() => setSmShow(true), [setSmShow]);
+
 
     const [showEditar, setShowEditar] = useState(false);
     const handleEditarClose = () => setShowEditar(false);
@@ -82,7 +82,14 @@ const Actividad = () => {
             [name]: value,
         }));
     };
-    const peticionGet = async () => {
+    const abrirCerrarModalMensaje = useCallback(() => {
+        handleShowMensaje();
+        setTimeout(() => {
+            handleMensajeClose();
+        }, 2000);
+    }, [handleShowMensaje, handleMensajeClose]);
+
+    const peticionGet = useCallback(async () => {
         try {
             const response = await axios.get(url, {
                 headers: {
@@ -101,7 +108,13 @@ const Actividad = () => {
             abrirCerrarModalMensaje();
             setErrors({});
         }
-    }
+    }, [abrirCerrarModalMensaje]);
+
+    useEffect(() => {
+        peticionGet();
+    }, [peticionGet]);
+
+
     const peticionPost = async (e) => {
         try {
             setErrors(validationForm(consolaSeleccionada));
@@ -380,15 +393,8 @@ const Actividad = () => {
 
         return errors;
     }
-    useEffect(() => {
-        peticionGet();
-    }, []);
-    const abrirCerrarModalMensaje = () => {
-        handleShowMensaje();
-        setTimeout(() => {
-            handleMensajeClose();
-        }, 2000);
-    };
+
+
     const seleccionarTarea = (consola, caso) => {
         console.log("consola", consola);
         setConsolaSeleccionada({
@@ -486,7 +492,7 @@ const Actividad = () => {
         </form>
     );
     const bodyEditar = (
-        <form onSubmit={cerrarEditarTarea}>
+        <form onSubmit={peticionPut}>
             <div className='flex'>
                 <div className='formActividad'>
                     <label>Título</label>
@@ -528,7 +534,7 @@ const Actividad = () => {
             </div>
             <div className='flex' style={{ alignItems: "center" }}>
                 <button className='btn btn-primary' type='submit'>Guardar Cambios</button>
-                <button className='btn btn-secondary' type='submit' >Cerrar</button>
+                <button className='btn btn-secondary' type='submit' onClick={cerrarEditarTarea} >Cerrar</button>
             </div>
         </form>
     );
@@ -618,6 +624,7 @@ const Actividad = () => {
             }
         }
     ]
+
     return (
         <div>
             <div>

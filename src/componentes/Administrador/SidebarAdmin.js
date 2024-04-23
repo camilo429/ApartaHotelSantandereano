@@ -61,11 +61,6 @@ function SidebarAdmin() {
         }
     }, [toggleRootClass]);
 
-    const eliminarToken = () => {
-        localStorage.removeItem('token');
-        window.location.href = "https://apartahotelsantandereano.web.app/";
-    }
-
     return (
         <nav className="navbar navbar-expand px-3 border-bottom">
             <button className="btn" id='sidebar-toggle' type='button'>

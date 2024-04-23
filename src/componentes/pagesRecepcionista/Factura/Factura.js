@@ -1,6 +1,4 @@
 import React from 'react';
-import FacturaHijo from '../CheckIn/FacturaHijo';
-import { useParams } from 'react-router-dom';
 import { Link } from "react-router-dom";
 import "./Factura.css";
 

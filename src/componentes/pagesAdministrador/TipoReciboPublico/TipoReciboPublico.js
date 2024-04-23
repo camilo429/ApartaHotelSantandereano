@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { Apiurl } from '../../../services/userService';
 import MUIDataTable from 'mui-datatables';
@@ -21,8 +21,8 @@ const TipoReciboPublico = () => {
     const handleTipoReciboShow = () => setTipoReciboShow(true);
 
     const [smShow, setSmShow] = useState(false);
-    const handleMensajeClose = () => setSmShow(false);
-    const handleShowMensaje = () => setSmShow(true);
+    const handleMensajeClose = useCallback(() => setSmShow(false), [setSmShow]);
+    const handleShowMensaje = useCallback(() => setSmShow(true), [setSmShow]);
 
     const [showEditar, setShowEditar] = useState(false);
     const handleEditarClose = () => setShowEditar(false);
@@ -44,8 +44,13 @@ const TipoReciboPublico = () => {
             [name]: value,
         }));
     };
-
-    const peticionGet = async () => {
+    const abrirCerrarModalMensaje = useCallback(() => {
+        handleShowMensaje();
+        setTimeout(() => {
+            handleMensajeClose();
+        }, 2000);
+    }, [handleShowMensaje, handleMensajeClose])
+    const peticionGet = useCallback(async () => {
         try {
             const response = await axios.get(url, {
                 headers: {
@@ -67,7 +72,10 @@ const TipoReciboPublico = () => {
             abrirCerrarModalMensaje();
             setErrors({});
         }
-    }
+    }, [abrirCerrarModalMensaje])
+    useEffect(() => {
+        peticionGet();
+    }, [peticionGet])
     const peticionPost = async (e) => {
         try {
             e.preventDefault();
@@ -132,7 +140,6 @@ const TipoReciboPublico = () => {
             setErrors({});
         }
     }
-
     const peticionDelete = async () => {
         try {
             const response = await axios.delete(urlD + consolaSeleccionada.codTipRecibo, {
@@ -158,12 +165,7 @@ const TipoReciboPublico = () => {
             setErrors({});
         }
     }
-    const abrirCerrarModalMensaje = () => {
-        handleShowMensaje();
-        setTimeout(() => {
-            handleMensajeClose();
-        }, 2000);
-    };
+
     const cerrarBodyInsetar = () => {
         handleTipoReciboClose();
         setConsolaSeleccionada({});
@@ -198,7 +200,6 @@ const TipoReciboPublico = () => {
             </div>
         </form>
     );
-
     const bodyEditar = (
         <form onSubmit={peticionPut}>
             <div className='flex'>
@@ -223,10 +224,19 @@ const TipoReciboPublico = () => {
             </div>
         </div>
     )
+    const popUp = (
+        <div>
+            <Modal size="sm" show={smShow} onHide={() => setSmShow(false)} aria-labelledby="example-modal-sizes-title-sm">
+                <Modal.Header closeButton>
+                    <Modal.Title id="example-modal-sizes-title-sm">
+                        {mensaje}
+                    </Modal.Title>
+                </Modal.Header>
+            </Modal>
+        </div>
+    )
 
-    useEffect(() => {
-        peticionGet();
-    }, [])
+
     const columns = [
         {
             name: "codTipRecibo",
@@ -278,7 +288,7 @@ const TipoReciboPublico = () => {
                 </Modal.Header>
                 <Modal.Body className="body">{bodyInsertar}</Modal.Body>
             </Modal>
-
+            <Modal show={smShow} onHide={handleMensajeClose} animation={false} > {popUp}</Modal>
             <Modal show={showEditar} onHide={handleEditarClose} animation={false} size="lg">
                 <Modal.Header closeButton>
                     <Modal.Title>Actualizar Nombre Empresa</Modal.Title>

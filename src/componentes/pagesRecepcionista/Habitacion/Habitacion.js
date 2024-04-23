@@ -764,9 +764,7 @@ function Habitacion() {
       <br />
       <div className="card shadow mb-4">
         <div className="flex">
-          {/*<button onClick={handleHabitacionShow} className="btn btn-primary" > Agregar Habitación </button>*/}
-          {/*<button onClick={() => abrirCerrarModalCheckIn()} className="btn btn-success"> Check-in </button>
-          <button onClick={() => abrirCerrarModalInsertar()} className="btn btn-danger"> Check-out </button>*/}
+          <button onClick={handleHabitacionShow} className="btn btn-primary" > Agregar Habitación </button>
         </div>
         <div className="card-body" style={{ width: "100%" }}>
           <MUIDataTable title={"Lista habitaciones"} data={data} columns={columns} options={options} />

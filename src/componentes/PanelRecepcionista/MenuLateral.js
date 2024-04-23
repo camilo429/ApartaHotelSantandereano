@@ -28,7 +28,6 @@ import ModuloCheckIn from "../pagesRecepcionista/CheckIn/ModuloCheckIn";
 import ModuloReciboPublico from "../pagesRecepcionista/ReciboPublico/ModuloReciboPublico";
 import ModuloTipoReciboPublico from "../pagesRecepcionista/TipoReciboPublico/ModuloTipoReciboPublico";
 import Graficas from "../pagesRecepcionista/Graficas";
-import Recibos from "../pagesRecepcionista/Factura/Recibos";
 import Tarea from "../pagesRecepcionista/Tarea";
 import ModuloAnalisisComentario from "../pagesRecepcionista/AnalisisComentario/ModuloAnalisisComentario";
 import ModuloAnalisisReservacion from "../pagesRecepcionista/AnalisisReservacion/ModuloAnalasisReservacion";
@@ -211,7 +210,6 @@ function MenuLateral() {
           <Route path="AnalisisHuespedes" exact={true} element={<ModuloAnalisisHuespedes />} />
           <Route path="Actividades" exact={true} element={<ModuloActividad />} />
           <Route path="/Graficas" exact={true} element={<Graficas />} />
-          <Route path="/Recibos" exact={true} element={<Recibos />} />
           <Route path="/Tarea" exact={true} element={<Tarea />} />
           <Route path="/Acciones" exact={true} element={<Acciones />} />
           <Route path="/Habitaciones" exact={true} element={<ModuloHabitacion />} />

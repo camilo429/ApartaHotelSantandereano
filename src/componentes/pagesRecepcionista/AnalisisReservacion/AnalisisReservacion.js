@@ -1,7 +1,6 @@
 import React from 'react';
 import Llamadas from "./Llamadas";
 import Tarjeta from "../Home/Tarjeta";
-import BarChart from './BarChart';
 const AnalisisFactura = () => {
     return (
         <div>

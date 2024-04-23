@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { EXPRESION_REGULAR_NOMBRE_APELLIDO, EXPRESION_REGULAR_EMAIL } from "../../services/ExpresionsRegular";
-import { useNavigate } from 'react-router-dom';
 //librerias
 import axios from "axios";
 //Estilos

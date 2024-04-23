@@ -1,9 +1,8 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { Apiurl } from '../../../services/userService';
 import MUIDataTable from 'mui-datatables';
-import { useForm } from 'react-hook-form';
 import { Modal } from 'react-bootstrap';
 import { Link } from "react-router-dom";
 import "./Producto.css";
@@ -21,8 +20,8 @@ const Producto = () => {
     const handleProductoShow = () => setShowProducto(true);
 
     const [smShow, setSmShow] = useState(false);
-    const handleMensajeClose = () => setSmShow(false);
-    const handleShowMensaje = () => setSmShow(true);
+    const handleMensajeClose = useCallback(() => setSmShow(false), [setSmShow]);
+    const handleShowMensaje = useCallback(() => setSmShow(true), [setSmShow]);
 
     const [mensaje, setMensaje] = useState("");
 
@@ -33,8 +32,6 @@ const Producto = () => {
     const [showEliminar, setShowEliminar] = useState(false);
     const handleEliminarClose = () => setShowEliminar(false);
     const handleEliminarShow = () => setShowEliminar(true);
-
-    const { handleSubmit, formState: { errors }, setValue, reset } = useForm();
 
     const [consolaSeleccionada, setConsolaSeleccionada] = useState({
         codProducto: "",
@@ -53,8 +50,14 @@ const Producto = () => {
             [name]: value,
         }));
     };
+    const abrirCerrarModalMensaje = useCallback(() => {
+        handleShowMensaje();
+        setTimeout(() => {
+            handleMensajeClose();
+        }, 2000); // 2000 milisegundos = 2 segundos
+    }, [handleShowMensaje, handleMensajeClose]);
 
-    const peticionGet = async () => {
+    const peticionGet = useCallback(async () => {
         try {
             const response = await axios.get(url, {
                 headers: {
@@ -63,7 +66,7 @@ const Producto = () => {
 
                 }
             });
-            console.log("Response Producto Get", response.status);
+            //console.log("Response Producto Get", response.status);
             if (response.status === 200) {
                 setData(response.data);
             } else {
@@ -75,9 +78,12 @@ const Producto = () => {
             setMensaje(mensajeError);
             abrirCerrarModalMensaje();
         }
-    }
-
-    const peticionPost = async () => {
+    }, [abrirCerrarModalMensaje]);
+    useEffect(() => {
+        peticionGet();
+    }, [peticionGet]);
+    const peticionPost = async (e) => {
+        e.preventDefault();
         try {
             const response = await axios.post(urlG, consolaSeleccionada, {
                 headers: {
@@ -108,8 +114,8 @@ const Producto = () => {
             abrirCerrarModalMensaje();
         }
     }
-
-    const peticionPut = async () => {
+    const peticionPut = async (e) => {
+        e.preventDefault();
         try {
             const response = await axios.put(urlE + consolaSeleccionada.codProducto, consolaSeleccionada, {
                 headers: {
@@ -135,7 +141,6 @@ const Producto = () => {
                 handleEditarClose();
                 setMensaje("Producto Editado");
                 abrirCerrarModalMensaje();
-                reset();
             }
         } catch (error) {
             const mensajeError = error.response && error.response.data && error.response.data.mensaje ? error.response.data.mensaje : "Hubo un error al dar ingreso al Huesped. Por favor, intenta nuevamente.";
@@ -143,14 +148,10 @@ const Producto = () => {
             abrirCerrarModalMensaje();
         }
     }
-    const abrirCerrarModalMensaje = () => {
-        handleShowMensaje();
-        setTimeout(() => {
-            handleMensajeClose();
-        }, 2000); // 2000 milisegundos = 2 segundos
-    };
-    const peticionDelete = async () => {
+
+    const peticionDelete = async (e) => {
         try {
+            e.preventDefault();
             const response = await axios.delete(urlD + consolaSeleccionada.codProducto, {
                 headers: {
                     Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
@@ -170,13 +171,9 @@ const Producto = () => {
             console.log("Error al eliminar producto", error);
         }
     }
-    useEffect(() => {
-        peticionGet();
-    }, []);
-
     const bodyCrearProducto = (
         <div>
-            <form onSubmit={handleSubmit(peticionPost)}>
+            <form onSubmit={peticionPost}>
                 <div className='flex'>
                     <div>
                         <label>Nombre</label>
@@ -196,14 +193,6 @@ const Producto = () => {
                         <label>Precio (Unidad)</label>
                         <input name='precio' className='form-control' required onChange={handleChange} />
                     </div>
-                    {/*<div>
-                        <label>Fecha Registro</label>
-                        <input type='date' required className='form-control' onChange={handleChange} />
-                    </div>
-                    <div>
-                        <label>Hora Registro</label>
-                        <input type='time' required className='form-control' onChange={handleChange} />
-                    </div>*/}
                 </div>
                 <div className='flex botones'>
                     <button className='btn btn-primary' type='submit'>Agregar</button>
@@ -212,10 +201,9 @@ const Producto = () => {
             </form>
         </div>
     );
-
     const bodyEditar = (
         <div>
-            <form onSubmit={handleSubmit(peticionPut)}>
+            <form onSubmit={peticionPut}>
                 <div className='flex'>
                     <div>
                         <label>Nombre</label>
@@ -235,14 +223,6 @@ const Producto = () => {
                         <label>Precio (Unidad)</label>
                         <input name='precio' className='form-control' required onChange={handleChange} value={consolaSeleccionada.precio} />
                     </div>
-                    {/*<div>
-                        <label>Fecha Registro</label>
-                        <input name='fechaRegistro' type='date' required className='form-control' onChange={handleChange} value={consolaSeleccionada.fechaRegistro} />
-                    </div>
-                    <div>
-                        <label>Hora Registro</label>
-                        <input name='horaRegistro' type='time' required className='form-control' onChange={handleChange} value={consolaSeleccionada.horaRegistro} />
-                    </div>*/}
                 </div>
                 <div className='flex botones'>
                     <button className='btn btn-primary' type='submit'>Agregar</button>
@@ -251,7 +231,6 @@ const Producto = () => {
             </form>
         </div>
     );
-
     const bodyEliminar = (
         <div className='bodyEliminar'>
             <p> ¿Está seguro de Eliminar el Producto?</p>
@@ -263,7 +242,6 @@ const Producto = () => {
             </div>
         </div>
     )
-
     const popUp = (
         <div>
             <Modal size="sm" show={smShow} onHide={() => setSmShow(false)} aria-labelledby="example-modal-sizes-title-sm">
@@ -275,7 +253,6 @@ const Producto = () => {
             </Modal>
         </div>
     )
-
     const seleccionarProducto = (consola, caso) => {
         console.log("consola", consola);
         setConsolaSeleccionada({
@@ -295,7 +272,6 @@ const Producto = () => {
             handleEliminarShow();
         }
     }
-
     const columns = [
         {
             name: "codProducto",
@@ -343,7 +319,6 @@ const Producto = () => {
             }
         }
     ]
-
     return (
         <div className='Producto'>
             <br />
