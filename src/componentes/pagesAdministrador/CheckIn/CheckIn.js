@@ -16,22 +16,8 @@ const CheckIn = () => {
     //const navigate = useNavigate();
 
     const [smShow, setSmShow] = useState(false);
-    const abrirCerrarModalMensaje = useCallback(() => {
-        handleShowMensaje();
-        setTimeout(() => {
-            handleMensajeClose();
-        }, 2000);
-    }, [handleShowMensaje, handleMensajeClose]);
-    const handleMensajeClose = useCallback(() => {
-        setSmShow(false);
-        abrirCerrarModalMensaje(); // Asegúrate de incluir esta función aquí
-    }, [setSmShow, abrirCerrarModalMensaje]);
-
-    const handleShowMensaje = useCallback(() => {
-        setSmShow(false);
-        abrirCerrarModalMensaje(); // Asegúrate de incluir esta función aquí
-
-    }, [setSmShow, abrirCerrarModalMensaje]);
+    const handleMensajeClose = useCallback(() => setSmShow(false), [setSmShow]);
+    const handleShowMensaje = useCallback(() => setSmShow(true), [setSmShow]);
 
     const [showProductos, setShowProductos] = useState(false);
     const handleProductosClose = () => setShowProductos(false);
@@ -146,7 +132,12 @@ const CheckIn = () => {
         return total;
     };
 
-
+    const abrirCerrarModalMensaje = useCallback(() => {
+        handleShowMensaje();
+        setTimeout(() => {
+            handleMensajeClose();
+        }, 2000);
+    }, [handleShowMensaje, handleMensajeClose]);
 
     const peticionGet = useCallback(async () => {
         try {
