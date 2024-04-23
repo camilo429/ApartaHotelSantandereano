@@ -1,4 +1,4 @@
-import React, { lazy } from "react";
+import React from "react";
 //iconos
 import { Routes, Route } from "react-router-dom";
 import { MdOutlineRestorePage } from "react-icons/md";
