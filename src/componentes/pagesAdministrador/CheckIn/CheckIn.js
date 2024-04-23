@@ -16,7 +16,12 @@ const CheckIn = () => {
     //const navigate = useNavigate();
 
     const [smShow, setSmShow] = useState(false);
-
+    const abrirCerrarModalMensaje = useCallback(() => {
+        handleShowMensaje();
+        setTimeout(() => {
+            handleMensajeClose();
+        }, 2000);
+    }, [handleShowMensaje, handleMensajeClose]);
     const handleMensajeClose = useCallback(() => {
         setSmShow(false);
         abrirCerrarModalMensaje(); // Asegúrate de incluir esta función aquí
@@ -141,12 +146,7 @@ const CheckIn = () => {
         return total;
     };
 
-    const abrirCerrarModalMensaje = useCallback(() => {
-        handleShowMensaje();
-        setTimeout(() => {
-            handleMensajeClose();
-        }, 2000);
-    }, [handleShowMensaje, handleMensajeClose]);
+
 
     const peticionGet = useCallback(async () => {
         try {
