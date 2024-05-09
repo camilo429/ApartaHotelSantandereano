@@ -734,12 +734,6 @@ function Reservacion() {
                                     <li>
                                         <Link className="dropdown-item" onClick={() => seleccionarReservacion(tableMeta.rowData, "Eliminar")}> Eliminar </Link>
                                     </li>
-                                    <li>
-                                        <hr className="dropdown-divider" />
-                                    </li>
-                                    <li>
-                                        <Link className="dropdown-item" to={`/Login`}> Factura </Link>
-                                    </li>
                                 </ul>
                             </li>
                         </div>

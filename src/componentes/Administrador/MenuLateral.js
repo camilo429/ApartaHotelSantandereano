@@ -168,12 +168,12 @@ function MenuLateral() {
               </li>
               <li className="sidebar-item">
                 <a href="pages.html" className="sidebar-link collapsed" data-bs-target="#recibo" data-bs-toggle="collapse" aria-expanded="false">
-                  <MdElectricalServices className="me-2" /> Recibos Publicos
+                  <MdElectricalServices className="me-2" /> Recibos Públicos
                 </a>
                 <ul id="recibo" className="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                   <li className="sidebar-item">
                     <NavLink className="sidebar-link" to="RecibosPublicos" exact="true" activeclassname="active">
-                      <MdOutlineWaterDrop className="me-2" /> Recibos Publicos
+                      <MdOutlineWaterDrop className="me-2" /> Recibos Públicos
                     </NavLink>
                   </li>
                   <li className="sidebar-item">

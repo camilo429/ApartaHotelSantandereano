@@ -6,7 +6,7 @@ import { FaSliders } from "react-icons/fa6";
 import { FaUser } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
 import * as HiIcons from "react-icons/hi";
-import { FaUsers } from "react-icons/fa";
+//import { FaUsers } from "react-icons/fa";
 import { MdOutlinePendingActions } from "react-icons/md";
 import { MdOutlineBedroomParent } from "react-icons/md";
 import { MdFamilyRestroom } from "react-icons/md";
@@ -58,14 +58,14 @@ function MenuLateral() {
                 <ul id="pages" className="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                   <li className="sidebar-item">
                     <NavLink className="sidebar-link" to="Huespedes" exact="true" activeclassname="active">
-                      <HiIcons.HiUsers className="me-2" />Huespedes
+                      <HiIcons.HiUsers className="me-2" />Huéspedes
                     </NavLink>
                   </li>
-                  <li className="sidebar-item">
+                  {/*<li className="sidebar-item">
                     <NavLink className="sidebar-link" to="AnalisisHuespedes" exact="true" activeclassname="active">
                       <FaUsers className="me-2" />Analisis Huespedes
                     </NavLink>
-                  </li>
+                  </li>*/}
                   <li className="sidebar-item">
                     <NavLink className="sidebar-link" to="Actividades" exact="true" activeclassname="active">
                       <FiActivity className="me-2" />Actividades
@@ -102,11 +102,11 @@ function MenuLateral() {
                       <FaPeopleCarry className="me-2" /> Productos
                     </NavLink>
                   </li>
-                  <li className="sidebar-item">
+                  {/*<li className="sidebar-item">
                     <NavLink className="sidebar-link" to="Productos" exact="true" activeclassname="active">
                       <FaPeopleCarry className="me-2" /> Analisis Productos
                     </NavLink>
-                  </li>
+                  </li>*/}
                   <li className="sidebar-item">
                     <NavLink className="sidebar-link" to="Productos" exact="true" activeclassname="active">
                       <FaPeopleCarry className="me-2" /> Gastos
@@ -127,7 +127,7 @@ function MenuLateral() {
                   </li>
                   <li className="sidebar-item">
                     <NavLink className="sidebar-link" to="AnalisisReservacion" exact="true" activeclassname="active">
-                      <FaPeopleCarry className="me-2" />Analisis Reservaciones
+                      <FaPeopleCarry className="me-2" />Análisis Reservaciones
                     </NavLink>
                   </li>
                 </ul>
@@ -144,9 +144,9 @@ function MenuLateral() {
                   <NavLink className="sidebar-link" to="Facturas" exact="true" activeclassname="active">
                     <FaPeopleCarry className="me-2" /> Facturas
                   </NavLink>
-                  <NavLink className="sidebar-link" to="AnalisisComentarios" exact="true" activeclassname="active">
+                  {/*<NavLink className="sidebar-link" to="AnalisisComentarios" exact="true" activeclassname="active">
                     <FaPeopleCarry className="me-2" /> Analisis de Comentarios
-                  </NavLink>
+                  </NavLink>*/}
                 </ul>
               </li>
 

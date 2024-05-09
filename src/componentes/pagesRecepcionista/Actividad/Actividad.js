@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import MUIDataTable from "mui-datatables";
+
 import { Apiurl } from '../../../services/userService';
 import SelectEmpleados from '../SelectEmpleados';
 import { Modal } from 'react-bootstrap';
@@ -10,29 +11,36 @@ import { EXPRESION_REGULAR_HORA_MINUTO_SEGUNDO } from '../../../services/Expresi
 
 const url = Apiurl + "actividades/listarActividades/empleado/";
 const urlC = Apiurl + "actividades/crearActividad";
-const urlActualizarActividad = Apiurl + "actividades/actualizarActividad/"
+//const urlS = Apiurl + "actividades/verActividad";
+const urlE = Apiurl + "actividades/actualizarActividad/"
+const urlD = Apiurl + "actividades/eliminarActividad/";
 
 const Actividad = () => {
+    const [data, setData] = useState([]);
     const [errors, setErrors] = useState({});
     const [mensaje, setMensaje] = useState("");
     const codEmpleado = sessionStorage.getItem("empleado");
-    const [tareasAsignadas, setTareasAsignadas] = useState([]);
+
 
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
     const [smShow, setSmShow] = useState(false);
-    const handleMensajeClose = () => setSmShow(false);
-    const handleShowMensaje = () => setSmShow(true);
+    const handleMensajeClose = useCallback(() => setSmShow(false), [setSmShow]);
+    const handleShowMensaje = useCallback(() => setSmShow(true), [setSmShow]);
 
     const [showEditar, setShowEditar] = useState(false);
     const handleEditarClose = () => setShowEditar(false);
     const handleEditarShow = () => setShowEditar(true);
 
-    const [showVer, setShowVer] = useState(false);
-    const handleVerClose = () => setShowVer(false);
-    const handleVerShow = () => setShowVer(true);
+    const [showSee, setShowSee] = useState(false);
+    const handleSeeClose = () => setShowSee(false);
+    const handleSeeShow = () => setShowSee(true);
+
+    const [showEliminar, setShowEliminar] = useState(false);
+    const handleEliminarClose = () => setShowEliminar(false);
+    const handleEliminarShow = () => setShowEliminar(true);
 
     const [consolaSeleccionada, setConsolaSeleccionada] = useState({
         codActividad: "",
@@ -80,9 +88,38 @@ const Actividad = () => {
             [name]: value,
         }));
     };
+    const abrirCerrarModalMensaje = useCallback(() => {
+        handleShowMensaje();
+        setTimeout(() => {
+            handleMensajeClose();
+        }, 2000);
+    }, [handleShowMensaje, handleMensajeClose]);
+    const peticionGet = useCallback(async () => {
+        try {
+            const response = await axios.get(url + codEmpleado, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
+                }
+            })
+            if (response.status === 200) {
+                setData(response.data);
+            }
+        } catch (error) {
+            console.log("get", error);
+            const mensajeError = error.response && error.response.data && error.response.data.mensaje ? error.response.data.mensaje : "Hubo un error al traer Tareas. Por favor, intenta nuevamente.";
+            setMensaje(mensajeError);
+            abrirCerrarModalMensaje();
+            setErrors({});
+        }
+    }, [abrirCerrarModalMensaje, codEmpleado]);
+
+    useEffect(() => {
+        peticionGet();
+    }, [peticionGet, codEmpleado]);
+
     const peticionPost = async (e) => {
         try {
-            e.preventDefault();
             setErrors(validationForm(consolaSeleccionada));
             if (Object.keys(errors).length === 0) {
                 e.preventDefault();
@@ -93,12 +130,13 @@ const Actividad = () => {
                         Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
                     }
                 })
-                //console.log(response.status);
+                console.log(response.status);
                 if (response.status === 201) {
-                    setTareasAsignadas(tareasAsignadas.concat(response.data));
+                    setData(data.concat(response.data));
                     setMensaje("Actividad Creada");
                     handleClose();
                     abrirCerrarModalMensaje();
+                    peticionGet();
                     setConsolaSeleccionada({
                         codActividad: "",
                         descripcion: "",
@@ -152,35 +190,57 @@ const Actividad = () => {
     const peticionPut = async (e) => {
         try {
             e.preventDefault();
-            console.log(errors);
+            setErrors(validationForm(consolaSeleccionada));
             if (Object.keys(errors).length === 0) {
-                const response = await axios.put(urlActualizarActividad + consolaSeleccionada.codActividad, consolaSeleccionada, {
+                const response = await axios.put(urlE + consolaSeleccionada.codActividad, consolaSeleccionada, {
                     headers: {
                         'Content-Type': 'application/json',
                         Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
                     }
-                });
+                })
                 if (response.status === 201) {
-                    const dataNueva = tareasAsignadas.map((consola) => {
+                    const dataNueva = data.map((consola) => {
                         if (consolaSeleccionada.codActividad === consola.codActividad) {
                             return { ...consola, ...consolaSeleccionada };
                         }
                         return consola;
-                    });
-                    setTareasAsignadas(dataNueva);
+                    })
+                    setData(dataNueva);
+                    peticionGet();
                     handleEditarClose();
-                    setMensaje("Tarea Actualizada");
+                    setMensaje("Actividad Actualizada");
                     abrirCerrarModalMensaje("");
-                    setErrors({});
                 }
             }
         } catch (error) {
-            const mensajeError = error.response && error.response.data && error.response.data.mensaje ? error.response.data.mensaje : "Hubo un error al Modificar Tareas. Por favor, intenta nuevamente.";
+            console.log("get", error);
+            const mensajeError = error.response && error.response.data && error.response.data.mensaje ? error.response.data.mensaje : "Hubo un error al Editar Actividad. Por favor, intenta nuevamente.";
             setMensaje(mensajeError);
             abrirCerrarModalMensaje();
             setErrors({});
         }
-    };
+    }
+    const peticionDelete = async (e) => {
+        try {
+            const response = await axios.delete(urlD + consolaSeleccionada.codActividad, {
+                headers: {
+                    Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
+                }
+            })
+            if (response.status === 200) {
+                setData(data.filter((consola) => consola.codActividad !== consolaSeleccionada.codActividad));
+                setMensaje("Tarea Eliminada");
+                handleEliminarClose();
+                abrirCerrarModalMensaje();
+                peticionGet();
+            }
+        } catch (error) {
+            const mensajeError = error.response && error.response.data && error.response.data.mensaje ? error.response.data.mensaje : "Hubo un error al Eliminar Tarea. Por favor, intenta nuevamente.";
+            setMensaje(mensajeError);
+            abrirCerrarModalMensaje();
+            setErrors({});
+        }
+    }
     const cerrarAsignarActividad = () => {
         handleClose();
         setConsolaSeleccionada({
@@ -265,9 +325,10 @@ const Actividad = () => {
             horaEntrega: "",
             titulo: ""
         })
+
     }
-    const cerrarVerTarea = () => {
-        handleVerClose();
+    const cerrarEliminarTarea = () => {
+        handleEliminarClose();
         setConsolaSeleccionada({
             codActividad: "",
             descripcion: "",
@@ -307,6 +368,7 @@ const Actividad = () => {
             horaEntrega: "",
             titulo: ""
         })
+
     }
     const handleBlur = (e) => {
         handleChange(e);
@@ -325,45 +387,19 @@ const Actividad = () => {
         } else if (!EXPRESION_REGULAR_HORA_MINUTO_SEGUNDO.test(consolaSeleccionada.horaEntrega)) {
             errors.horaEntrega = "El Campo 'Hora Entrega' no es válido";
         }
+        if (!consolaSeleccionada || consolaSeleccionada.estadoActividad === "") {
+            errors.estadoActividad = "Estado Actividad es requerido"
+        }
         if (!consolaSeleccionada || !consolaSeleccionada.empleado || consolaSeleccionada.empleado.nombre === "") {
             errors.empleado = "Es necesario Elegir Empleado";
         }
         if (!consolaSeleccionada || consolaSeleccionada.descripcion === "") {
             errors.descripcion = "Es Necesario una descripción breve de la tarea";
         }
+
+
         return errors;
     }
-    const abrirCerrarModalMensaje = useCallback(() => {
-        handleShowMensaje();
-        setTimeout(() => {
-            handleMensajeClose();
-        }, 2000);
-    }, []);
-    useEffect(() => {
-        const actividadesPropias = async () => {
-            try {
-                const response = await axios.get(url + codEmpleado, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
-                    }
-                })
-                console.log(response.data);
-                if (response.status === 200) {
-                    setTareasAsignadas(response.data);
-                    // console.log("Actividades Propias", response.data);
-                }
-            } catch (error) {
-                console.log("get", error);
-                const mensajeError = error.response && error.response.data && error.response.data.mensaje ? error.response.data.mensaje : "Hubo un error al traer Tareas Asignadas.";
-                setMensaje(mensajeError);
-                abrirCerrarModalMensaje();
-                setErrors({});
-            }
-        }
-        actividadesPropias();
-    }, [abrirCerrarModalMensaje, codEmpleado, tareasAsignadas]);
-
     const seleccionarTarea = (consola, caso) => {
         console.log("consola", consola);
         setConsolaSeleccionada({
@@ -406,11 +442,14 @@ const Actividad = () => {
             },
 
         })
-        if (caso === "Ver") {
-            handleVerShow();
-        }
         if (caso === "Editar") {
             handleEditarShow();
+        }
+        if (caso === "Eliminar") {
+            handleEliminarShow();
+        }
+        if (caso === "Ver") {
+            handleSeeShow();
         }
     }
     const bodyInsertar = (
@@ -461,28 +500,28 @@ const Actividad = () => {
         </form>
     );
     const bodyEditar = (
-        <form onSubmit={peticionPut}>
+        <form>
             <div className='flex'>
                 <div className='formActividad'>
                     <label>Título</label>
-                    <input name='titulo' type='text' className='form-control' onBlur={handleBlur} disabled onChange={handleChange} placeholder='Título' value={consolaSeleccionada.titulo || ""} />
+                    <input name='titulo' type='text' className='form-control' onBlur={handleBlur} onChange={handleChange} placeholder='Título' value={consolaSeleccionada.titulo || ""} />
                     {errors.titulo && <p id='errors'>{errors.titulo}</p>}
                 </div>
                 <div className='formActividad'>
                     <label>Fecha Entrega</label>
-                    <input name='fechaEntrega' type='date' className='form-control' onBlur={handleBlur} disabled onChange={handleChange} value={consolaSeleccionada?.fechaEntrega || ""} />
+                    <input name='fechaEntrega' type='date' className='form-control' onBlur={handleBlur} onChange={handleChange} value={consolaSeleccionada?.fechaEntrega || ""} />
                     {errors.fechaEntrega && <p id='errors'>{errors.fechaEntrega}</p>}
                 </div>
                 <div className='formActividad'>
                     <label>Hora Entrega</label>
-                    <input name='horaEntrega' type="text" className='form-control' disabled onBlur={handleBlur} onChange={handleChange} value={consolaSeleccionada?.horaEntrega || ""} placeholder='Hora:Minutos:Segundos' />
+                    <input name='horaEntrega' type="text" className='form-control' onBlur={handleBlur} onChange={handleChange} value={consolaSeleccionada?.horaEntrega || ""} placeholder='Hora:Minutos:Segundos' />
                     {errors.horaEntrega && <p id='errors'>{errors.horaEntrega}</p>}
                 </div>
                 <div className='formActividad'>
                     <label>Estado Actividad</label>
-                    <select name='estadoActividad' className='form-select' aria-label="Default select example" onChange={handleChange} value={consolaSeleccionada?.estadoActividad || ""} placeholder="Seleccione Actividad">
-                        <option value="PENDIENTE">PENDIENTE</option>
+                    <select name='estadoActividad' className='form-select' aria-label="Default select example" onChange={handleChange} placeholder="Seleccione Actividad" value={consolaSeleccionada?.estadoActividad || ""}>
                         <option value="COMPLETADO">COMPLETADO</option>
+                        <option value="PENDIENTE">PENDIENTE</option>
                         <option value="CANCELADO">CANCELADO</option>
                         <option value="EN CURSO">EN CURSO</option>
                     </select>
@@ -491,39 +530,43 @@ const Actividad = () => {
             </div>
             <div className='flex'>
                 <div className='formDescripcion'>
+                    <label>Empleado</label>
+                    <SelectEmpleados name="empleado" value={consolaSeleccionada?.empleado || ""} handleChangeData={handleChange} />
+                    {errors.empleado && <p id='errors'>{errors.empleado}</p>}
+                </div>
+                <div className='formDescripcion'>
                     <label>Descripcion</label>
-                    <textarea name='descripcion' type="textarea" className='form-control' onBlur={handleBlur} disabled onChange={handleChange} placeholder='Descripcion' value={consolaSeleccionada?.descripcion || ""} style={{ resize: "none" }} />
+                    <textarea name='descripcion' type="textarea" className='form-control' onBlur={handleBlur} onChange={handleChange} placeholder='Descripcion' value={consolaSeleccionada?.descripcion || ""} style={{ resize: "none" }} />
                     {errors.descripcion && <p id='errors'>{errors.descripcion}</p>}
                 </div>
             </div>
             <div className='flex' style={{ alignItems: "center" }}>
-                <button className='btn btn-primary' type='submit'>Asignar</button>
+                <button className='btn btn-primary' onClick={(e) => peticionPut(e)}>Guardar Cambios</button>
                 <button className='btn btn-secondary' type='submit' onClick={cerrarEditarTarea} >Cerrar</button>
             </div>
         </form>
     );
-    const bodyVer = (
-        <>
+    const bodySee = (
+        <form >
             <div className='flex'>
                 <div className='formActividad'>
                     <label>Título</label>
-                    <input name='titulo' type='text' className='form-control' onBlur={handleBlur} disabled onChange={handleChange} placeholder='Título' value={consolaSeleccionada.titulo || ""} />
+                    <input disabled name='titulo' type='text' className='form-control' onBlur={handleBlur} onChange={handleChange} placeholder='Título' value={consolaSeleccionada.titulo || ""} />
                     {errors.titulo && <p id='errors'>{errors.titulo}</p>}
                 </div>
                 <div className='formActividad'>
                     <label>Fecha Entrega</label>
-                    <input name='fechaEntrega' type='date' className='form-control' onBlur={handleBlur} disabled onChange={handleChange} value={consolaSeleccionada?.fechaEntrega || ""} />
+                    <input disabled name='fechaEntrega' type='date' className='form-control' onBlur={handleBlur} onChange={handleChange} value={consolaSeleccionada?.fechaEntrega || ""} />
                     {errors.fechaEntrega && <p id='errors'>{errors.fechaEntrega}</p>}
                 </div>
                 <div className='formActividad'>
                     <label>Hora Entrega</label>
-                    <input name='horaEntrega' type="text" className='form-control' disabled onBlur={handleBlur} onChange={handleChange} value={consolaSeleccionada?.horaEntrega || ""} placeholder='Hora:Minutos:Segundos' />
+                    <input disabled name='horaEntrega' type="text" className='form-control' onBlur={handleBlur} onChange={handleChange} value={consolaSeleccionada?.horaEntrega || ""} placeholder='Hora:Minutos:Segundos' />
                     {errors.horaEntrega && <p id='errors'>{errors.horaEntrega}</p>}
                 </div>
                 <div className='formActividad'>
                     <label>Estado Actividad</label>
-                    <select name='estadoActividad' className='form-select' aria-label="Default select example" disabled value={consolaSeleccionada?.estadoActividad || ""} onChange={handleChange} placeholder="Seleccione Actividad">
-                        <option value="">Seleccione una opción</option>
+                    <select disabled name='estadoActividad' className='form-select' aria-label="Default select example" onChange={handleChange} value={consolaSeleccionada?.estadoActividad || ""} placeholder="Seleccione Actividad">
                         <option value="COMPLETADO">COMPLETADO</option>
                         <option value="PENDIENTE">PENDIENTE</option>
                         <option value="CANCELADO">CANCELADO</option>
@@ -531,20 +574,36 @@ const Actividad = () => {
                     </select>
                     {errors.estadoActividad && <p id='errors'>{errors.estadoActividad}</p>}
                 </div>
-
             </div>
             <div className='flex'>
                 <div className='formDescripcion'>
+                    <label>Empleado</label>
+                    <SelectEmpleados name="empleado" value={consolaSeleccionada?.empleado || ""} handleChangeData={handleChange} />
+                    {errors.empleado && <p id='errors'>{errors.empleado}</p>}
+                </div>
+                <div className='formDescripcion'>
                     <label>Descripcion</label>
-                    <textarea name='descripcion' type="textarea" className='form-control' onBlur={handleBlur} disabled onChange={handleChange} placeholder='Descripcion' value={consolaSeleccionada?.descripcion || ""} style={{ resize: "none" }} />
-                    {/*{errors.descripcion && <p id='errors'>{errors.descripcion}</p>}*/}
+                    <textarea disabled name='descripcion' type="textarea" className='form-control' onBlur={handleBlur} onChange={handleChange} placeholder='Descripcion' value={consolaSeleccionada?.descripcion || ""} style={{ resize: "none" }} />
+                    {errors.descripcion && <p id='errors'>{errors.descripcion}</p>}
                 </div>
             </div>
             <div className='flex' style={{ alignItems: "center" }}>
-                {/*<button className='btn btn-primary' type='submit'>Asignar</button>*/}
-                <button className='btn btn-secondary' type='submit' onClick={cerrarVerTarea} >Cerrar</button>
+                <button className='btn btn-secondary' type='submit' onClick={handleSeeClose} >Cerrar</button>
             </div>
-        </>
+        </form>
+    );
+    const bodyEliminar = (
+        <div className="bodyEliminar">
+            <p>
+                Esta seguro de Eliminar la Tarea
+                <br />
+                <b> {(consolaSeleccionada && consolaSeleccionada.titulo)}</b> Asignada a:<b> {(consolaSeleccionada.empleado.nombre + " " + consolaSeleccionada.empleado.apellido) || ""} </b> ?
+            </p>
+            <div align="right">
+                <button className="btn btn-primary" type="submit" onClick={() => peticionDelete()} style={{ margin: "5px" }}> Eliminar </button>
+                <button className="btn btn-danger" type="submit" onClick={cerrarEliminarTarea} > Cancelar </button>
+            </div>
+        </div>
     );
     const popUp = (
         <div>
@@ -557,7 +616,6 @@ const Actividad = () => {
             </Modal>
         </div>
     );
-
     const columns = [
         {
             name: "codActividad",
@@ -567,7 +625,8 @@ const Actividad = () => {
             label: "Titulo"
         }, {
             name: "descripcion",
-            label: "Descripcion"
+            label: "Descripcion",
+            status: false
         }, {
             name: "fechaEntrega",
             label: "Fecha Entrega"
@@ -603,13 +662,13 @@ const Actividad = () => {
                             </Link>
                             <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li>
-                                    <Link className="dropdown-item" onClick={() => seleccionarTarea(tableMeta.rowData, "Ver")}> Ver </Link>
-                                </li>
-                                <li>
                                     <Link className="dropdown-item" onClick={() => seleccionarTarea(tableMeta.rowData, "Editar")}> Editar </Link>
                                 </li>
                                 <li>
-                                    <hr className="dropdown-divider" />
+                                    <Link className="dropdown-item" onClick={() => seleccionarTarea(tableMeta.rowData, "Eliminar")}> Eliminar </Link>
+                                </li>
+                                <li>
+                                    <Link className="dropdown-item" onClick={() => seleccionarTarea(tableMeta.rowData, "Ver")}> Ver </Link>
                                 </li>
                             </ul>
                         </div>
@@ -618,33 +677,35 @@ const Actividad = () => {
             }
         }
     ]
+
     return (
         <div>
             <div>
-                <button className='btn btn-primary' type='submit' onClick={handleShow} >Crear Tarea</button>
+                <button className='btn btn-primary' type='submit' onClick={handleShow} >Crear Actividad</button>
             </div>
             <div>
-                <MUIDataTable title={"Tareas Asignadas"} data={tareasAsignadas} columns={columns} />
+                <MUIDataTable title={"Lista Huéspedes"} data={data} columns={columns} />
             </div>
             <Modal show={show} onHide={handleClose} animation={false} size='lg'>
                 <Modal.Header closeButton>
-                    <Modal.Title>Asignar Tarea</Modal.Title>
+                    <Modal.Title>Asignar Actividad</Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="body">{bodyInsertar}</Modal.Body>
             </Modal>
             <Modal show={smShow} onHide={handleMensajeClose} animation={false} > {popUp}</Modal>
             <Modal show={showEditar} onHide={handleEditarClose} animation={false} size="lg">
                 <Modal.Header closeButton>
-                    <Modal.Title>Editar Tarea</Modal.Title>
+                    <Modal.Title>Editar Actividad</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>{bodyEditar}</Modal.Body>
             </Modal>
-            <Modal show={showVer} onHide={handleVerClose} animation={false} size="lg">
+            <Modal show={showSee} onHide={handleSeeClose} animation={false} size="lg">
                 <Modal.Header closeButton>
-                    <Modal.Title>Ver Tarea</Modal.Title>
+                    <Modal.Title>Ver Actividad</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>{bodyVer}</Modal.Body>
+                <Modal.Body>{bodySee}</Modal.Body>
             </Modal>
+            <Modal show={showEliminar} onHide={handleEliminarClose}> {bodyEliminar} </Modal>
         </div>
     );
 }

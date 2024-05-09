@@ -5,12 +5,14 @@ import { Link } from "react-router-dom";
 import { Modal } from 'react-bootstrap';
 import MUIDataTable from 'mui-datatables';
 import SelectMultiProductos from '../Producto.js/SelectMultiProductos';
+// Rutas
 const url = Apiurl + "checkin/listarCheckin";
 const urlC = Apiurl + "factura/crearFactura";
 
 const CheckIn = () => {
     const [data, setData] = useState([]);
     const [mensaje, setMensaje] = useState("");
+    const [errors, setErrors] = useState({});
 
     const [smShow, setSmShow] = useState(false);
     const handleMensajeClose = useCallback(() => setSmShow(false), [setSmShow]);
@@ -23,7 +25,6 @@ const CheckIn = () => {
     const [verCheckIn, setVerCheckIn] = useState(false);
     const handleCheckInClose = () => setVerCheckIn(false);
     const handleVerCheckInShow = () => setVerCheckIn(true);
-    const [errors, setErrors] = useState();
 
     const [consolaFactura, setConsolaFactura] = useState({
         codFactura: "",
@@ -96,24 +97,84 @@ const CheckIn = () => {
             },
             numAdultos: "",
             numNinos: "",
-            totalAcompañantes: "",
+            numAcompanantes: "",
             totalPersona: ""
         },
+        facturas: [
+            {
+                codFactura: "",
+                description: "",
+                estado: "",
+                fechaCreacion: "",
+                horaCreacion: "",
+                itemFactura: [
+                    {
+                        cantidad: "",
+                        cantidadTotal: "",
+                        codItemFactura: "",
+                        producto: {
+                            codProducto: "",
+                            cantidad: "",
+                            fechaRegistro: "",
+                            horaRegistro: "",
+                            marca: "",
+                            nombreProducto: "",
+                            precio: ""
+                        },
+                        subtotal: "",
+                    }
+                ]
+
+            }
+        ],
+        acompanante: [
+            {
+                nombre: "",
+                apellido: "",
+                tipoDocumento: {
+                    codTipoDocumento: "",
+                    nomTipoDocumento: ""
+                },
+                numDocumento: "",
+                fechaNacimiento: ""
+            }
+        ],
         total: ""
     })
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setConsolaFactura((prevState) => ({
-            ...prevState,
-            [name]: value,
-        }));
+        if (name === "itemFactura") {
+            // Calcular el nuevo total basado en los nuevos elementos seleccionados
+            const nuevoTotal = calcularTotal(value); // Asume que tienes una función calcularTotal para obtener el nuevo total
+            setConsolaFactura((prevState) => ({
+                ...prevState,
+                [name]: value,
+                total: nuevoTotal, // Actualizar el total en el estado
+            }));
+        } else {
+            // Si el cambio ocurrió en otro lugar, simplemente actualizar el estado como lo estás haciendo actualmente
+            setConsolaFactura((prevState) => ({
+                ...prevState,
+                [name]: value,
+            }));
+        }
+    };
+    const calcularTotal = (selectedItems) => {
+        let total = 0;
+        // Itera sobre los elementos seleccionados y suma el precio de cada uno al total
+        selectedItems.forEach((item) => {
+            total += item.cantidad * item.producto.precio;
+        });
+
+        return total;
     };
     const abrirCerrarModalMensaje = useCallback(() => {
         handleShowMensaje();
         setTimeout(() => {
             handleMensajeClose();
         }, 2000);
-    }, [handleShowMensaje, handleMensajeClose])
+    }, [handleShowMensaje, handleMensajeClose]);
+
     const peticionGet = useCallback(async () => {
         try {
             const response = await axios.get(url, {
@@ -123,7 +184,7 @@ const CheckIn = () => {
             });
             if (response.status === 200) {
                 setData(response.data);
-                //  console.log("CheckIn", response.data);
+                console.log("CheckIn", response.data);
             }
         } catch (error) {
             console.log(error);
@@ -132,10 +193,12 @@ const CheckIn = () => {
             abrirCerrarModalMensaje();
             setErrors({});
         }
-    }, [abrirCerrarModalMensaje])
+    }, [abrirCerrarModalMensaje]);
+
     useEffect(() => {
         peticionGet();
     }, [peticionGet]);
+
     const peticionPost = async (e) => {
         e.preventDefault();
         try {
@@ -151,8 +214,8 @@ const CheckIn = () => {
                 setData(data.concat(response.data));
                 setMensaje("Factura Creada");
                 peticionGet();
-                handleProductosClose();
                 abrirCerrarModalMensaje();
+                handleProductosClose();
                 setConsolaFactura({});
             }
         } catch (error) {
@@ -218,29 +281,43 @@ const CheckIn = () => {
                     },
                     imagenHabitacion: consola[4].imagenHabitacion
                 },
-                totalAcompañantes: consola[5],
-                //facturas: [{
-                //    codFactura: consola[6].codFactura,
-                //    descripcion: consola[6].descripcion,
-                //    estado: consola[6].estado,
-                //    fechaCreacion: consola[6].fechaCreacion,
-                //    horaCreacion: consola[6].horaCreacion,
-                //    itemFactura: [{
-                //        cantidad: consola[6].facturas.itemFactura.cantidad,
-                //        cantidadTotal: consola[6].itemFactura.cantidadTotal,
-                //        codItemFactura: consola[6].itemFactura.codItemFactura,
-                //        producto: [{
-                //            codProducto: consola[6].producto.codProducto,
-                //            nombreProducto: consola[6].producto.nombreProducto,
-                //            marca: consola[6].facturas.itemFactura.producto.marca,
-                //            cantidad: consola[6].facturas.itemFactura.producto.cantidad,
-                //            precio: consola[6].facturas.itemFactura.producto.precio
-                //        }],
-                //        subtotal: consola[6].itemFactura.subtotal
-                //    }],
-                //    total: consola[6].total
-                //}]
-            },
+                numAcompanantes: consola[5],
+                facturas: consola[6].map(factura => ({
+                    codFactura: factura.codFactura,
+                    descripcion: factura.descripcion,
+                    estado: factura.estado,
+                    fechaCreacion: factura.fechaCreacion,
+                    horaCreacion: factura.horaCreacion,
+                    itemFactura: factura.itemFactura.map(itemFactura => ({
+                        cantidad: itemFactura.cantidad,
+                        cantidadTotal: itemFactura.cantidadTotal,
+                        codItemFactura: itemFactura.codItemFactura,
+                        producto: {
+                            cantidad: itemFactura.producto.cantidad,
+                            codProducto: itemFactura.producto.codProducto,
+                            fechaRegistro: itemFactura.producto.fechaRegistro,
+                            horaRegistro: itemFactura.producto.horaRegistro,
+                            marca: itemFactura.producto.marca,
+                            nombreProducto: itemFactura.producto.nombreProducto,
+                            precio: itemFactura.producto.precio
+                        },
+                        subtotal: factura.itemFactura.subtotal
+
+                    })),
+                    total: factura.total,
+                }
+                )),
+                acompanantes: consola[7].map(acompanante => ({
+                    nombre: acompanante.nombre,
+                    apellido: acompanante.apellido,
+                    tipoDocumento: {
+                        codTipoDocumento: acompanante.tipoDocumento.codTipoDocumento,
+                        nomTipoDocumento: acompanante.tipoDocumento.nomTipoDocumento
+                    },
+                    numDocumento: acompanante.numDocumento,
+                    fechaNacimiento: acompanante.fechaNacimiento
+                }))
+            }
         })
 
         if (caso === "Factura") {
@@ -250,18 +327,19 @@ const CheckIn = () => {
             handleVerCheckInShow();
         }
     }
-    const bodyCheckIn = (
+
+    const bodyRegistrarFactura = (
         <div>
             <form onSubmit={peticionPost}>
                 <div className='flex'>
                     <div>
                         <label>Nombre(s)</label>
-                        <input type='text' disabled name='nombre' value={consolaFactura?.checkin?.codHuesped?.nombre || ""} className='form-control' />
+                        <input type='text' disabled name='nombre' value={consolaFactura?.checkin?.codHuesped?.nombre || ""} onChange={handleChange} className='form-control' />
                         {errors.nombre && <p>{errors.nombre}</p>}
                     </div>
                     <div>
                         <label>Apellido(s)</label>
-                        <input type='text' disabled name='apellido' value={consolaFactura?.checkin?.codHuesped?.apellido || ""} className='form-control' />
+                        <input type='text' disabled name='apellido' value={consolaFactura?.checkin?.codHuesped?.apellido || ""} onChange={handleChange} className='form-control' />
                     </div>
                 </div>
                 <div className='flex' style={{ width: "100%" }}>
@@ -277,11 +355,14 @@ const CheckIn = () => {
                     </div>
                     <div>
                         <label>Estado</label>
-                        <input type='text' name='estado' value={consolaFactura?.estado || ""} onChange={handleChange} className='form-control' />
+                        <select required className="form-select" aria-label="Default select example" name="estadoHuesped" value={consolaFactura?.estado} onChange={handleChange}>
+                            <option value="ABIERTA">ABIERTA</option>
+                            <option value="PAGADA">PAGADA</option>
+                        </select>
                     </div>
                     <div>
-                        <label>Descripcion</label>
-                        <textarea type='textare' name='descripcion' value={consolaFactura?.descripcion || ""} onChange={handleChange} className='form-control' style={{ resize: "none", width: "200px" }} />
+                        <label>Descripción</label>
+                        <textarea type='textare' name='descripcion' value={consolaFactura?.descripcion || ""} onChange={handleChange} className='form-control' style={{ resize: "none", width: "200px" }} placeholder='Productos Consumidos' />
                     </div>
                 </div>
                 <div className='flex'>
@@ -319,7 +400,7 @@ const CheckIn = () => {
                     </div>
                     <div>
                         <label>Total Personas Hospedadas</label>
-                        <input type='text' disabled name='totalAcompañantes' value={consolaFactura?.checkin?.totalAcompañantes || ""} className='form-control' />
+                        <input type='text' disabled name='totalAcompanantes' value={consolaFactura?.checkin?.numAcompanantes || ""} className='form-control' />
                     </div>
                 </div>
                 <div className='flex' style={{ width: "100%" }}>
@@ -375,8 +456,8 @@ const CheckIn = () => {
                 }
             }
         }, {
-            name: "totalAcompañantes",
-            label: "Total Personas"
+            name: "numAcompanantes",
+            label: "Total Personas",
         }, {
             name: "facturas",
             label: "Facturas",
@@ -384,6 +465,18 @@ const CheckIn = () => {
                 customBodyRender: (value, tableMeta) => {
                     if (value && value.estado && value.codFactura) {
                         return value.codFactura + " " + value.estado;
+                    } else {
+                        return "";
+                    }
+                }
+            }
+        }, {
+            name: "acompanante",
+            label: "Acompañantes",
+            options: {
+                customBodyRender: (value, tableMeta) => {
+                    if (value && value.nombre && value.apellido) {
+                        return value.nombre + " " + value.apellido;
                     } else {
                         return "";
                     }
@@ -418,7 +511,6 @@ const CheckIn = () => {
         }
     ]
 
-
     return (
         <div>
             <div>
@@ -426,11 +518,11 @@ const CheckIn = () => {
             </div>
             <Modal show={showProductos} onHide={handleProductosClose} animation={false} size='lg'>
                 <Modal.Header>
-                    <Modal.Title>Registrar Factura</Modal.Title>
+                    <Modal.Title>Registrar Recibo</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>{bodyCheckIn}</Modal.Body>
+                <Modal.Body>{bodyRegistrarFactura}</Modal.Body>
             </Modal>
-            <Modal show={smShow} onHide={handleMensajeClose} animation={false} > {popUp}</Modal>
+            <Modal show={smShow} onHide={handleMensajeClose} animation={false}> {popUp}</Modal>
             <Modal show={verCheckIn} onHide={handleCheckInClose} animation={false} size='lg'>
                 <Modal.Header closeButton>
                     <Modal.Title> Check - In</Modal.Title>

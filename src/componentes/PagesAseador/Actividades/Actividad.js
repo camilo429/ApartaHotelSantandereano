@@ -108,7 +108,6 @@ const Actividad = () => {
             setErrors({});
         }
     };
-
     const cerrarVerTarea = () => {
         handleVerClose();
         setConsolaSeleccionada({

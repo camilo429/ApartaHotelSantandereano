@@ -20,7 +20,7 @@ const urlG = Apiurl + "habitacion/crearHabitacion";
 const urlE = Apiurl + "habitacion/actualizarHabitacion/";
 const urlD = Apiurl + "habitacion/eliminarHabitacion/";
 const urlCheckIn = Apiurl + "checkin/crearCheckin";
-const urlCheckOut = Apiurl + "checkout/checkout/"
+const urlCheckOut = Apiurl + "checkout/outhabitacion/"
 
 function Habitacion() {
   const [data, setData] = useState([]);
@@ -255,6 +255,7 @@ function Habitacion() {
       handleMensajeClose();
     }, 2000); // 2000 milisegundos = 2 segundos
   }, [handleShowMensaje, handleMensajeClose])
+
   const peticionGet = useCallback(async () => {
     try {
       const response = await axios.get(url, {
@@ -270,15 +271,17 @@ function Habitacion() {
         console.log("Ha ocurrido un error get Habitación", response.status);
       }
     } catch (error) {
-      const mensajeError = error.response && error.response.data && error.response.data.mensaje ? error.response.data.mensaje : "Hubo un error al trater Habitaciones. Por favor, intenta nuevamente.";
+      const mensajeError = error.response && error.response.data && error.response.data.mensaje ? error.response.data.mensaje : "Hubo un error al listar Habitaciones. Por favor, intenta nuevamente.";
       setMensaje(mensajeError);
       abrirCerrarModalMensaje();
       setErrors({});
     }
   }, [abrirCerrarModalMensaje])
+
   useEffect(() => {
     peticionGet();
   }, [peticionGet]);
+
   const peticionPost = async (e) => {
     try {
       e.preventDefault();
@@ -411,7 +414,7 @@ function Habitacion() {
           setData(data.concat(response.data));
           peticionGet();
           handleCheckInClose()
-          setMensaje("Habitación Reservada");
+          setMensaje("Habitación Ocupada");
           abrirCerrarModalMensaje();
           setErrorsChecIn({});
           setConsolaCheckIn({});
@@ -426,37 +429,25 @@ function Habitacion() {
   };
   const peticionCheckOut = async (e) => {
     try {
-      const response = await axios.put(urlCheckOut + consolaSeleccionada.codHabitacion.Habitacion, {
+      e.preventDefault();
+      const response = await axios.put(urlCheckOut + consolaCheckIn.codHabitacion.codHabitacion, consolaCheckIn, {
         headers: {
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
-        }
+        },
       })
-
-      if (response.status === 201) {
+      console.log(response.status);
+      if (response.status === 200) {
         const dataNueva = data.map((consola) => {
-          if (consolaSeleccionada.codHabitacion === consola.codHabitacion) {
-            consola.nombreHabitacion = {
-              codTipoHabitacion: consolaSeleccionada.nombreHabitacion.codTipoHabitacion,
-              nombre: consolaSeleccionada.nombreHabitacion.nombre,
-              precioXPersona: consolaSeleccionada.nombreHabitacion.precioXPersona,
-              precioXAcompanante: consolaSeleccionada.nombreHabitacion.precioXAcompanante
-            };
-            consola.descripHabitacion = consolaSeleccionada.descripHabitacion;
-            consola.numHabitacion = consolaSeleccionada.numHabitacion;
-            consola.pisoHabitacion = consolaSeleccionada.pisoHabitacion;
-            consola.maxPersonasDisponibles = consolaSeleccionada.maxPersonasDisponibles;
-            consola.estadoHabitacion = {
-              codEstadoHabitacion: consolaSeleccionada.estadoHabitacion.codEstadoHabitacion,
-              nombre: consolaSeleccionada.estadoHabitacion.nombre
-            };
-            consola.imagenHabitacion = consolaSeleccionada.imagenHabitacion;
+          if (consolaCheckIn.codHabitacion === consola.codHabitacion) {
+            return { ...consola, ...consolaCheckIn };
           }
           return consola;
         })
         setData(dataNueva);
         peticionGet();
-        handleEditarClose();
-        setMensaje("Habitación Actualizada");
+        handleCheckOutClose();
+        setMensaje("Check-Out Exitoso");
         abrirCerrarModalMensaje();
       }
     } catch (error) {
@@ -518,7 +509,7 @@ function Habitacion() {
       handleCheckOutShow();
     }
   }
-  const cerrtarInsertar = () => {
+  const cerrarInsertar = () => {
     handleHabitacionClose();
     setConsolaCheckIn({});
   }
@@ -530,7 +521,6 @@ function Habitacion() {
     handleCheckInClose();
     setConsolaCheckIn();
   }
-
 
   function fechaMinima() {
     const today = new Date();
@@ -604,7 +594,7 @@ function Habitacion() {
         </div>
         <div align="right">
           <button className="btn btn-primary" color="primary" type="submit">Insertar</button>
-          <button className="btn btn-secondary" onClick={cerrtarInsertar} type="submit">Cancelar</button>
+          <button className="btn btn-secondary" onClick={cerrarInsertar} type="submit">Cancelar</button>
         </div>
       </form>
       <br />
@@ -620,24 +610,24 @@ function Habitacion() {
           </FormGroup>
           <FormGroup className="me-2">
             <Label for="exampleEmail">Numero Habitación</Label>
-            <input className="form-control" name="numHabitacion" onBlur={handleBlur} onChange={handleChange} value={(consolaSeleccionada && consolaSeleccionada.numHabitacion) || ""} placeholder="Número Habitación" type="number" />
+            <input disabled className="form-control" name="numHabitacion" onBlur={handleBlur} onChange={handleChange} value={(consolaSeleccionada && consolaSeleccionada.numHabitacion) || ""} placeholder="Número Habitación" type="number" />
             {errors.numHabitacion && <p id="errores">{errors.numHabitacion}</p>}
           </FormGroup>
           <FormGroup className="me-2" >
             <Label for="exampleEmail">Piso Habitación</Label>
-            <input className="form-control" name="pisoHabitacion" onChange={handleChange} onBlur={handleBlur} value={(consolaSeleccionada && consolaSeleccionada.pisoHabitacion) || ""} placeholder="Piso Habitación" type="number" />
+            <input disabled className="form-control" name="pisoHabitacion" onChange={handleChange} onBlur={handleBlur} value={(consolaSeleccionada && consolaSeleccionada.pisoHabitacion) || ""} placeholder="Piso Habitación" type="number" />
             {errors.pisoHabitacion && <p id="errores">{errors.pisoHabitacion}</p>}
           </FormGroup>
           <FormGroup className="me-2">
             <Label for="exampleEmail">Capacidad (#Personas)</Label>
-            <input className="form-control" name="maxPersonasDisponibles" onChange={handleChange} onBlur={handleBlur} value={(consolaSeleccionada && consolaSeleccionada.maxPersonasDisponibles) || ""} placeholder="# Personas" type="number" />
+            <input disabled className="form-control" name="maxPersonasDisponibles" onChange={handleChange} onBlur={handleBlur} value={(consolaSeleccionada && consolaSeleccionada.maxPersonasDisponibles) || ""} placeholder="# Personas" type="number" />
             {errors.maxPersonasDisponibles && <p id="errores">{errors.maxPersonasDisponibles}</p>}
           </FormGroup>
         </div>
         <div className="flex">
           <FormGroup className="me-2" style={{ marginLeft: "4%" }}>
             <Label for="exampleEmail">Imagen Habitacion</Label>
-            <input className="form-control" name="imagenHabitacion" onChange={handleChange} onBlur={handleBlur} value={(consolaSeleccionada && consolaSeleccionada.imagenHabitacion) || ""} placeholder="imagenHabitacion" />
+            <input disabled className="form-control" name="imagenHabitacion" onChange={handleChange} onBlur={handleBlur} value={(consolaSeleccionada && consolaSeleccionada.imagenHabitacion) || ""} placeholder="imagenHabitacion" />
             {errors.imagenHabitacion && <p id="errores">{errors.imagenHabitacion}</p>}
           </FormGroup>
           <FormGroup className="me-2">
@@ -647,7 +637,7 @@ function Habitacion() {
           </FormGroup>
           <FormGroup className="me-2" style={{ width: "100%", height: "100%" }}>
             <Label for="exampleEmail">Descripción Habitación</Label>
-            <textarea className="form-control" name="descripHabitacion" type="textare" onBlur={handleBlur} value={(consolaSeleccionada && consolaSeleccionada.descripHabitacion) || ""} onChange={handleChange} placeholder="Descripción Habitación" style={{ width: "100%", height: "100%" }} />
+            <textarea disabled className="form-control" name="descripHabitacion" type="textare" onBlur={handleBlur} value={(consolaSeleccionada && consolaSeleccionada.descripHabitacion) || ""} onChange={handleChange} placeholder="Descripción Habitación" style={{ width: "100%", height: "100%" }} />
             {errors.descripHabitacion && <p id="errores">{errors.descripHabitacion}</p>}
           </FormGroup>
         </div>
@@ -740,10 +730,10 @@ function Habitacion() {
       <p>
         ¿Desea  desocupar la habitación?
         <br />
-        <b> {!(consolaCheckIn && consolaSeleccionada.nombreHabitacion.numHabitacion) || ""} </b> ?
+        <b> {(consolaSeleccionada && consolaSeleccionada.numHabitacion && consolaCheckIn.nombreHabitacion) || ""} </b>
       </p>
       <div align="right">
-        <button className="btn btn-primary" type="submit" onClick={() => peticionCheckOut()} style={{ margin: "5px" }}> Si </button>
+        <button className="btn btn-primary" type="submit" onClick={(e) => peticionCheckOut(e)} style={{ margin: "5px" }}> Si </button>
         <button className="btn btn-danger" type="submit" onClick={handleCheckOutClose} > No  </button>
       </div>
     </div>
@@ -815,6 +805,15 @@ function Habitacion() {
                   <li>
                     <Link className="dropdown-item" onClick={() => seleccionarHabitacion(tableMeta.rowData, "CheckIn")}> Check-In </Link>
                   </li>
+                  {/*<li>
+                    <Link className="dropdown-item" onClick={() => seleccionarHabitacion(tableMeta.rowData, "Eliminar")}> Eliminar </Link>
+                  </li>*/}
+                  <li>
+                    <Link className="dropdown-item" onClick={() => seleccionarHabitacion(tableMeta.rowData, "Editar")}> Editar </Link>
+                  </li>
+                  <li>
+                    <Link className="dropdown-item" onClick={() => seleccionarHabitacion(tableMeta.rowData, "CheckOut")}> Check-Out </Link>
+                  </li>
                 </ul>
               </li>
             </div>
@@ -848,7 +847,7 @@ function Habitacion() {
       <Modal show={smShow} onHide={handleMensajeClose} animation={false} > {popUp}</Modal>
       <Modal show={showEditar} onHide={handleEditarClose} animation={false} dialogClassName="customModal">
         <Modal.Header closeButton>
-          <Modal.Title>Editar Huesped</Modal.Title>
+          <Modal.Title>Editar Habitación</Modal.Title>
         </Modal.Header>
         <Modal.Body>{bodyEditar}</Modal.Body>
       </Modal>
@@ -859,7 +858,7 @@ function Habitacion() {
         </Modal.Header>
         {bodyCheckIn}
       </Modal>
-      <Modal show={showCheckOut} onHide={handleCheckOutClose} animation={false} dialogClassName="checkIn">
+      <Modal show={showCheckOut} onHide={handleCheckOutClose} animation={false} size="lg">
         <Modal.Header>
           <Modal.Title>Check - Out</Modal.Title>
         </Modal.Header>

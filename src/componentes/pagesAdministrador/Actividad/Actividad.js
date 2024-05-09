@@ -11,7 +11,8 @@ import { EXPRESION_REGULAR_HORA_MINUTO_SEGUNDO } from '../../../services/Expresi
 
 const url = Apiurl + "actividades/listarActividades";
 const urlC = Apiurl + "actividades/crearActividad";
-const urlE = Apiurl + "actividades/verActividad";
+//const urlS = Apiurl + "actividades/verActividad";
+const urlE = Apiurl + "actividades/actualizarActividad/"
 const urlD = Apiurl + "actividades/eliminarActividad/";
 
 const Actividad = () => {
@@ -27,10 +28,13 @@ const Actividad = () => {
     const handleMensajeClose = useCallback(() => setSmShow(false), [setSmShow]);
     const handleShowMensaje = useCallback(() => setSmShow(true), [setSmShow]);
 
-
     const [showEditar, setShowEditar] = useState(false);
     const handleEditarClose = () => setShowEditar(false);
     const handleEditarShow = () => setShowEditar(true);
+
+    const [showSee, setShowSee] = useState(false);
+    const handleSeeClose = () => setShowSee(false);
+    const handleSeeShow = () => setShowSee(true);
 
     const [showEliminar, setShowEliminar] = useState(false);
     const handleEliminarClose = () => setShowEliminar(false);
@@ -88,7 +92,6 @@ const Actividad = () => {
             handleMensajeClose();
         }, 2000);
     }, [handleShowMensaje, handleMensajeClose]);
-
     const peticionGet = useCallback(async () => {
         try {
             const response = await axios.get(url, {
@@ -97,7 +100,6 @@ const Actividad = () => {
                     Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
                 }
             })
-            console.log(response.data);
             if (response.status === 200) {
                 setData(response.data);
             }
@@ -113,7 +115,6 @@ const Actividad = () => {
     useEffect(() => {
         peticionGet();
     }, [peticionGet]);
-
 
     const peticionPost = async (e) => {
         try {
@@ -189,7 +190,7 @@ const Actividad = () => {
             e.preventDefault();
             setErrors(validationForm(consolaSeleccionada));
             if (Object.keys(errors).length === 0) {
-                const response = axios.put(urlE + consolaSeleccionada.codActividad, consolaSeleccionada, {
+                const response = await axios.put(urlE + consolaSeleccionada.codActividad, consolaSeleccionada, {
                     headers: {
                         'Content-Type': 'application/json',
                         Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
@@ -198,19 +199,23 @@ const Actividad = () => {
                 if (response.status === 201) {
                     const dataNueva = data.map((consola) => {
                         if (consolaSeleccionada.codActividad === consola.codActividad) {
-
+                            return { ...consola, ...consolaSeleccionada };
                         }
                         return consola;
                     })
                     setData(dataNueva);
                     peticionGet();
-                    handleEditarShow();
-                    setMensaje("Tarea Actualizada");
+                    handleEditarClose();
+                    setMensaje("Actividad Actualizada");
                     abrirCerrarModalMensaje("");
                 }
             }
         } catch (error) {
-
+            console.log("get", error);
+            const mensajeError = error.response && error.response.data && error.response.data.mensaje ? error.response.data.mensaje : "Hubo un error al Editar Actividad. Por favor, intenta nuevamente.";
+            setMensaje(mensajeError);
+            abrirCerrarModalMensaje();
+            setErrors({});
         }
     }
     const peticionDelete = async (e) => {
@@ -393,8 +398,6 @@ const Actividad = () => {
 
         return errors;
     }
-
-
     const seleccionarTarea = (consola, caso) => {
         console.log("consola", consola);
         setConsolaSeleccionada({
@@ -442,6 +445,9 @@ const Actividad = () => {
         }
         if (caso === "Eliminar") {
             handleEliminarShow();
+        }
+        if (caso === "Ver") {
+            handleSeeShow();
         }
     }
     const bodyInsertar = (
@@ -492,7 +498,7 @@ const Actividad = () => {
         </form>
     );
     const bodyEditar = (
-        <form onSubmit={peticionPut}>
+        <form>
             <div className='flex'>
                 <div className='formActividad'>
                     <label>Título</label>
@@ -511,7 +517,7 @@ const Actividad = () => {
                 </div>
                 <div className='formActividad'>
                     <label>Estado Actividad</label>
-                    <select name='estadoActividad' className='form-select' aria-label="Default select example" onChange={handleChange} placeholder="Seleccione Actividad">
+                    <select name='estadoActividad' className='form-select' aria-label="Default select example" onChange={handleChange} placeholder="Seleccione Actividad" value={consolaSeleccionada?.estadoActividad || ""}>
                         <option value="COMPLETADO">COMPLETADO</option>
                         <option value="PENDIENTE">PENDIENTE</option>
                         <option value="CANCELADO">CANCELADO</option>
@@ -533,8 +539,54 @@ const Actividad = () => {
                 </div>
             </div>
             <div className='flex' style={{ alignItems: "center" }}>
-                <button className='btn btn-primary' type='submit'>Guardar Cambios</button>
+                <button className='btn btn-primary' onClick={(e) => peticionPut(e)}>Guardar Cambios</button>
                 <button className='btn btn-secondary' type='submit' onClick={cerrarEditarTarea} >Cerrar</button>
+            </div>
+        </form>
+    );
+    const bodySee = (
+        <form >
+            <div className='flex'>
+                <div className='formActividad'>
+                    <label>Título</label>
+                    <input disabled name='titulo' type='text' className='form-control' onBlur={handleBlur} onChange={handleChange} placeholder='Título' value={consolaSeleccionada.titulo || ""} />
+                    {errors.titulo && <p id='errors'>{errors.titulo}</p>}
+                </div>
+                <div className='formActividad'>
+                    <label>Fecha Entrega</label>
+                    <input disabled name='fechaEntrega' type='date' className='form-control' onBlur={handleBlur} onChange={handleChange} value={consolaSeleccionada?.fechaEntrega || ""} />
+                    {errors.fechaEntrega && <p id='errors'>{errors.fechaEntrega}</p>}
+                </div>
+                <div className='formActividad'>
+                    <label>Hora Entrega</label>
+                    <input disabled name='horaEntrega' type="text" className='form-control' onBlur={handleBlur} onChange={handleChange} value={consolaSeleccionada?.horaEntrega || ""} placeholder='Hora:Minutos:Segundos' />
+                    {errors.horaEntrega && <p id='errors'>{errors.horaEntrega}</p>}
+                </div>
+                <div className='formActividad'>
+                    <label>Estado Actividad</label>
+                    <select disabled name='estadoActividad' className='form-select' aria-label="Default select example" onChange={handleChange} value={consolaSeleccionada?.estadoActividad || ""} placeholder="Seleccione Actividad">
+                        <option value="COMPLETADO">COMPLETADO</option>
+                        <option value="PENDIENTE">PENDIENTE</option>
+                        <option value="CANCELADO">CANCELADO</option>
+                        <option value="EN CURSO">EN CURSO</option>
+                    </select>
+                    {errors.estadoActividad && <p id='errors'>{errors.estadoActividad}</p>}
+                </div>
+            </div>
+            <div className='flex'>
+                <div className='formDescripcion'>
+                    <label>Empleado</label>
+                    <SelectEmpleados name="empleado" value={consolaSeleccionada?.empleado || ""} handleChangeData={handleChange} />
+                    {errors.empleado && <p id='errors'>{errors.empleado}</p>}
+                </div>
+                <div className='formDescripcion'>
+                    <label>Descripcion</label>
+                    <textarea disabled name='descripcion' type="textarea" className='form-control' onBlur={handleBlur} onChange={handleChange} placeholder='Descripcion' value={consolaSeleccionada?.descripcion || ""} style={{ resize: "none" }} />
+                    {errors.descripcion && <p id='errors'>{errors.descripcion}</p>}
+                </div>
+            </div>
+            <div className='flex' style={{ alignItems: "center" }}>
+                <button className='btn btn-secondary' type='submit' onClick={handleSeeClose} >Cerrar</button>
             </div>
         </form>
     );
@@ -551,7 +603,6 @@ const Actividad = () => {
             </div>
         </div>
     );
-
     const popUp = (
         <div>
             <Modal size="sm" show={smShow} onHide={() => setSmShow(false)} aria-labelledby="example-modal-sizes-title-sm">
@@ -563,7 +614,6 @@ const Actividad = () => {
             </Modal>
         </div>
     );
-
     const columns = [
         {
             name: "codActividad",
@@ -573,7 +623,8 @@ const Actividad = () => {
             label: "Titulo"
         }, {
             name: "descripcion",
-            label: "Descripcion"
+            label: "Descripcion",
+            status: false
         }, {
             name: "fechaEntrega",
             label: "Fecha Entrega"
@@ -615,7 +666,7 @@ const Actividad = () => {
                                     <Link className="dropdown-item" onClick={() => seleccionarTarea(tableMeta.rowData, "Eliminar")}> Eliminar </Link>
                                 </li>
                                 <li>
-                                    <hr className="dropdown-divider" />
+                                    <Link className="dropdown-item" onClick={() => seleccionarTarea(tableMeta.rowData, "Ver")}> Ver </Link>
                                 </li>
                             </ul>
                         </div>
@@ -631,24 +682,29 @@ const Actividad = () => {
                 <button className='btn btn-primary' type='submit' onClick={handleShow} >Crear Actividad</button>
             </div>
             <div>
-                <MUIDataTable title={"Lista Huespedes"} data={data} columns={columns} />
+                <MUIDataTable title={"Lista Huéspedes"} data={data} columns={columns} />
             </div>
             <Modal show={show} onHide={handleClose} animation={false} size='lg'>
                 <Modal.Header closeButton>
-                    <Modal.Title>Asignar Tarea</Modal.Title>
+                    <Modal.Title>Asignar Actividad</Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="body">{bodyInsertar}</Modal.Body>
             </Modal>
             <Modal show={smShow} onHide={handleMensajeClose} animation={false} > {popUp}</Modal>
             <Modal show={showEditar} onHide={handleEditarClose} animation={false} size="lg">
                 <Modal.Header closeButton>
-                    <Modal.Title>Editar Tarea</Modal.Title>
+                    <Modal.Title>Editar Actividad</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>{bodyEditar}</Modal.Body>
+            </Modal>
+            <Modal show={showSee} onHide={handleSeeClose} animation={false} size="lg">
+                <Modal.Header closeButton>
+                    <Modal.Title>Ver Actividad</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>{bodySee}</Modal.Body>
             </Modal>
             <Modal show={showEliminar} onHide={handleEliminarClose}> {bodyEliminar} </Modal>
         </div>
     );
 }
-
 export default Actividad;

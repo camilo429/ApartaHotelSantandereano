@@ -46,7 +46,6 @@ const Login = () => {
             };
 
             const response = await axios.post(Apiurl + "oauth/token", new URLSearchParams(reqData), {
-                withCredentials: true,
                 auth: {
                     username: "angularapp",
                     password: "angu1234lar",

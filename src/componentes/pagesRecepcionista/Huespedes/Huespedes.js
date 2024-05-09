@@ -584,7 +584,7 @@ function Huespedes() {
       label: "Celular",
     }, {
       name: "correo",
-      label: "Correo Electronico",
+      label: "Correo Electrónico",
     }, {
       name: "tipoDocumento",
       label: "Tipo Documento",
@@ -597,7 +597,6 @@ function Huespedes() {
           } else {
             return "";
           }
-          // Devuelve el nombre del tipo de documento
         },
       },
     }, {
@@ -680,12 +679,6 @@ function Huespedes() {
                   <li>
                     <Link className="dropdown-item" onClick={() => seleccionarHuespedes(tableMeta.rowData, "Eliminar")}> Eliminar </Link>
                   </li>
-                  <li>
-                    <hr className="dropdown-divider" />
-                  </li>
-                  <li>
-                    <Link className="dropdown-item" to={`/Login`}> Factura </Link>
-                  </li>
                 </ul>
               </li>
             </div>
@@ -698,21 +691,21 @@ function Huespedes() {
   return (
     <div className="Huespedes">
       <div>
-        <h6 className="m-0 font-weight-bold text-primary"> Base de Datos Huespedes </h6>
-        <div> <button onClick={handleShow} className="btn btn-primary"> Agregar Huesped</button> </div>
+        <h6 className="m-0 font-weight-bold text-primary"> Base de Datos Huéspedes </h6>
+        <div> <button onClick={handleShow} className="btn btn-primary"> Agregar Huésped</button> </div>
         <div style={{ color: "red" }}>
           <MUIDataTable title={"Lista Huespedes"} data={data} columns={columns} options={{ selectableRows: 'none' }} id="custom-table" />
         </div>
       </div>
       <Modal show={show} onHide={handleClose} animation={false} dialogClassName="crearHuesped">
         <Modal.Header closeButton>
-          <Modal.Title>Insertar Huesped</Modal.Title>
+          <Modal.Title>Insertar Huésped</Modal.Title>
         </Modal.Header>
         <Modal.Body className="body">{bodyInsertar}</Modal.Body>
       </Modal>
       <Modal show={showEditar} onHide={handleEditarClose} animation={false} dialogClassName="crearHuesped">
         <Modal.Header closeButton>
-          <Modal.Title>Editar Huesped</Modal.Title>
+          <Modal.Title>Editar Huésped</Modal.Title>
         </Modal.Header>
         <Modal.Body>{bodyEditar}</Modal.Body>
       </Modal>

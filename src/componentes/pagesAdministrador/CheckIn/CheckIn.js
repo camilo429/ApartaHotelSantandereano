@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { Modal } from 'react-bootstrap';
 import MUIDataTable from 'mui-datatables';
 import SelectMultiProductos from '../Producto.js/SelectMultiProductos';
-
+// Rutas
 const url = Apiurl + "checkin/listarCheckin";
 const urlC = Apiurl + "factura/crearFactura";
 
@@ -13,7 +13,6 @@ const CheckIn = () => {
     const [data, setData] = useState([]);
     const [mensaje, setMensaje] = useState("");
     const [errors, setErrors] = useState({});
-    //const navigate = useNavigate();
 
     const [smShow, setSmShow] = useState(false);
     const handleMensajeClose = useCallback(() => setSmShow(false), [setSmShow]);
@@ -98,9 +97,48 @@ const CheckIn = () => {
             },
             numAdultos: "",
             numNinos: "",
-            totalAcompañantes: "",
+            numAcompanantes: "",
             totalPersona: ""
         },
+        facturas: [
+            {
+                codFactura: "",
+                description: "",
+                estado: "",
+                fechaCreacion: "",
+                horaCreacion: "",
+                itemFactura: [
+                    {
+                        cantidad: "",
+                        cantidadTotal: "",
+                        codItemFactura: "",
+                        producto: {
+                            codProducto: "",
+                            cantidad: "",
+                            fechaRegistro: "",
+                            horaRegistro: "",
+                            marca: "",
+                            nombreProducto: "",
+                            precio: ""
+                        },
+                        subtotal: "",
+                    }
+                ]
+
+            }
+        ],
+        acompanante: [
+            {
+                nombre: "",
+                apellido: "",
+                tipoDocumento: {
+                    codTipoDocumento: "",
+                    nomTipoDocumento: ""
+                },
+                numDocumento: "",
+                fechaNacimiento: ""
+            }
+        ],
         total: ""
     })
     const handleChange = (e) => {
@@ -123,7 +161,6 @@ const CheckIn = () => {
     };
     const calcularTotal = (selectedItems) => {
         let total = 0;
-
         // Itera sobre los elementos seleccionados y suma el precio de cada uno al total
         selectedItems.forEach((item) => {
             total += item.cantidad * item.producto.precio;
@@ -131,7 +168,6 @@ const CheckIn = () => {
 
         return total;
     };
-
     const abrirCerrarModalMensaje = useCallback(() => {
         handleShowMensaje();
         setTimeout(() => {
@@ -148,7 +184,7 @@ const CheckIn = () => {
             });
             if (response.status === 200) {
                 setData(response.data);
-                //  console.log("CheckIn", response.data);
+                console.log("CheckIn", response.data);
             }
         } catch (error) {
             console.log(error);
@@ -245,29 +281,43 @@ const CheckIn = () => {
                     },
                     imagenHabitacion: consola[4].imagenHabitacion
                 },
-                totalAcompañantes: consola[5],
-                //facturas: [{
-                //    codFactura: consola[6].codFactura,
-                //    descripcion: consola[6].descripcion,
-                //    estado: consola[6].estado,
-                //    fechaCreacion: consola[6].fechaCreacion,
-                //    horaCreacion: consola[6].horaCreacion,
-                //    itemFactura: [{
-                //        cantidad: consola[6].facturas.itemFactura.cantidad,
-                //        cantidadTotal: consola[6].itemFactura.cantidadTotal,
-                //        codItemFactura: consola[6].itemFactura.codItemFactura,
-                //        producto: [{
-                //            codProducto: consola[6].producto.codProducto,
-                //            nombreProducto: consola[6].producto.nombreProducto,
-                //            marca: consola[6].facturas.itemFactura.producto.marca,
-                //            cantidad: consola[6].facturas.itemFactura.producto.cantidad,
-                //            precio: consola[6].facturas.itemFactura.producto.precio
-                //        }],
-                //        subtotal: consola[6].itemFactura.subtotal
-                //    }],
-                //    total: consola[6].total
-                //}]
-            },
+                numAcompanantes: consola[5],
+                facturas: consola[6].map(factura => ({
+                    codFactura: factura.codFactura,
+                    descripcion: factura.descripcion,
+                    estado: factura.estado,
+                    fechaCreacion: factura.fechaCreacion,
+                    horaCreacion: factura.horaCreacion,
+                    itemFactura: factura.itemFactura.map(itemFactura => ({
+                        cantidad: itemFactura.cantidad,
+                        cantidadTotal: itemFactura.cantidadTotal,
+                        codItemFactura: itemFactura.codItemFactura,
+                        producto: {
+                            cantidad: itemFactura.producto.cantidad,
+                            codProducto: itemFactura.producto.codProducto,
+                            fechaRegistro: itemFactura.producto.fechaRegistro,
+                            horaRegistro: itemFactura.producto.horaRegistro,
+                            marca: itemFactura.producto.marca,
+                            nombreProducto: itemFactura.producto.nombreProducto,
+                            precio: itemFactura.producto.precio
+                        },
+                        subtotal: factura.itemFactura.subtotal
+
+                    })),
+                    total: factura.total,
+                }
+                )),
+                acompanantes: consola[7].map(acompanante => ({
+                    nombre: acompanante.nombre,
+                    apellido: acompanante.apellido,
+                    tipoDocumento: {
+                        codTipoDocumento: acompanante.tipoDocumento.codTipoDocumento,
+                        nomTipoDocumento: acompanante.tipoDocumento.nomTipoDocumento
+                    },
+                    numDocumento: acompanante.numDocumento,
+                    fechaNacimiento: acompanante.fechaNacimiento
+                }))
+            }
         })
 
         if (caso === "Factura") {
@@ -350,7 +400,7 @@ const CheckIn = () => {
                     </div>
                     <div>
                         <label>Total Personas Hospedadas</label>
-                        <input type='text' disabled name='totalAcompañantes' value={consolaFactura?.checkin?.totalAcompañantes || ""} className='form-control' />
+                        <input type='text' disabled name='totalAcompanantes' value={consolaFactura?.checkin?.numAcompanantes || ""} className='form-control' />
                     </div>
                 </div>
                 <div className='flex' style={{ width: "100%" }}>
@@ -406,8 +456,8 @@ const CheckIn = () => {
                 }
             }
         }, {
-            name: "totalAcompanantes",
-            label: "Total Personas"
+            name: "numAcompanantes",
+            label: "Total Personas",
         }, {
             name: "facturas",
             label: "Facturas",
@@ -415,6 +465,18 @@ const CheckIn = () => {
                 customBodyRender: (value, tableMeta) => {
                     if (value && value.estado && value.codFactura) {
                         return value.codFactura + " " + value.estado;
+                    } else {
+                        return "";
+                    }
+                }
+            }
+        }, {
+            name: "acompanante",
+            label: "Acompañantes",
+            options: {
+                customBodyRender: (value, tableMeta) => {
+                    if (value && value.nombre && value.apellido) {
+                        return value.nombre + " " + value.apellido;
                     } else {
                         return "";
                     }
@@ -449,7 +511,6 @@ const CheckIn = () => {
         }
     ]
 
-
     return (
         <div>
             <div>
@@ -457,11 +518,11 @@ const CheckIn = () => {
             </div>
             <Modal show={showProductos} onHide={handleProductosClose} animation={false} size='lg'>
                 <Modal.Header>
-                    <Modal.Title>Registrar Factura</Modal.Title>
+                    <Modal.Title>Registrar Recibo</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>{bodyRegistrarFactura}</Modal.Body>
             </Modal>
-            <Modal show={smShow} onHide={handleMensajeClose} animation={false} > {popUp}</Modal>
+            <Modal show={smShow} onHide={handleMensajeClose} animation={false}> {popUp}</Modal>
             <Modal show={verCheckIn} onHide={handleCheckInClose} animation={false} size='lg'>
                 <Modal.Header closeButton>
                     <Modal.Title> Check - In</Modal.Title>

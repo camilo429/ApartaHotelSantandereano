@@ -1,5 +1,6 @@
 h2 {
-    font-size: small;
+    font-size: 2rem;
+    text-align: center;
 }
 
 input {
@@ -13,4 +14,18 @@ input {
 
 .formularioFactura>input {
     text-align: center;
+}
+
+.formularioRecibo {
+    display: flex;
+    gap: 5px;
+}
+
+.formularioRecibo>input {
+    text-align: center;
+}
+
+.itemsFactura {
+    display: flex;
+    gap: 5px;
 }
